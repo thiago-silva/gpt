@@ -63,7 +63,7 @@ options {
     s << "#ifndef FALSE\n";
     s << " #define FALSE 0\n";
     s << "#endif\n\n";
-    s << "void matrix_cpy(void *src, void* dest, int type, int size) {\n"
+    s << "void matrix_cpy__(void *src, void* dest, int type, int size) {\n"
          "   int i;\n"
          "   int *ds,*dd;\n"
          "   float *fs,*fd;\n"
@@ -95,7 +95,7 @@ options {
          "       exit(1);\n"
          "   }\n"
          "}\n";
-    s << "void matrix_init(void *matrix, int type, int size) {\n"
+    s << "void matrix_init__(void *matrix, int type, int size) {\n"
          "   int i;\n"
          "   int *d;\n"
          "   float* f;\n"
@@ -170,17 +170,17 @@ options {
          "   va_end(args);\n"
          "   printf(\"\\n\");\n"
          "}\n\n";
-    s << "int leia_inteiro() {\n"
+    s << "int leia_inteiro__() {\n"
          "   int i;\n"
          "   scanf(\"%d\", &i);\n"
          "   return i;\n"
          "}\n";
-    s << "float leia_real() {\n"
+    s << "float leia_real__() {\n"
          "   float f;\n"
          "   scanf(\"%f\", &f);\n"
          "   return f;\n"
          "}\n";
-    s << "char* leia_literal() {\n"
+    s << "char* leia_literal__() {\n"
          "   char *lit = NULL;\n"
          "   int  len = 0;\n"
          "   int read;\n"
@@ -191,6 +191,22 @@ options {
          "   lit[strlen(lit)-1] = 0;\n"
          "   /*TODO:   free(lit);*/\n"
          "   return lit;\n"
+         "}\n";
+    s << "boolean str_comp__(char* left, char* right) {\n"
+         "   if(left == 0) {\n"
+         "     if(right == 0) {\n"
+         "       return TRUE;\n"
+         "     } else {\n"
+         "       return FALSE;\n"
+         "     }\n"
+         "   }\n"
+         "   return (strcmp(left, right)==0);\n"
+         "}\n";
+    s << "int str_strlen__(char* str) {\n"
+         "   if(str == 0) {\n"
+         "     return 0;\n"
+         "   }\n"
+         "   return strlen(str);\n"
          "}\n\n";
 //     write(s);
     _head << s.str();
@@ -243,14 +259,14 @@ options {
       if(s.lexeme == "leia") {
         switch(type) {
           case TIPO_REAL:
-            return "leia_real";
+            return "leia_real__";
           case TIPO_LITERAL:
-            return "leia_literal";
+            return "leia_literal__";
           case TIPO_CARACTERE:
             return "leia_caractere";
           case TIPO_INTEIRO:
           default:
-            return "leia_inteiro";
+            return "leia_inteiro__";
         }
       } /*else if(s.lexeme == "imprima") {
         return "printf";
@@ -304,10 +320,10 @@ options {
     return str;
   }
 
-  /*
+  
   string translateBinExpr(const production& left, const production& right, int optoken) {
-    if((left.expr.first != TIPO_LITERAL) && ((right.expr.first != TIPO_LITERAL)) {
-      stringstream ret;
+    stringstream ret;
+    if((left.expr.first != TIPO_LITERAL) && (right.expr.first != TIPO_LITERAL)) {      
       switch(optoken) {
         case T_IGUAL:
           ret << left.expr.second << "==" << right.expr.second;
@@ -336,12 +352,28 @@ options {
 
     switch(optoken) {
       case T_IGUAL:
+        ret << "str_comp__(" << left.expr.second << "," << right.expr.second << ")";
+        break;
       case T_DIFERENTE:
+        ret << "str_comp__(" << left.expr.second << "," << right.expr.second << ")";
       case T_MAIOR:
+        ret << "(str_strlen__(" << left.expr.second << ") > str_strlen__(" << right.expr.second << "))";
+        break;
       case T_MENOR:
+        ret << "(str_strlen__(" << left.expr.second << ") < str_strlen__(" << right.expr.second << "))";
+        break;
       case T_MAIOR_EQ:
+        ret << "(str_strlen__(" << left.expr.second << ") <= str_strlen__(" << right.expr.second << "))";
+        break;
       case T_MENOR_EQ:  
-  }*/
+        ret << "(str_strlen__(" << left.expr.second << ") >= str_strlen__(" << right.expr.second << "))";
+        break;
+      default:
+          cerr << "Erro interno: op nao suportado (pt2c::translateBinExpr)." << endl;
+          exit(1);
+    }
+    return ret.str();
+  }
   
   string _currentScope;
 
@@ -392,7 +424,7 @@ variaveis
                 str << ";";
                 writeln(str);
       
-                init << "matrix_init(" << *itid << ", ";
+                init << "matrix_init__(" << *itid << ", ";
                 switch(p.matrizvars.first) {
                   case TIPO_INTEIRO:
                     init << "'i', ";break;
@@ -700,13 +732,18 @@ expr[int expecting_type] returns [production p]
   | #(T_BIT_XOU   left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="^";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
   | #(T_BIT_KW_E  left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="&";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
   | #(T_BIT_NOT   left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="~";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_IGUAL     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="==";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-//   : #(T_IGUAL    left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=translateBinExpr(left,right,T_IGUAL);p.expr.first=#expr->getEvalType();}
-  | #(T_DIFERENTE left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="!=";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_MAIOR     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+=">";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_MENOR     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="<";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_MAIOR_EQ  left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+=">=";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_MENOR_EQ  left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="<=";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
+//  | #(T_IGUAL     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="==";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
+  | #(T_IGUAL    left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=translateBinExpr(left,right,T_IGUAL);p.expr.first=#expr->getEvalType();}
+  //| #(T_DIFERENTE left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="!=";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
+  | #(T_DIFERENTE left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=translateBinExpr(left,right,T_DIFERENTE);p.expr.first=#expr->getEvalType();}
+  //| #(T_MAIOR     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+=">";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
+  | #(T_MAIOR     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=p.expr.second=translateBinExpr(left,right,T_MAIOR);p.expr.first=#expr->getEvalType();}
+  //| #(T_MENOR     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="<";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
+  | #(T_MENOR     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=p.expr.second=translateBinExpr(left,right,T_MENOR);p.expr.first=#expr->getEvalType();}
+  //| #(T_MAIOR_EQ  left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+=">=";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
+  | #(T_MAIOR_EQ  left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=p.expr.second=translateBinExpr(left,right,T_MAIOR_EQ);p.expr.first=#expr->getEvalType();}
+  //| #(T_MENOR_EQ  left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="<=";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
+  | #(T_MENOR_EQ  left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=p.expr.second=translateBinExpr(left,right,T_MENOR_EQ);p.expr.first=#expr->getEvalType();}
   | #(T_MAIS      left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="+";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
   | #(T_MENOS     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="-";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
   | #(T_DIV       left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="/";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
@@ -785,7 +822,7 @@ func_decls
                 addInitStm(decl);
                 decl.str("");
 
-                cpy << "matrix_cpy(" << *itid << "__, " << *itid << ", ";
+                cpy << "matrix_cpy__(" << *itid << "__, " << *itid << ", ";
                 switch(mat.matrizvars.first) {
                   case TIPO_INTEIRO:
                     cpy << "'i', ";break;
