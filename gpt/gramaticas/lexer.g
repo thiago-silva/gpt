@@ -1,5 +1,10 @@
 header {
   #include "ErrorHandler.hpp"
+  #include <string>
+  #include <sstream>
+  #include <ctype.h>
+
+  using namespace std;
 }
 
 options {
@@ -220,8 +225,9 @@ T_INT_LIT
 options {
   paraphrase = "número inteiro";
 }
-  : ('0' T_DIGIT)=>   T_OCTAL_LIT
+  : ('0' ('c'|'C') )=> T_OCTAL_LIT
   | ('0' ('x'|'X') )=> T_HEX_LIT
+  | ('0' ('b'|'B') )=> T_BIN_LIT
   | T_INTEGER_LIT 
   ;
   
@@ -232,12 +238,67 @@ T_INTEGER_LIT
 
 protected
 T_OCTAL_LIT
-  : '0' (T_DIGIT)+
+  : '0' ('c'|'C') (T_DIGIT)+
+      {
+        if($getText.find("9",0) != string::npos) {
+          stringstream s;
+          s << "\"" << $getText << "\" não é um valor octal válido";
+          ErrorHandler::self()->add(s, getLine());
+        } else {
+          string res = $getText.substr(2);
+          res.insert(0,"0");
+          $setText(res);
+        }
+      }
   ;
 
 protected
 T_HEX_LIT
-  : '0' ('x'|'X') (T_DIGIT|'a'..'f'|'A'..'F')+
+  : '0' ('x'|'X') (T_DIGIT|'a'..'z'|'A'..'Z')+
+    {
+      string str = $getText;
+      for(unsigned int i = 2; i < str.length(); ++i) {
+        if(!isxdigit(str[i])) {
+          stringstream s;
+          s << "\"" << str << "\" não é um valor hexadecimal válido";
+          ErrorHandler::self()->add(s, getLine());
+          break;
+        }
+      }
+    }
+  ;
+
+protected
+T_BIN_LIT
+  : '0' ('b'|'B') (T_DIGIT)+
+  {
+    string str = $getText;
+    bool haserror = false;
+    for(unsigned int i = 2; i < str.length(); ++i) {
+      if((str[i] != '0') && (str[i] != '1')) {
+        stringstream s;
+        s << "\"" << str << "\" não é um valor binário válido";
+        ErrorHandler::self()->add(s, getLine());
+        haserror = true;
+        break;
+      }
+    }
+    if(!haserror) {
+      //convert to decimal
+      int x = 0;
+      string str = $getText.substr(2);
+  
+      int len = str.length()-1;
+    
+      for(int i = len; i >= 0; i--) {
+        x = x | ((str[i]-48) << len-i);
+      }    
+      stringstream s;
+      s << x;
+      string res = s.str();
+      $setText(res);
+    }
+  }
   ;
 
 T_REAL_LIT
