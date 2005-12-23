@@ -1,15 +1,41 @@
-\NewEntry 0 notes
+\NewEntry 0 devel
+
+\CurrentEntry 1 TODO
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
-<p></p>
-<p>   </p>
-<ul type="disc"><li>A analise semantica (contextual parsing) não decora a AST, ja que a semelhança entre portugol e C permite uma traducao mais direta. No entanto, para compilar um fonte em portugol para uma linguagem de mais baixo nivel (codigo de maquina), seria nescessario esse esforco. A AST, então, conter informacoes sobre os operandos e tipos de expressões nos nós </li>
-<ul type="disc"><li>ex: &quot;1 == 2&quot; ::= #(== boolean (1 2) )</li>
-<li>ex; &quot;1 + 3.4&quot;    ::=  #(+ real (1  3.4) )</li></ul>
-<li>Eh ainda, possivel descartar a tabela de simbolos, decorando a AST com as informacoes de identificadores.</li></ul>
+<ul type="disc"><li>parser.g error handling</li>
+<ul type="disc"><li>terminar tratamento nas declaracoes de funcoes</li>
+<li>substituir getTokenNames()[DFASDF] por getTokenDescriptioN(TOKEN)</li>
+<ul type="disc"><li>overload getTokenDescripion(int)</li></ul>
+<li>Verificar todos os consumeUntil() nas excessoes</li>
+<li>Limpar comentarios, codigo...<br /></li></ul>
+<li>gpt.cpp</li>
+<ul type="disc"><li>remover tempnam() e usar mkstemp()<br /></li></ul>
+<li>pt2c:</li>
+<ul type="disc"><li>free(lit)! em leia_literal()<br /><br /></li></ul>
+<li>Criar o arquivo executavel default nao como &quot;a.out&quot;, mas com o ID da declaracao do algoritmo<br /></li>
+<li>Limpar codigos, comentarios.</li>
+<ul type="disc"><li>pt2c fix:</li>
+<ul type="disc"><li>/home/jester/projects/upis/trunk/pparser/gramaticas/pt2c.g:776:11: warning:Rule 'tipo_prim' returns a value</li>
+<li>dar uma olhada nas producoes de ret_type (funcao)<br /></li></ul></ul>
+<li>Editor + parser (online analysis check)</li>
+<ul type="disc"><li>Plugin ou protoeditor like?</li>
+<li>Adicionar mimetype com icone (x-pseudo-codigo)</li></ul>
+<li>Interpreter/Debugger<br /></li>
+<li>Release</li>
+<ul type="disc"><li>Site (html manual (wiki), comentarios de implementacao, exemplos, etc)</li>
+<li>configure.in configurations (check for antlr)</li>
+<li>README, TODO, NEWS<br /></li></ul>
+<div><br />----------------------------------------------------------------------------------------------------------------<br /><br />Bugs:<br />algoritmo inútil;<br />Linha: 1 - Variável/função &quot;inútil&quot; não pode ter caracteres especiais..<br /><br />-&gt; &quot;inútil&quot; não é nem variável, nem, função. é o nome do algoritmo<br /><br />Verificação de igualdade de strings! Como está sendo traduzido?deveria ser strcmpi()<br /><br />------------------------------------------------------------------------------------<br /></div>
+<li>-Fazer verificação de uso de variaveis?</li>
+<ul type="disc"><li>&quot;Aviso: variavel &quot;w&quot; nao esta sendo usada&quot;</li>
+<div><br /><br /></div></ul>
+<li>-faça/enquanto();</li>
+<li>-switch (escolha)<br /></li>
+<li>Fazer representacao de numeros binarios? (0 para oct, 0x para hex, 0b para bin?)?</li></ul>
 </body></html>
 
 
-\NewEntry 0 traducao para C
+\NewEntry 1 traducao para C
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>Notas</li>
 <ul type="disc"><li>Passagens de parametros de qualquer tipo eh feito por valor.<br /></li></ul>
@@ -25,7 +51,7 @@
 <ul type="disc"><ul type="disc"><li>Complicado implementar (precisa-se avaliar se os &quot;retorne&quot; estão dentro de &quot;if&quot;s e se serão executados com certeza.)</li></ul></ul></ul>
 </body></html>
 
-\NewEntry 1 comentarios
+\NewEntry 2 comentarios
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>matrizes podem receber valores que são outras matrizes de mesma dimensao/tipo.</li>
 <li>ex: a ,x : matriz[2] de inteiros; a := x; //OK</li>
@@ -34,42 +60,17 @@
 <li><br /></li></ul></ul></ul>
 </body></html>
 
-\CurrentEntry 0 TODO
+\NewEntry 1 notes
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
-<ul type="disc"><li>parser.g error handling</li>
-<ul type="disc"><li>terminar tratamento nas declaracoes de funcoes</li>
-<li>substituir getTokenNames()[DFASDF] por getTokenDescriptioN(TOKEN)</li>
-<ul type="disc"><li>overload getTokenDescripion(int)</li></ul>
-<li>Verificar todos os consumeUntil() nas excessoes</li>
-<li>Limpar comentarios, codigo...<br /></li></ul>
-<li>gpt.cpp</li>
-<ul type="disc"><li>remover tempnam() e usar mkstemp()<br /></li></ul>
-<li>pt2c:</li>
-<ul type="disc"><li>free(lit)! em leia_literal()<br /><br /></li></ul>
-<li>Limpar codigos, comentarios.</li>
-<ul type="disc"><li>pt2c fix:</li>
-<ul type="disc"><li>/home/jester/projects/upis/trunk/pparser/gramaticas/pt2c.g:776:11: warning:Rule 'tipo_prim' returns a value</li>
-<li>dar uma olhada nas producoes de ret_type (funcao)<br /></li></ul></ul>
-<li>Editor + parser (online analysis check)</li>
-<ul type="disc"><li>Plugin ou protoeditor like?</li>
-<li>Adicionar mimetype com icone (x-pseudo-codigo)</li></ul>
-<li>Interpreter/Debugger<br /></li>
-<li>Release</li>
-<ul type="disc"><li>Manual (man page)</li>
-<li>Site (html manual, comentarios de implementacao, exemplos, etc)</li>
-<li>configure.in configurations (check for antlr)</li>
-<li>README, TODO, NEWS<br /></li></ul>
-<div><br />----------------------------------------------------------------------------------------------------------------<br /></div>
-<li>-Fazer verificação de uso de variaveis?</li>
-<ul type="disc"><li>&quot;Aviso: variavel &quot;w&quot; nao esta sendo usada&quot;</li>
-<div><br /><br /></div></ul>
-<li>-faça/enquanto();</li>
-<li>-switch (escolha)<br /></li>
-<li>Fazer representacao de numeros binarios? (0 para oct, 0x para hex, 0b para bin?)?</li></ul>
+<p></p>
+<p>   </p>
+<ul type="disc"><li>A analise semantica (contextual parsing) não decora a AST, ja que a semelhança entre portugol e C permite uma traducao mais direta. No entanto, para compilar um fonte em portugol para uma linguagem de mais baixo nivel (codigo de maquina), seria nescessario esse esforco. A AST, então, conter informacoes sobre os operandos e tipos de expressões nos nós </li>
+<ul type="disc"><li>ex: &quot;1 == 2&quot; ::= #(== boolean (1 2) )</li>
+<li>ex; &quot;1 + 3.4&quot;    ::=  #(+ real (1  3.4) )</li></ul>
+<li>Eh ainda, possivel descartar a tabela de simbolos, decorando a AST com as informacoes de identificadores.</li></ul>
 </body></html>
 
-
-\NewEntry 0 Tratamento de erros
+\NewEntry 1 Tratamento de erros
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <p></p>
 <ul type="disc"><li>A dificuldade em deixar as mensagens de erro uniformes, ao tentar elaborar tratamentos de erros mais detalhados e prestativos.<br /></li>
@@ -78,4 +79,135 @@
 <ul type="disc"><li>Ao catch[], pode-se lancar um custom exception, a ser recuperado em main.c</li>
 <li>Fazer disso uma opcao?</li></ul></ul></ul>
 </body></html>
+
+\NewEntry 0 manual
+
+\NewEntry 1 Introdução
+
+\NewEntry 2 Sobre
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><div>G-Portugol é um dialeto da linguagem portugol (ou portugês estruturado), muito usada para </div>
+<div>descrever algoritmos de forma livre e espontânea, em portugês. Em geral, livros dedicados </div>
+<div>ao ensino de algoritmos, lógica e estruturas de dados utilizam alguma forma dessa linguagem. <br /><br />A proposta de G-Portugol é disponibilizar uma implementação para essa linguagem, fornecendo </div>
+<div>ferramentas que ofereçam recursos de edição, compilação e execução de programas escritos nessa <br />linguagem, de forma a favorecer estudantes que dão os primeiros passos no aprendizado de <br />desenvolvimento de softwares, bem como de professores que ensinam disciplinas relacionadas <br />a computação.</div></ul>
+</body></html>
+
+\NewEntry 2 G-Portugol
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><li>Características da linguagem<br /><br />A linguagem em si não difere fundamentalmente ou apresenta novidades em relação ao uso popular de portugol. Abaixo podemos ver um sumário estrutural da linguagem.<br /></li>
+<ul type="disc"><li>Declaração de variáveis tipadas:</li>
+<ul type="disc"><li>Primitivos inteiros, reais, caracteres, literais e lógicos, assim como matrizes N dimensionais desses tipos.</li></ul>
+<li>Estruturas de controle:</li>
+<ul type="disc"><li>Condicional:</li>
+<ul type="disc"><li>se/então/senão</li></ul>
+<li>Repetição:</li>
+<ul type="disc"><li>enquanto</li>
+<li>para (popularmente o &quot;for&quot;)<br /></li></ul></ul>
+<li>Subrotinas:</li>
+<ul type="disc"><li>Implementadas no modelo de funções, parametrizadas e com tipo de retorno.<br /></li></ul></ul></ul>
+<p></p>
+<ul type="disc"><div>Essa estrutura é complementada pelas operações:<br /></div>
+<ul type="disc"><li>matematicas:</li>
+<ul type="disc"><li>soma (+)</li>
+<li>subtração (-)</li>
+<li>divisão (/)</li>
+<li>multiplicação (*)</li>
+<li>modulo (%)</li></ul>
+<li>lógicas:</li>
+<ul type="disc"><li>menor (&lt;)</li>
+<li>maior (&gt;)</li>
+<li>menor ou igual (&lt;=)</li>
+<li>maior ou igual (&gt;=)</li>
+<li>OR (ou)</li>
+<li>AND  (e)</li>
+<li>NOT (não)</li>
+<li>bitwise OR (|)</li>
+<li>bitwise AND (&amp;)</li>
+<li>bitwise NOT (~)  </li></ul>
+<li>de igualdade:</li>
+<ul type="disc"><li>igual (=)</li>
+<li>diferente (&lt;&gt;)</li></ul>
+<li>Atribuição (:=)<br /></li></ul>
+<div>E, por fim, duas funções internas disponíveis para IO:</div>
+<ul type="disc"><li>leia()</li>
+<li>escreva()<br /></li></ul></ul>
+</body></html>
+
+\NewEntry 2 O programa gpt
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><div><span style="font-weight:600">gpt </span>é o programa responsável pela criação do código executável, a partir do código fonte escrito em G-Portugol. O modo de uso é semelhante a compiladores tradicionais, mas gpt não é um compilador, mas um tradutor. Seu trabalho consiste em analizar o código-fonte informado a procura de erros e, em caso de ausência desses, traduzir o código para a linguagem C e, finalmente, chamando um compilador para gerar o código executável.</div>
+<div><br />Para informações sobre seu uso, leia o manual, digitando o comando</div>
+<ul type="disc"><div>$ man gpt</div></ul></ul>
+</body></html>
+
+\NewEntry 1 Para programadores (Express)
+
+\NewEntry 2 Ola Mundo
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><div>Mantendo a tradição, vamos criar nosso primeiro programa. O propósito dele será exibir na <br />tela o texto &quot;Olá mundo&quot;. Abra seu editor favoríto e crie um arquivo chamado &quot;ola_mundo.pt&quot; com o seguinte<br />conteúdo:<br /></div>
+<div>algoritmo olamundo;<br /><br />/* <br />   Nosso primeiro programa <br />*/<br />início<br />  imprima(&quot;Olá mundo!&quot;);<br />fim<br /><br /><br />Após salvar o arquivo, digite o seguinte na linha de comando:<br /><br />$ gpt ola_mundo.pt	</div>
+<div><br />Se tudo der certo (rezo para isso), um novo arquivo aparecerá no diretório atual, chamado &quot;olamundo&quot;. Podemos, agora, executar nosso programa:</div>
+<div><br />$ ./olamundo<br />Olá mundo!<br /><br />E ver o texto &quot;Ola mundo!&quot; aparecer na tela. Note que o arquivo executável é batizado de acordo com o nome do algoritmo, e não, de acordo com o arquivo fonte.<br /><br />Como deve assumir, o que estiver dentro de aspas duplas (&quot;) é tratado como uma string ou constante literal. Escapes são permitidos como EOL (\n), tabulação (\t) dentre outros. Não é permitido a concatenação em multiplas linhas como em C:<br /><br />	imprima(&quot;Isso é uma &quot;<br />	               &quot;Concatenação&quot;); //erro!<br /><br />Comentários ao estilo C (/**/) e C++ (//) são permitidos.<br /><br />Outro detalhe é a pontuação. Da mesma forma que em C, o &quot;;&quot; é utilizado como finalizador de comandos, muito embora algumas semelhanças com o pascal tenham sido mantidas (como a declaração de variáveis e definição de blocos).<br /></div></ul>
+</body></html>
+
+\NewEntry 2 Variáveis e estruturas condicionais
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><li>Variáveis primitivas<br /></li>
+<div>A declaração de variáveis deve ser feita dentro de um bloco específico, que deve aparecer logo após a declaração do algorítmo. O bloco é iniciado pela palavra chave &quot;variáveis&quot; (sim, com acento) e termina com a palavra chave &quot;fim-variáveis&quot;. Pelo menos uma variável deve ser declarada dentro do bloco (embora o bloco seja opicional), e apenas um bloco deve ser declarado.<br /><br />Para declarar uma variável &quot;x&quot; do tipo inteiro, e uma variável &quot;nome&quot; do tipo literal, escrevemos assim:<br /><br />algoritmo inútil;<br /><br />variáveis<br />  x : inteiro;<br />  nome : literal<br />fim-variáveis<br /><br />início<br />fim<br /><br />Cinco pontos devem ser evidenciados no exemplo acima. <br /><br />O primeiro é o nome do algoritmo: ele tem acento. Se tentar compilar esse código, um erro saltará da tela.<br /><br />Linha: 1 - &quot;inútil&quot; não pode ter caracteres especiais..</div>
+<div><br />Identificadores (nomes de variáveis, funções e do algoritmo) não podem ter acentos ou caracteres especiais (leu a mensagem de erro?). A definição de um identificador em G-Portugol é equivalente ao das linguagens populares: uma letra (a-z ou A-Z) seguido de qualquer número ou letras. Cedilhas estão fora, é claro.<br /><br />O segundo ponto, é a palavra-chave &quot;variáveis&quot;: ela tem acento. Veja o capitulo sobre a implementação para maiores detalhes sobre esse assunto.<br /><br />O terceiro, é a definição do bloco e sua (falta de) semelhança com o Pascal. Todas os blocos em G-Portugol seguem o formato &quot;nome/fim-nome&quot;, em favor da uniformidade e em detrimento de exceções linguísticas que causam dor de cabeça aos estudantes (maiores detalhes, ver implementacao da linguagem).<br /><br />E, finalmente, o quarto ponto é a ausência de código entre &quot;início&quot; e &quot;fim&quot;. O programa não é obrigado a ter enunciados ou comandos. Meros detalhes....<br /><br />Voltando a declaração de variáveis. O formato geral é como se segue:<br />	[identificador] : [tipo];<br /><br />Tal qual Pascal (3 palavras consecutivas terminadas em &quot;al&quot;! Ual!! ).<br /><br />No exemplo, as variáveis &quot;x&quot; e &quot;nome&quot; estão disponível para nosso programa. Tipos inteiros são números inteiros que combrem a faixa de[...] até [...]. Sim, o mesmo que em C (para detalhes de tradução portugol =&gt; C, veja o capitulo sobre a implementação da tradução)<br /><br />Assim que um programa é executado, todas as variáveis declaradas são iniciadas com um valor nulo ou &quot;0&quot;.</div>
+<div><br />Para maiores detalhes sobre os tipos de dados suportados, clique aqui.<br /><br />Nota: identificadores constantes não são suportados.<br /></div>
+<li>Matrizes<br /><br />Matrizes N dimensionais de tipos primitivos é suportado. Um exemplo de declaração de uma matriz:<br /><br />variáveis<br />   bitset : matriz[10] de lógicos;<br />   quadr : matriz[4][4] de inteiros;<br />fim-variáveis<br /><br />Os subscritos na declaração indicam o tamanho da matriz, e sua dimensão é informada pelo numero de subscritos. É importante observar que matrizes são &quot;0 based&quot;, logo, a matriz &quot;bitset&quot; pode ser usada do indice 0 até o indice 9 (incluindo). Seu indice 10 está fora de cogitação, e seu uso implicará em segmentation faults que irão assombrar seus melhores dias.<br /><br />Matrizes, assim como variáveis de tipos primitivos, são inicializadas com o valor 0/nulo em todas as suas posições.<br /><br />Quando usadas como argumentos de funções, matrizes são passadas &lt;b&gt;por valor&lt;/b&gt;. No entanto, argumentos do tipo matriz não são aceitos pela função &quot;imprima&quot;. Também não são válidas como lvalues<br /><br />	bitset := quadr; //erro! Nem que fosse do mesmo tipo/dimensoes.....<br /></li>
+<li>Estruturas condicionais<br /><br />O títilo deveria ser no singular. Por enquanto, apenas a estrutura se/então/senão é suportada. <br /><br />Seguindo o exemplo anterior, eis um algorítmo simples que verifica se o usuário é maior de idade.<br /><br />algoritmo idade;<br /><br />variáveis<br />  idade : inteiro;<br />  nome : literal;<br />fim-variáveis<br /><br />início<br />  imprima(&quot;Digite seu nome:&quot;);<br />  nome := leia();<br />  imprima(nome, &quot;, digite sua idade:&quot;);<br />  idade := leia();<br /><br />  se idade &gt;= 18 então<br />    se nome = &quot;Malkovich&quot; então<br />       imprima(&quot;Malkovich, malkivich malkovich? Malkovich!&quot;);       <br />    senão<br />       imprima(&quot;Bem vindo senhor&quot;, '!');<br />  senão<br />    imprima(&quot;Vai brincar de Home-Aranha em outro lugar...&quot;);<br />  fim-se<br />fim<br /><br />Mais uma vez, vamos passar a lente em alguns pontos.<br /></li>
+<ul type="disc"><li>O nome do algoritmo é &quot;idade&quot;, assim como o nome de uma variável. Não há conflitos.<br /></li>
+<li>O operador de atribuição é o pascal-like &quot;:=&quot;. (ver detalhes de implementação)<br /><br />A função interna &quot;leia&quot; pode ser usada por variáveis de qualquer tipo primitivo. Para evitar surpresas (numeros inteiros recebendo strings, por exemplo), leia sobre a implementação interna aqui.<br /></li>
+<li>A função &quot;imprima&quot; recebe um número de argumentos variáveis, que podem ser constantes literais ou variáveis primitivas. Os valores são concatenados e adicionados de um caractere EOL (end of line, ou fim de linha).<br /></li>
+<li>Já vimos que strings/literais constantes são denotados por texto entre aspas duplas (&quot;). Tal qual em C, um caractere entre aspas simples (') é um caractere constante que, da mesma forma, pode permitir escapes como '\n'.<br /></li>
+<li>Assim como a palavra-chave &quot;variáveis&quot;, &quot;então&quot; e &quot;senão&quot; devem ser acentuadas.<br /></li>
+<li>Como em &quot;variáveis/fim-variáveis&quot;, blocos &quot;se&quot; (não confundir com blocos &quot;C&quot;!) tem seus respectivos e obrigatórios &quot;fim-se&quot;. Não há a exceção de &quot;um enunciado, apenas&quot; encontrado na linguagem C onde o uso de &quot;{}&quot; é opcional . Também, não há imposições sobre a indentação.<br /></li>
+<li>A equivalência da expressão &quot;nome = &quot;Malkovich&quot;&quot; é computada como se espera, respeitando os tipos de dados. Salienta-se que comparações de tipos literais são feitas em &lt;br&gt;case sensitive&lt;/b&gt;.<br /></li></ul></ul>
+</body></html>
+
+
+\NewEntry 2 Estruturas de repetição
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><li>Enquanto </li>
+<li></li>
+<li>para/de/até/passo/faça</li></ul>
+</body></html>
+
+\NewEntry 2 Operações e constantes
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><li>matematicas/logicas, etc...</li>
+<ul type="disc"><li>Tabela de precedencia<br />	</li></ul>
+<li>constantes hexadecimais, octais, decimais, (binarias)?</li>
+<ul type="disc"><li>hexadecimais iniciam com &quot;0x&quot; ou &quot;0X&quot;</li>
+<li>octais iniciam com &quot;0c&quot;</li>
+<ul type="disc"><li>Em C: &quot;0&quot;</li>
+<ul type="disc"><li>quebra uniformidade</li></ul>
+<li>em Prolog: &quot;0o&quot;</li>
+<ul type="disc"><li>falta clareza.</li></ul></ul>
+<li>binarios iniciam com &quot;0b&quot;<br /></li></ul>
+<li>Nota sobre a falta de operações sobre literais/string<br /><br /></li></ul>
+</body></html>
+
+
+\NewEntry 2 Funções
+
+\NewEntry 2 Issues
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><li>Por ser uma traducao....blabla<br />Usando variavel &quot;log : lógico&quot;, por exemplo, gera um gcc warning:<br />	tmp/c__W1ZrBG:145: warning: built-in function `log' declared as non-function<br /><br /></li>
+<li>Sobre a funcao leia()</li>
+<ul type="disc"><li>restricoes causadas pela implementacao da traducao</li>
+<ul type="disc"><li>participacao em expressoes (não eh permitido em expressoes com N termos, ou aplicada a operadores unarios).</li></ul>
+<li>No entanto, eh permitido &quot;mat[leia()] := 10&quot;</li></ul></ul>
+</body></html>
+
+
+\NewEntry 1 Implementação
+
+\NewEntry 1 Funções
+
+\NewEntry 1 A linguagem em detalhes
+
+\NewEntry 1 Implementação
 
