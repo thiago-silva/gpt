@@ -18,5 +18,14 @@ Instalacao Basica
     $ su
     # make install
 
-  
+
+  o CVS
+		Se voce baixou os fontes do CVS:
+    
+    $ make -f Makefile.cvs
+    $ ./configure
+    $ make
+    $ su
+    # make install
+ 	
   Para maiores detalhes, leia INSTALL.default
