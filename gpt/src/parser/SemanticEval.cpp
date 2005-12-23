@@ -233,17 +233,17 @@ void SemanticEval::evaluateAttribution(ExpressionValue&  lv, ExpressionValue& rv
   stringstream msg;
 
   if(!lv.isPrimitive()) {
-    msg << "Apenas variáveis de tipos primitivos podem receber valores.";
+    msg << "Apenas variáveis de tipos primitivos podem receber valores";
     ErrorHandler::self()->add(msg, line);
     return;
   }
 
-  if(!lv.isCompatibleWidth(rv)) {    
+  if(!lv.isCompatibleWidth(rv)) {
     if(rv.primitiveType() != TIPO_NULO) {
       msg << "Variável não pode receber valores do tipo '"
-        << rv.toString() << "'.";  
+        << rv.toString() << "'";  
     } else {
-      msg << "Expressão não retorna resultado para variável.";  
+      msg << "Expressão não retorna resultado para variável";  
     }
     ErrorHandler::self()->add(msg, line);
   }
@@ -269,7 +269,7 @@ ExpressionValue SemanticEval::evaluateLValue(RefPortugolAST id, list<ExpressionV
     }
   } catch(SymbolTableException& e) {
     stringstream msg;    
-    msg << "Variável \"" << id->getText() << "\" não foi declarada.";
+    msg << "Variável \"" << id->getText() << "\" não foi declarada";
     ErrorHandler::self()->add(msg, id->getLine());
     return ret;
   }
@@ -280,7 +280,7 @@ ExpressionValue SemanticEval::evaluateLValue(RefPortugolAST id, list<ExpressionV
     ret.set(lvalue.type);
     if(dim.size() > 0) {
       stringstream msg;
-      msg << "Variável \"" << id->getText() << "\" não é uma matriz/conjunto.";
+      msg << "Variável \"" << id->getText() << "\" não é uma matriz/conjunto";
       ErrorHandler::self()->add(msg, id->getLine());
       return ret;
     } else {
@@ -295,7 +295,7 @@ ExpressionValue SemanticEval::evaluateLValue(RefPortugolAST id, list<ExpressionV
     list<ExpressionValue>::iterator it;
     for(it = dim.begin(); it != dim.end();++it) {
       if(!(*it).isNumeric(true)) {
-        ErrorHandler::self()->add("Subscritos de conjuntos/matrizes devem ser valores numéricos inteiros ou equivalente.", id->getLine());
+        ErrorHandler::self()->add("Subscritos de conjuntos/matrizes devem ser valores numéricos inteiros ou equivalente", id->getLine());
       }
     }
 
@@ -316,11 +316,11 @@ ExpressionValue SemanticEval::evaluateLValue(RefPortugolAST id, list<ExpressionV
         msg << "Matriz/conjunto \"" << id->getText() << "\" possui " << lvalue.type.dimensions().size();
   
         if(dim.size() == 1) {
-          msg << " dimensão.";
+          msg << " dimensão";
         } else {
-          msg << " dimensões.";
+          msg << " dimensões";
         }
-        msg << " Use " << lvalue.type.dimensions().size() << " subscrito(s).";
+        msg << " Use " << lvalue.type.dimensions().size() << " subscrito(s)";
         ErrorHandler::self()->add(msg, id->getLine());
       } 
     } else {
@@ -339,7 +339,7 @@ void SemanticEval::evaluateBooleanExpr(ExpressionValue& /*v*/, int /*line*/) {
 void SemanticEval::evaluateNumericExpr(ExpressionValue& ev, int line) {
   if(!ev.isPrimitive() || !ev.isNumeric()) {
     stringstream err;
-    err << "Esperando uma expressão numérica. Encontrado expressão '" << ev.toString() << "'.";
+    err << "Esperando uma expressão numérica. Encontrado expressão '" << ev.toString() << "'";
     ErrorHandler::self()->add(err, line);
   }
 }
@@ -350,8 +350,16 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
   ExpressionValue ret, nulo;
 
   //operadores suportam apenas primitivos
-  if(!left.isPrimitive() || !right.isPrimitive()) {
-    return ret;
+//   if(!left.isPrimitive() || !right.isPrimitive()) {
+//     return ret;
+//   }
+
+  //não permitir TIPO_ALL em expressões binarias
+  if((left.primitiveType() == TIPO_ALL) || (right.primitiveType() == TIPO_ALL)) {
+    stringstream msg;
+    msg << "Função interna não pode participar de expressão";
+    ErrorHandler::self()->add(msg, op->getLine());
+    return nulo;
   }
 
   switch(op->getType()) {
@@ -359,6 +367,8 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
     case SemanticCheckTokenTypes::T_IGUAL:
     case SemanticCheckTokenTypes::T_DIFERENTE:
 
+    //nota sobre literais:
+    // operacoes aplicadas sobre o length() do literal
     case SemanticCheckTokenTypes::T_MAIOR:
     case SemanticCheckTokenTypes::T_MENOR:
     case SemanticCheckTokenTypes::T_MAIOR_EQ:
@@ -374,7 +384,7 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
         msg << "Operador \"" << op->getText() << "\" não pode ser usado em expressões no formato " 
             << "'" << left.toString() 
             << " " << op->getText() 
-            << " " << right.toString() << "'.";
+            << " " << right.toString() << "'";
             ErrorHandler::self()->add(msg, op->getLine());
             return nulo;
       }   
@@ -387,7 +397,7 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
       ret = evaluateNumTypes(left, right);
       if((ret.primitiveType() == TIPO_REAL) || (ret.primitiveType() == TIPO_NULO)) {
         stringstream msg;
-        msg << "Operador \"" << op->getText() << "\" só pode ser usado com termos númericos não-reais.";
+        msg << "Operador \"" << op->getText() << "\" só pode ser usado com termos númericos não-reais";
             ErrorHandler::self()->add(msg, op->getLine());
          return nulo;
       } else {
@@ -404,7 +414,7 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
       ret = evaluateNumTypes(left, right);
       if(!ret.isNumeric()) {
         stringstream msg;
-        msg << "Operador \"" << op->getText() << "\" não pode ser usado com termos não-numéricos.";
+        msg << "Operador \"" << op->getText() << "\" não pode ser usado com termos não-numéricos";
             ErrorHandler::self()->add(msg, op->getLine());          
             return nulo;
       } else {
@@ -422,6 +432,14 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
 ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& ev, RefPortugolAST unary_op) {
   ExpressionValue nulo;
 
+  //não permitir TIPO_ALL em expressões binarias
+  if(ev.primitiveType() == TIPO_ALL) {
+    stringstream msg;
+    msg << "Função interna não pode participar de expressão";
+    ErrorHandler::self()->add(msg, unary_op->getLine());
+    return nulo;
+  }
+
   switch(unary_op->getType()) {
 
     //operadores unarios para expressões numéricas (retorna o tipo da expressão 'expr')
@@ -431,7 +449,7 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& ev, RefPortugolAST u
       if(!ev.isNumeric()) {
         stringstream msg;
         msg <<  "Operador unário \"" << unary_op->getText()
-            << "\" deve ser usado em termos numéricos.";
+            << "\" deve ser usado em termos numéricos";
         ErrorHandler::self()->add(msg, unary_op->getLine());
         return nulo;
       } else {      
@@ -447,7 +465,7 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& ev, RefPortugolAST u
   }
 
   stringstream msg;
-  msg << "Erro interno: operador não suportado: " << unary_op->getText() << ".";
+  msg << "Erro interno: operador não suportado: " << unary_op->getText() << "";
   ErrorHandler::self()->add(msg, unary_op->getLine());
   return nulo;
 }
@@ -455,7 +473,7 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& ev, RefPortugolAST u
 void SemanticEval::evaluateReturnCmd(ExpressionValue& ev, int line) {
   if(currentScope == SymbolTable::GlobalScope) {
     //tentando retornar no bloco principal
-    ErrorHandler::self()->add("Bloco principal não deve ter retorno.", line);
+    ErrorHandler::self()->add("Bloco principal não deve ter retorno", line);
   } else {
     //currentScope eh o nome da funcao atual
     try {
@@ -464,7 +482,7 @@ void SemanticEval::evaluateReturnCmd(ExpressionValue& ev, int line) {
       if(!ev.isCompatibleWidth(sctype)) {
           stringstream msg;
           msg << "Expressão de retorno deve ser compatível com o tipo \"" 
-            << sctype.toString() <<  "\".";
+            << sctype.toString() <<  "\"";
           ErrorHandler::self()->add(msg, line);
       } //else ok!
     } catch(SymbolTableException& e) {
@@ -514,7 +532,7 @@ ExpressionValue SemanticEval::evaluateFCall(RefPortugolAST f, list<ExpressionVal
     fcallsList.push_back(pair<RefPortugolAST,list<ExpressionValue> >(f,args));
   } catch(SymbolTableException& e) {
       stringstream msg;
-      msg << "Função \"" << f->getText() << "\" não foi declarada.";
+      msg << "Função \"" << f->getText() << "\" não foi declarada";
       ErrorHandler::self()->add(msg, f->getLine());      
   }
 
@@ -547,7 +565,7 @@ void SemanticEval::evaluateAllFCalls() {
         if(!(*it).isPrimitive()) {
           stringstream msg;
           msg << "Argumento " << count;
-          msg << " da função \"" << f->getText() << "\" não pode ser matriz/conjunto.";
+          msg << " da função \"" << f->getText() << "\" não pode ser matriz/conjunto";
           ErrorHandler::self()->add(msg, f->getLine());      
           return;
         }
@@ -559,7 +577,7 @@ void SemanticEval::evaluateAllFCalls() {
     if(params.symbolList().size() != args.size()) {
       stringstream msg;
       msg << "Número de argumentos diferem do número de parâmetros da função \""
-        << f->getText() << "\".";
+        << f->getText() << "\"";
       ErrorHandler::self()->add(msg, f->getLine());      
       continue;
     }
@@ -575,7 +593,7 @@ void SemanticEval::evaluateAllFCalls() {
       if(!(*ait).isCompatibleWidth(*pit)) {
         stringstream msg;
         msg << "Argumento " << count << " da função \"" << f->getText() << "\" deve ser do tipo \""
-          << (*pit).toString() << "\".";
+          << (*pit).toString() << "\"";
         ErrorHandler::self()->add(msg, f->getLine());              
         return;
       }    
@@ -594,7 +612,7 @@ bool SemanticEval::evalVariableRedeclaration(const string& scope, RefPortugolAST
     Symbol s = stable.getSymbol(scope, id->getText());
     stringstream err;
     err << "Variável/função redeclarada: \"" << id->getText() << "\". Primeira declaração na linha "
-        << s.line << ".";
+        << s.line;
     ErrorHandler::self()->add(err, id->getLine());
     return true;
   } catch(SymbolTableException& e) {
