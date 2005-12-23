@@ -1,0 +1,627 @@
+/***************************************************************************
+ *   Copyright (C) 2005 by Thiago Silva   *
+ *   thiago.silva@kdemal.net   *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+#include "SemanticEval.hpp"
+
+#include "ErrorHandler.hpp"
+#include "SemanticCheckTokenTypes.hpp"
+
+#include <sstream>
+
+ExpressionValue::ExpressionValue() 
+  : _isPrimitive(true)
+  , _primitiveType(TIPO_NULO)
+  {}
+  
+ExpressionValue::ExpressionValue(int type) 
+  : _isPrimitive(true), _primitiveType(type)
+  {
+}
+
+void ExpressionValue::setPrimitiveType(int type) { 
+  _primitiveType=type;
+  _isPrimitive=true;
+}
+
+int ExpressionValue::primitiveType() const {
+  return _primitiveType;
+}
+  
+void ExpressionValue::setPrimitive(bool val) {
+  _isPrimitive = val;
+}
+
+bool ExpressionValue::isPrimitive() const {
+  return _isPrimitive;
+}
+
+void ExpressionValue::setDimensions(const list<int>& d) {
+  _isPrimitive = false;
+  _dimensions = d;
+}
+
+list<int>& ExpressionValue::dimensions() {
+  return _dimensions;
+}
+
+bool ExpressionValue::isNumeric(bool integerOnly) const {
+  if(!_isPrimitive) {
+    return false;
+  }
+
+  if(integerOnly) {
+    switch(_primitiveType) {
+      case TIPO_CARACTERE:
+      case TIPO_INTEIRO:
+      case TIPO_LOGICO:
+      case TIPO_ALL:
+        return true;
+      case TIPO_REAL:
+      case TIPO_LITERAL:
+      case TIPO_NULO:
+      default:
+        return false;
+    }    
+  } else {
+    switch(_primitiveType) {
+      case TIPO_CARACTERE:
+      case TIPO_INTEIRO:
+      case TIPO_LOGICO:
+      case TIPO_REAL:
+      case TIPO_ALL:
+        return true;
+      case TIPO_LITERAL:
+      case TIPO_NULO:
+      default:
+        return false;
+    }
+  }
+}
+bool ExpressionValue::isCompatibleWidth(ExpressionValue& other) const {
+  if(!matchesType(other._isPrimitive)) {
+    return false;
+  } else if(!matchesDimensions(other._dimensions)) {
+    return false;
+  } else if(!matchesPrimitiveType(other._primitiveType)) {
+    return false;
+  }
+  return true;
+}
+
+bool ExpressionValue::isCompatibleWidth(SymbolType& other) const {
+  if(!matchesType(other.isPrimitive())) {
+    return false;
+  } else if(!matchesDimensions(other.dimensions())) {
+    return false;
+  } else if(!matchesPrimitiveType(other.primitiveType())) {
+    return false;
+  }
+  return true;
+}
+
+bool ExpressionValue::matchesType(bool other_isprimitive) const {
+  return _isPrimitive == other_isprimitive;  
+}
+
+bool ExpressionValue::matchesDimensions(list<int>& other_dimensions) const {
+  //numero de dimensoes
+  if(_dimensions.size() != other_dimensions.size()) {
+    return false;
+  }
+
+  //range das dimensoes
+  list<int>::const_iterator lit = _dimensions.begin();
+  list<int>::const_iterator rit = other_dimensions.begin();
+  while((lit != _dimensions.end()) && (rit != other_dimensions.end())) {
+    if((*lit) != (*rit)) {
+      return false;
+    }
+    ++lit;
+    ++rit;
+  }
+  return true;
+}
+
+bool ExpressionValue::matchesPrimitiveType(int other_type) const {
+//1: todos os tipos numericos (inteiro, real, logico, caractere) sao compativeis entre si
+//2: tipos nulos são incompativeis por natureza
+//3: tipo_all eh compativel com todos
+
+  //para funcoes sem retorno
+  if((_primitiveType == TIPO_NULO) ||
+    (other_type == TIPO_NULO)) {
+    return false;
+  }
+
+  //rvalue retorna qualquer tipo
+  if(other_type == TIPO_ALL) {
+    return true;
+  }
+  
+  
+  if(_primitiveType == TIPO_LITERAL) {
+    if(other_type == TIPO_LITERAL) {
+      return true; //ambos literal, ok
+    } else {
+      return false; //um eh literal, o outro nao...incompativeis!
+    }
+  } else if(other_type == TIPO_LITERAL) {
+    return false; //um eh literal, o outro nao...incompativeis!
+  } else {
+    return true; //ambos são numericos (int,real,logico,caractere) ok!
+  }
+}
+
+void ExpressionValue::set(SymbolType& s) {
+  _isPrimitive  = s.isPrimitive();
+  _primitiveType = s.primitiveType();
+  _dimensions = s.dimensions();
+}
+
+string ExpressionValue::toString() const {
+  string str;
+  str = Symbol::typeToString(_primitiveType);
+  if(!_isPrimitive) {    
+    list<int>::const_iterator it;
+    for(it = _dimensions.begin(); it != _dimensions.end(); ++it) {
+      str += "[";
+//       str += *it;
+      str += "]";
+    }
+  }
+  return str;
+}
+
+//******************************************************************************************//
+
+
+SemanticEval::SemanticEval(SymbolTable& st)
+  : stable(st)
+{
+}
+
+SymbolTable& SemanticEval::getSymbolTable() {
+  return stable;
+}
+
+void SemanticEval::setCurrentScope(const string& sc) {
+  currentScope = sc;
+}
+
+//declaration of primitives
+void SemanticEval::declareVars(pair<int, list<RefPortugolAST> >& prims) {
+  list<RefPortugolAST>::iterator it;
+  for(it = prims.second.begin(); it != prims.second.end(); ++it) {
+    if(!evalVariableRedeclaration(currentScope, (*it))) {
+      stable.declareVar(currentScope, (*it)->getText(), (*it)->getLine(), prims.first);
+    }
+  }
+}
+
+//declaration of matrixes
+//pair< pair<type,list<dimensions> >, list<ids> >
+void SemanticEval::declareVars(pair< pair<int, list<int> >, list<RefPortugolAST> >& ms) {
+
+  list<RefPortugolAST>::iterator it;
+  for(it = ms.second.begin(); it != ms.second.end(); ++it) {
+    if(!evalVariableRedeclaration(currentScope, (*it))) {
+      stable.declareVar(currentScope, (*it)->getText(), (*it)->getLine(), ms.first.first, ms.first.second);
+    }
+  }
+}
+
+void SemanticEval::evaluateAttribution(ExpressionValue&  lv, ExpressionValue& rv, int line) {
+//lvalue e rvalue devem ter tipos compativeis
+//  -numericos (inteiro, logico, real, caractere) sao compativeis entre si.
+
+  stringstream msg;
+
+  if(!lv.isPrimitive()) {
+    msg << "Apenas variáveis de tipos primitivos podem receber valores.";
+    ErrorHandler::self()->add(msg, line);
+    return;
+  }
+
+  if(!lv.isCompatibleWidth(rv)) {    
+    if(rv.primitiveType() != TIPO_NULO) {
+      msg << "Variável não pode receber valores do tipo '"
+        << rv.toString() << "'.";  
+    } else {
+      msg << "Expressão não retorna resultado para variável.";  
+    }
+    ErrorHandler::self()->add(msg, line);
+  }
+}
+
+ExpressionValue SemanticEval::evaluateLValue(RefPortugolAST id, list<ExpressionValue>& dim) {
+/*
+  1: lvalue (id) deve ter sido declarado no escopo global ou local
+  2: o tipo do lvalue (id) deve ser o mesmo da declaracao (primitivo/dimensoes)
+  3: as expressoes das dimensoes devem ser numericas inteiras. [1.2] ou ["aa"] ->erro
+*/
+
+  bool islocal;
+  Symbol lvalue;
+  ExpressionValue ret;
+
+  try {
+    lvalue = stable.getSymbol(currentScope, id->getText(), true);
+    if(lvalue.scope == SymbolTable::GlobalScope) {
+      islocal = false;
+    } else {
+      islocal = true;
+    }
+  } catch(SymbolTableException& e) {
+    stringstream msg;    
+    msg << "Variável \"" << id->getText() << "\" não foi declarada.";
+    ErrorHandler::self()->add(msg, id->getLine());
+    return ret;
+  }
+
+  ret.setPrimitiveType(lvalue.type.primitiveType());
+
+  if(lvalue.type.isPrimitive()) {
+    ret.set(lvalue.type);
+    if(dim.size() > 0) {
+      stringstream msg;
+      msg << "Variável \"" << id->getText() << "\" não é uma matriz/conjunto.";
+      ErrorHandler::self()->add(msg, id->getLine());
+      return ret;
+    } else {
+      return ret;
+    }
+  } else {//matriz/conjunto    
+
+//     ret.setPrimitive(true);
+//     ret.setPrimitiveType(lvalue.type.primitiveType());
+
+    //checar expressoes dos subscritos
+    list<ExpressionValue>::iterator it;
+    for(it = dim.begin(); it != dim.end();++it) {
+      if(!(*it).isNumeric(true)) {
+        ErrorHandler::self()->add("Subscritos de conjuntos/matrizes devem ser valores numéricos inteiros ou equivalente.", id->getLine());
+      }
+    }
+
+    /* Nota: checar pelas dimensoes impede que 
+       se passe matriz como parametros. Checar subscritos apenas 
+       em atribuicoes.
+    */
+
+    //checar numero de dimensoes usado
+    // - So eh permitido matrizes como lvalue sem subscritos, ou com todos os seus subscritos
+
+    if(dim.size() > 0) {
+      //matriz com seus subscritos, retorna apenas o tipo primitivo
+      ret.setPrimitive(true);
+
+      if(lvalue.type.dimensions().size() != dim.size()) {
+        stringstream msg;
+        msg << "Matriz/conjunto \"" << id->getText() << "\" possui " << lvalue.type.dimensions().size();
+  
+        if(dim.size() == 1) {
+          msg << " dimensão.";
+        } else {
+          msg << " dimensões.";
+        }
+        msg << " Use " << lvalue.type.dimensions().size() << " subscrito(s).";
+        ErrorHandler::self()->add(msg, id->getLine());
+      } 
+    } else {
+      //variavel matriz sem subscritos, retorna tipo matriz
+      ret.setPrimitive(true);
+      ret.setDimensions(lvalue.type.dimensions());
+    }
+    return ret;
+  }
+}
+
+void SemanticEval::evaluateBooleanExpr(ExpressionValue& /*v*/, int /*line*/) {
+  //qualquer coisa pode ser avaliado como expressão booleana
+}
+
+void SemanticEval::evaluateNumericExpr(ExpressionValue& ev, int line) {
+  if(!ev.isPrimitive() || !ev.isNumeric()) {
+    stringstream err;
+    err << "Esperando uma expressão numérica. Encontrado expressão '" << ev.toString() << "'.";
+    ErrorHandler::self()->add(err, line);
+  }
+}
+
+ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValue& right, RefPortugolAST op) {
+  //analisa expressoes binarias
+
+  ExpressionValue ret, nulo;
+
+  //operadores suportam apenas primitivos
+  if(!left.isPrimitive() || !right.isPrimitive()) {
+    return ret;
+  }
+
+  switch(op->getType()) {
+    //qualquer tipo, contanto que left e right sejam compativeis
+    case SemanticCheckTokenTypes::T_IGUAL:
+    case SemanticCheckTokenTypes::T_DIFERENTE:
+
+    case SemanticCheckTokenTypes::T_MAIOR:
+    case SemanticCheckTokenTypes::T_MENOR:
+    case SemanticCheckTokenTypes::T_MAIOR_EQ:
+    case SemanticCheckTokenTypes::T_MENOR_EQ:
+
+    case SemanticCheckTokenTypes::T_KW_OU:
+    case SemanticCheckTokenTypes::T_KW_E:
+      if(left.isCompatibleWidth(right)) {
+        ret.setPrimitiveType(TIPO_LOGICO);
+        return ret;
+      } else {
+        stringstream msg;
+        msg << "Operador \"" << op->getText() << "\" não pode ser usado em expressões no formato " 
+            << "'" << left.toString() 
+            << " " << op->getText() 
+            << " " << right.toString() << "'.";
+            ErrorHandler::self()->add(msg, op->getLine());
+            return nulo;
+      }   
+      break;
+
+    //qualquer numerico não-real (inteiro, caractere, lógico)
+    case SemanticCheckTokenTypes::T_BIT_OU:
+    case SemanticCheckTokenTypes::T_BIT_XOU:
+    case SemanticCheckTokenTypes::T_BIT_E:
+      ret = evaluateNumTypes(left, right);
+      if((ret.primitiveType() == TIPO_REAL) || (ret.primitiveType() == TIPO_NULO)) {
+        stringstream msg;
+        msg << "Operador \"" << op->getText() << "\" só pode ser usado com termos númericos não-reais.";
+            ErrorHandler::self()->add(msg, op->getLine());
+         return nulo;
+      } else {
+        return ret;
+      }
+      break;
+
+    //qualquer numérico
+    case SemanticCheckTokenTypes::T_MAIS:
+    case SemanticCheckTokenTypes::T_MENOS:
+    case SemanticCheckTokenTypes::T_DIV:
+    case SemanticCheckTokenTypes::T_MULTIP:
+    case SemanticCheckTokenTypes::T_MOD:
+      ret = evaluateNumTypes(left, right);
+      if(!ret.isNumeric()) {
+        stringstream msg;
+        msg << "Operador \"" << op->getText() << "\" não pode ser usado com termos não-numéricos.";
+            ErrorHandler::self()->add(msg, op->getLine());          
+            return nulo;
+      } else {
+        return ret;
+      }
+      break;
+  }
+
+  stringstream msg;
+  msg << "Erro interno: operador não suportado: " << op->getText();
+  ErrorHandler::self()->add(msg, op->getLine());
+  return nulo;
+}
+
+ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& ev, RefPortugolAST unary_op) {
+  ExpressionValue nulo;
+
+  switch(unary_op->getType()) {
+
+    //operadores unarios para expressões numéricas (retorna o tipo da expressão 'expr')
+    case SemanticCheckTokenTypes::TI_UN_POS://+
+    case SemanticCheckTokenTypes::TI_UN_NEG://-
+    case SemanticCheckTokenTypes::TI_UN_BNOT://~        
+      if(!ev.isNumeric()) {
+        stringstream msg;
+        msg <<  "Operador unário \"" << unary_op->getText()
+            << "\" deve ser usado em termos numéricos.";
+        ErrorHandler::self()->add(msg, unary_op->getLine());
+        return nulo;
+      } else {      
+        return ev;
+      }  
+      break;
+
+    //operador "not", para todos os tipos. Retorna TIPO_LOGICO
+    case SemanticCheckTokenTypes::TI_UN_NOT:
+      ev.setPrimitiveType(TIPO_LOGICO);
+      return ev;
+      break;
+  }
+
+  stringstream msg;
+  msg << "Erro interno: operador não suportado: " << unary_op->getText() << ".";
+  ErrorHandler::self()->add(msg, unary_op->getLine());
+  return nulo;
+}
+
+void SemanticEval::evaluateReturnCmd(ExpressionValue& ev, int line) {
+  if(currentScope == SymbolTable::GlobalScope) {
+    //tentando retornar no bloco principal
+    ErrorHandler::self()->add("Bloco principal não deve ter retorno.", line);
+  } else {
+    //currentScope eh o nome da funcao atual
+    try {
+      SymbolType sctype = stable.getSymbol(SymbolTable::GlobalScope, currentScope).type;
+      
+      if(!ev.isCompatibleWidth(sctype)) {
+          stringstream msg;
+          msg << "Expressão de retorno deve ser compatível com o tipo \"" 
+            << sctype.toString() <<  "\".";
+          ErrorHandler::self()->add(msg, line);
+      } //else ok!
+    } catch(SymbolTableException& e) {
+      stringstream msg;
+      msg << "Erro interno: SemanticEval::evaluateReturnCmd exception ";
+      ErrorHandler::self()->addFatal(msg);
+    }
+  } 
+}
+
+void SemanticEval::declareFunction(Funcao& f) {
+  //checa redeclaracao
+  if(evalVariableRedeclaration(SymbolTable::GlobalScope, f.id)) {
+    return;
+  }
+
+  Symbol sfunc(SymbolTable::GlobalScope, f.id->getText(), f.id->getLine(), true, f.return_type.primitiveType(), f.return_type.dimensions());
+
+  
+        
+  list< pair<int, list<RefPortugolAST> > >::iterator it = f.prim_params.begin();
+  for(it = f.prim_params.begin(); it != f.prim_params.end(); ++it) {
+    sfunc.param.add((*it).first);
+    declareVars((*it)); 
+  }
+
+  
+
+  list< pair< pair<int, list<int> >, list<RefPortugolAST> > >::iterator mit;
+  for(mit = f.mt_params.begin(); mit != f.mt_params.end(); ++mit) {    
+    sfunc.param.add((*mit).first);
+    declareVars((*mit));
+  }
+
+  stable.insertSymbol(sfunc, SymbolTable::GlobalScope);
+}
+
+ExpressionValue SemanticEval::evaluateFCall(RefPortugolAST f, list<ExpressionValue>& args) {
+  //avaliar, apenas no final da analise, as chamadas de funcoes (quando todas elas tiverem sido declaradas)
+  
+  ExpressionValue v;
+
+  //funcoes sao declaradas em escopo global
+  try {
+    SymbolType s = stable.getSymbol(SymbolTable::GlobalScope, f->getText()).type;
+    v.set( s);
+    fcallsList.push_back(pair<RefPortugolAST,list<ExpressionValue> >(f,args));
+  } catch(SymbolTableException& e) {
+      stringstream msg;
+      msg << "Função \"" << f->getText() << "\" não foi declarada.";
+      ErrorHandler::self()->add(msg, f->getLine());      
+  }
+
+  return v;
+}
+
+void SemanticEval::evaluateAllFCalls() {
+  list<pair<RefPortugolAST,list<ExpressionValue> > >::iterator it;
+  for(it = fcallsList.begin(); it != fcallsList.end(); ++it) {
+    RefPortugolAST f = (*it).first;
+    list<ExpressionValue>& args = (*it).second;
+    
+
+    Symbol s;
+    try {
+      s = stable.getSymbol(SymbolTable::GlobalScope, f->getText());
+    } catch(SymbolTableException& e) {
+      cerr << "Internal error: SemanticEval::evaluateAllFCalls()\n";
+      exit(1);
+//       continue;
+    }
+
+    ParameterSig params = s.param;
+
+    if(params.isVariable()) {
+      //nao deixar matrizes como argumentos de funcoes com parametros variaveis
+      int count = 1;
+      for(list<ExpressionValue>::iterator it = args.begin();
+          it != args.end(); ++it) {
+        if(!(*it).isPrimitive()) {
+          stringstream msg;
+          msg << "Argumento " << count;
+          msg << " da função \"" << f->getText() << "\" não pode ser matriz/conjunto.";
+          ErrorHandler::self()->add(msg, f->getLine());      
+          return;
+        }
+        count++;
+      }          
+      continue;
+    }
+    
+    if(params.symbolList().size() != args.size()) {
+      stringstream msg;
+      msg << "Número de argumentos diferem do número de parâmetros da função \""
+        << f->getText() << "\".";
+      ErrorHandler::self()->add(msg, f->getLine());      
+      continue;
+    }
+
+    list<SymbolType>::iterator pit = params.symbolList().begin();
+    list<SymbolType>::iterator pend = params.symbolList().end();
+
+    list<ExpressionValue>::iterator ait = args.begin();
+    list<ExpressionValue>::iterator aend = args.end();
+  
+    int count = 1;
+    while((pit != pend) && (ait != aend)) {
+      if(!(*ait).isCompatibleWidth(*pit)) {
+        stringstream msg;
+        msg << "Argumento " << count << " da função \"" << f->getText() << "\" deve ser do tipo \""
+          << (*pit).toString() << "\".";
+        ErrorHandler::self()->add(msg, f->getLine());              
+        return;
+      }    
+      ++count;
+      ++pit;
+      ++ait;
+    }
+  }
+}
+
+/************************************** Protected ***********************************/
+
+bool SemanticEval::evalVariableRedeclaration(const string& scope, RefPortugolAST id) {
+
+  try {
+    Symbol s = stable.getSymbol(scope, id->getText());
+    stringstream err;
+    err << "Variável/função redeclarada: \"" << id->getText() << "\". Primeira declaração na linha "
+        << s.line << ".";
+    ErrorHandler::self()->add(err, id->getLine());
+    return true;
+  } catch(SymbolTableException& e) {
+    return false;
+  }
+}
+
+
+ExpressionValue SemanticEval::evaluateNumTypes(ExpressionValue& left, ExpressionValue& right) {
+  ExpressionValue ret;
+
+  if(!left.isNumeric() || !right.isNumeric()) return ret;
+
+  //a ordem eh importante. Primeiro o tipo mais forte.
+
+  if((left.primitiveType() == TIPO_REAL) || (right.primitiveType() == TIPO_REAL)) {
+    ret.setPrimitiveType(TIPO_REAL); //promoted to real
+
+  } else if((left.primitiveType() == TIPO_INTEIRO) || (right.primitiveType() == TIPO_INTEIRO)) {
+    ret.setPrimitiveType(TIPO_INTEIRO); //promoted to int
+
+  } else  if((left.primitiveType() == TIPO_CARACTERE) || (right.primitiveType() == TIPO_CARACTERE)) {
+    ret.setPrimitiveType(TIPO_CARACTERE); //promoted to char
+
+  } else if((left.primitiveType() == TIPO_LOGICO) || (right.primitiveType() == TIPO_LOGICO)) {
+    ret.setPrimitiveType(TIPO_LOGICO); //promoted to bool
+  }    
+
+  return ret; //no number here...
+}

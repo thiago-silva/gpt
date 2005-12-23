@@ -1,0 +1,787 @@
+<>
+--------------
+<asd>
+--------------
+<asd
+>
+--------------
+<algoritmo>
+--------------
+<algoritmo
+>
+--------------
+<algoritmo fim>
+--------------
+<algoritmo
+fim>
+--------------
+<algoritmo ;>
+--------------
+<algoritmo
+;>
+--------------
+<algoritmo bla
+>
+--------------
+<algoritmo
+bla
+>
+--------------
+<algoritmo bla;>
+--------------
+<algoritmo bla;
+asd>
+--------------
+<algoritmo bla;
+variáveis>
+--------------
+<algoritmo bla;
+variáveis fim>
+--------------
+<algoritmo bla;
+variáveis
+fim>
+--------------
+<algoritmo bla;
+variáveis
+foo>
+--------------
+<algoritmo bla;
+variáveis
+foo
+>
+--------------
+<algoritmo bla;
+variáveis
+foo var>
+--------------
+<algoritmo bla;
+variáveis
+foo inteiro>
+--------------
+<algoritmo bla;
+variáveis
+foo
+inteiro>
+--------------
+<algoritmo bla;
+variáveis
+foo bar inteiro>
+--------------
+<algoritmo bla;
+variáveis
+foo,bar inteiro>
+--------------
+<algoritmo bla;
+variáveis
+foo,inteiro>
+--------------
+<algoritmo bla;
+variáveis
+foo,
+inteiro>
+--------------
+<algoritmo bla;
+variáveis
+foo
+,inteiro>
+--------------
+<algoritmo bla;
+variáveis
+foo, bar
+inteiro>
+--------------
+<algoritmo bla;
+variáveis
+foo, bar tt>
+--------------
+<algoritmo bla;
+variáveis
+foo, bar 
+tt>
+--------------
+<algoritmo bla;
+variáveis
+foo, bar : tt>
+--------------
+<algoritmo bla;
+variáveis
+foo, bar : tt;>
+--------------
+<algoritmo bla;
+variáveis
+foo, bar:>
+--------------
+<algoritmo bla;
+variáveis
+foo : inteiro>
+--------------
+<algoritmo bla;
+variáveis
+foo : inteiro
+>
+--------------
+<algoritmo bla;
+variáveis
+foo : inteiro;>
+--------------
+<algoritmo bla;
+variáveis
+foo : inteiro;
+>
+--------------
+<algoritmo bla;
+variáveis
+foo : inteiro;
+mt : matriz>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz
+[>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[ asd>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz asd
+>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[123>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[123 sad>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[
+123>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[
+123 sad>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[123]>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[123] sad>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[123] de>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[1]
+de>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[1] de sad>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[1] de
+asd>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[1] de inteiros>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[1] de inteiros;>
+--------------
+%%principal%%
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[1] de inteiros;
+foo>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[1] de inteiros;
+fim-variáveis>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[1] de inteiros;
+fim-variáveis
+asd>
+--------------
+<algoritmo bla;
+variáveis
+mt : matriz[1] de inteiros;
+fim-variáveis asd>
+--------------
+<algoritmo bla;
+início>
+--------------
+<algoritmo bla;
+início sad>
+--------------
+<algoritmo bla;
+início
+  ;>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x =
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x = 1
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x :=
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x := fim
+>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x := 1
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x := 
+1
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x[
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x[ asd :=
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x[1 :=
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x[1] :=
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x[12 :=
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x[1][ :=
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x["a"] :=
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x[] :=
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x[1] := x[
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x[1] := x[asd
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x[1] := x[
+  asd
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x[1] := x[1
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x[1] := x[1 sad
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x[1] := x[1
+  asd
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x[1] := x[1]
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x(
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x()
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x(fim
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x(1
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x(1, fim
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x(1, 
+  bla
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x(1, )
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x(1, );
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x(1, ) fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x(1 fim
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x(1 2
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x(1 2)
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x(1 
+  2
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x(1,
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x(1
+,
+fim>
+--------------
+<algoritmo bla;
+variáveis
+  x : inteiro;
+fim-variáveis
+início
+  x(1,2
+fim>
+--------------
+<algoritmo bla;
+início
+fim
+função f() : inteiro
+início
+  retorne
+fim>
+--------------
+<algoritmo bla;
+início
+fim
+função f() : inteiro
+início
+  retorne>
+--------------
+<algoritmo bla;
+início
+fim
+função f() : inteiro
+início
+  retorne 1
+fim>
+--------------
+<algoritmo bla;
+início
+  se
+fim>
+--------------
+<algoritmo bla;
+início
+  se>
+--------------
+<algoritmo bla;
+início
+  se fim
+fim>
+--------------
+<algoritmo bla;
+início
+  se x
+fim>
+--------------
+<algoritmo bla;
+início
+  se x =
+fim>
+--------------
+<algoritmo bla;
+início
+  se x+
+fim>
+--------------
+<algoritmo bla;
+início
+  se x então
+fim>
+--------------
+<algoritmo bla;
+início
+  se x então fim>
+--------------
+<algoritmo bla;
+início
+  se x então
+  senão
+fim>
+--------------
+<algoritmo bla;
+início
+  se x então
+  senão fim>
+--------------
+<algoritmo bla;
+início
+  enquanto>
+--------------
+<algoritmo bla;
+início
+  enquanto
+>
+--------------
+<algoritmo bla;
+início
+  enquanto
+fim>
+--------------
+<algoritmo bla;
+início
+  enquanto fim>
+--------------
+<algoritmo bla;
+início
+  enquanto x
+fim>
+--------------
+<algoritmo bla;
+início
+  enquanto x faça
+fim>
+--------------
+<algoritmo bla;
+início
+  enquanto x faça fim>
+--------------
+<algoritmo bla;
+início
+  enquanto x faça 
+    x := 2;
+fim>
+--------------
+<algoritmo bla;
+início
+  para
+fim>
+--------------
+<algoritmo bla;
+início
+  para x
+fim>
+--------------
+<algoritmo bla;
+início
+  para x fim>
+--------------
+<algoritmo bla;
+início
+  para x de
+fim>
+--------------
+<algoritmo bla;
+início
+  para x de fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1 fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1
+fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até
+fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até 10
+fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até 10 fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até 10 faça
+fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até 10 faça fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até 10 faça
+    x := 2;
+fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até passo 10 faça
+    x := 2;
+fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até 10 passo faça
+    x := 2;
+fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até 10 passo>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até 10 passo
+fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até 10 passo 1
+fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até 10 passo 1>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até 10 passo +>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até 10 passo +
+fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até 10 passo a faça
+    x := 2;
+fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até 10 passo a
+fim>
+--------------
+<algoritmo bla;
+início
+  para x de 1 até 10 passo +a faça
+    x := 2;
+fim>
+--------------

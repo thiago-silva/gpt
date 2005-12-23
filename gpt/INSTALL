@@ -1,0 +1,22 @@
+Instalacao Basica
+=================
+
+  o Pre-requisitos
+
+    - gcc/g++   : Gnu Compiler Collection (especificamente, precisamos do gcc/g++)
+                http://directory.fsf.org/gcc.html)
+
+    - Antlr     : Ferramenta para construcao de compiladores
+                http://directory.fsf.org/gcc.html
+
+  o Comandos para instalacao padrao:
+    
+    $ tar xvfz gpt-xxx.tar.gz
+    $ cd gpt-xxx
+    $ ./configure
+    $ make
+    $ su
+    # make install
+
+  
+  Para maiores detalhes, leia INSTALL.default

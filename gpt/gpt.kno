@@ -1,0 +1,81 @@
+\NewEntry 0 notes
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<p></p>
+<p>   </p>
+<ul type="disc"><li>A analise semantica (contextual parsing) não decora a AST, ja que a semelhança entre portugol e C permite uma traducao mais direta. No entanto, para compilar um fonte em portugol para uma linguagem de mais baixo nivel (codigo de maquina), seria nescessario esse esforco. A AST, então, conter informacoes sobre os operandos e tipos de expressões nos nós </li>
+<ul type="disc"><li>ex: &quot;1 == 2&quot; ::= #(== boolean (1 2) )</li>
+<li>ex; &quot;1 + 3.4&quot;    ::=  #(+ real (1  3.4) )</li></ul>
+<li>Eh ainda, possivel descartar a tabela de simbolos, decorando a AST com as informacoes de identificadores.</li></ul>
+</body></html>
+
+
+\NewEntry 0 traducao para C
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><li>Notas</li>
+<ul type="disc"><li>Passagens de parametros de qualquer tipo eh feito por valor.<br /></li></ul>
+<li>Casting:</li>
+<ul type="disc"><li>(literal)xx := 123; //valido (implicit cast)?</li>
+<ul type="disc"><li>Isso pode ser interessante no futuro mas:</li>
+<ul type="disc"><li>1: Complica muito mais a tradução para C.</li>
+<li>2: Nao sobra muita opcao para ensinar que tipos diferentes devem ser respeitados. </li>
+<ul type="disc"><li>E isso eh interessante pois em linguagens compiladas (tipadas), isso eh regra.</li></ul></ul></ul></ul></ul>
+<p></p>
+<ul type="disc"><li>Semantic:</li>
+<li>Checar se as funcoes que retornam dados tem seus respectivos comandos &quot;retorne&quot;.</li>
+<ul type="disc"><ul type="disc"><li>Complicado implementar (precisa-se avaliar se os &quot;retorne&quot; estão dentro de &quot;if&quot;s e se serão executados com certeza.)</li></ul></ul></ul>
+</body></html>
+
+\NewEntry 1 comentarios
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><li>matrizes podem receber valores que são outras matrizes de mesma dimensao/tipo.</li>
+<li>ex: a ,x : matriz[2] de inteiros; a := x; //OK</li>
+<ul type="disc"><li>ex2: a : matriz[2] de inteiros; a := func(); //retorna matriz[2] de inteiros. OK<br /><br /><br />Eh possivel, ate de certa forma, interessante implementar isso. Penso que os C arrays devem ser criados dinamicamente. Para isso, seria mais facil criar uma funcao que crie essa matriz (new_matriz()?), informando dimensoes, tamanhos, tipos, etc.. </li>
+<ul type="disc"><li>No que se refere a programação, soa como um feature interessante. No entanto, nao creio que teria um bom valor para ensino. Seria mais interessante ter o aluno aprendendo a copiar e manipular as matrizes diretamente por meio das estruturas de controle (se/enquanto...).</li>
+<li><br /></li></ul></ul></ul>
+</body></html>
+
+\CurrentEntry 0 TODO
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><li>parser.g error handling</li>
+<ul type="disc"><li>terminar tratamento nas declaracoes de funcoes</li>
+<li>substituir getTokenNames()[DFASDF] por getTokenDescriptioN(TOKEN)</li>
+<ul type="disc"><li>overload getTokenDescripion(int)</li></ul>
+<li>Verificar todos os consumeUntil() nas excessoes</li>
+<li>Limpar comentarios, codigo...<br /></li></ul>
+<li>gpt.cpp</li>
+<ul type="disc"><li>remover tempnam() e usar mkstemp()<br /></li></ul>
+<li>pt2c:</li>
+<ul type="disc"><li>free(lit)! em leia_literal()<br /><br /></li></ul>
+<li>Limpar codigos, comentarios.</li>
+<ul type="disc"><li>pt2c fix:</li>
+<ul type="disc"><li>/home/jester/projects/upis/trunk/pparser/gramaticas/pt2c.g:776:11: warning:Rule 'tipo_prim' returns a value</li>
+<li>dar uma olhada nas producoes de ret_type (funcao)<br /></li></ul></ul>
+<li>Editor + parser (online analysis check)</li>
+<ul type="disc"><li>Plugin ou protoeditor like?</li>
+<li>Adicionar mimetype com icone (x-pseudo-codigo)</li></ul>
+<li>Interpreter/Debugger<br /></li>
+<li>Release</li>
+<ul type="disc"><li>Manual (man page)</li>
+<li>Site (html manual, comentarios de implementacao, exemplos, etc)</li>
+<li>configure.in configurations (check for antlr)</li>
+<li>README, TODO, NEWS<br /></li></ul>
+<div><br />----------------------------------------------------------------------------------------------------------------<br /></div>
+<li>-Fazer verificação de uso de variaveis?</li>
+<ul type="disc"><li>&quot;Aviso: variavel &quot;w&quot; nao esta sendo usada&quot;</li>
+<div><br /><br /></div></ul>
+<li>-faça/enquanto();</li>
+<li>-switch (escolha)<br /></li>
+<li>Fazer representacao de numeros binarios? (0 para oct, 0x para hex, 0b para bin?)?</li></ul>
+</body></html>
+
+
+\NewEntry 0 Tratamento de erros
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<p></p>
+<ul type="disc"><li>A dificuldade em deixar as mensagens de erro uniformes, ao tentar elaborar tratamentos de erros mais detalhados e prestativos.<br /></li>
+<li>Será que atrapalha mais do que ajuda continuar a analise sintatica apos errors encontrados?</li>
+<ul type="disc"><li>Muitos erros seguintes ao primeiro podem acabar atrapalhando mais.</li>
+<ul type="disc"><li>Ao catch[], pode-se lancar um custom exception, a ser recuperado em main.c</li>
+<li>Fazer disso uma opcao?</li></ul></ul></ul>
+</body></html>
+
