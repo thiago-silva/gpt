@@ -56,6 +56,10 @@ BasePortugolParser::BasePortugolParser(TokenStream& lexer, int k_)
 {
 }
 
+string BasePortugolParser::getAlgName() {
+  return _name;
+}
+
 void BasePortugolParser::match(int t) {
   lastToken = LT(1);
   LLkParser::match(t);

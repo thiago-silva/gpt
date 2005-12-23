@@ -20,9 +20,9 @@
 
 bool debug_flag = false;
 
-char* ifilepath = NULL;
-char* ofilepath = NULL;
-char* cfilepath = NULL;
+string ifilepath;
+string ofilepath;
+char* cfilepath;
 
 bool frompipe = false;
 
@@ -83,10 +83,6 @@ bool init(int argc, char** argv) {
     }
   }
 
-  if(!ofilepath) {
-    ofilepath = "a.out";
-  }
-
   if(!frompipe) {
     if(optind < argc) {
       ifilepath = argv[optind];
@@ -112,6 +108,7 @@ bool do_parse(istream& in, ostream& out) {
     parser.setASTFactory(&ast_factory);
 
     parser.algoritmo();
+    ofilepath = parser.getAlgName();
 
     if(ErrorHandler::self()->hasError()) {
       ErrorHandler::self()->showErrors();
@@ -121,7 +118,6 @@ bool do_parse(istream& in, ostream& out) {
     RefPortugolAST tree = parser.getPortugolAST();
     if(tree)
     {
-
       if(debug_flag) {cerr << tree->toStringList() << endl << endl;} 
 
       SymbolTable stable;
@@ -139,6 +135,7 @@ bool do_parse(istream& in, ostream& out) {
         cerr << "BEGIN SOURCE >>>> \n";
         cerr << walker.algoritmo(tree) << endl;
         cerr << "<<<<<< END SOURCE\n";
+        return false;
       } else {
         out << walker.algoritmo(tree) << endl;       
       }
@@ -184,7 +181,7 @@ bool parse(void) {
     }
   } else {
     ifstream fin;
-    fin.open(ifilepath, ios_base::in);
+    fin.open(ifilepath.c_str(), ios_base::in);
     if(!fin) {
       cerr << PACKAGE << ": não foi possível abrir o arquivo: \"" << ifilepath << "\"" << std::endl;
       goto end;

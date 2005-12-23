@@ -41,6 +41,7 @@ catch[antlr::MismatchedTokenException e] { //EOF
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 declaracao_algoritmo
   : alg:T_KW_ALGORITMO^ id:T_IDENTIFICADOR T_SEMICOL!
+    {_name = id->getText();}
   ;
 
 exception //T_KW_ALGORITMO, T_IDENTIFICADOR, T_SEMICOL
