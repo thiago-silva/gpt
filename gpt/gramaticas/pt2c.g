@@ -145,9 +145,13 @@ options {
          "         c = va_arg(args, int);\n"
          "         printf(\"%c\", c);\n"
          "         break;\n"
-         "       case 's':\n"
+         "       case 's':\n"         
          "         s = va_arg(args, char*);\n"
-         "         printf(\"%s\", s);\n"
+         "         if(!s) {\n"
+         "           printf(\"(nulo)\");\n"
+         "         } else {\n"
+         "           printf(\"%s\", s);\n"
+         "         }\n"
          "         break;\n"
          "       case 'b':\n"
          "         b = va_arg(args, int);\n"
@@ -255,6 +259,7 @@ options {
     return id;
   }
 
+  
   string translateFunctionParams(const string& id, list<pair<int, string> >& params) {
     Symbol s = stable.getSymbol(SymbolTable::GlobalScope, id);
     
@@ -292,10 +297,51 @@ options {
       case TIPO_CARACTERE: str = "char"; break;
       case TIPO_LITERAL:   str = "char*"; break;
       case TIPO_LOGICO:    str = "boolean"; break;    
-      default:             str = "unknow_type"; break;
+      default:
+        cerr << "Erro interno: tipo nao suportado (pt2c::translateType)." << endl;
+        exit(1);
     }
     return str;
   }
+
+  /*
+  string translateBinExpr(const production& left, const production& right, int optoken) {
+    if((left.expr.first != TIPO_LITERAL) && ((right.expr.first != TIPO_LITERAL)) {
+      stringstream ret;
+      switch(optoken) {
+        case T_IGUAL:
+          ret << left.expr.second << "==" << right.expr.second;
+          break;
+        case T_DIFERENTE:
+          ret << left.expr.second << "!=" << right.expr.second;
+          break;
+        case T_MAIOR:
+          ret << left.expr.second << ">" << right.expr.second;
+          break;
+        case T_MENOR:
+          ret << left.expr.second << "<" << right.expr.second;
+          break;
+        case T_MAIOR_EQ:
+          ret << left.expr.second << ">=" << right.expr.second;
+          break;
+        case T_MENOR_EQ:  
+          ret << left.expr.second << "<=" << right.expr.second;
+          break;
+        default:
+          cerr << "Erro interno: op nao suportado (pt2c::translateBinExpr)." << endl;
+          exit(1);
+      }
+      return ret.str();
+    }
+
+    switch(optoken) {
+      case T_IGUAL:
+      case T_DIFERENTE:
+      case T_MAIOR:
+      case T_MENOR:
+      case T_MAIOR_EQ:
+      case T_MENOR_EQ:  
+  }*/
   
   string _currentScope;
 
@@ -650,11 +696,12 @@ expr[int expecting_type] returns [production p]
 {
   production left,right;
 }
-  : #(T_BIT_OU    left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="|";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
+  : #(T_BIT_OU    left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="|";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}  
   | #(T_BIT_XOU   left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="^";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
   | #(T_BIT_KW_E  left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="&";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
   | #(T_BIT_NOT   left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="~";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
   | #(T_IGUAL     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="==";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
+//   : #(T_IGUAL    left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=translateBinExpr(left,right,T_IGUAL);p.expr.first=#expr->getEvalType();}
   | #(T_DIFERENTE left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="!=";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
   | #(T_MAIOR     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+=">";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
   | #(T_MENOR     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="<";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
@@ -665,10 +712,10 @@ expr[int expecting_type] returns [production p]
   | #(T_DIV       left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="/";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
   | #(T_MULTIP    left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="*";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
   | #(T_MOD       left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="%";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(TI_UN_NEG  right=element[expecting_type]) {p.expr.second="-";p.expr.second+=right.expr.second;}
-  | #(TI_UN_POS  right=element[expecting_type]) {p.expr.second="+";p.expr.second+=right.expr.second;}
-  | #(TI_UN_NOT  right=element[expecting_type]) {p.expr.second="!";p.expr.second+=right.expr.second;}
-  | #(TI_UN_BNOT right=element[expecting_type]) {p.expr.second="~";p.expr.second+=right.expr.second;}
+  | #(TI_UN_NEG  right=element[expecting_type]) {p.expr.second="-";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
+  | #(TI_UN_POS  right=element[expecting_type]) {p.expr.second="+";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
+  | #(TI_UN_NOT  right=element[expecting_type]) {p.expr.second="!";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
+  | #(TI_UN_BNOT right=element[expecting_type]) {p.expr.second="~";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
   | p=element[expecting_type]
   ;
 
