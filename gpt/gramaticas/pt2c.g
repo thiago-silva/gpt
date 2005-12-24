@@ -620,12 +620,12 @@ stm_ret
   production e;
   stringstream str;
 }
-  : #(T_KW_RETORNE e=expr[expecting_type]) 
-    {
+  : #(T_KW_RETORNE (TI_NULL|e=expr[expecting_type]))
+    {  
       str << "return " << e.expr.second << ";";
       writeln(str);
     }
-  ; 
+  ;
 
 stm_se
 {

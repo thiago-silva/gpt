@@ -184,14 +184,10 @@ fcall returns [ExpressionValue rettype]
       rettype = evaluator.evaluateFCall(id, args); //check if f() exists, check for arguments.      
     }
   ;
-
 stm_ret
-{ExpressionValue etype;}  
-  : (#(T_KW_RETORNE TI_NULL))=> #(r:T_KW_RETORNE TI_NULL)
-      //nota: etype eh inicializado como TIPO_NULO.
-      {evaluator.evaluateReturnCmd(etype, r->getLine());}
-  | #(rt:T_KW_RETORNE etype=expr)   
-      {evaluator.evaluateReturnCmd(etype, rt->getLine());}
+{ExpressionValue etype;}
+  : #(r:T_KW_RETORNE (TI_NULL|etype=expr))
+    {evaluator.evaluateReturnCmd(etype, r->getLine());}
   ;
 
 stm_se

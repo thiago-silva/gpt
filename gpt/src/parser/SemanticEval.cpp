@@ -140,13 +140,12 @@ bool ExpressionValue::matchesDimensions(list<int>& other_dimensions) const {
 
 bool ExpressionValue::matchesPrimitiveType(int other_type) const {
 //1: todos os tipos numericos (inteiro, real, logico, caractere) sao compativeis entre si
-//2: tipos nulos são incompativeis por natureza
+//2: tipos nulos são compativeis apenas com tipo nulo
 //3: tipo_all eh compativel com todos
 
   //para funcoes sem retorno
-  if((_primitiveType == TIPO_NULO) ||
-    (other_type == TIPO_NULO)) {
-    return false;
+  if(_primitiveType == TIPO_NULO) {
+    return _primitiveType == other_type;
   }
 
   //rvalue retorna qualquer tipo
