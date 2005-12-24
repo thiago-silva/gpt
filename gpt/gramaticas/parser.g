@@ -339,7 +339,7 @@ catch[antlr::MismatchedTokenException e] {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 stm_ret!
-  : t:T_KW_RETORNE^ (e:expr {#stm_ret = #(t,e);}|{#stm_ret = #(t,[TI_NULL,"null"]);})
+  : t:T_KW_RETORNE^ (e:expr {#stm_ret = #(t,e);}|{#stm_ret = #(t,[TI_NULL,"null!"]);})
   ;
 exception
 catch[antlr::NoViableAltException e] {
