@@ -2,6 +2,7 @@ header {
   #include "ErrorHandler.hpp"
   #include <string>
   #include <sstream>
+  #include <iostream>
   #include <ctype.h>
 
   using namespace std;
@@ -417,11 +418,16 @@ catch[antlr::RecognitionException] {
 */
 protected
 T_ID_AUX
-  : (T_LETTER | '_') ( T_LETTER | T_DIGIT | '_')*
+  : (T_LETTER | '_') T_LETTER_OR_DIGIT
   ;
-  
+
+protected
+T_LETTER_OR_DIGIT
+  : ( T_LETTER | T_DIGIT | '_')*
+  ;
+
 T_IDENTIFICADOR
-options { 
+options {
   testLiterals = true;
    //nota: identificador pode ser:
    // -nome do algoritmo (ver declaração de algoritmo)
@@ -439,7 +445,7 @@ options {
         }
       }
       
-    ('-' T_ID_AUX)?
+    ('-' T_LETTER_OR_DIGIT)?
   {
     
     if(m != -1) {
