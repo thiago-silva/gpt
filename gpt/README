@@ -1,48 +1,54 @@
-                                      G-Portugol
+G-Portugol
 versao: 0.5b
 
-  o Sobre
+o Sobre
 
-      G-Portugol eh um dialeto da linguagem portugol (ou portugues estruturado), muito usada para 
-      descrever algoritmos de forma livre e espontanea, em portugues e, em geral, livros dedicados 
-      ao ensino de algoritmos, logica e estruturas de dados incorporam uma forma dessa linguagem. 
+ G-Portugol eh um dialeto da linguagem portugol 
+ (ou portugues estruturado), muito usada para descrever 
+ algoritmos de forma livre e espontanea, em portugues e, 
+ em geral, livros dedicados ao ensino de algoritmos, logica 
+ e estruturas de dados incorporam uma forma dessa linguagem. 
   
-      A proposta de G-Portugol eh oferecer uma implementação dessa linguagem, fornecendo 
-      ferramentas que oferecam recursos de edicao, compilacao e execução de programas
-      escritos nessa linguagem, de forma a favorecer estudantes de que dao os primeiros
-      passos no aprendizado de desenvolvimento de softwares, bem como professores.
+ A proposta de G-Portugol eh oferecer uma implementação dessa 
+ linguagem, fornecendo ferramentas que oferecam recursos 
+ de edicao, compilacao e execução de programas escritos nessa 
+ linguagem, de forma a favorecer estudantes de que dao os 
+ primeiros passos no aprendizado de desenvolvimento de softwares, 
+ bem como professores.
 
 
-  o O Pacote
-      Descricao dos diretorios do pacote
+o O Pacote
+
+ Descricao dos diretorios do pacote
   
-      exemplos/
-        Exemplos de algoritmos escritos em G-Portugol
+ exemplos/
+   Exemplos de algoritmos escritos em G-Portugol
   
-      extra/
-        Arquivos de syntax highlight para os editores baseados no kate/kwrite do ambiente KDE
+ extra/
+   Arquivos de syntax highlight para os editores baseados no 
+   kate/kwrite do ambiente KDE
   
-      gramaticas/
-        As gramaticas ANTLR da linguagem G-Portugol
+ gramaticas/
+   As gramaticas ANTLR da linguagem G-Portugol
   
-      doc/
-        Man pages e outros documentos
+ doc/
+   Man pages e outros documentos
   
-      src/
-        Fontes do tradutor
+ src/
+   Fontes do tradutor
   
-      test/
-        Scripts e programas de teste
+ test/
+   Scripts e programas de teste
 
 
-  o Maiores Informacoes
+o Maiores Informacoes
 
-      Website: http://compuclass.codigolivre.org.br/
-  
-      Autor: Thiago Silva <thiago.silva@kdemail.net> 
+ Website: http://compuclass.codigolivre.org.br/
+ 
+ Autor: Thiago Silva <thiago.silva@kdemail.net> 
 
 
-  o Copyright
+o Copyright
 
-      Esse pacote eh distribuido nos termos da GNU GENERAL PUBLIC LICENSE v2
-      (ver arquivo COPYRIGHT para maiores detalhes)
+ Esse pacote eh distribuido nos termos da GNU GENERAL PUBLIC LICENSE v2
+ (ver arquivo COPYRIGHT para maiores detalhes)

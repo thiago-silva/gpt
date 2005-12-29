@@ -39,7 +39,7 @@
       <item>enquanto</item>
       <item>faça</item>
       <item>fim-enquanto</item>
-      <item>para</item>
+<!--       <item>para</item> -->
       <item>passo</item>
       <item>até</item>
       <item>fim-para</item>
@@ -111,7 +111,7 @@
         
         
         <!-- matriz de... (Data Type) vs. para X de...(Keyword)-->
-        <StringDetect String="para" attribute="Keyword" context="paraCmd"/>
+        <StringDetect String="para" attribute="Control Structure" context="paraCmd"/>
         <!--matriz de... (Data Type)-->
         <keyword attribute="Data Type" context="#stay" String="de_key"/>                
         
@@ -127,9 +127,9 @@
           um eh Keyword, o outro eh Data Type-->
       <context name="paraCmd" lineEndContext="#stay" attribute="Normal Text">
         <!-- seta a regra para "de" como keyword -->
-        <keyword attribute="control_st" context="#stay" String="de_key"/>
+        <keyword attribute="Control Structure" context="#stay" String="de_key"/>
         <!-- "até" sai do contexto  -->
-        <keyword attribute="control_st" context="#pop" String="ate_key"/>        
+        <keyword attribute="Control Structure" context="#pop" String="ate_key"/>        
         <!-- importa as regras do contexto normal. ja que a regra 
              para "de" foi setada, ele não vai ser sobrescrito pela regra 
              do contexto (de_key -> Data Type) -->

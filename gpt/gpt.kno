@@ -9,29 +9,51 @@
 <li>Verificar todos os consumeUntil() nas excessoes</li>
 <li>Limpar comentarios, codigo...<br /></li></ul>
 <li>gpt.cpp</li>
-<ul type="disc"><li>remover tempnam() e usar mkstemp()<br /></li></ul>
+<ul type="disc"><li>remover tempnam() e usar mkstemp()</li>
+<li>Adicionar opcoes para interpretação, geracao de codigo C (sem compilacao)<br /></li></ul>
 <li>pt2c:</li>
 <ul type="disc"><li>free(lit)! em leia_literal()<br /><br /></li></ul>
-<li>Criar o arquivo executavel default nao como &quot;a.out&quot;, mas com o ID da declaracao do algoritmo<br /></li>
+<li>Interpreter:</li>
+<ul type="disc"><li>Matrizes e stm_ret</li>
+<li>casting na atribuicao ((int)x nao pode ter 2.3 como valor)</li>
+<li>Socket conn + step(into|over|out) + continue + breakpoint + watch<br /></li></ul>
 <li>Limpar codigos, comentarios.</li>
 <ul type="disc"><li>pt2c fix:</li>
 <ul type="disc"><li>/home/jester/projects/upis/trunk/pparser/gramaticas/pt2c.g:776:11: warning:Rule 'tipo_prim' returns a value</li>
 <li>dar uma olhada nas producoes de ret_type (funcao)<br /></li></ul></ul>
 <li>Editor + parser (online analysis check)</li>
-<ul type="disc"><li>Plugin ou protoeditor like?</li>
-<li>Adicionar mimetype com icone (x-pseudo-codigo)</li></ul>
-<li>Interpreter/Debugger<br /></li>
+<ul type="disc"><li>Plugin não é bom:</li>
+<ul type="disc"><li>Funciona com outros tipos de arquivos</li>
+<li>Não tem widget mostrando as mensagens de erro</li></ul>
+<li>Protoeditor</li>
+<ul type="disc"><li>Aproveita infraestrutura, add/removemarks, breakpoints, abstract variables, watches, error msgs, etc</li>
+<li>Fork()</li>
+<ul type="disc"><li>Fazer de um jeito em que evite replicação.</li>
+<li>Não ter settings relacionados a PHP.<br /></li></ul></ul></ul>
+<li>Interpreter/Debugger</li>
+<li>Adicionar mimetype com icone (x-pseudo-codigo)<br /></li>
 <li>Release</li>
 <ul type="disc"><li>Site (html manual (wiki), comentarios de implementacao, exemplos, etc)</li>
 <li>configure.in configurations (check for antlr)</li>
-<li>README, TODO, NEWS<br /></li></ul>
-<div><br />----------------------------------------------------------------------------------------------------------------<br /><br />Bugs:<br />algoritmo inútil;<br />Linha: 1 - Variável/função &quot;inútil&quot; não pode ter caracteres especiais..<br /><br />-&gt; &quot;inútil&quot; não é nem variável, nem, função. é o nome do algoritmo<br /><br />Verificação de igualdade de strings! Como está sendo traduzido?deveria ser strcmpi()<br /><br />------------------------------------------------------------------------------------<br /></div>
+<li>README, TODO, NEWS<br /><br /></li></ul>
+<li>Parser Plugin:</li>
+<ul type="disc"><li>Action (enable/disable) pelo menu/shortcut</li>
+<li>Linkar com gpt</li></ul>
+<div><br />----------------------------------------------------------------------------------------------------------------<br />Checar divisão por 0<br /></div>
+<li>Highlight: numeros binarios e octais</li>
+<li>Highlight: funcoes()<br /><br />Checar se eh possivel: &quot;imprima()&quot; sem argumentos<br /></li>
+<li>Bugs:</li>
+<ul type="disc"><li>algoritmo inútil;<br />Linha: 1 - Variável/função &quot;inútil&quot; não pode ter caracteres especiais..<br />-&gt; &quot;inútil&quot; não é nem variável, nem, função. é o nome do algoritmo<br /></li></ul>
+<li>Verificação de igualdade de strings! Como está sendo traduzido?deveria ser strcmpi()<br /></li>
+<div><br />------------------------------------------------------------------------------------<br /></div>
 <li>-Fazer verificação de uso de variaveis?</li>
 <ul type="disc"><li>&quot;Aviso: variavel &quot;w&quot; nao esta sendo usada&quot;</li>
 <div><br /><br /></div></ul>
 <li>-faça/enquanto();</li>
 <li>-switch (escolha)<br /></li>
-<li>Fazer representacao de numeros binarios? (0 para oct, 0x para hex, 0b para bin?)?</li></ul>
+<li>Fazer representacao de numeros binarios? (0 para oct, 0x para hex, 0b para bin?)?<br /><br /><br /></li>
+<li>-------------------------------------------------------------------------------------------------------------------<br /><br />Limpeza de codigo:<br /><br />lexer e parser: apenas polir.<br /><br />Semantic, pt2c, interpreter:</li>
+<ul type="disc"><li>Remodelar (codigo atual está muito experimental, therefore, mal feito)<br /></li></ul></ul>
 </body></html>
 
 
@@ -94,7 +116,7 @@
 
 \NewEntry 2 G-Portugol
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
-<ul type="disc"><li>Características da linguagem<br /><br />A linguagem em si não difere fundamentalmente ou apresenta novidades em relação ao uso popular de portugol. Abaixo podemos ver um sumário estrutural da linguagem.<br /></li>
+<ul type="disc"><li>Características Gerais da linguagem<br /><br />A linguagem em si não difere fundamentalmente ou apresenta novidades em relação ao uso popular de portugol. Abaixo podemos ver um sumário estrutural da linguagem.<br /></li>
 <ul type="disc"><li>Declaração de variáveis tipadas:</li>
 <ul type="disc"><li>Primitivos inteiros, reais, caracteres, literais e lógicos, assim como matrizes N dimensionais desses tipos.</li></ul>
 <li>Estruturas de controle:</li>
@@ -130,7 +152,13 @@
 <li>Atribuição (:=)<br /></li></ul>
 <div>E, por fim, duas funções internas disponíveis para IO:</div>
 <ul type="disc"><li>leia()</li>
-<li>escreva()<br /></li></ul></ul>
+<li>escreva()<br /><br /></li></ul>
+<li>Objetivo e filosofia<br /><br /></li>
+<li>O objetivo final de G-Portugol e suas ferramentas é facilitar o estudo e o ensino de algorítmo e lógica  de programação usando como linguagem principal o português. Para atingir esse objetivo, é necessário atenção em diversos aspectos referentes a diversas disciplinas.<br /><br />Guidelines para as ferramentas:<br />Deve ser de fácil acesso e utilização por um leigo, alem de ter alto grau em termos de interface visual e usabilidade.<br />Deve ser configurável naquilo que diz respeito a diferentes abordagens de ensino e estilo do professor.<br />Ênfase deve ser dada à representação, ilustração e expressão de estruturas lógicas e processos internos de computadores baseados na arquitetura de Von Newmann.<br /><br /><br />Guideline para a linguagem:<br />A linguagem deve ser totalmente em português respeitando acentuações.<br />Deve ter uniformidade e coerência estrutural.<br />Deve ser simples, e evitar complexidades que desviam a atenção do propósito original para a detalhes da linguagem. (Apenas recursos escenciais devem fazer parte do núcleo.)<br />Deve ser configurável naquilo que diz respeito a diferentes abordagens de ensino e estilo do professor.<br /><br />-----------<br /></li>
+<li>Deve ser de fácil acesso e utilização por um leigo, alem de ter alto grau em termos de interface visual e usabilidade.<br /><br />As ferramentas devem ter uma instalação e configuração de fácil manuseio. Configurações avançadas devem ser exibidas separadamente. Embora seja interessante que o uso de algumas ferramentas reflitam o comportamento de ferramentas reais de desenvolvimento de software, esse grau de reflexão deve ser balanceado e, quando possível, um modo simples de uso deve ser disponibilizado.<br />	Exemplo: gpt<br />		Embora seja possível usá-lo como outros compiladores, a partir da linha de comando,<br />		alternativas devem estar presentes, como executá-lo a partir de um editor.<br /><br /></li>
+<li>Deve ser configurável naquilo que diz respeito a diferentes abordagens de ensino e estilo do professor.<br /><br />Recursos que podem ser opcionais, devem seguir essa regra, de forma a não oferecer mais do que será usado, poluindo o ambiente visual. Procurar a simplicidade.<br /></li>
+<li>Ênfase deve ser dada à representação, ilustração e expressão de estruturas lógicas e processos internos de computadores baseados na arquitetura de Von Newmann.<br /><br />Todo o foco deve ser dado ao ensino-aprendizagem da disciplina. Alunos e professores não devem ser perturbados ou surpreendidos por detalhes das ferramentas. Isso demanda que as mesmas sejam altamente intuitivas no modo de uso. Evitar exceções, procurando alto grau de clareza e uniformidade. <br /><br /><br />----------------------------------------------------------<br /><br /></li>
+<li>Pode-se fazer um dialeto de portugol por meio de uma tradução direta do pascal, C ou outra linguagem popular. Ou pode-se criar uma linguagem que, embora semelhante com as anteriores, tenha diferenças fundamentais em sua concepção. <br /><br /><br /><br /><br /></li></ul>
 </body></html>
 
 \NewEntry 2 O programa gpt
@@ -164,9 +192,8 @@
 <li>Já vimos que strings/literais constantes são denotados por texto entre aspas duplas (&quot;). Tal qual em C, um caractere entre aspas simples (') é um caractere constante que, da mesma forma, pode permitir escapes como '\n'.<br /></li>
 <li>Assim como a palavra-chave &quot;variáveis&quot;, &quot;então&quot; e &quot;senão&quot; devem ser acentuadas.<br /></li>
 <li>Como em &quot;variáveis/fim-variáveis&quot;, blocos &quot;se&quot; (não confundir com blocos &quot;C&quot;!) tem seus respectivos e obrigatórios &quot;fim-se&quot;. Não há a exceção de &quot;um enunciado, apenas&quot; encontrado na linguagem C onde o uso de &quot;{}&quot; é opcional . Também, não há imposições sobre a indentação.<br /></li>
-<li>A equivalência da expressão &quot;nome = &quot;Malkovich&quot;&quot; é computada como se espera, respeitando os tipos de dados. Salienta-se que comparações de tipos literais são feitas em &lt;br&gt;case sensitive&lt;/b&gt;.<br /></li></ul></ul>
+<li>A equivalência da expressão &quot;nome = &quot;Malkovich&quot;&quot; é computada como se espera, respeitando os tipos de dados. Salienta-se que comparações de tipos literais são feitas em &lt;br&gt;case sensitive&lt;/b&gt;. Para maiores informações sobre operações sobre literais, clique aqui (&gt;=, &lt;= &lt;&gt;..<br /></li></ul></ul>
 </body></html>
-
 
 \NewEntry 2 Estruturas de repetição
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
@@ -190,7 +217,6 @@
 <li>Nota sobre a falta de operações sobre literais/string<br /><br /></li></ul>
 </body></html>
 
-
 \NewEntry 2 Funções
 
 \NewEntry 2 Issues
@@ -201,7 +227,6 @@
 <ul type="disc"><li>participacao em expressoes (não eh permitido em expressoes com N termos, ou aplicada a operadores unarios).</li></ul>
 <li>No entanto, eh permitido &quot;mat[leia()] := 10&quot;</li></ul></ul>
 </body></html>
-
 
 \NewEntry 1 Implementação
 

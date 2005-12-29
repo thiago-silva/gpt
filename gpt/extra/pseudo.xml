@@ -39,7 +39,7 @@
       <item>enquanto</item>
       <item>faça</item>
       <item>fim-enquanto</item>
-      <item>para</item>
+<!--       <item>para</item> -->
       <item>passo</item>
       <item>até</item>
       <item>fim-para</item>
@@ -111,7 +111,7 @@
         
         
         <!-- matriz de... (Data Type) vs. para X de...(Keyword)-->
-        <StringDetect String="para" attribute="Keyword" context="paraCmd"/>
+        <StringDetect String="para" attribute="Decimal" context="paraCmd"/>
         <!--matriz de... (Data Type)-->
         <keyword attribute="Data Type" context="#stay" String="de_key"/>                
         
