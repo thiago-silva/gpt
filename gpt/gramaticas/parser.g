@@ -512,7 +512,8 @@ catch[antlr::MismatchedTokenException e] {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 stm_para 
 {RefToken tk;}
-  : T_KW_PARA^ lvalue {tk=lastToken;} 
+  : T_KW_PARA^ 
+    lvalue {tk=lastToken;} 
     T_KW_DE! {tk=lastToken;} 
     expr {tk=lastToken;}
     T_KW_ATE!
@@ -658,10 +659,10 @@ options {
 
 op_unario!
   : (
-        T_MENOS   {#op_unario = #[TI_UN_NEG,"un!-"];}
-      | T_MAIS    {#op_unario = #[TI_UN_POS,"un!+"];}
-      | T_KW_NOT  {#op_unario = #[TI_UN_NOT,"un!não"];}
-      | T_BIT_NOT {#op_unario = #[TI_UN_BNOT,"un!~"];}
+        T_MENOS   {#op_unario = #[TI_UN_NEG,"-"];}
+      | T_MAIS    {#op_unario = #[TI_UN_POS,"+"];}
+      | T_KW_NOT  {#op_unario = #[TI_UN_NOT,"não"];}
+      | T_BIT_NOT {#op_unario = #[TI_UN_BNOT,"~"];}
     )?
   ; 
 
