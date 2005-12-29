@@ -76,20 +76,20 @@ string SymbolType::toString() const {
 //------------------------------------------------------------------------------------//
 
 Symbol::Symbol() 
-  : scope(), lexeme(), line(-1), type(TIPO_NULO), isFunction(false), isBuiltin(false)
+  : cd(-1), scope(), lexeme(), line(-1), type(TIPO_NULO), isFunction(false), isBuiltin(false)
   , param()
 {
 
 }
 
 Symbol::Symbol(const string& scope_, const string& lexeme_, int line_, bool isfunction_) 
-  : scope(scope_), lexeme(lexeme_), line(line_)
+  : cd(-1), scope(scope_), lexeme(lexeme_), line(line_)
   , type(TIPO_NULO), isFunction(isfunction_), isBuiltin(false)
   , param() {}
 
 
 Symbol::Symbol(const string& scope_, const string& lexeme_, int line_, bool isfunction_, int type_) 
-    : scope(scope_), lexeme(lexeme_), line(line_)
+    : cd(-1), scope(scope_), lexeme(lexeme_), line(line_)
     , type(), isFunction(isfunction_), isBuiltin(false)
     , param() {
 
@@ -99,7 +99,7 @@ Symbol::Symbol(const string& scope_, const string& lexeme_, int line_, bool isfu
 
 Symbol::Symbol(const string& scope_, const string& lexeme_, int line_, bool isfunction_, int type_,
   const list<int>& dimensions) 
-    : scope(scope_)
+    : cd(-1), scope(scope_)
     , lexeme(lexeme_)
     , line(line_) 
     , type()

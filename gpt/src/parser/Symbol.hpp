@@ -63,16 +63,16 @@ public:
   ParameterSig()
   : variable_params(false)  {}
 
-  void add(int type) {
+  void add(const string& name, int type) {
     SymbolType s(type);
-    params.push_back(s); 
+    params.push_back(pair<string, SymbolType>(name,s));
   }
 
-  void add(pair<int, list<int> >& p) {
+  void add(const string& name, pair<int, list<int> >& p) {
     SymbolType s(p.first);
     s.setPrimitive(false);
     s.setDimensions(p.second);
-    params.push_back(s);
+    params.push_back(pair<string, SymbolType>(name,s));
   }
 
   int paramType(int idx) {
@@ -81,20 +81,20 @@ public:
     }
   
     int c = 0;
-    for(list<SymbolType>::iterator it = params.begin(); it != params.end(); it++) {
+    for(list<pair<string,SymbolType> >::iterator it = params.begin(); it != params.end(); it++) {
       if(c == idx) {
-        return (*it).primitiveType();
+        return (*it).second.primitiveType();
       }
     }
     return TIPO_NULO; //throw exception?
   }
 
-  list<SymbolType>& symbolList() { return params; }
+  list< pair<string,SymbolType> >& symbolList() { return params; }
   bool isVariable() { return variable_params;}
   void setVariable(bool val) { variable_params = val;}
 protected:
   bool variable_params; //f(...)
-  list<SymbolType> params;   //parâmetros de funcao    
+  list<pair<string, SymbolType> > params;   //parâmetros de funcao    <name, type>
 };
 
 class Symbol {  
@@ -116,7 +116,7 @@ public:
   //attrs
 
   
-
+  int cd;
   string scope;
   string lexeme;
   int line;
