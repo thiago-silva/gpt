@@ -61,6 +61,8 @@ tokens {
   T_KW_RETORNE="retorne";  
   T_KW_PASSO="passo";
 
+  T_REAL_LIT="número real"; //nondeterminism T_INT_LIT & T_REAL_LIT
+
   //imaginaries for AST
   TI_UN_POS;
   TI_UN_NEG;
@@ -230,8 +232,12 @@ options {
   | ('0' ('x'|'X') )=> T_HEX_LIT
   | ('0' ('b'|'B') )=> T_BIN_LIT
   | T_INTEGER_LIT 
-  ;
-  
+    (
+      '.' (T_DIGIT)+
+      {$setType(T_REAL_LIT);}
+    )?
+  ;  
+
 protected
 T_INTEGER_LIT
   : (T_DIGIT)+
@@ -239,15 +245,35 @@ T_INTEGER_LIT
 
 protected
 T_OCTAL_LIT
-  : '0' ('c'|'C') (T_DIGIT)+
+  : '0' ('c'|'C') (T_LETTER_OR_DIGIT)+ //T_LETTER_OR_DIGIT apenas para capturar erro corretamente
       {
-        if($getText.find("9",0) != string::npos) {
+        bool haserror = false;
+        string str = $getText;
+        if(str.find("9",0) != string::npos) {
           stringstream s;
           s << "\"" << $getText << "\" não é um valor octal válido";
-          ErrorHandler::self()->add(s, getLine());
+          ErrorHandler::self()->add(s, getLine());          
+          haserror = true;
         } else {
-          string res = $getText.substr(2);
-          res.insert(0,"0");
+          for(unsigned int i = 2; i < str.length(); ++i) {
+            if(!isdigit(str[i])) {
+              stringstream s;
+              s << "\"" << str << "\" não é um valor hexadecimal válido";
+              ErrorHandler::self()->add(s, getLine());
+              haserror = true;
+              break;
+            }
+          }
+        }
+        if(!haserror) {
+          //convert to base 10
+          int base10;
+          str = str.substr(2);//0c
+          base10 = strtoul(str.c_str(), NULL, 8);
+
+          stringstream s;
+          s << base10;        
+          string res = s.str();
           $setText(res);
         }
       }
@@ -255,23 +281,35 @@ T_OCTAL_LIT
 
 protected
 T_HEX_LIT
-  : '0' ('x'|'X') (T_DIGIT|'a'..'z'|'A'..'Z')+
+  : '0' ('x'|'X') (T_LETTER_OR_DIGIT)+ //T_LETTER_OR_DIGIT apenas para capturar erro corretamente
     {
+      bool haserror = false;
       string str = $getText;
       for(unsigned int i = 2; i < str.length(); ++i) {
         if(!isxdigit(str[i])) {
           stringstream s;
           s << "\"" << str << "\" não é um valor hexadecimal válido";
           ErrorHandler::self()->add(s, getLine());
+          haserror = true;
           break;
         }
+      }
+      if(!haserror) {
+        //convert to base 10
+        int base10;
+        base10 = strtoul(str.c_str(), NULL, 16);
+  
+        stringstream s;
+        s << base10;
+        string res = s.str();
+        $setText(res);      
       }
     }
   ;
 
 protected
 T_BIN_LIT
-  : '0' ('b'|'B') (T_DIGIT)+
+  : '0' ('b'|'B') (T_LETTER_OR_DIGIT)+
   {
     string str = $getText;
     bool haserror = false;
@@ -285,29 +323,19 @@ T_BIN_LIT
       }
     }
     if(!haserror) {
-      //convert to decimal
-      int x = 0;
+      //convert to base 10
+      int base10;
       string str = $getText.substr(2);
-  
-      int len = str.length()-1;
-    
-      for(int i = len; i >= 0; i--) {
-        x = x | ((str[i]-48) << len-i);
-      }    
+      base10 = strtoul(str.c_str(), NULL, 2);//0b
+
       stringstream s;
-      s << x;
+      s << base10;
       string res = s.str();
       $setText(res);
     }
   }
   ;
 
-T_REAL_LIT
-options {
-  paraphrase = "número real";
-}  : T_DIGIT '.' (T_DIGIT)+
-  ;
-  
 T_CARAC_LIT
 options {
   paraphrase = "caractere";
@@ -418,12 +446,12 @@ catch[antlr::RecognitionException] {
 */
 protected
 T_ID_AUX
-  : (T_LETTER | '_') T_LETTER_OR_DIGIT
+  : (T_LETTER | '_') (T_LETTER_OR_DIGIT)*
   ;
 
 protected
 T_LETTER_OR_DIGIT
-  : ( T_LETTER | T_DIGIT | '_')*
+  : T_LETTER | T_DIGIT | '_'
   ;
 
 T_IDENTIFICADOR
@@ -445,7 +473,7 @@ options {
         }
       }
       
-    ('-' T_LETTER_OR_DIGIT)?
+    ('-' (T_LETTER_OR_DIGIT)*)?
   {
     
     if(m != -1) {
