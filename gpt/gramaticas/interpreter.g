@@ -105,7 +105,7 @@ inicio
 
 stm
   : stm_attr
-  | fcall 
+  | {interpreter.beginFCall();} fcall {interpreter.endFCall();}
 //   | stm_ret
   | stm_se
   | stm_enquanto
@@ -140,7 +140,7 @@ fcall returns [ExprValue v]
   list<ExprValue> args;
   ExprValue e;
 }
-  : #(TI_FCALL id:T_IDENTIFICADOR 
+  : #(TI_FCALL id:T_IDENTIFICADOR {interpreter.nextCmd(id->getLine());}
       (
         e=expr
         {args.push_back(e);}
@@ -155,7 +155,7 @@ fcall returns [ExprValue v]
         RefPortugolAST fnode   = getFunctionNode(id->getText()); //gets the function node
         func_decls(fnode, args);                                   //executes
 //         v = returnValue; //global ExprValue returnValue
-      }  
+      }
     }
   ;
 
@@ -170,7 +170,8 @@ stm_se
   ExprValue e;
   bool exec = false;
 }
-  : #(T_KW_SE e=expr   {exec = e.ifTrue();} 
+  : #(se:T_KW_SE {interpreter.nextCmd(se->getLine());}
+      e=expr   {exec = e.ifTrue();} 
 
       conditional_statements[exec]
       {
@@ -203,7 +204,8 @@ stm_enquanto
   bool exec;
   RefPortugolAST exprNode, first_stm;
 }
-  : #(T_KW_ENQUANTO {exprNode = _t;} e=expr {exec=e.ifTrue();} 
+  : #(enq:T_KW_ENQUANTO {interpreter.nextCmd(enq->getLine());}
+      {exprNode = _t;} e=expr {exec=e.ifTrue();} 
       {
         first_stm = _t;
 
@@ -224,7 +226,7 @@ stm_para
   int ps;
   RefPortugolAST ateNode, first_stm;
 }
-  : #(T_KW_PARA 
+  : #(para:T_KW_PARA {interpreter.nextCmd(para->getLine());}
         lv=lvalue
         de=expr   {interpreter.execAttribution(lv, de);}
           {ateNode = _t;}

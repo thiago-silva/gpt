@@ -12,6 +12,7 @@
 
 using namespace std;
 
+
 class ExprValue {
   public:
     void setValue(string str) {
@@ -58,12 +59,12 @@ class LValue {
 
 class Variables {
 public:
-  void init() { //init glovals
+  void setupGlobals() { //init glovals
     //currentVars must have all global vars at this point
     globalVars = currentVars;
   }
 
-  void init(const string& scope) {    
+  void pushState() {    
     varstates.push(currentVars);
     currentVars.clear();
   }
@@ -85,6 +86,14 @@ public:
     varstates.pop();
   }
 
+  map<string, Variable>& getLocals() {
+    return currentVars;
+  }
+
+  map<string, Variable>& getGlobals() {
+    return globalVars;
+  }
+
 private:
   typedef map<string, Variable> VariableState_t;
 
@@ -93,14 +102,114 @@ private:
   map<string, Variable> globalVars;
 };
 
+
+#include <sys/socket.h>
+#include <netinet/in.h>
+//#include <errno.h>
+#include <netdb.h>
+//#include <unistd.h> //close
+
+class Net {
+  public:
+  Net() : clientsock(-1){}
+
+  void init() {
+    struct sockaddr_in name;
+
+    char* hostname = "localhost";
+    int port = 5555;   
+
+    struct hostent *hostinfo = NULL;    
+      
+    name.sin_family = AF_INET;
+    name.sin_port = htons (port);
+    hostinfo = gethostbyname (hostname);
+  
+    if (hostinfo == NULL)
+    {
+      cerr << "client: unknow host : "  << hostname << endl;
+      return;
+    }
+
+    name.sin_addr = *(struct in_addr *) hostinfo->h_addr;    
+    
+    clientsock = socket(PF_INET, SOCK_STREAM, 0);
+    if(clientsock < 0) {
+      cerr << "client: could not create socket\n";
+      return;
+    }
+
+    if(connect(clientsock, (struct sockaddr*) &name,sizeof(name)) != 0) { 
+      cerr << "client: unable to connect" << endl;
+      //unable to connect
+      closeSock();
+    }
+  }
+
+  void sendData(int line, Variables& v) {
+    if(clientsock < 0) return;
+
+    map<string, Variable> globals = v.getGlobals();
+
+    stringstream s;
+    s << "<data><line number=\"" << line << "\"/>";
+
+    s << "<vars>";
+    for(map<string, Variable>::iterator it = globals.begin(); it != globals.end(); ++it) {
+      s << "<var name=\"" << (*it).second.name << "\" type=\"" << (*it).second.type
+        << "\" value=\"" <<  (*it).second.primitiveValue << "\"/>";
+    }
+    s << "</vars></data>";
+
+    if(send(clientsock, s.str().c_str(), sizeof(char)* (s.str().length()+1), 0) < 0) {//error
+      cerr << "client:error sending data\n";
+    }
+  }
+
+  void receiveCmd() {
+    char buffer[500];
+    int received;
+
+    if(clientsock < 0) return;
+
+    received = recv(clientsock, buffer, sizeof(buffer), 0);
+    if(received < 0) {
+      cerr << "client: error receiving\n";
+    }
+
+    cerr << "client: received: " << received << ":\"" << buffer << "\"" << endl;
+  }
+
+  void signalNextCmd(int line, Variables& v) {
+//     1: send stack info
+//     2: send variables
+//     3: wait for command
+    sendData(line, v);
+    receiveCmd();
+  }
+
+  void closeSock() {
+    shutdown(clientsock, SHUT_RDWR);
+    close(clientsock);
+    clientsock = -1;
+  }
+
+private:
+  int clientsock;
+};
+
 class PrivateInterpreter {
   public:
-  PrivateInterpreter(SymbolTable& st) : stable(st) {}
+
+  PrivateInterpreter(SymbolTable& st) : stable(st), skipCmd(false) {}
   
   void init() {
     list<Symbol> globals = stable.getSymbols(SymbolTable::GlobalScope);
 
     for(list<Symbol>::iterator it = globals.begin(); it != globals.end(); ++it) {
+      if((*it).isFunction) {
+        continue;
+      }
       Variable v;
       v.name = (*it).lexeme;
       v.type = (*it).type.primitiveType();
@@ -109,11 +218,10 @@ class PrivateInterpreter {
       variables.add(v);
     }
 
-    variables.init();
-  }
+    variables.setupGlobals();
+//     variables.pushState();
 
-  void nextCmd(int line) {
-    //conection
+    net.init();
   }
 
   void execAttribution(LValue& lvalue, ExprValue& v) {
@@ -497,7 +605,7 @@ class PrivateInterpreter {
 
 
   void initFCall(const string& fname, list<ExprValue>& args) {
-    variables.init(fname);
+    variables.pushState();
 
     //setup local vars
 
@@ -548,10 +656,34 @@ class PrivateInterpreter {
     }
   }
 
+//----------- Debugger -------------------------
+
+  void nextCmd(int line) {
+    cerr << "line: " << line << endl;
+    //notes: 
+    //    mat[leia()] := f() + f2(); //is a single step
+    //   se f() então // single step
+
+    if(!skipCmd) {
+      net.signalNextCmd(line, variables);
+    }
+  }
+
+  void beginFCall() {
+//     if(net.currentCmd == CMD_STEP_INTO) {
+//       skipCmd = false;
+//     } else {
+//       skipCmd = true;
+//     }
+  }
+
+  void endFCall() {
+    skipCmd = false;
+  }
+
   private:
     ExprValue executeLeia() {
       ExprValue ret;
-      //ret.type = 
       cin >> ret.value;
       return ret;
     }
@@ -591,6 +723,9 @@ class PrivateInterpreter {
 //     stack<VariableState_t> varstates;
 //     map<string, Variable> currentVars;//map<varname, Variable>
     SymbolTable& stable;
+
+  bool skipCmd;
+  Net net;
 };
 
 #endif
