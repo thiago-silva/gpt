@@ -14,6 +14,7 @@
 #include "SemanticCheck.hpp"
 #include "PortugolAST.hpp"
 #include "ErrorHandler.hpp"
+#include "Interpreter.hpp"
 
   ANTLR_USING_NAMESPACE(std)
   ANTLR_USING_NAMESPACE(antlr)
@@ -139,6 +140,9 @@ bool do_parse(istream& in, ostream& out) {
       } else {
         out << walker.algoritmo(tree) << endl;       
       }
+
+      Interpreter interpreter(stable);
+      interpreter.algoritmo(tree);
     }
     else {
       cerr << PACKAGE << ": erro interno: No tree produced" << endl;
