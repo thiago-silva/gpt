@@ -21,6 +21,8 @@
 
 bool debug_flag = false;
 
+bool interpret_only = false;
+
 string ifilepath;
 string ofilepath;
 char* cfilepath;
@@ -28,17 +30,19 @@ char* cfilepath;
 bool frompipe = false;
 
 void showhelp(void) {
-  cout << PACKAGE << " [options] arquivo\n"
+  cout << PACKAGE << " [opções] arquivo\n"
           "Opções:\n"
           "   -v            mostra versão do programa\n"
-          "   -h            mostra essa ajuda\n"
-          "   -o <arquivo>  salva executável como <arquivo>. Default: a.out\n"
+          "   -h            mostra essa ajuda\n"          
+          "   -o <arquivo>  compila e salva executável como <arquivo>\n"
+          "   -i            não compila, apenas interpreta\n"
           "\n";
 }
 
 void showversion(void) {
-  cout << "G-Portugol versão " << VERSION << "\n"
-          "Website: http://codigolivre.org/projeto\n"
+  cout << "GPT - Compilador G-Portucol\n"
+          "versão  : " << VERSION << "\n"
+          "Website : http://codigolivre.org/compuclass\n"
           "Copyright (C) 2003-2005 Thiago Silva <thiago.silva@kdemail.net>\n\n";
 }
 
@@ -46,9 +50,9 @@ bool init(int argc, char** argv) {
   int c;
   opterr = 0;  
 #ifdef DEBUG
-    while((c = getopt(argc, argv, "o:hvpd")) != -1) {
+    while((c = getopt(argc, argv, "o:ihvpd")) != -1) {
 #else
-    while((c = getopt(argc, argv, "o:hvp")) != -1) {
+    while((c = getopt(argc, argv, "o:ihvp")) != -1) {
 #endif
     switch(c) {
 #ifdef DEBUG
@@ -56,6 +60,9 @@ bool init(int argc, char** argv) {
         debug_flag = true;
         break;
 #endif
+      case 'i':
+        interpret_only = true;
+        break;
       case 'p':
         frompipe = true;
         break;
@@ -96,9 +103,10 @@ bool init(int argc, char** argv) {
   return true;
 }
 
-
 bool do_parse(istream& in, ostream& out) {
+
   DEBUG_PARSER = false;
+
   try
   {
     PortugolLexer lexer(in);
@@ -128,21 +136,24 @@ bool do_parse(istream& in, ostream& out) {
       if(ErrorHandler::self()->hasError()) {
         ErrorHandler::self()->showErrors();
         return false;
-      }
+      }      
 
-      Portugol2C walker(stable);
-      
-      if(debug_flag) {
-        cerr << "BEGIN SOURCE >>>> \n";
-        cerr << walker.algoritmo(tree) << endl;
-        cerr << "<<<<<< END SOURCE\n";
-        return false;
+      //parsing complete!
+
+      if(interpret_only) {
+        Interpreter interpreter(stable);
+        interpreter.algoritmo(tree);
       } else {
-        out << walker.algoritmo(tree) << endl;       
+        Portugol2C pt2c(stable);
+        if(debug_flag) {
+          cerr << "BEGIN SOURCE >>>> \n";
+          cerr << pt2c.algoritmo(tree) << endl;
+          cerr << "<<<<<< END SOURCE\n";          
+        } else {
+          out << pt2c.algoritmo(tree) << endl;          
+        }
       }
-
-      Interpreter interpreter(stable);
-      interpreter.algoritmo(tree);
+      return true;
     }
     else {
       cerr << PACKAGE << ": erro interno: No tree produced" << endl;
@@ -160,6 +171,7 @@ bool do_parse(istream& in, ostream& out) {
     return false;
   }
 
+  cerr << "main::do_parse: bug, nao deveria executar essa linha!" << endl;
   return true;
 }
 
@@ -222,7 +234,9 @@ int main(int argc, char** argv)
   }
 
   if(parse()) {
-    success = compile()?EXIT_SUCCESS:EXIT_FAILURE;
+    if(!debug_flag && !interpret_only) {
+      success = compile()?EXIT_SUCCESS:EXIT_FAILURE;
+    }
   } else {
     success = EXIT_FAILURE;
   }
