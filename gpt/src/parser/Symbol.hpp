@@ -48,15 +48,12 @@ public:
   void setDimensions(const list<int>&);
   list<int>& dimensions();
 
-
   string toString() const;
 protected:
   bool _isPrimitive;
   int _primitiveType;  
   list<int>    _dimensions; //conjunto/matrizASTRef  
 };
-
-#include <iostream>
 
 class ParameterSig {
 public:
@@ -97,7 +94,7 @@ protected:
   list<pair<string, SymbolType> > params;   //parâmetros de funcao    <name, type>
 };
 
-class Symbol {  
+class Symbol {
 public:
   Symbol();
   
