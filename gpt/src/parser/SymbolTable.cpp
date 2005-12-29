@@ -23,6 +23,7 @@
 string SymbolTable::GlobalScope = "@global";
 
 SymbolTable::SymbolTable()
+  : currentCod(0)
 {
   //builtin functions
   registrarLeia();
@@ -35,12 +36,14 @@ SymbolTable::~SymbolTable()
 
 void SymbolTable::registrarLeia() {
   Symbol f(SymbolTable::GlobalScope, "leia", 0, true, TIPO_ALL);
+  f.cd = currentCod++;
   f.isBuiltin = true;
   insertSymbol(f, SymbolTable::GlobalScope);
 }
 
 void SymbolTable::registrarImprima() {
   Symbol f(SymbolTable::GlobalScope, "imprima", 0, true, TIPO_NULO);
+  f.cd = currentCod++;
   f.param.setVariable(true);
   f.isBuiltin = true;
   insertSymbol(f, SymbolTable::GlobalScope);  
@@ -48,6 +51,7 @@ void SymbolTable::registrarImprima() {
 
 void SymbolTable::declareVar(const string& scope, const string& lexeme, int line, int type) {
   Symbol s(scope, lexeme, line, false, type);
+  s.cd = currentCod++;
   symbols[scope].push_back(s);
 }
 
@@ -55,11 +59,13 @@ void SymbolTable::declareVar(const string& scope, const string& lexeme, int line
       , const list<int>& dimensions) {
 
   Symbol s(scope, lexeme, line, false, type, dimensions);
+  s.cd = currentCod++;
   symbols[scope].push_back(s);  
 }
 
 
-void SymbolTable::insertSymbol(const Symbol& s, const string& scope) {
+void SymbolTable::insertSymbol(Symbol& s, const string& scope) {
+  s.cd = currentCod++;
   symbols[scope].push_back(s);
 }
 
@@ -87,3 +93,6 @@ Symbol& SymbolTable::getSymbol(const string& scope, const string& lexeme, bool s
   throw SymbolTableException("no symbol found");
 }
 
+list<Symbol> SymbolTable::getSymbols(const string& scope) {
+  return symbols[scope];
+}

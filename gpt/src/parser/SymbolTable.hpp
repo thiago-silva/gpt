@@ -30,14 +30,17 @@ public:
   void declareVar(const string& scope, const string& lexeme, int line, int type
       , const list<int>& dimensions);
 
-  void insertSymbol(const Symbol& s, const string& scope);
+  void insertSymbol(Symbol& s, const string& scope);
 
   Symbol& getSymbol(const string& scope, const string& lexeme, bool searchGlobal = false);
+
+  list<Symbol> getSymbols(const string& scope);
 
 protected:
   void SymbolTable::registrarLeia();
   void SymbolTable::registrarImprima();
 
+  int currentCod;
   map<string,list<Symbol> > symbols;//map<scope, symbols>
 };
 
