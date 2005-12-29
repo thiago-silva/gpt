@@ -104,6 +104,7 @@ public:
   ExpressionValue  evaluateFCall(RefPortugolAST f, list<ExpressionValue>& args);  
   void evaluateAllFCalls();
   
+  void evaluatePasso(int line, const string& str);
 protected:
 
   bool evalVariableRedeclaration(const string& scope, RefPortugolAST id);

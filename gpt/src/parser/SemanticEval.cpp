@@ -408,17 +408,28 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
     case SemanticCheckTokenTypes::T_MAIS:
     case SemanticCheckTokenTypes::T_MENOS:
     case SemanticCheckTokenTypes::T_DIV:
-    case SemanticCheckTokenTypes::T_MULTIP:
-    case SemanticCheckTokenTypes::T_MOD:
+    case SemanticCheckTokenTypes::T_MULTIP:    
       ret = evaluateNumTypes(left, right);
       if(!ret.isNumeric()) {
         stringstream msg;
-        msg << "Operador \"" << op->getText() << "\" não pode ser usado com termos não-numéricos";
+        msg << "Operador \"" << op->getText() << "\" só pode ser usado com termos numéricos";
             ErrorHandler::self()->add(msg, op->getLine());          
             return nulo;
       } else {
         return ret;
-      }
+      }      
+      break;
+    case SemanticCheckTokenTypes::T_MOD:
+      ret = evaluateNumTypes(left, right);
+      if(!ret.isNumeric(true)) {
+        stringstream msg;
+        msg << "Operador \"" << op->getText() << "\" não pode ser usado com termos "
+            << "numéricos inteiros e compatíveis";
+            ErrorHandler::self()->add(msg, op->getLine());          
+            return nulo;
+      } else {
+        return ret;
+      }      
       break;
   }
 
@@ -443,8 +454,7 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& ev, RefPortugolAST u
 
     //operadores unarios para expressões numéricas (retorna o tipo da expressão 'expr')
     case SemanticCheckTokenTypes::TI_UN_POS://+
-    case SemanticCheckTokenTypes::TI_UN_NEG://-
-    case SemanticCheckTokenTypes::TI_UN_BNOT://~        
+    case SemanticCheckTokenTypes::TI_UN_NEG://-    
       if(!ev.isNumeric()) {
         stringstream msg;
         msg <<  "Operador unário \"" << unary_op->getText()
@@ -455,7 +465,18 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& ev, RefPortugolAST u
         return ev;
       }  
       break;
-
+    case SemanticCheckTokenTypes::TI_UN_BNOT://~
+      if(!ev.isNumeric(true)) {
+        stringstream msg;
+        msg <<  "Operador unário \"" << unary_op->getText()
+            << "\" deve ser usado em termos numéricos inteiros e compatíveis";
+        ErrorHandler::self()->add(msg, unary_op->getLine());
+        return nulo;
+      } else {      
+        return ev;
+      }  
+      break;
+      
     //operador "not", para todos os tipos. Retorna TIPO_LOGICO
     case SemanticCheckTokenTypes::TI_UN_NOT:
       ev.setPrimitiveType(TIPO_LOGICO);
@@ -504,7 +525,7 @@ void SemanticEval::declareFunction(Funcao& f) {
         
   list< pair<int, list<RefPortugolAST> > >::iterator it = f.prim_params.begin();
   for(it = f.prim_params.begin(); it != f.prim_params.end(); ++it) {
-    sfunc.param.add((*it).first);
+    sfunc.param.add((*(*it).second.begin())->getText(), (*it).first);
     declareVars((*it)); 
   }
 
@@ -512,7 +533,7 @@ void SemanticEval::declareFunction(Funcao& f) {
 
   list< pair< pair<int, list<int> >, list<RefPortugolAST> > >::iterator mit;
   for(mit = f.mt_params.begin(); mit != f.mt_params.end(); ++mit) {    
-    sfunc.param.add((*mit).first);
+    sfunc.param.add((*(*mit).second.begin())->getText(),(*mit).first);
     declareVars((*mit));
   }
 
@@ -527,7 +548,7 @@ ExpressionValue SemanticEval::evaluateFCall(RefPortugolAST f, list<ExpressionVal
   //funcoes sao declaradas em escopo global
   try {
     SymbolType s = stable.getSymbol(SymbolTable::GlobalScope, f->getText()).type;
-    v.set( s);
+    v.set(s);
     fcallsList.push_back(pair<RefPortugolAST,list<ExpressionValue> >(f,args));
   } catch(SymbolTableException& e) {
       stringstream msg;
@@ -569,7 +590,7 @@ void SemanticEval::evaluateAllFCalls() {
           return;
         }
         count++;
-      }          
+      }
       continue;
     }
     
@@ -581,18 +602,18 @@ void SemanticEval::evaluateAllFCalls() {
       continue;
     }
 
-    list<SymbolType>::iterator pit = params.symbolList().begin();
-    list<SymbolType>::iterator pend = params.symbolList().end();
+    list< pair<string,SymbolType> >::iterator pit = params.symbolList().begin();
+    list< pair<string,SymbolType> >::iterator pend = params.symbolList().end();
 
     list<ExpressionValue>::iterator ait = args.begin();
     list<ExpressionValue>::iterator aend = args.end();
   
     int count = 1;
     while((pit != pend) && (ait != aend)) {
-      if(!(*ait).isCompatibleWidth(*pit)) {
+      if(!(*ait).isCompatibleWidth((*pit).second)) {
         stringstream msg;
         msg << "Argumento " << count << " da função \"" << f->getText() << "\" deve ser do tipo \""
-          << (*pit).toString() << "\"";
+          << (*pit).second.toString() << "\"";
         ErrorHandler::self()->add(msg, f->getLine());              
         return;
       }    
@@ -600,6 +621,14 @@ void SemanticEval::evaluateAllFCalls() {
       ++pit;
       ++ait;
     }
+  }
+}
+
+void SemanticEval::evaluatePasso(int line, const string& str) {
+  if(atoi(str.c_str()) == 0) {
+    stringstream msg;
+    msg << "Passo com valor \"0\" é inapropriado";
+    ErrorHandler::self()->add(msg, line);
   }
 }
 
