@@ -210,9 +210,8 @@ stm_para
     )
   ;
 
-//nada a analisar aqui...
 passo
-  : #(T_KW_PASSO (T_MAIS|T_MENOS)? T_INT_LIT)
+  : #(T_KW_PASSO (T_MAIS|T_MENOS)? i:T_INT_LIT) {evaluator.evaluatePasso(i->getLine(),i->getText());}
   ;
 
 expr returns [ExpressionValue type]
