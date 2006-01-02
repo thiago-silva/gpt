@@ -1,6 +1,6 @@
 \NewEntry 0 devel
 
-\NewEntry 1 TODO
+\CurrentEntry 1 TODO
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>parser.g error handling</li>
 <ul type="disc"><li>terminar tratamento nas declaracoes de funcoes</li>
@@ -9,8 +9,7 @@
 <li>Verificar todos os consumeUntil() nas excessoes</li>
 <li>Limpar comentarios, codigo...<br /></li></ul>
 <li>gpt.cpp</li>
-<ul type="disc"><li>remover tempnam() e usar mkstemp()</li>
-<li>Adicionar opcoes para interpretação, geracao de codigo C (sem compilacao)<br /></li></ul>
+<ul type="disc"><li>remover tempnam() e usar mkstemp()<br /></li></ul>
 <li>pt2c:</li>
 <ul type="disc"><li>free(lit)! em leia_literal()<br /><br /></li></ul>
 <li>Interpreter:</li>
@@ -39,7 +38,11 @@
 <li>Parser Plugin:</li>
 <ul type="disc"><li>Action (enable/disable) pelo menu/shortcut</li>
 <li>Linkar com gpt</li></ul>
-<div><br />----------------------------------------------------------------------------------------------------------------<br />Checar divisão por 0<br /></div>
+<div><br />----------------------------------------------------------------------------------------------------------------<br />Checar divisão por 0<br /><br /></div>
+<li>Retirar no lexer os &quot; dos strings:</li>
+<ul type="disc"><li>STR_LIT: &quot;! (.*) &quot;!</li>
+<li>atualizar: na traducao para C, circular as strings com &quot;</li></ul>
+<div></div>
 <li>Highlight: numeros binarios e octais</li>
 <li>Highlight: funcoes()<br /><br />Checar se eh possivel: &quot;imprima()&quot; sem argumentos<br /></li>
 <li>Bugs:</li>
@@ -55,6 +58,7 @@
 <li>-------------------------------------------------------------------------------------------------------------------<br /><br />Limpeza de codigo:<br /><br />lexer e parser: apenas polir.<br /><br />Semantic, pt2c, interpreter:</li>
 <ul type="disc"><li>Remodelar (codigo atual está muito experimental, therefore, mal feito)<br /></li></ul></ul>
 </body></html>
+
 
 \NewEntry 1 traducao para C
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
@@ -101,11 +105,10 @@
 <li>Fazer disso uma opcao?</li></ul></ul></ul>
 </body></html>
 
-\CurrentEntry 1 interpret
+\NewEntry 1 interpret
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <p>[size]<br />&lt;data&gt;<br />  &lt;vars&gt;<br />    &lt;var name=&quot;x&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1&quot;/&gt;<br />    &lt;var name=&quot;vect&quot; type=&quot;integer&quot; primitive=&quot;false&quot;&gt;<br />      &lt;var name=&quot;0&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;100&quot;/&gt;<br />      &lt;var name=&quot;1&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;10&quot;/&gt;<br />      &lt;var name=&quot;2&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1110&quot;/&gt;<br />    &lt;/var&gt;<br />    &lt;var name=&quot;mat2&quot; type=&quot;integer&quot; primitive=&quot;false&quot;&gt;<br />      &lt;var name=&quot;0&quot; type=&quot;integer&quot; primitive=&quot;false&quot;&gt;<br />        &lt;var name=&quot;0&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1&quot;/&gt;<br />        &lt;var name=&quot;1&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1&quot;/&gt;<br />      &lt;/var&gt;<br />      &lt;var name=&quot;1&quot; type=&quot;integer&quot; primitive=&quot;false&quot;&gt;<br />        &lt;var name=&quot;0&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1&quot;/&gt;<br />        &lt;var name=&quot;1&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1&quot;/&gt;<br />      &lt;/var&gt;<br />    &lt;/var&gt;<br />  &lt;/vars&gt;<br /><br />  &lt;stackinfo&gt;<br />    &lt;entry function=&quot;bla()&quot; line=&quot;3&quot;/&gt;<br />    &lt;entry function=&quot;@global&quot; line=&quot;5&quot;/&gt;<br />  &lt;/stackinfo&gt;<br /><br />  &lt;message&gt;<br />     &lt;output&gt;Hello world!&lt;/output&gt;<br />     &lt;runtime_error line=&quot;3&quot;&gt;Linha 3 - tentando acessar indice 3 na matriz &quot;mat[2]&quot;&lt;/runtime_error&gt;<br />  &lt;/message&gt;<br />&lt;/data&gt;</p>
 </body></html>
-
 
 \NewEntry 0 manual
 
