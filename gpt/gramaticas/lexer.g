@@ -384,7 +384,7 @@ T_WS_ : (' '
   ;
 
 SL_COMMENT
-  : "//" (~('\n'))* '\n'
+  : "//" (~('\n'))* ('\n')?
     { 
       newline();
       $setType(antlr::Token::SKIP);
@@ -487,7 +487,7 @@ options {
     //check for latim non-keywords
     if(hasLatim && (testLiteralsTable(_ttype) == T_IDENTIFICADOR)) {
       stringstream s;
-      s << "Variável/função \"" << $getText << "\" não pode ter caracteres especiais.";
+      s << "Identificador \"" << $getText << "\" não pode ter caracteres especiais.";
       ErrorHandler::self()->add(s, getLine());
     }
   }
