@@ -62,8 +62,12 @@ protected:
   static string expecting_stm_or_fimse;
   static string expecting_stm_or_fimenq;
   static string expecting_stm_or_fimpara;
+  static string expecting_eof_or_function;
+  static string expecting_function_name;
+  static string expecting_param_or_fparen;
+  static string expecting_inicio_or_vardecl;
 
-  RefToken lastToken; //util para erros de ";". (aponta para o ultimo matched token).
+  RefToken lastToken;
 
  bool isDatatype(int tk) {
     return (tk == PortugolParserTokenTypes::T_KW_INTEIRO)

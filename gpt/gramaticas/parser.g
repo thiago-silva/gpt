@@ -28,40 +28,40 @@ algoritmo
   : declaracao_algoritmo (var_decl_block)? stm_block (func_decls)* EOF
   ;
 
-exception //nem "variaveis" nem "inicio"
-catch[antlr::NoViableAltException e] {
-  reportMismatchedError(e.getLine(), 
-    "\"variáveis\" ou \"início\" após declaração de algoritmo", getTokenDescription(e.token));
-}
+  exception //nem "variaveis" nem "inicio"
+  catch[antlr::NoViableAltException e] {
+    reportMismatchedError(e.getLine(), 
+      "\"variáveis\" ou \"início\" após declaração de algoritmo", getTokenDescription(e.token));
+  }
 
-catch[antlr::MismatchedTokenException e] { //EOF
+  catch[antlr::MismatchedTokenException e] { //EOF
+    reportMismatchedError(e.getLine(), expecting_eof_or_function, getTokenDescription(e.token));
+  }
 
-  reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
-}
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 declaracao_algoritmo
   : alg:T_KW_ALGORITMO^ id:T_IDENTIFICADOR T_SEMICOL!
     {_name = id->getText();}
   ;
 
-exception //T_KW_ALGORITMO, T_IDENTIFICADOR, T_SEMICOL
-catch[antlr::MismatchedTokenException e] {
-  if(e.expecting == T_IDENTIFICADOR) {
-    if(alg->getLine() != e.getLine()) {
-      reportMismatchedError(alg->getLine(), expecting_algorithm_name, "", alg->getText());
+  exception //T_KW_ALGORITMO, T_IDENTIFICADOR, T_SEMICOL
+  catch[antlr::MismatchedTokenException e] {
+    if(e.expecting == T_IDENTIFICADOR) {
+      if(alg->getLine() != e.getLine()) {
+        reportMismatchedError(alg->getLine(), expecting_algorithm_name, "", alg->getText());
+      } else {
+        reportMismatchedError(e.getLine(), expecting_algorithm_name, getTokenDescription(e.token));
+      }
+    } else if(e.expecting == T_SEMICOL) {
+      reportMismatchedError(id->getLine(), getTokenNames()[e.expecting], "", id->getText());
     } else {
-      reportMismatchedError(e.getLine(), expecting_algorithm_name, getTokenDescription(e.token));
+      reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
     }
-  } else if(e.expecting == T_SEMICOL) {
-    reportMismatchedError(id->getLine(), getTokenNames()[e.expecting], "", id->getText());
-  } else {
-    reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+    BitSet b;
+    b.add(T_KW_VARIAVEIS);
+    b.add(T_KW_INICIO);
+    consumeUntil(b);
   }
-  BitSet b;
-  b.add(T_KW_VARIAVEIS);
-  b.add(T_KW_INICIO);
-  consumeUntil(b);
-}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 var_decl_block  
@@ -69,47 +69,47 @@ var_decl_block
   : tvars:T_KW_VARIAVEIS^ (var_decl {tk = lastToken;} semi:T_SEMICOL!)+ T_KW_FIM_VARIAVEIS!
   ;
 
-//Nota: T_KW_VARIAVEIS ja foi checado.
+  //Nota: T_KW_VARIAVEIS ja foi checado.
 
-exception //nenhum T_IDENTIFICADOR (var_decl)
-catch[antlr::NoViableAltException e] {
-  
-  int cd;
-  if(e.getLine() == tvars->getLine()) {
-    cd = reportMismatchedError(e.getLine(), expecting_variable, "", tvars->getText());
-  } else {
-    cd = reportMismatchedError(e.getLine(), expecting_variable, getTokenDescription(e.token));
-  }
-  printTip("Pelo menos uma variável deve ser declarada", e.getLine(), cd);
-
-  BitSet b;
-  b.add(T_KW_INICIO);
-  b.add(T_KW_FUNCAO);
-  consumeUntil(b); 
-}
-
-catch[antlr::MismatchedTokenException e] {
-  if(e.expecting == T_SEMICOL) {
-    if(isDatatype(tk->getType())) {
-      reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());
-    } /*else {
-      reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
-    }*/
-  } else if(e.expecting == T_KW_FIM_VARIAVEIS){
-    if(e.getLine() == semi->getLine()) {
-      reportMismatchedError(e.getLine(), expecting_fimvar_or_var, "", semi->getText());
+  exception //nenhum T_IDENTIFICADOR (var_decl)
+  catch[antlr::NoViableAltException e] {
+    
+    int cd;
+    if(e.getLine() == tvars->getLine()) {
+      cd = reportMismatchedError(e.getLine(), expecting_variable, "", tvars->getText());
     } else {
-      reportMismatchedError(e.getLine(), expecting_fimvar_or_var, getTokenDescription(e.token));
+      cd = reportMismatchedError(e.getLine(), expecting_variable, getTokenDescription(e.token));
     }
-  } else {
-    reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+    printTip("Pelo menos uma variável deve ser declarada", e.getLine(), cd);
+  
+    BitSet b;
+    b.add(T_KW_INICIO);
+    b.add(T_KW_FUNCAO);
+    consumeUntil(b); 
   }
 
-  BitSet b;
-  b.add(T_KW_VARIAVEIS);
-  b.add(T_KW_INICIO);
-  consumeUntil(b);
-}
+  catch[antlr::MismatchedTokenException e] {
+    if(e.expecting == T_SEMICOL) {
+      if(isDatatype(tk->getType())) {
+        reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());
+      } /*else {
+        reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+      }*/
+    } else if(e.expecting == T_KW_FIM_VARIAVEIS){
+      if(e.getLine() == semi->getLine()) {
+        reportMismatchedError(e.getLine(), expecting_fimvar_or_var, "", semi->getText());
+      } else {
+        reportMismatchedError(e.getLine(), expecting_fimvar_or_var, getTokenDescription(e.token));
+      }
+    } else {
+      reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+    }
+  
+    BitSet b;
+    b.add(T_KW_VARIAVEIS);
+    b.add(T_KW_INICIO);
+    consumeUntil(b);
+  }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -123,40 +123,39 @@ var_decl!
      )
   ;
 
-//Nota: T_IDENTIFICADOR ja foi checado
-
-exception
-catch[antlr::MismatchedTokenException e] {
- 
-  if(e.expecting == T_COLON) {
-    if((e.token->getType() != EOF_) && (e.getLine() == lastId->getLine())) {
-      int cd;
-      cd = reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
-
-      if(e.token->getType() == T_IDENTIFICADOR) {
-        printTip(string("Coloque uma vírgula entre as variáveis \"")
-             + lastId->getText() + "\" e \"" + e.token->getText() + "\"", e.getLine(), cd);
+  //Nota: T_IDENTIFICADOR ja foi checado
+  exception
+  catch[antlr::MismatchedTokenException e] {
+  
+    if(e.expecting == T_COLON) {
+      if((e.token->getType() != EOF_) && (e.getLine() == lastId->getLine())) {
+        int cd;
+        cd = reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+  
+        if(e.token->getType() == T_IDENTIFICADOR) {
+          printTip(string("Coloque uma vírgula entre as variáveis \"")
+              + lastId->getText() + "\" e \"" + e.token->getText() + "\"", e.getLine(), cd);
+        }
+        if(isDatatype(e.token->getType())) {
+          printTip(string("Coloque ':' entre \"")
+            + lastId->getText() + "\" e " + getTokenNames()[LA(1)], e.getLine(), cd);
+        }
+      } else {
+        reportMismatchedError(lastId->getLine(), getTokenNames()[e.expecting], "", lastId->getText());
       }
-      if(isDatatype(e.token->getType())) {
-        printTip(string("Coloque ':' entre \"")
-           + lastId->getText() + "\" e " + getTokenNames()[LA(1)], e.getLine(), cd);
-      }
-    } else {
-      reportMismatchedError(lastId->getLine(), getTokenNames()[e.expecting], "", lastId->getText());
     }
+    lastToken = LT(1);
+    consumeUntil(T_SEMICOL);
   }
-  lastToken = LT(1);
-  consumeUntil(T_SEMICOL);
-}
-
-catch[antlr::NoViableAltException e] { //no datatype
-  if(e.getLine() == colon->getLine()) {
-    reportMismatchedError(e.getLine(), expecting_datatype,  getTokenDescription(e.token));
-  } else {
-    reportMismatchedError(e.getLine(), expecting_datatype, "", colon->getText());
+  
+  catch[antlr::NoViableAltException e] { //no datatype
+    if(e.getLine() == colon->getLine()) {
+      reportMismatchedError(e.getLine(), expecting_datatype,  getTokenDescription(e.token));
+    } else {
+      reportMismatchedError(e.getLine(), expecting_datatype, "", colon->getText());
+    }
+    consumeUntil(T_SEMICOL);
   }
-  consumeUntil(T_SEMICOL);
-}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 var_more
@@ -164,17 +163,18 @@ var_more
   :  (T_COMMA! {lst=lastToken;} id:T_IDENTIFICADOR {lastToken = id;})*
   ;
 
-exception
-catch[antlr::MismatchedTokenException e] {
-  if(lst->getLine() == e.getLine()) {
-    reportMismatchedError(e.getLine(), expecting_variable, getTokenDescription(e.token));
-  } else {
-    reportMismatchedError(e.getLine(), expecting_variable, "", lst->getText());
+  exception
+  catch[antlr::MismatchedTokenException e] {
+    if(lst->getLine() == e.getLine()) {
+      reportMismatchedError(e.getLine(), expecting_variable, getTokenDescription(e.token));
+    } else {
+      reportMismatchedError(e.getLine(), expecting_variable, "", lst->getText());
+    }
+    consumeUntil(T_COLON);
   }
-  consumeUntil(T_COLON);
-}
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 tp_prim
+{RefToken tk=lastToken;}
   : T_KW_INTEIRO
   | T_KW_REAL
   | T_KW_CARACTERE
@@ -182,31 +182,40 @@ tp_prim
   | T_KW_LOGICO
   ;
 
+
+  exception //for function return
+  catch[antlr::NoViableAltException e] {
+    if(e.getLine() == tk->getLine()) {
+      reportMismatchedError(e.getLine(), expecting_datatype, getTokenDescription(e.token));
+    } else {
+      reportMismatchedError(tk->getLine(), expecting_datatype, "", tk->getText());
+    }
+    BitSet b;
+    b.add(T_SEMICOL);//next for decl var
+    b.add(T_KW_INICIO); //next for rettype
+    consumeUntil(b);
+  }
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 tp_matriz!
 {RefToken lst;}
   : mt:T_KW_MATRIZ dim:dimensoes {lst=lastToken;}T_KW_DE tipo:tp_prim_pl
     {#tp_matriz = #(tipo, dim);}    
   ;
 
-exception
-catch[antlr::MismatchedTokenException e] {
-  if(lst->getType() == T_FECHAC) {
-    if(e.getLine() == mt->getLine()) {    
-      reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
-    } else {
-      reportMismatchedError(mt->getLine(), getTokenNames()[e.expecting], "", lst->getText());
-    }
-  }//else: dimensoes deu erro. Nao reporte nada aqui.
-  
-  consumeUntil(T_SEMICOL);
-}
-
-// catch[antlr::NoViableAltException e] {
-// 
-//   reportMismatchedError(mt->getLine(), getTokenNames()[T_KW_DE], "", mt->getText());
-//   consumeUntil(T_KW_DE);
-// }
+  exception
+  catch[antlr::MismatchedTokenException e] {
+    if(lst->getType() == T_FECHAC) {
+      if(e.getLine() == mt->getLine()) {    
+        reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+      } else {
+        reportMismatchedError(mt->getLine(), getTokenNames()[e.expecting], "", lst->getText());
+      }
+    }//else: dimensoes deu erro. Nao reporte nada aqui.
+    
+    consumeUntil(T_SEMICOL);
+  }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -225,25 +234,25 @@ dimensoes
     )+
   ;
 
-exception
-catch[antlr::MismatchedTokenException e] {
-  
-  if(e.getLine() == lst->getLine()) {
-    reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], "", lst->getText());//getTokenDescription(e.token));
-  } else {
-    reportMismatchedError(lst->getLine(), getTokenNames()[e.expecting], "", lst->getText());
+  exception
+  catch[antlr::MismatchedTokenException e] {
+    
+    if(e.getLine() == lst->getLine()) {
+      reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], "", lst->getText());//getTokenDescription(e.token));
+    } else {
+      reportMismatchedError(lst->getLine(), getTokenNames()[e.expecting], "", lst->getText());
+    }
+    consumeUntil(T_KW_DE);
   }
-  consumeUntil(T_KW_DE);
-}
 
-catch[antlr::NoViableAltException e] {
-  if(mt->getLine() == e.getLine()) {
-    reportMismatchedError(e.getLine(), getTokenNames()[T_ABREC], "", mt->getText());
-  } else {
-    reportMismatchedError(mt->getLine(), getTokenNames()[T_ABREC], "", mt->getText());
+  catch[antlr::NoViableAltException e] {
+    if(mt->getLine() == e.getLine()) {
+      reportMismatchedError(e.getLine(), getTokenNames()[T_ABREC], "", mt->getText());
+    } else {
+      reportMismatchedError(mt->getLine(), getTokenNames()[T_ABREC], "", mt->getText());
+    }
+    consumeUntil(T_KW_DE);
   }
-  consumeUntil(T_KW_DE);
-}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -272,32 +281,29 @@ stm_block!
   : T_KW_INICIO stms:stm_list T_KW_FIM
       {#stm_block = #(T_KW_INICIO, stms);}
   ;
-exception
-catch[antlr::MismatchedTokenException e] {
-  if(e.expecting == T_KW_FIM) {
-    int cd = reportMismatchedError(e.getLine(), expecting_stm_or_fim, getTokenDescription(e.token));
-    if(e.token->getType() == T_IDENTIFICADOR) {
-      printTip(string("se \"") + e.token->getText() 
-        + "\" é uma variável, adicione o operador de atribuição " + getTokenNames()[T_ATTR]
-        + ", se for uma função, adicione " +  getTokenNames()[T_ABREP] , e.getLine(), cd);
-    } 
-  } else {
-    reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+
+  exception
+  catch[antlr::MismatchedTokenException e] {
+    if(e.expecting == T_KW_FIM) {
+      int cd = reportMismatchedError(e.getLine(), expecting_stm_or_fim, getTokenDescription(e.token));
+      if(e.token->getType() == T_IDENTIFICADOR) {
+        printTip(string("se \"") + e.token->getText() 
+          + "\" é uma variável, adicione o operador de atribuição " + getTokenNames()[T_ATTR]
+          + ", se for uma função, adicione " +  getTokenNames()[T_ABREP] , e.getLine(), cd);
+      } 
+    } else {
+      reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+    }
+  
+    BitSet b;
+    b.add(EOF_);
+    b.add(T_KW_FUNCAO);
+    consumeUntil(b);
   }
 
-  BitSet b;
-  b.add(EOF_);
-  b.add(T_KW_FUNCAO);
-  consumeUntil(b);
-}
-
-// catch[antlr::NoViableAltException e] {
-//   reportMismatchedError(e.getLine(), getTokenNames()[T_KW_FIM], getTokenDescription(e.token));
-// }
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// stm_list
-//   : (stm)*
-//   ;
+//   catch[antlr::NoViableAltException e] {
+//     cerr << "stm_block:NoViableAltException\n";
+//   }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -312,53 +318,51 @@ stm_list
     )*
   ;
 
-//Nota: caso haja excecao em (stm_list)*, não haverá outra tentativa (causada pelo *),
-//      isso eh, a funcao stm_list retornara.
-exception
-catch[antlr::MismatchedTokenException e] {
-  if(e.expecting == T_SEMICOL) {
-    if(tk->getLine() == e.getLine()) {
-      reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
-    } else {
-      reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());
+  //Nota: caso haja excecao em (stm_list)*, não haverá outra tentativa (causada pelo *),
+  //      isso eh, a funcao stm_list retornara.
+  exception
+  catch[antlr::MismatchedTokenException e] {
+    if(e.expecting == T_SEMICOL) {
+      if(tk->getLine() == e.getLine()) {
+        reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+      } else {
+        reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());
+      }
     }
+  
+    BitSet b;
+    b.add(T_KW_FIM_SE);
+    b.add(T_KW_FIM_ENQUANTO);
+    b.add(T_KW_FIM_PARA);
+    b.add(T_KW_FIM);
+    consumeUntil(b);
   }
-
-  BitSet b;
-  b.add(T_KW_FIM_SE);
-  b.add(T_KW_FIM_ENQUANTO);
-  b.add(T_KW_FIM_PARA);
-  b.add(T_KW_FIM);
-  consumeUntil(b);
-}
-// exception
-// catch[antlr::NoViableAltException e] {
-//   reportMismatchedError(e.getLine(), getTokenNames()[T_KW_FIM], getTokenDescription(e.token));
-// }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 stm_ret!
   : t:T_KW_RETORNE^ (e:expr {#stm_ret = #(t,e);}|{#stm_ret = #(t,[TI_NULL,"null!"]);})
   ;
-exception
-catch[antlr::NoViableAltException e] {
-  reportMismatchedError(lastToken->getLine(), expecting_expression, "", lastToken->getText());
 
-  //tudo o que vem depois de stm_list
-  BitSet b;
-  b.add(T_IDENTIFICADOR);
-  b.add(T_KW_RETORNE);
-  b.add(T_KW_SE);
-  b.add(T_KW_ENQUANTO);
-  b.add(T_KW_PARA);
-  b.add(T_KW_SENAO);
-  b.add(T_KW_FIM_SE);
-  b.add(T_KW_FIM_ENQUANTO);
-  b.add(T_KW_FIM_PARA);
-  b.add(T_KW_FIM);
-  consumeUntil(b);
-}
+  exception
+  catch[antlr::NoViableAltException e] {
+    reportMismatchedError(lastToken->getLine(), expecting_expression, "", lastToken->getText());
+  
+    //tudo o que vem depois de stm_list
+    BitSet b;
+    b.add(T_IDENTIFICADOR);
+    b.add(T_KW_RETORNE);
+    b.add(T_KW_SE);
+    b.add(T_KW_ENQUANTO);
+    b.add(T_KW_PARA);
+    b.add(T_KW_SENAO);
+    b.add(T_KW_FIM_SE);
+    b.add(T_KW_FIM_ENQUANTO);
+    b.add(T_KW_FIM_PARA);
+    b.add(T_KW_FIM);
+    consumeUntil(b);
+  }
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 array_sub
@@ -366,23 +370,23 @@ array_sub
   : (T_ABREC! expr {tk = lastToken;}T_FECHAC!)*
   ;
 
-exception //apenas para rvalue. se array_sub pertence a um lvalue, ele ja foi validado porcausa
-          //do predicado em stm_list
-catch[antlr::MismatchedTokenException e] {
-  reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());
-
-  //consumeUntil: para tudo o que vem depois de lvalue
-  BitSet b;
-  b.add(T_ATTR);
-  b.add(T_KW_DE);
-  //+ tudo o que vem depois de expr
-  b.add(T_SEMICOL);
-  b.add(T_FECHAC);
-  b.add(T_KW_ENTAO);
-  b.add(T_KW_FACA);
-  b.add(T_KW_ATE);
-  consumeUntil(b);
-}
+  exception //apenas para rvalue. se array_sub pertence a um lvalue, ele ja foi validado porcausa
+            //do predicado em stm_list
+  catch[antlr::MismatchedTokenException e] {
+    reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());
+  
+    //consumeUntil: para tudo o que vem depois de lvalue
+    BitSet b;
+    b.add(T_ATTR);
+    b.add(T_KW_DE);
+    //+ tudo o que vem depois de expr
+    b.add(T_SEMICOL);
+    b.add(T_FECHAC);
+    b.add(T_KW_ENTAO);
+    b.add(T_KW_FACA);
+    b.add(T_KW_ATE);
+    consumeUntil(b);
+  }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 lvalue!
@@ -391,26 +395,29 @@ lvalue!
     s:array_sub
     {#lvalue = #(id, s);}
   ;
-exception
-catch[antlr::MismatchedTokenException e] {
-  if(lst->getLine() == e.getLine()) {
-    reportMismatchedError(e.getLine(), expecting_variable, getTokenDescription(e.token));
-  } else {
-    reportMismatchedError(lst->getLine(), expecting_variable, "", lst->getText());
-  }  
-  //tudo o que vem depois de lvalue
-  BitSet b;
-  b.add(T_ATTR);
-  b.add(T_KW_DE);  
-  //+tudo o que vem depois de expr
-  b.add(T_SEMICOL);
-  b.add(T_FECHAC);
-  b.add(T_KW_ENTAO);
-  b.add(T_KW_FACA);
-  b.add(T_KW_ATE);
-  consumeUntil(b);
-}
+
+  exception
+  catch[antlr::MismatchedTokenException e] {
+    if(lst->getLine() == e.getLine()) {
+      reportMismatchedError(e.getLine(), expecting_variable, getTokenDescription(e.token));
+    } else {
+      reportMismatchedError(lst->getLine(), expecting_variable, "", lst->getText());
+    }  
+    //tudo o que vem depois de lvalue
+    BitSet b;
+    b.add(T_ATTR);
+    b.add(T_KW_DE);  
+    //+tudo o que vem depois de expr
+    b.add(T_SEMICOL);
+    b.add(T_FECHAC);
+    b.add(T_KW_ENTAO);
+    b.add(T_KW_FACA);
+    b.add(T_KW_ATE);
+    consumeUntil(b);
+  }
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 stm_attr
   : lvalue T_ATTR^ expr
   ;
@@ -423,91 +430,95 @@ stm_se
   : T_KW_SE^ expr {tk=lastToken;} T_KW_ENTAO! {tk=lastToken;} stm_list (T_KW_SENAO stm_list)? {tk=lastToken;} T_KW_FIM_SE!
   ;
 
-exception
-catch[antlr::MismatchedTokenException e] {
-  if(e.expecting != T_KW_FIM_SE) {
-    if(e.getLine() == tk->getLine()) {
-      reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+  exception
+  catch[antlr::MismatchedTokenException e] {
+    if(e.expecting != T_KW_FIM_SE) {
+      if(e.getLine() == tk->getLine()) {
+        reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+      } else {
+        reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());
+      }
     } else {
-      reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());
+      if(e.getLine() == tk->getLine()) {
+        reportMismatchedError(e.getLine(), expecting_stm_or_fimse, getTokenDescription(e.token));
+      } else {
+        reportMismatchedError(tk->getLine(), expecting_stm_or_fimse, "", tk->getText());
+      }  
     }
-  } else {
+    //tudo o que vem depois de stm_list
+    BitSet b;
+    b.add(T_IDENTIFICADOR);
+    b.add(T_KW_RETORNE);
+    b.add(T_KW_SE);
+    b.add(T_KW_ENQUANTO);
+    b.add(T_KW_PARA);
+    b.add(T_KW_SENAO);
+    b.add(T_KW_FIM_SE);
+    b.add(T_KW_FIM_ENQUANTO);
+    b.add(T_KW_FIM_PARA);
+    b.add(T_KW_FIM);
+    consumeUntil(b);
+  }
+
+  catch[antlr::NoViableAltException e] { //fimse
     if(e.getLine() == tk->getLine()) {
       reportMismatchedError(e.getLine(), expecting_stm_or_fimse, getTokenDescription(e.token));
     } else {
       reportMismatchedError(tk->getLine(), expecting_stm_or_fimse, "", tk->getText());
     }  
+    //tudo o que vem depois de stm_list
+    BitSet b;
+    b.add(T_IDENTIFICADOR);
+    b.add(T_KW_RETORNE);
+    b.add(T_KW_SE);
+    b.add(T_KW_ENQUANTO);
+    b.add(T_KW_PARA);
+    b.add(T_KW_SENAO);
+    b.add(T_KW_FIM_SE);
+    b.add(T_KW_FIM_ENQUANTO);
+    b.add(T_KW_FIM_PARA);
+    b.add(T_KW_FIM);
+    consumeUntil(b);
   }
-  //tudo o que vem depois de stm_list
-  BitSet b;
-  b.add(T_IDENTIFICADOR);
-  b.add(T_KW_RETORNE);
-  b.add(T_KW_SE);
-  b.add(T_KW_ENQUANTO);
-  b.add(T_KW_PARA);
-  b.add(T_KW_SENAO);
-  b.add(T_KW_FIM_SE);
-  b.add(T_KW_FIM_ENQUANTO);
-  b.add(T_KW_FIM_PARA);
-  b.add(T_KW_FIM);
-  consumeUntil(b);
-}
 
-catch[antlr::NoViableAltException e] { //fimse
-  if(e.getLine() == tk->getLine()) {
-    reportMismatchedError(e.getLine(), expecting_stm_or_fimse, getTokenDescription(e.token));
-  } else {
-    reportMismatchedError(tk->getLine(), expecting_stm_or_fimse, "", tk->getText());
-  }  
-  //tudo o que vem depois de stm_list
-  BitSet b;
-  b.add(T_IDENTIFICADOR);
-  b.add(T_KW_RETORNE);
-  b.add(T_KW_SE);
-  b.add(T_KW_ENQUANTO);
-  b.add(T_KW_PARA);
-  b.add(T_KW_SENAO);
-  b.add(T_KW_FIM_SE);
-  b.add(T_KW_FIM_ENQUANTO);
-  b.add(T_KW_FIM_PARA);
-  b.add(T_KW_FIM);
-  consumeUntil(b);
-}
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 stm_enquanto
 {RefToken tk;}
   : T_KW_ENQUANTO^ expr {tk=lastToken;} T_KW_FACA! {tk=lastToken;} stm_list {tk=lastToken;} T_KW_FIM_ENQUANTO!
   ;
-exception
-catch[antlr::MismatchedTokenException e] {
-  if(e.expecting != T_KW_FIM_ENQUANTO) {
-    if(e.getLine() == tk->getLine()) {
-      reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+
+  exception
+  catch[antlr::MismatchedTokenException e] {
+    if(e.expecting != T_KW_FIM_ENQUANTO) {
+      if(e.getLine() == tk->getLine()) {
+        reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+      } else {
+        reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());
+      }
     } else {
-      reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());
+      if(e.getLine() == tk->getLine()) {
+        reportMismatchedError(e.getLine(), expecting_stm_or_fimenq, getTokenDescription(e.token));
+      } else {
+        reportMismatchedError(tk->getLine(), expecting_stm_or_fimenq, "", tk->getText());
+      }  
     }
-  } else {
-    if(e.getLine() == tk->getLine()) {
-      reportMismatchedError(e.getLine(), expecting_stm_or_fimenq, getTokenDescription(e.token));
-    } else {
-      reportMismatchedError(tk->getLine(), expecting_stm_or_fimenq, "", tk->getText());
-    }  
+    //tudo o que vem depois de stm_list
+    BitSet b;
+    b.add(T_IDENTIFICADOR);
+    b.add(T_KW_RETORNE);
+    b.add(T_KW_SE);
+    b.add(T_KW_ENQUANTO);
+    b.add(T_KW_PARA);
+    b.add(T_KW_SENAO);
+    b.add(T_KW_FIM_SE);
+    b.add(T_KW_FIM_ENQUANTO);
+    b.add(T_KW_FIM_PARA);
+    b.add(T_KW_FIM);
+    consumeUntil(b);
   }
-  //tudo o que vem depois de stm_list
-  BitSet b;
-  b.add(T_IDENTIFICADOR);
-  b.add(T_KW_RETORNE);
-  b.add(T_KW_SE);
-  b.add(T_KW_ENQUANTO);
-  b.add(T_KW_PARA);
-  b.add(T_KW_SENAO);
-  b.add(T_KW_FIM_SE);
-  b.add(T_KW_FIM_ENQUANTO);
-  b.add(T_KW_FIM_PARA);
-  b.add(T_KW_FIM);
-  consumeUntil(b);
-}
-//nota: stm_enquanto nao lanca noViable
+
+  //nota: stm_enquanto nao lanca noViable
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 stm_para 
@@ -524,135 +535,141 @@ stm_para
     T_KW_FIM_PARA!
   ;
 
-exception
-catch[antlr::MismatchedTokenException e] {
-  if(e.expecting != T_KW_FIM_PARA) {
-    if(e.getLine() == tk->getLine()) {
-      reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+  exception
+  catch[antlr::MismatchedTokenException e] {
+    if(e.expecting != T_KW_FIM_PARA) {
+      if(e.getLine() == tk->getLine()) {
+        reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+      } else {
+        reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());
+      }
     } else {
-      reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());
+      if(e.getLine() == tk->getLine()) {
+        reportMismatchedError(e.getLine(), expecting_stm_or_fimpara, getTokenDescription(e.token));
+      } else {
+        reportMismatchedError(tk->getLine(), expecting_stm_or_fimpara, "", tk->getText());
+      }  
     }
-  } else {
-    if(e.getLine() == tk->getLine()) {
-      reportMismatchedError(e.getLine(), expecting_stm_or_fimpara, getTokenDescription(e.token));
-    } else {
-      reportMismatchedError(tk->getLine(), expecting_stm_or_fimpara, "", tk->getText());
-    }  
+    //tudo o que vem depois de stm_list
+    BitSet b;
+    b.add(T_IDENTIFICADOR);
+    b.add(T_KW_RETORNE);
+    b.add(T_KW_SE);
+    b.add(T_KW_ENQUANTO);
+    b.add(T_KW_PARA);
+    b.add(T_KW_SENAO);
+    b.add(T_KW_FIM_SE);
+    b.add(T_KW_FIM_ENQUANTO);
+    b.add(T_KW_FIM_PARA);
+    b.add(T_KW_FIM);
+    consumeUntil(b);
   }
-  //tudo o que vem depois de stm_list
-  BitSet b;
-  b.add(T_IDENTIFICADOR);
-  b.add(T_KW_RETORNE);
-  b.add(T_KW_SE);
-  b.add(T_KW_ENQUANTO);
-  b.add(T_KW_PARA);
-  b.add(T_KW_SENAO);
-  b.add(T_KW_FIM_SE);
-  b.add(T_KW_FIM_ENQUANTO);
-  b.add(T_KW_FIM_PARA);
-  b.add(T_KW_FIM);
-  consumeUntil(b);
-}
 
 passo
 {RefToken tk=LT(1);}
   : (T_KW_PASSO^ {tk=lastToken;} (T_MAIS|T_MENOS)? {tk=lastToken;} T_INT_LIT)?
   ;
 
-exception
-catch[antlr::NoViableAltException e] {
-  // passo faz lookahead para checar T_KW_FACA
-  if(tk->getType() != T_KW_PASSO) {
-    if(e.getLine() == tk->getLine()) {
-      reportMismatchedError(e.getLine(), getTokenNames()[T_KW_FACA], getTokenDescription(e.token));
+  exception
+  catch[antlr::NoViableAltException e] {
+    // passo faz lookahead para checar T_KW_FACA
+    if(tk->getType() != T_KW_PASSO) {
+      if(e.getLine() == tk->getLine()) {
+        reportMismatchedError(e.getLine(), getTokenNames()[T_KW_FACA], getTokenDescription(e.token));
+      } else {
+        reportMismatchedError(tk->getLine(), getTokenNames()[T_KW_FACA], "", tk->getText());
+      }
     } else {
-      reportMismatchedError(tk->getLine(), getTokenNames()[T_KW_FACA], "", tk->getText());
-    }
-  } else {
-    reportMismatchedError(tk->getLine(), getTokenNames()[T_INT_LIT], "", tk->getText());
-    consumeUntil(T_KW_FACA);
-  }  
-}
-
-catch[antlr::MismatchedTokenException e] {
-  if(e.getLine() == tk->getLine()) {
-    reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
-  } else {
-    reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], "", tk->getText());
+      reportMismatchedError(tk->getLine(), getTokenNames()[T_INT_LIT], "", tk->getText());
+      consumeUntil(T_KW_FACA);
+    }  
   }
-  consumeUntil(T_KW_FACA);
-}
+  
+  catch[antlr::MismatchedTokenException e] {
+    if(e.getLine() == tk->getLine()) {
+      reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+    } else {
+      reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], "", tk->getText());
+    }
+    consumeUntil(T_KW_FACA);
+  }
+
+
+
+
 /* ----------------------------- Expressoes ---------------------------------- */
+
+
+
 
 expr
   : expr_e (T_KW_OU^ expr)?
   ;
 
-exception //catch todas as excecoes nas expr_*
-catch[ANTLR_USE_NAMESPACE(antlr)NoViableAltException e] {
-  //nothing
-
-}
+  exception //catch todas as excecoes nas expr_*
+  catch[ANTLR_USE_NAMESPACE(antlr)NoViableAltException e] {
+    //nothing
+  }
   
 expr_e 
 options {
-  defaultErrorHandler=false; //noviable should be caught on principal
+  defaultErrorHandler=false; //noviable should be caught on expr
 }
   : expr_bit_ou (T_KW_E^ expr_e)?
   ;
 
 expr_bit_ou
 options {
-  defaultErrorHandler=false; //noviable should be caught on principal
+  defaultErrorHandler=false; //noviable should be caught on expr
 }
   : expr_bit_xou (T_BIT_OU^ expr_bit_ou)?
   ;
 
 expr_bit_xou 
 options {
-  defaultErrorHandler=false; //noviable should be caught on principal
+  defaultErrorHandler=false; //noviable should be caught on expr
 }
   : expr_bit_e (T_BIT_XOU^ expr_bit_xou)?
   ;
 
 expr_bit_e
 options {
-  defaultErrorHandler=false; //noviable should be caught on principal
+  defaultErrorHandler=false; //noviable should be caught on expr
 }
   : expr_igual (T_BIT_E^ expr_bit_e)?
   ;
   
 expr_igual
 options {
-  defaultErrorHandler=false; //noviable should be caught on principal
+  defaultErrorHandler=false; //noviable should be caught on expr
 }
   : expr_relacional (T_IGUAL^ expr_igual|T_DIFERENTE^ expr_igual)?
   ;
         
 expr_relacional
 options {
-  defaultErrorHandler=false; //noviable should be caught on principal
+  defaultErrorHandler=false; //noviable should be caught on expr
 }
   : expr_ad ((T_MAIOR^| T_MAIOR_EQ^| T_MENOR^| T_MENOR_EQ^) expr_relacional)?
   ;
 
 expr_ad
 options {
-  defaultErrorHandler=false; //noviable should be caught on principal
+  defaultErrorHandler=false; //noviable should be caught on expr
 }
   : expr_multip (T_MAIS^ expr_ad| T_MENOS^ expr_ad)?
   ;
 
 expr_multip 
 options {
-  defaultErrorHandler=false; //noviable should be caught on principal
+  defaultErrorHandler=false; //noviable should be caught on expr
 }
   : expr_unario (( T_DIV^ | T_MULTIP^ | T_MOD^ ) expr_multip)?
   ;
 
 expr_unario!
 options {
-  defaultErrorHandler=false; //noviable should be caught on principal
+  defaultErrorHandler=false; //noviable should be caught on expr
 }
   : o:op_unario e:expr_elemento {#expr_unario = #(o, e);}
   ;
@@ -666,25 +683,26 @@ op_unario!
     )?
   ; 
 
-exception  //op_unario faz um lookahead e lanca noViable 
-           //se LA(1) nao servir em nenhuma alternativa de expr_elemento
-catch[ANTLR_USE_NAMESPACE(antlr)NoViableAltException e] {
-
-  if(lastToken->getLine() == e.getLine()) {
-    reportMismatchedError(e.getLine(), expecting_expression, getTokenDescription(e.token), lastToken->getText());  
-  } else {
-    reportMismatchedError(lastToken->getLine(), expecting_expression, "", lastToken->getText());
+  exception  //op_unario faz um lookahead e lanca noViable 
+            //se LA(1) nao servir em nenhuma alternativa de expr_elemento
+  catch[ANTLR_USE_NAMESPACE(antlr)NoViableAltException e] {
+  
+    if(lastToken->getLine() == e.getLine()) {
+      reportMismatchedError(e.getLine(), expecting_expression, getTokenDescription(e.token), lastToken->getText());  
+    } else {
+      reportMismatchedError(lastToken->getLine(), expecting_expression, "", lastToken->getText());
+    }
+  
+    //proximos tokens possiveis (nao-opicionais) apos expr
+    BitSet b;
+    b.add(T_SEMICOL);
+    b.add(T_FECHAC);
+    b.add(T_KW_ENTAO);
+    b.add(T_KW_FACA);
+    b.add(T_KW_ATE);
+    consumeUntil(b);
   }
 
-  //proximos tokens possiveis (nao-opicionais) apos expr
-  BitSet b;
-  b.add(T_SEMICOL);
-  b.add(T_FECHAC);
-  b.add(T_KW_ENTAO);
-  b.add(T_KW_FACA);
-  b.add(T_KW_ATE);
-  consumeUntil(b);
-}
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 expr_elemento
@@ -694,12 +712,11 @@ expr_elemento
   |! T_ABREP e:expr T_FECHAP {#expr_elemento = #([TI_PARENTHESIS,"!par"], e);}
   ;
 
-exception //ja foi tratado em op_unario
-catch[ANTLR_USE_NAMESPACE(antlr)NoViableAltException e] {
-  //nothing
-}
-// catch[antlr::MismatchedTokenException e] {
-// }
+  exception //ja foi tratado em op_unario
+  catch[ANTLR_USE_NAMESPACE(antlr)NoViableAltException e] {
+    //nothing
+  }
+
 /*************************************************************************************/
 
 fcall!
@@ -707,31 +724,31 @@ fcall!
   : id:T_IDENTIFICADOR T_ABREP a:fargs {tk=lastToken;} T_FECHAP {#fcall = #([TI_FCALL,"fcall!"], id, a);}
   ; 
 
-exception //T_FECHAP
-catch[antlr::MismatchedTokenException e] {
- 
-  if(tk->getLine() == e.getLine()) {
-    int cd = reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
-    if((e.token->getType() == T_IDENTIFICADOR)
-       || (e.token->getType() == T_STRING_LIT)
-       || (e.token->getType() == T_INT_LIT)
-       || (e.token->getType() == T_REAL_LIT)
-       || (e.token->getType() == T_CARAC_LIT)) {
-      printTip(string("Coloque uma vírgula antes de \"") + e.token->getText() + "\"",e.getLine(),cd);
+  exception //T_FECHAP
+  catch[antlr::MismatchedTokenException e] {
+  
+    if(tk->getLine() == e.getLine()) {
+      int cd = reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+      if((e.token->getType() == T_IDENTIFICADOR)
+        || (e.token->getType() == T_STRING_LIT)
+        || (e.token->getType() == T_INT_LIT)
+        || (e.token->getType() == T_REAL_LIT)
+        || (e.token->getType() == T_CARAC_LIT)) {
+        printTip(string("Coloque uma vírgula antes de \"") + e.token->getText() + "\"",e.getLine(),cd);
+      }
+    } else {
+      reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());  
     }
-  } else {
-    reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());  
+  
+    //tudo o que vem depois de expr
+    BitSet b;
+    b.add(T_SEMICOL);
+    b.add(T_FECHAC);
+    b.add(T_KW_ENTAO);
+    b.add(T_KW_FACA);
+    b.add(T_KW_ATE);
+    consumeUntil(b);
   }
-
-  //tudo o que vem depois de expr
-  BitSet b;
-  b.add(T_SEMICOL);
-  b.add(T_FECHAC);
-  b.add(T_KW_ENTAO);
-  b.add(T_KW_FACA);
-  b.add(T_KW_ATE);
-  consumeUntil(b);
-}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -740,16 +757,16 @@ fargs
   : (expr (T_COMMA! expr)*)?
   ;
 
-exception
-catch[ANTLR_USE_NAMESPACE(antlr)NoViableAltException e] {
-
-  if(lst->getLine() == e.getLine()) {
-    reportMismatchedError(e.getLine(), expecting_expression, getTokenDescription(e.token));  
-  } else {
-    reportMismatchedError(lst->getLine(), expecting_expression, "", lst->getText());
+  exception
+  catch[ANTLR_USE_NAMESPACE(antlr)NoViableAltException e] {
+  
+    if(lst->getLine() == e.getLine()) {
+      reportMismatchedError(e.getLine(), expecting_expression, getTokenDescription(e.token));  
+    } else {
+      reportMismatchedError(lst->getLine(), expecting_expression, "", lst->getText());
+    }
+    consumeUntil(T_FECHAP);
   }
-  consumeUntil(T_FECHAP);
-}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -762,34 +779,160 @@ literal
   | T_KW_FALSO
   ;
 
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 func_decls!
-  : T_KW_FUNCAO id:T_IDENTIFICADOR T_ABREP params:fparams T_FECHAP ret:rettype 
+{RefToken tk;}
+  : f:T_KW_FUNCAO id:T_IDENTIFICADOR T_ABREP params:fparams {tk=lastToken;}T_FECHAP ret:rettype 
     fvars:fvar_decl
     block:stm_block
 
     {#func_decls = #(id, params, ret, fvars, block);}
   ;
 
+  exception
+  catch[antlr::MismatchedTokenException e] {
+
+    if(e.expecting == T_IDENTIFICADOR) {
+      if(f->getLine() == e.getLine()) {
+        reportMismatchedError(e.getLine(), expecting_function_name, getTokenDescription(e.token));
+      } else {
+        reportMismatchedError(f->getLine(), expecting_function_name, "", f->getText());
+      }
+      consumeUntil(T_ABREP);
+    } else if(e.expecting == T_ABREP) { 
+      if(id->getLine() == e.getLine()) {
+        reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+      } else {
+        reportMismatchedError(f->getLine(), getTokenNames()[e.expecting], "", id->getText());
+      }
+      consumeUntil(T_FECHAP);
+    } else if(e.expecting == T_FECHAP) {
+      if(tk->getLine() == e.getLine()) {
+        reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+      } else {
+        reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());
+      }
+      consumeUntil(T_KW_INICIO);
+    } else {
+        cerr << "no message for this error! (func_decls::MismatchedTokenException)\n";
+//       cerr << "func_decls:for what is this?" << endl;
+//       reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+    }
+  }
+
+//   catch[ANTLR_USE_NAMESPACE(antlr)NoViableAltException e] {
+//     cerr << "func_decls::NoViableAltException" << endl;
+//     reportMismatchedError(e.getLine(), getTokenNames()[T_KW_INICIO], getTokenDescription(e.token));
+//     consumeUntil(T_KW_FIM);
+//   }
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 rettype
   : (T_COLON! p:tp_prim   {#rettype = #([TI_FRETURN,"rettype!"], p);}   )?
   ;
 
+  exception //rettype does lookahead
+  catch[antlr::NoViableAltException e] {
+//     cerr << "rettype:NoViableAltException\n";
+//     reportMismatchedError(e.getLine(), getTokenNames()[T_KW_INICIO], getTokenDescription(e.token));
+//     consumeUntil(T_KW_FIM);    
+  }
+
+  catch[antlr::MismatchedTokenException e] {
+//     cerr << "rettype:MismatchedTokenException\n";
+  }
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 fffvar_decl
-  : (var_decl T_SEMICOL!)+
+{RefToken tk;}
+  : (var_decl {tk=lastToken;} T_SEMICOL!)+
   ;
+
+  exception //T_SEMICOL
+  catch[antlr::MismatchedTokenException e] {
+    if(tk->getLine() == e.getLine()) {
+      reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+    } else {
+      reportMismatchedError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());
+    }
+    consumeUntil(T_KW_INICIO);
+  }
+
+  catch[ANTLR_USE_NAMESPACE(antlr)NoViableAltException e] {
+//     cerr << "fffvar_decl::NoViableAltException" << endl;
+  }
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 fvar_decl!
   : ( s:fffvar_decl {#fvar_decl = #([T_KW_VARIAVEIS,"variáveis!"],s);} )?
   ;
 
+  exception
+  catch[antlr::NoViableAltException e] {
+//     cerr << "fvar_decl::NoViableAltException" << endl;
+  }
+
+//   catch[antlr::MismatchedTokenException e] {
+//     cerr << "fvar_decl::MismatchedTokenException" << endl;
+//   }
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 fparams
+{RefToken tk = lastToken;}
   : (fparam (T_COMMA! fparam)*)?
   ;
 
+  exception
+  catch[ANTLR_USE_NAMESPACE(antlr)NoViableAltException e] {
+    if(e.getLine() == tk->getLine()) {
+      reportMismatchedError(e.getLine(), expecting_param_or_fparen, getTokenDescription(e.token));
+    } else {
+      reportMismatchedError(tk->getLine(), expecting_param_or_fparen, "", tk->getText());
+    }
+    consumeUntil(T_FECHAP);
+  }
+
+
+//   catch[antlr::MismatchedTokenException e] {
+//     cerr << "fparams::MismatchedTokenException" << endl;
+//   }
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 fparam!
-  : id:T_IDENTIFICADOR T_COLON
+{RefToken tk=lastToken;}
+  : id:T_IDENTIFICADOR col:T_COLON {tk=lastToken;}
      (
          p:tp_prim   {#fparam = #([TI_VAR_PRIMITIVE,"primitive!"], p, id);}
        | m:tp_matriz {#fparam = #([TI_VAR_MATRIX, "matrix!"], m, id);}
      )
   ;
+
+  exception
+  catch[antlr::MismatchedTokenException e] {
+    if(e.expecting == T_IDENTIFICADOR) {
+      if(e.getLine() == tk->getLine()) {
+        reportMismatchedError(e.getLine(), expecting_variable, getTokenDescription(e.token));
+      } else {
+        reportMismatchedError(tk->getLine(), expecting_variable, "", tk->getText());
+      }
+    } else { //missing colon
+      reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], "", id->getText());
+    }
+    consumeUntil(T_FECHAP);
+  }
+
+
+  catch[ANTLR_USE_NAMESPACE(antlr)NoViableAltException e] {
+    //no datatype found
+    if(tk->getLine() == e.getLine()) {
+      reportMismatchedError(e.getLine(), expecting_datatype, getTokenDescription(e.token));
+    } else {
+      reportMismatchedError(tk->getLine(), expecting_datatype, "", tk->getText());
+    }
+    consumeUntil(T_FECHAP);
+  }
