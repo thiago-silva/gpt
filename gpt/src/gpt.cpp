@@ -21,6 +21,7 @@
 
 bool debug_flag = false;
 
+bool translate_only = false;
 bool interpret_only = false;
 
 string ifilepath;
@@ -35,7 +36,8 @@ void showhelp(void) {
           "   -v            mostra versão do programa\n"
           "   -h            mostra essa ajuda\n"          
           "   -o <arquivo>  compila e salva executável como <arquivo>\n"
-          "   -i            não compila, apenas interpreta\n"
+          "   -g <arquivo>  traduz para C e salva como <arquivo>\n"
+          "   -i            não compila, apenas interpreta\n"          
           "\n";
 }
 
@@ -50,9 +52,9 @@ bool init(int argc, char** argv) {
   int c;
   opterr = 0;  
 #ifdef DEBUG
-    while((c = getopt(argc, argv, "o:ihvpd")) != -1) {
+    while((c = getopt(argc, argv, "o:ighvpd")) != -1) {
 #else
-    while((c = getopt(argc, argv, "o:ihvp")) != -1) {
+    while((c = getopt(argc, argv, "o:ighvp")) != -1) {
 #endif
     switch(c) {
 #ifdef DEBUG
@@ -60,6 +62,9 @@ bool init(int argc, char** argv) {
         debug_flag = true;
         break;
 #endif
+      case 'g':
+        translate_only = true;
+        break;
       case 'i':
         interpret_only = true;
         break;
@@ -234,7 +239,7 @@ int main(int argc, char** argv)
   }
 
   if(parse()) {
-    if(!debug_flag && !interpret_only) {
+    if(!interpret_only) {
       success = compile()?EXIT_SUCCESS:EXIT_FAILURE;
     }
   } else {
