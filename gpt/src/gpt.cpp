@@ -1,3 +1,23 @@
+/***************************************************************************
+ *   Copyright (C) 2005 by Thiago Silva                                    *
+ *   thiago.silva@kdemal.net                                               *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
 #include "config.h"
 
 #include <unistd.h>
@@ -34,9 +54,9 @@ void showhelp(void) {
   cout << PACKAGE << " [opções] arquivo\n"
           "Opções:\n"
           "   -v            mostra versão do programa\n"
-          "   -h            mostra essa ajuda\n"          
+          "   -h            mostra esse texto\n"          
           "   -o <arquivo>  compila e salva executável como <arquivo>\n"
-          "   -g <arquivo>  traduz para C e salva como <arquivo>\n"
+//           "   -g <arquivo>  traduz para C e salva como <arquivo>\n"
           "   -i            não compila, apenas interpreta\n"          
           "\n";
 }
@@ -52,9 +72,9 @@ bool init(int argc, char** argv) {
   int c;
   opterr = 0;  
 #ifdef DEBUG
-    while((c = getopt(argc, argv, "o:ighvpd")) != -1) {
+    while((c = getopt(argc, argv, "o:ihvpd")) != -1) {
 #else
-    while((c = getopt(argc, argv, "o:ighvp")) != -1) {
+    while((c = getopt(argc, argv, "o:ihvp")) != -1) {
 #endif
     switch(c) {
 #ifdef DEBUG
@@ -62,9 +82,9 @@ bool init(int argc, char** argv) {
         debug_flag = true;
         break;
 #endif
-      case 'g':
-        translate_only = true;
-        break;
+//       case 'g':
+//         translate_only = true;
+//         break;
       case 'i':
         interpret_only = true;
         break;
@@ -188,7 +208,7 @@ bool parse(void) {
 
   fout.open(cfilepath, ios_base::out);
   if(!fout) {
-    cerr << PACKAGE << ": não foi possível abrir o arquivo: \"" << ofilepath << "\"" << std::endl;
+    cerr << PACKAGE << ": não foi possível abrir o arquivo: \"" << cfilepath << "\"" << std::endl;
     goto end;
   }
 

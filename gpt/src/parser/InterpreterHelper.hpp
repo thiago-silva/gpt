@@ -1,3 +1,23 @@
+/***************************************************************************
+ *   Copyright (C) 2005 by Thiago Silva                                    *
+ *   thiago.silva@kdemal.net                                               *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
 #ifndef INTERPRETERHELPER_HPP
 #define INTERPRETERHELPER_HPP
 
@@ -250,7 +270,7 @@ class Net {
   }
 
   void receiveCmd() {
-    char buffer[500];
+    char buffer[1024];
     int received;
 
     if(clientsock < 0) return;
@@ -280,6 +300,12 @@ class Net {
 private:
   int clientsock;
 };
+
+
+
+//------------------------------------------------------------------------
+
+
 
 class PrivateInterpreter {
   public:
@@ -318,7 +344,7 @@ class PrivateInterpreter {
       if(var.checkBounds(lvalue.dims)) {
         var.setValue(lvalue.dims, v.value);        
       } else {
-        cerr << "Exceção na linha " << currentLine << " - Overflow em \"" << lvalue.name 
+        cerr << "Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lvalue.name 
              << lvalue.dimsToString() << "\". Abortando..." << endl;
         exit(1);
       }
@@ -340,7 +366,7 @@ class PrivateInterpreter {
         s << (atoi(val.c_str()) + passo);
         var.setValue(lvalue.dims, s.str());
       } else {
-        cerr << "Exceção na linha " << currentLine << " - Overflow em \"" << lvalue.name 
+        cerr << "Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lvalue.name 
              << lvalue.dimsToString() << "\". Abortando..." << endl;
         exit(1);
       }
@@ -596,6 +622,12 @@ class PrivateInterpreter {
   ExprValue evaluateDiv(ExprValue& left, ExprValue& right) {
     ExprValue v;
 
+    if(atof(right.value.c_str()) == 0) {
+      cerr << "Erro de execução próximo a linha " << currentLine 
+           << " - Divisão por 0 é ilegal. Abortando..." << endl;
+      exit(1);      
+    }
+  
     stringstream s;
     if((left.type == TIPO_REAL) || (left.type == TIPO_REAL)) {
       s << (atof(left.value.c_str()) / atof(right.value.c_str()));
@@ -681,8 +713,14 @@ class PrivateInterpreter {
     if(var.isPrimitive) {
       value.value = var.primitiveValue;
     } else {
-      value.value = var.getValue(l.dims);
-      value.values = var.values;
+      if(var.checkBounds(l.dims)) {
+        value.value = var.getValue(l.dims);
+        value.values = var.values;
+      } else {
+        cerr << "Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << l.name 
+             << l.dimsToString() << "\". Abortando..." << endl;
+        exit(1);
+      }
     }
     return value;
   }
@@ -697,7 +735,7 @@ class PrivateInterpreter {
         string val = var.getValue(lv.dims);
         return atoi(val.c_str()) <= atoi(ate.value.c_str());
       } else {
-        cerr << "Exceção na linha " << currentLine << " - Overflow em \"" << lv.name 
+        cerr << "Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lv.name 
              << lv.dimsToString() << "\". Abortando..." << endl;
         exit(1);
       }
@@ -714,7 +752,7 @@ class PrivateInterpreter {
         string val = var.getValue(lv.dims);
         return atoi(val.c_str()) <= atoi(ate.value.c_str());
       } else {
-        cerr << "Exceção na linha " << currentLine << " - Overflow em \"" << lv.name 
+        cerr << "Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lv.name 
              << lv.dimsToString() << "\". Abortando..." << endl;
         exit(1);
       }
