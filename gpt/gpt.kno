@@ -3,8 +3,7 @@
 \CurrentEntry 1 TODO
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>parser.g error handling</li>
-<ul type="disc"><li>terminar tratamento nas declaracoes de funcoes</li>
-<li>substituir getTokenNames()[DFASDF] por getTokenDescriptioN(TOKEN)</li>
+<ul type="disc"><li>substituir getTokenNames()[DFASDF] por getTokenDescriptioN(TOKEN)</li>
 <ul type="disc"><li>overload getTokenDescripion(int)</li></ul>
 <li>Verificar todos os consumeUntil() nas excessoes</li>
 <li>Limpar comentarios, codigo...<br /></li></ul>
@@ -13,8 +12,8 @@
 <li>pt2c:</li>
 <ul type="disc"><li>free(lit)! em leia_literal()<br /><br /></li></ul>
 <li>Interpreter:</li>
-<ul type="disc"><li>Matrizes e stm_ret</li>
-<li>casting na atribuicao ((int)x nao pode ter 2.3 como valor)</li>
+<ul type="disc"><li>stm_ret</li>
+<li>Verificar casting na atribuicao</li>
 <li>Socket conn + step(into|over|out) + continue + breakpoint + watch<br /></li></ul>
 <li>Limpar codigos, comentarios.</li>
 <ul type="disc"><li>pt2c fix:</li>

@@ -289,7 +289,7 @@ stm_block!
       if(e.token->getType() == T_IDENTIFICADOR) {
         printTip(string("se \"") + e.token->getText() 
           + "\" é uma variável, adicione o operador de atribuição " + getTokenNames()[T_ATTR]
-          + ", se for uma função, adicione " +  getTokenNames()[T_ABREP] , e.getLine(), cd);
+          + " logo após. Se for uma função, adicione " +  getTokenNames()[T_ABREP] , e.getLine(), cd);
       } 
     } else {
       reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));

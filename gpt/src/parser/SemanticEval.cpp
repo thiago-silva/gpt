@@ -338,7 +338,7 @@ void SemanticEval::evaluateBooleanExpr(ExpressionValue& /*v*/, int /*line*/) {
 void SemanticEval::evaluateNumericExpr(ExpressionValue& ev, int line) {
   if(!ev.isPrimitive() || !ev.isNumeric()) {
     stringstream err;
-    err << "Esperando uma expressão numérica. Encontrado expressão '" << ev.toString() << "'";
+    err << "Esperando uma expressão numérica. Encontrado expressão \"" << ev.toString() << "\"";
     ErrorHandler::self()->add(err, line);
   }
 }
