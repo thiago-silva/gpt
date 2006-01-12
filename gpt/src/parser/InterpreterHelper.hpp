@@ -72,14 +72,7 @@ class Variable {
   }
 
   void setValue(string value) {
-    //cast
-    if(type == TIPO_INTEIRO) {
-      stringstream ss;
-      ss << atoi(value.c_str());
-      primitiveValue = ss.str();  
-    } else {
-      primitiveValue = value;
-    }
+    primitiveValue = castVal(value);
   }
 
   void setValue(list<string>& d, string value) {
@@ -90,14 +83,24 @@ class Variable {
       colon = ":";
     }
 
-    //cast
-    if(type == TIPO_INTEIRO) {
-      stringstream ss;
-      ss << atoi(value.c_str());
-      values[sub.str()] = ss.str();  
-    } else {
-      values[sub.str()] = value;
-    }    
+    values[sub.str()] = castVal(value);
+  }
+
+  string castVal(string value) {
+    stringstream ss;
+    switch(type) {
+      case TIPO_INTEIRO:        
+        ss << atoi(value.c_str());
+        return ss.str();
+      case TIPO_LOGICO:
+        if((value.length() == 0)||(value == "falso") || (value == "0")) {
+          return "0";
+        } else {
+          return "1";
+        }
+      default:
+        return value;
+    }
   }
 
 
@@ -313,7 +316,7 @@ class PrivateInterpreter {
       var.setValue(v.value);
     } else {
       if(var.checkBounds(lvalue.dims)) {
-        var.setValue(lvalue.dims, v.value);
+        var.setValue(lvalue.dims, v.value);        
       } else {
         cerr << "Exceção na linha " << currentLine << " - Overflow em \"" << lvalue.name 
              << lvalue.dimsToString() << "\". Abortando..." << endl;
@@ -331,7 +334,6 @@ class PrivateInterpreter {
     if(var.isPrimitive) {
       s << (atoi(var.primitiveValue.c_str()) + passo);
       var.primitiveValue = s.str();
-      cerr << "passo: " << var.name << ":=" << s.str() << endl;
     } else {
       if(var.checkBounds(lvalue.dims)) {
         string val = var.getValue(lvalue.dims);
