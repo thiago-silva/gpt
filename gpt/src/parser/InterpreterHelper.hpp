@@ -7,6 +7,7 @@
 #include <string>
 #include <sstream>
 #include <list>
+#include <map>
 #include <stack>
 #include <iostream>
 
@@ -31,6 +32,7 @@ class ExprValue {
     }
 
   string value;
+  map<string, string> values; //map<keys, value>. ex: matrix["10:1"] == matrix[10][1]
   int type;
 };
 
@@ -42,7 +44,64 @@ class Variable {
   bool isPrimitive;
   string primitiveValue;
 
-//   list<string> matrixExprValue;
+  bool checkBounds(list<string>& d) {
+    list<int>::iterator it = dimensions.begin();
+    list<string>::iterator ot = d.begin();
+    
+    //no need for dim.size() == d.size(). Semantic check wouldn't allow
+    
+    int num;
+    for( ; it != dimensions.end(); ++it, ++ot) {      
+      num = atoi((*ot).c_str());
+
+      if((num < 0) || (num >= (*it))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  string getValue(list<string>& d) {
+    stringstream sub;
+    string colon;
+    for(list<string>::iterator it = d.begin(); it != d.end(); ++it) {
+      sub << colon << *it;
+      colon = ":";
+    }
+    return values[sub.str()];
+  }
+
+  void setValue(string value) {
+    //cast
+    if(type == TIPO_INTEIRO) {
+      stringstream ss;
+      ss << atoi(value.c_str());
+      primitiveValue = ss.str();  
+    } else {
+      primitiveValue = value;
+    }
+  }
+
+  void setValue(list<string>& d, string value) {
+    stringstream sub;
+    string colon;
+    for(list<string>::iterator it = d.begin(); it != d.end(); ++it) {
+      sub << colon << *it;
+      colon = ":";
+    }
+
+    //cast
+    if(type == TIPO_INTEIRO) {
+      stringstream ss;
+      ss << atoi(value.c_str());
+      values[sub.str()] = ss.str();  
+    } else {
+      values[sub.str()] = value;
+    }    
+  }
+
+
+  map<string, string> values; //map<keys, value>. ex: matrix["10:1"] == matrix[10][1]
   list<int>    dimensions; //dim configuration
 };
 
@@ -51,6 +110,14 @@ class LValue {
     void addMatrixIndex(ExprValue& e) {
       dims.push_back(e.value);
     }        
+
+  string dimsToString() {
+    stringstream sub;
+    for(list<string>::iterator it = dims.begin(); it != dims.end(); ++it) {
+      sub << "[" << *it << "]";
+    }    
+    return sub.str();
+  }
 
   string name;
   list<string> dims;//0,2,3 == X[0][2][3]
@@ -64,7 +131,7 @@ public:
     globalVars = currentVars;
   }
 
-  void pushState() {    
+  void pushState() {
     varstates.push(currentVars);
     currentVars.clear();
   }
@@ -74,15 +141,28 @@ public:
   }
 
   Variable& get(const string& name) {
-    if(currentVars.find(name) == currentVars.end()) {
+    if(varstates.size() == 0) {
       return globalVars[name];
+    }
+
+    if(currentVars.find(name) == currentVars.end()) {
+      if(globalVars.find(name) == globalVars.end()) {
+        cerr << "BUG: variável " << name << " não encontrada." << endl;
+        exit(1);
+      } else {        
+        return globalVars[name];
+      }
     } else {
       return currentVars[name];
     }
   }
 
-  void popState() {    
-    currentVars = varstates.top();
+  void popState() {
+    if(varstates.size() == 1) {
+      currentVars = globalVars;
+    } else {
+      currentVars = varstates.top();      
+    }
     varstates.pop();
   }
 
@@ -127,7 +207,7 @@ class Net {
   
     if (hostinfo == NULL)
     {
-      cerr << "client: unknow host : "  << hostname << endl;
+      //cerr << "client: unknow host : "  << hostname << endl;
       return;
     }
 
@@ -230,11 +310,16 @@ class PrivateInterpreter {
     Variable& var = variables.get(lvalue.name);
 
     if(var.isPrimitive) { //primitive 
-      var.primitiveValue = v.value;      
-      cerr << var.name << ":=" << v.value << endl;
+      var.setValue(v.value);
     } else {
-      //TODO!
-    }   
+      if(var.checkBounds(lvalue.dims)) {
+        var.setValue(lvalue.dims, v.value);
+      } else {
+        cerr << "Exceção na linha " << currentLine << " - Overflow em \"" << lvalue.name 
+             << lvalue.dimsToString() << "\". Abortando..." << endl;
+        exit(1);
+      }
+    } 
   }
 
   void execPasso(LValue& lvalue, int passo) {
@@ -242,13 +327,21 @@ class PrivateInterpreter {
     //3: set the v.value to the variable in the current scope
     Variable& var = variables.get(lvalue.name);
 
-    if(var.isPrimitive) { //primitive
-      stringstream s;
-      s << (atof(var.primitiveValue.c_str()) + passo);
+    stringstream s;
+    if(var.isPrimitive) {
+      s << (atoi(var.primitiveValue.c_str()) + passo);
       var.primitiveValue = s.str();
       cerr << "passo: " << var.name << ":=" << s.str() << endl;
     } else {
-      //TODO!
+      if(var.checkBounds(lvalue.dims)) {
+        string val = var.getValue(lvalue.dims);
+        s << (atoi(val.c_str()) + passo);
+        var.setValue(lvalue.dims, s.str());
+      } else {
+        cerr << "Exceção na linha " << currentLine << " - Overflow em \"" << lvalue.name 
+             << lvalue.dimsToString() << "\". Abortando..." << endl;
+        exit(1);
+      }
     }
   }
 
@@ -469,7 +562,7 @@ class PrivateInterpreter {
     ExprValue v;
 
     stringstream s;
-    if((left.type == TIPO_REAL) || (left.type == TIPO_REAL)) {
+    if((left.type == TIPO_REAL) || (right.type == TIPO_REAL)) {
       s << (atof(left.value.c_str()) + atof(right.value.c_str()));
       v.type = TIPO_REAL;
     } else {
@@ -585,24 +678,46 @@ class PrivateInterpreter {
     value.type = var.type;
     if(var.isPrimitive) {
       value.value = var.primitiveValue;
-    } //TODO: else if matrix!
+    } else {
+      value.value = var.getValue(l.dims);
+      value.values = var.values;
+    }
     return value;
   }
 
   bool execLowerEq(LValue& lv, ExprValue& ate) {
     Variable var = variables.get(lv.name);
-    //TODO: matrix
 
-    //var.getValue(lv);//lv has information about the indexes uded
-    return atoi(var.primitiveValue.c_str()) <= atoi(ate.value.c_str());
+    if(var.isPrimitive) {
+      return atoi(var.primitiveValue.c_str()) <= atoi(ate.value.c_str());
+    } else {
+      if(var.checkBounds(lv.dims)) {
+        string val = var.getValue(lv.dims);
+        return atoi(val.c_str()) <= atoi(ate.value.c_str());
+      } else {
+        cerr << "Exceção na linha " << currentLine << " - Overflow em \"" << lv.name 
+             << lv.dimsToString() << "\". Abortando..." << endl;
+        exit(1);
+      }
+    }
   }
 
   bool execBiggerEq(LValue& lv, ExprValue& ate) {
     Variable var = variables.get(lv.name);
 
-    return atoi(var.primitiveValue.c_str()) >= atoi(ate.value.c_str());
+    if(var.isPrimitive) {
+      return atoi(var.primitiveValue.c_str()) >= atoi(ate.value.c_str());
+    } else {
+      if(var.checkBounds(lv.dims)) {
+        string val = var.getValue(lv.dims);
+        return atoi(val.c_str()) <= atoi(ate.value.c_str());
+      } else {
+        cerr << "Exceção na linha " << currentLine << " - Overflow em \"" << lv.name 
+             << lv.dimsToString() << "\". Abortando..." << endl;
+        exit(1);
+      }
+    }
   }
-
 
   void initFCall(const string& fname, list<ExprValue>& args) {
     variables.pushState();
@@ -630,8 +745,11 @@ class PrivateInterpreter {
     while((ait != args.end()) && (pit != params.end())) {
       Symbol pv = stable.getSymbol(fname, (*pit).first);
       Variable& var = variables.get(pv.lexeme);
-      //TODO! matrix!
-      var.primitiveValue = (*ait).value;
+      if(var.isPrimitive) {
+        var.primitiveValue = (*ait).value;
+      } else {
+        var.values = (*ait).values;
+      }
       
       ++ait;
       ++pit;
@@ -653,17 +771,20 @@ class PrivateInterpreter {
     } else if(fname == "imprima") {
       executeImprima(args);
       return v;//empty value
+    } else {
+      cerr << "BUG: No built-in function called \"" << fname << "\"" << endl;
     }
   }
 
 //----------- Debugger -------------------------
 
   void nextCmd(int line) {
-    cerr << "line: " << line << endl;
+//     cerr << "line: " << line << endl;
     //notes: 
     //    mat[leia()] := f() + f2(); //is a single step
     //   se f() então // single step
 
+    currentLine = line;
     if(!skipCmd) {
       net.signalNextCmd(line, variables);
     }
@@ -726,6 +847,7 @@ class PrivateInterpreter {
 
   bool skipCmd;
   Net net;
+  int currentLine;
 };
 
 #endif
