@@ -580,7 +580,14 @@ void SemanticEval::evaluateAllFCalls() {
     ParameterSig params = s.param;
 
     if(params.isVariable()) {
-      //nao deixar matrizes como argumentos de funcoes com parametros variaveis
+      //nao permitir 0 argumentos
+      if(args.size() == 0) {
+        stringstream msg;
+        msg << "Pelo menos um argumento deve ser passado para a função \"" << f->getText() << "\"";
+        ErrorHandler::self()->add(msg, f->getLine());      
+        return;
+      }
+      //nao permitir matrizes como argumentos de funcoes com parametros variaveis
       int count = 1;
       for(list<ExpressionValue>::iterator it = args.begin();
           it != args.end(); ++it) {
