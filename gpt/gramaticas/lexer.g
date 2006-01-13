@@ -1,4 +1,4 @@
-/***************************************************************************
+/*
  *   Copyright (C) 2005 by Thiago Silva                                    *
  *   thiago.silva@kdemal.net                                               *
  *                                                                         *
@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+                                                                          */
 
 
 header {
@@ -40,6 +40,7 @@ options {
   exportVocab=Portugol;
   testLiterals = false;
   filter=T_INVALID;
+  genHashLines=false;//no #line
 }
 
 //we have to create the tokens here, because some of them have accents
@@ -241,7 +242,7 @@ T_STRING_LIT
 options {
   paraphrase = "literal";
 }
-  : '"' (ESC|~('"'|'\\'|'\n'|'\r'))* '"'
+  : '"'! (ESC|~('"'|'\\'|'\n'|'\r'))* '"'!
   ;
   
  
@@ -257,7 +258,7 @@ options {
       '.' (T_DIGIT)+
       {$setType(T_REAL_LIT);}
     )?
-  ;  
+  ;
 
 protected
 T_INTEGER_LIT
@@ -361,7 +362,7 @@ T_CARAC_LIT
 options {
   paraphrase = "caractere";
 }
-  : '\'' ( ~('\''|'\n'|'\r'|'\\') | ESC )? '\''
+  : '\''! ( ~('\''|'\n'|'\r'|'\\') | ESC )? '\''!
   ;
 
 protected

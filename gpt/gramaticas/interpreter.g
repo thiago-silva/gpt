@@ -1,4 +1,4 @@
-/***************************************************************************
+/*
  *   Copyright (C) 2005 by Thiago Silva                                    *
  *   thiago.silva@kdemal.net                                               *
  *                                                                         *
@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+                                                                          */
 
 
 header {
@@ -126,8 +126,9 @@ inicio
   ;
 
 stm
+{ExprValue retToDevNull;}
   : stm_attr
-  | {interpreter.beginFCall();} fcall {interpreter.endFCall();}
+  | {interpreter.beginFCall();} retToDevNull=fcall {interpreter.endFCall();}
 //   | stm_ret
   | stm_se
   | stm_enquanto
@@ -333,10 +334,10 @@ element returns [ExprValue v]
   ;
 
 literal returns [ExprValue v]
-  : l:T_STRING_LIT     {v.setValue(l->getText().substr(1, l->getText().length()-2));v.type = TIPO_LITERAL;} //remove the " and "
+  : l:T_STRING_LIT     {v.setValue(l->getText());v.type = TIPO_LITERAL;} //remove the " and "
   | i:T_INT_LIT        {v.setValue(i->getText());v.type = TIPO_INTEIRO;}
   | r:T_REAL_LIT       {v.setValue(r->getText());v.type = TIPO_REAL;}
-  | c:T_CARAC_LIT      {v.setValue(parseChar(c->getText()));v.type = TIPO_CARACTERE;}
+  | c:T_CARAC_LIT      {v.setValue(c->getText());v.type = TIPO_CARACTERE;}
   | lv:T_KW_VERDADEIRO {v.setValue("1");v.type = TIPO_LOGICO;}
   | lf:T_KW_FALSO      {v.setValue("0");v.type = TIPO_LOGICO;}
   ;
