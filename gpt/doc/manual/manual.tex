@@ -1,0 +1,598 @@
+% TODO: rever referencias a implementação da gramatica
+%       mudar aspas nos codigos verbantim para aspas reais (para que o leitor possa copiar e colar sem ter que mudar
+%         o caractere das aspas).              
+
+\documentclass[a4paper,10pt]{report}
+
+% page setup
+\oddsidemargin  0.0in
+\evensidemargin 0.0in
+\textwidth      6.5in
+\headheight     0.0in
+\topmargin      0.0in
+\textheight=9.0in
+
+\pagestyle{myheadings}    % Go for customized headings
+\newcommand{\capitulo}[1]  % Re-define the chaptering command
+        {                 
+          \chapter{#1}
+          \markright{Capítulo \thechapter.  {#1} \hfill}
+        }
+
+
+\usepackage[brazilian]{babel} %traduz data, ``capitulo'', etc...
+\usepackage[latin1]{inputenc} %permite acentos diretamente
+\usepackage[T1]{fontenc} %to get the hyphenation right.
+%\usepackage{times}
+%\usepackage{aeguill}
+
+\usepackage{hyperref}
+
+\usepackage{float}
+
+\floatstyle{ruled}
+\newfloat{program}{thp}{lop}
+\floatname{program}{Programa} 
+
+\floatstyle{plain}
+\newfloat{code}{thp}{lop}
+\floatname{code}{Codigo}
+
+\renewcommand{\rmdefault}{phv} %helvetica
+
+
+
+\title{G-Portugol}
+\author{Thiago Silva \texttt{thiago.silva@kdemail.net}}
+
+% \usepackage[pdftex]{hyperref} %should be the LAST in the preamble
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\capitulo{Introdução}
+% \begin{abstract}
+
+G-Portugol é um dialeto da linguagem portugol (ou portugês estruturado), muito usada para 
+descrever algoritmos em português, de forma livre e espontânea. Em geral, livros dedicados 
+ao ensino de algoritmos, lógica e estruturas de dados utilizam alguma forma dessa linguagem. 
+
+A proposta de G-Portugol é disponibilizar uma implementação da linguagem portugol, 
+fornecendo ferramentas que ofereçam recursos de edição, compilação, execução e depuração de 
+programas escritos nessa linguagem, de forma a favorecer estudantes que dão os primeiros 
+passos no aprendizado de desenvolvimento de softwares, bem como professores que ensinam 
+disciplinas relacionadas a computação. Portanto, seu foco é primariamente didático.
+
+% \end{abstract}
+
+\capitulo{Características Gerais}
+
+A linguagem em si não difere fundamentalmente ou apresenta novidades em relação ao uso popular de 
+portugol. Semelhante à linguagens como Pascal e C, é uma linguagem imperativa, com comandos de 
+controle de fluxo, manipulação de dados e recursos de entrada e saída básicos.
+
+\section{Tipos de dados}
+
+Tipos primitivos como inteiro e literal são suportados, assim como matrizes "n" dimensionais de tipos primitivos. 
+Além das estruturas de controle, subprogramas são suportados no modelo de funções parametrizadas com retorno
+de dados primitivos. Entre os tipos primitivos, se encontram:
+
+\begin{table}[ht]
+\begin{center}
+  \begin{tabular}{|l|l|}
+    \hline
+    \multicolumn{2}{|c|}{Tipos primitivos} \\
+    \hline
+      Tipo & Exemplos \\
+    \hline
+    inteiro & 19 \\
+    real & 2.5 \\
+    caractere & 'a' \\
+    literal & ``uma frase'' \\
+    lógico & verdadeiro \\
+    \hline
+  \end{tabular}
+  \label{tb_tipos_primitivos}
+  \caption{Tipos de dados primitivos}
+\end{center}
+\end{table}
+
+Com esses tipos, pode-se criar conjuntos como vetores ou matrizes ``n'' dimensionais. Tipos mais complexos,
+não são suportados, pois o objetivo é ter um conjunto básico o suficiente para o ensino de algorítmos e 
+suas estruturas de controle. 
+
+\section{Estruturas de controle}
+
+Da mesma forma, o conjunto de estruturas de controle são os mais primitivos. Uma estrutura condicional 
+(se/senão) e duas estruturas de repetição (enquanto/para) são suportadas. Embora a estrutura ``para''
+seja uma especialização de um laço simples como o ``enquanto'', ela foi implementada, visto
+que tanto uma variedade de livros como professores, discutem seu funcionamento.
+
+\begin{table}[ht]
+  \begin{center}
+    \begin{tabular}{|l|l|}
+      \hline
+      \multicolumn{2}{|c|}{Estruturas de repetição} \\
+      \hline
+        Estrutura & Tipo \\
+      \hline
+      se/então/senão/& condicional \\
+      enquanto & repetição \\
+      para & repetição \\
+      \hline    
+    \end{tabular}
+
+    \label{tb_estruturas_de_repeticao}
+    \caption{Estruturas de repetição}
+  \end{center}
+\end{table}
+
+
+\section{Subprogramas (funções)}
+
+Subprogramas são como funções em C. Podem receber qualquer número de parâmetros, sejam tipos primitivos
+ou vetores, e podem retornar valores primitivos. Entretanto, não é permitido declarar funções aninhadas ou
+funções com parâmetros variáveis. Vale ressaltar que passagem de parâmetros é sempre feita por 
+\textit{valor}.
+
+
+\capitulo{Programando em G-Portugol}
+
+A proposta desse capítulo é mostrar os elementos da linguagem G-Portugol usando programas como exemplos. Não 
+é um capítulo sobre como programar, nem tem como intuito ensinar algorítmos. Portanto, é esperado que o 
+leitor seja familiarizado com programação.
+
+\section{Olá Mundo}
+
+Mantendo a tradição, vamos criar nosso primeiro programa. O propósito dele será exibir na tela o 
+texto "Olá mundo". Abra seu editor favorito e crie um arquivo  chamado "exemplo1.pt" com o seguinte 
+conteúdo:
+
+\begin{program}
+  \begin{verbatim}
+/* 
+  Nosso primeiro programa 
+*/
+  
+algoritmo olamundo;
+  
+início
+  imprima("Olá mundo!");
+fim
+  \end{verbatim}
+  \caption{``Olá Mundo'' em G-Portugol.}
+\end{program}
+
+\noindent 
+Após salvar o arquivo, digite o seguinte na linha de comando:
+
+\begin{verbatim}
+$ gpt exemplo1.pt
+\end{verbatim}
+
+Se tudo ocorrer como esperado, um novo arquivo aparecerá no diretório atual, 
+chamado "olamundo". Podemos, agora, executar o programa da seguinte forma:
+
+\begin{verbatim}
+$ ./olamundo
+Olá mundo! 
+\end{verbatim}
+
+Então, observe ``Olá mundo!'' aparecer na tela. Note que o arquivo executável é batizado de acordo com o nome 
+do algoritmo e não, de acordo com o arquivo fonte.
+
+Como já deve ter assumido, comentários ao estilo C (/**/) e C++ (//) são permitidos e o que estiver entre aspas 
+duplas (") é tratado como uma string ou constante literal. 
+Escapes são permitidos como EOL ($\backslash$n), tabulação ($\backslash$t) dentre outros. Não é permitido a 
+concatenação em multiplas linhas como na linguagem C:
+
+\begin{verbatim}
+  imprima("Isso é uma "
+          "Concatenação"); //erro!
+\end{verbatim}
+
+Outro detalhe é a pontuação. Da mesma forma que em C, o ``;'' é utilizado como finalizador de enunciados.
+
+
+\section{Variáveis}
+
+A declaração de variáveis deve ser feita dentro de um bloco específico, que deve aparecer logo após a 
+declaração do algoritmo. O bloco é iniciado pela palavra-chave ``variáveis'' (sim, com acento) e 
+termina com a palavra chave ``fim-variáveis''. Pelo menos uma variável deve ser declarada dentro do bloco 
+(embora o bloco em si seja opcional), e apenas um bloco em escopo global deve ser declarado. 
+Eis um exemplo para estudo:
+
+\begin{program}  
+  \begin{verbatim}  
+algoritmo inutil;
+
+variáveis
+  x    : inteiro;
+  nome : literal
+fim-variáveis
+
+início
+fim
+  \end{verbatim}  
+  \caption{Declaração de variáveis globais.}
+  \label{programa_inutil}
+\end{program}
+ 
+
+\subsection{Variáveis primitivas}
+
+Variáveis primitivas são declaradas seguindo o seguinte modelo:
+
+\begin{verbatim}
+<identificador> [, identificador]* : <tipo>; 
+\end{verbatim}
+
+Como pode-se notar, é parecido com Pascal. Assim que um programa é executado, todas as variáveis declaradas são 
+iniciadas com um valor nulo ou ``0'' automaticamente. Vale ressaltar que constantes (const, final, etc) não são 
+suportados. Os tipos primitivos suportados encontram-se na tabela \ref{tb_tipos_primitivos}
+
+A fim explorar melhor os aspectos da declaração, seguem-se cinco comentários a respeito do último 
+exemplo (programa \ref{programa_inutil})
+
+\begin{itemize}
+ \item 
+  O primeiro é o nome do algoritmo (inutil): ele não tem acento. Se declarar o algoritmo como ``inútil'' 
+  e tentar compilar o código, o seguinte erro será exibido:
+
+  \textbf{Linha: 1 - ``inútil'' não pode ter caracteres especiais.}
+
+  Como está claro, identificadores (nomes de variáveis, funções e do algoritmo) não podem ter acentos ou 
+  caracteres especiais. A definição de um identificador em G-Portugol é equivalente ao das linguagens 
+  populares: uma letra (a-z ou A-Z) seguido de qualquer número de letras ou números (e underscores). 
+  Cedilhas, portanto, também não formam identificadores válidos.
+
+ \item 
+  O segundo ponto, é a palavra-chave ``variáveis'': ela tem acento, e isso é permitido e de propósito. 
+  Veja o capítulo sobre a implementação para maiores detalhes sobre esse assunto.
+
+  \item
+  O terceiro, é a definição do bloco e sua (falta de) semelhança com o Pascal. Todas os blocos em G-Portugol 
+  tentam seguir o formato ``nome/fim-nome'', em favor da uniformidade e em detrimento de exceções linguísticas 
+  que causam dor de cabeça aos estudantes (no entanto, ainda existem excessões. Mais informações no capítulo
+  sobre a implementação *todo*.). 
+
+
+  \item 
+  E, finalmente, o quarto ponto é a ausência de código entre ``início'' e ``fim''. 
+  O programa não é obrigado a ter enunciados ou comandos. Meros detalhes... 
+\end{itemize}
+
+
+\subsection{Vetores e matrizes}
+
+Vetores e matrizes ``n'' dimensionais de tipos primitivos são suportados. Um exemplo de declaração de uma matriz:
+
+\begin{verbatim}
+variáveis
+   bitset : matriz[10] de lógicos;
+   quadr : matriz[4][4] de inteiros;
+fim-variáveis 
+\end{verbatim}
+
+O tipo do vetor ou matriz é dado pelo nome do tipo no plural (``inteiros'' para tipo inteiro, ``literais'' 
+para tipo literal, etc). Os subscritos na declaração indicam o tamanho da matriz, e sua dimensão é informada pelo numero de 
+subscritos. 
+
+É importante observar que matrizes são ``0 based'', logo, a matriz ``bitset'' pode ser usada 
+do indice 0 até o indice 9 (inclusive). Seu indice 10 não é válido e seu uso poderá acarretar em erros de execução
+(\textit{runtime errors}) que poderão serem detectados dependendo da forma como o programa foi compilado/executado. 
+Matrizes, assim como variáveis de tipos primitivos, são inicializadas com o valor 0/nulo em todas as suas posições. 
+Quando usadas como argumentos de funções, matrizes são passadas por valor. Vale ressaltar que argumentos do tipo 
+matriz não são aceitos pela função ``imprima'' e, também, não são válidas como lvalues:
+
+\begin{program}
+  \begin{verbatim}
+ variáveis
+  m1 : matriz[2] de inteiros;
+  m2 : matriz[2] de inteiros;
+fim-variáveis
+
+início
+  m1 := m2;    //erro
+  imprima(m1); //erro
+fim
+  \end{verbatim}
+  
+  \caption{Uso incorreto de matrizes.}
+\end{program}
+
+
+\section{Estruturas condicionais}
+
+Por enquanto, apenas a estrutura se/então/senão é suportada. 
+Eis um algoritmo simples que verifica se o usuário é maior de idade:
+
+\begin{program}
+ \begin{verbatim}
+algoritmo idade;
+
+variáveis
+  idade : inteiro;
+  nome : literal;
+fim-variáveis
+
+início
+  imprima("Digite seu nome:");
+  nome := leia();
+  imprima(nome, ", digite sua idade:");
+  idade := leia();
+
+  se idade >= 18 então
+    se nome = "Malkovich" então
+       imprima("Malkovich, malkivich malkovich? Malkovich!");       
+    senão
+       imprima("Bem vindo senhor ", nome, '!');
+  senão
+    imprima("Larga o computador, guri!");
+  fim-se
+fim 
+  \end{verbatim}
+  %\label{programa_exemplo_condicional}
+  \caption{Exemplo de programa que utiliza estrutura condicional.}
+\end{program}
+
+Alguns pontos a serem considerados:
+
+
+\begin{itemize}
+  \item 
+  O nome do algoritmo é ``idade'', assim como o nome de uma variável. Não há conflitos. 
+
+  \item
+  O operador de atribuição é o pascal-like ``:=''. (ver detalhes de implementação *todo*) 
+
+  \item
+  A função interna ``leia'' pode ser usada por variáveis de qualquer tipo primitivo. Para evitar surpresas 
+  (números inteiros recebendo strings, por exemplo), leia sobre a implementação interna aqui *todo*.
+
+  \item
+  A função ``imprima'' recebe um número de argumentos variáveis, que podem ser constantes literais ou variáveis 
+  primitivas. Os valores são concatenados e adicionados de um caractere EOL (end of line, ou fim de linha). 
+
+  \item
+  Já vimos que strings/literais constantes são denotados por texto entre aspas duplas ("). Tal qual em C, 
+  um caractere entre aspas simples (') é um caractere constante que, da mesma forma, pode permitir escapes como 
+  '$\backslash$n'. 
+
+  \item
+  Assim como a palavra-chave ``variáveis'', ``então'' e ``senão'' devem ser acentuadas. 
+
+  \item
+  Como em ``variáveis/fim-variáveis'', blocos ``se'' tem seus respectivos e obrigatórios ``fim-se''. 
+  Não há a exceção de "um enunciado, apenas" encontrado na linguagem C onde o uso de ``{}'' é opcional. 
+  Também, não há imposições sobre a indentação.
+
+  \item
+  A equivalência da expressão ``nome = "Malkovich'' é computada como se espera (comparação caractere por caractere), 
+  respeitando os tipos de dados. Salienta-se que comparações de tipos literais são feitas em case sensitive. 
+  Para maiores informações sobre operações sobre literais, veja o capitulo *todo*.
+\end{itemize} 
+
+\begin{program}
+  \begin{verbatim}
+//código inválido: faltando fim-se
+algoritmo se_invalido;
+
+início
+  se x = 2 então
+    imprima("ok");
+  imprima("estou dentro ou fora do bloco \"se\"?");
+fim 
+  \end{verbatim}
+  \caption{Uso incorreto de estrutura condicional}
+\end{program}
+
+
+\section{Estruturas de repetição}
+
+\subsection{A estrutura ``enquanto''}
+
+A estrutura ``enquanto'' é a mais básica e comum das estruturas de repetição. Seu funcionamento é o mesmo que
+em outras linguagens populares, onde um conjunto de instruções é executado repetidamente enquanto o valor 
+lógico de uma dada expressão for avaliada como ``verdadeiro''.
+
+\begin{program}
+  \begin{verbatim}
+algoritmo fatorial;
+
+variáveis
+  res : inteiro;
+  fat : inteiro;
+  x : inteiro;
+fim-variáveis
+
+início
+  imprima(``Digite um número:'');
+  x := leia();
+  
+  fat := x;
+  res := 1;
+
+  enquanto x <> 0 faça
+    res := res * x;
+    x   := x - 1;
+  fim-enquanto
+
+  imprima(``fatorial de '',fat,`` é igual a '',res);  
+fim
+  \end{verbatim}
+  \caption{Exemplo de programa que utiliza a estrutura ``enquanto''}
+\end{program}
+
+
+Parênteses em volta da expressão da estrutura ``enquanto'' são opcionais. Qualquer expressão que possa ser 
+avaliada como expressão numérica é uma expressão lógica válida. Expressões que não podem ser avaliadas
+lógicamente são expressões avaliadas como literais. Portanto, são comandos válidos:
+
+\begin{code}
+ \begin{verbatim}
+enquanto verdadeiro faça          //ok
+enquanto 3+5 faça                 //ok, avalia 8 como verdadeiro
+enquanto 0 faça                   //ok, avalia 0 como falso
+enquanto x faça                   //ok, sendo x uma variável numérica ou lógica
+enquanto ``nome'' = ``nome'' faça //ok, valor de expressão lógica (=) avaliada como verdadeiro
+enquanto ``nome'' faça            //erro: valor de expressão literal não pode ser avaliada como valor lógico.
+
+  \end{verbatim}
+\end{code}
+
+Nota: não há implementação para estrutura ``faça/enquanto''.
+
+\subsection{A estrutura ``para''}
+
+A estrutura ``para'' é uma especialização da estrutura ``enquanto'', e costuma ser ensinada em cursos de programação.
+Sua sintáxe é semelhante ao que se vê em literatura sobre algoritmos e estruturas de dados, entretanto, é uma sintaxe
+diferente de linguagens populares como C e Java.
+
+A estrutura ``para'' tem a seguinte forma:
+
+\begin{code}
+ para <variável numérica> de <expressão numérica> até <expressão numérica> [passo <constante inteiro>] faça
+  [lista de comandos]
+ fim-para
+\end{code}
+
+O uso de delimitadores (expressões de/até) constrolam os valores que a variável numérica terá no início e no fim do
+laço. Tanto o controle de passos, quanto a decisão de incrementar ou decrementar a variável de controle
+é feita pelo termo opicional ``passo''. Ele informa a frequência do incremento ou decremento, e 
+seu valor padrão é 1. Por exemplo, para iterar o valor de uma variável numérica ``x'' de 0 até 10, de 2 em 2, escreve-se: 
+
+\begin{code}
+  \begin{verbatim}
+para x de 0 até 10 passo 2 faça
+  //comandos...
+fim-para
+  \end{verbatim}
+\end{code}
+
+Da mesma forma, para uma iteração decrescente, de 2 em 2, escreve-se:
+
+\begin{code}
+  \begin{verbatim}
+para x de 0 até 10 passo -2 faça
+  //comandos...
+fim-para
+  \end{verbatim}
+\end{code}
+
+
+\begin{program}
+  \begin{verbatim}
+algoritmo fatorial;
+
+variáveis
+  res : inteiro;
+  x : inteiro;
+fim-variáveis
+
+início
+  imprima("Digite um número:");
+  x := leia();
+
+  res := 1;
+  para x de x até 1 passo -1 faça
+    res := res * x;
+  fim-para
+
+  imprima("fatorial de ",x," é igual a ",res);
+fim
+
+  \end{verbatim}
+  \caption{Exemplo de programa que utiliza a estrutura ''para``}
+\end{program}
+
+
+Em comparação com a estrutura ``for'' de linguagens com sintaxe baseadas em C, há diferenças não só de sintaxe,
+mas de implementação. Um ``for'' que itera sobre uma variável numérica de 0 até (=>) 10, ao sair do laço, 
+o valor dessa variável será 11. Em G-Portugol, a variável terá o valor 10 ao sair do laço. Essa diferença acontece 
+porque a sintaxe do ``para'' induz a esse comportamento, diferente da sintaxe do ``for'', que é mais detalhada
+e sua estrutura induz o mesmo raciocínio que a estrutura ``enquanto/while''.
+
+\begin{verbatim}  
+//código em C
+for(x = 0; x <= 10; x++) {  } 
+
+printf("%d", x); //imprime ``11''
+
+//--------------
+
+//código equivalente em G-Portugol
+para x de 0 até 10 faça
+fim-para
+
+imprima(x); //imprime ``10''
+\end{verbatim}
+
+Ademais, da mesma forma que o ``for'', é possível que a variável de controle tenha seu valor
+alterado pelos comandos aninhados. Isso permite que o laço seja encerrado prematuramente, como também é comum
+em estruturas como ``enquanto''. A utilidade dessa técnica está no fato de G-Portugol não incorporar mecanismos
+para refinar o controle de laços (como ``break'' e ``continue'', encontrados em linguagens populares).
+Maiores detalhes sobre a implementação no capítulo *todo*.
+
+\newpage
+
+\section{Funções}
+
+Blabla
+
+
+\capitulo{Implementação da linguagem G-Portugol}
+
+\section{Introdução}
+
+  preocupações, principios no design da linguagem, etc.
+
+\section{Acentos}
+
+\section{Uniformidade na estrutura de blocos}
+
+  *excessão, nos blocos de variáveis locais em escopo de funcao
+
+\section{Expressões}
+
+  *operadores e operandos
+  *precendencia e associatividade
+  
+  \subsection{Avaliação de expressões}
+
+  *promoções de tipos e castings automaticos (inteiro para real, real para inteiro)
+  *avaliações aritméticas
+  *avaliações lógicas 
+  *literais
+
+\section {Funções internas}
+
+  \subsection{imprimir}
+
+  \subsection{ler}
+
+\capitulo{O compilador GPT}
+
+\section{Erros de compilação}
+
+  trying to be smart!
+
+\section{Tradução para C}
+
+
+  \subsection{Limitações}
+
+\section{Interpretação de código}
+
+  \subsection{Erros de execução (runtime errors)}
+
+  \subsection{Depuração iterativa}
+
+\section{Compilação para executável nativo}
+
+
+
+\end{document}
