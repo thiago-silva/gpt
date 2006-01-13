@@ -44,9 +44,10 @@ bool debug_flag = false;
 bool translate_only = false;
 bool interpret_only = false;
 
-string ifilepath;
-string ofilepath;
-char* cfilepath;
+string ifilepath; //pt source
+string ofilepath; //binary output
+string trpath;    //translated C source
+char cfilepath[] = "/tmp/c__XXXXXX"; //tmp translated C source
 
 bool frompipe = false;
 
@@ -56,7 +57,7 @@ void showhelp(void) {
           "   -v            mostra versão do programa\n"
           "   -h            mostra esse texto\n"          
           "   -o <arquivo>  compila e salva executável como <arquivo>\n"
-//           "   -g <arquivo>  traduz para C e salva como <arquivo>\n"
+          "   -t <arquivo>  traduz para C e salva como <arquivo>\n"
           "   -i            não compila, apenas interpreta\n"          
           "\n";
 }
@@ -72,9 +73,9 @@ bool init(int argc, char** argv) {
   int c;
   opterr = 0;  
 #ifdef DEBUG
-    while((c = getopt(argc, argv, "o:ihvpd")) != -1) {
+    while((c = getopt(argc, argv, "o:t:hvipd")) != -1) {
 #else
-    while((c = getopt(argc, argv, "o:ihvp")) != -1) {
+    while((c = getopt(argc, argv, "o:t:hvi")) != -1) {
 #endif
     switch(c) {
 #ifdef DEBUG
@@ -82,9 +83,12 @@ bool init(int argc, char** argv) {
         debug_flag = true;
         break;
 #endif
-//       case 'g':
-//         translate_only = true;
-//         break;
+       case 't':
+        translate_only = true;
+        if(optarg) {
+          trpath = optarg;
+        }
+        break;
       case 'i':
         interpret_only = true;
         break;
@@ -103,13 +107,12 @@ bool init(int argc, char** argv) {
         } 
         break;
         case '?':
-           if(optopt == 'o') {
-            cerr << PACKAGE << ": faltando argumento para opção -o." << endl;
-            return false;
+           if((optopt == 'o') || (optopt == 't')) {
+            cerr << PACKAGE << ": faltando argumento para opção -" << (char)optopt << endl;
            } else {
              cerr << PACKAGE << ": opção inválida: -" <<  char(optopt) << endl;
            }
-           break;
+           return false;
      default:
          cerr << PACKAGE << ": erro interno." << endl;
         return false;
@@ -125,6 +128,7 @@ bool init(int argc, char** argv) {
     }
   }
 
+  
   return true;
 }
 
@@ -169,14 +173,16 @@ bool do_parse(istream& in, ostream& out) {
         Interpreter interpreter(stable);
         interpreter.algoritmo(tree);
       } else {
-        Portugol2C pt2c(stable);
+        Portugol2C pt2c(stable);        
+        string c_src = pt2c.algoritmo(tree);
+
+        out << c_src << endl;
+
         if(debug_flag) {
           cerr << "BEGIN SOURCE >>>> \n";
-          cerr << pt2c.algoritmo(tree) << endl;
+          cerr << c_src << endl;
           cerr << "<<<<<< END SOURCE\n";          
-        } else {
-          out << pt2c.algoritmo(tree) << endl;          
-        }
+        }        
       }
       return true;
     }
@@ -204,9 +210,11 @@ bool parse(void) {
   bool success = false;
   ofstream fout;
 
-  cfilepath = tempnam(0L, "c__");
-
+  int fd = mkstemp(cfilepath);
+  close(fd);
+  
   fout.open(cfilepath, ios_base::out);
+  
   if(!fout) {
     cerr << PACKAGE << ": não foi possível abrir o arquivo: \"" << cfilepath << "\"" << std::endl;
     goto end;
@@ -233,15 +241,15 @@ bool parse(void) {
   }
 
   end:
-    fout.close();
+    fout.close();     
     return success;
 }
 
 bool compile(void) {
   stringstream cmd;
   cmd << "gcc -ansi -x c -o " << ofilepath << " " << cfilepath;
-
-  if(debug_flag) {cerr << cmd.str();}
+    
+  if(debug_flag) {cerr << "cmd: " << cmd.str() << endl;}
 
   if(system(cmd.str().c_str()) == -1) {
     cerr << PACKAGE << ": não foi possível invocar gcc." << endl;
@@ -250,16 +258,46 @@ bool compile(void) {
   return true;
 }
 
+bool copy_source() {
+  ofstream out(trpath.c_str());
+  ifstream in(cfilepath);
+
+//   out.open(, ios_base::out);  
+//   in.open(cfilepath, ios_base::in);
+
+  if(!out || !in) {
+    cerr << PACKAGE << ": não foi possível criar arquivo fonte." << endl;
+    return  false;
+  }
+
+  char c;
+  while(in.get(c)) {
+    out.put(c);
+  }
+
+  if(!in.eof() || !out) {
+    cerr << PACKAGE << ": ocorreu um erro ao criar arquivo fonte." << endl;
+    return false;
+  }
+
+  in.close();
+  out.close();  
+  return true;
+}
+
 int main(int argc, char** argv)
 { 
   int success = EXIT_SUCCESS;
+
   if(!init(argc, argv)) {
     success = EXIT_FAILURE;
     goto the_end;
   }
 
   if(parse()) {
-    if(!interpret_only) {
+    if(translate_only) {
+      success = copy_source()?EXIT_SUCCESS:EXIT_FAILURE;
+    } else if(!interpret_only) {
       success = compile()?EXIT_SUCCESS:EXIT_FAILURE;
     }
   } else {
@@ -268,6 +306,5 @@ int main(int argc, char** argv)
 
   the_end:
     unlink(cfilepath);
-    free(cfilepath);
     return success;
 }
