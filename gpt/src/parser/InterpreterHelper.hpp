@@ -813,6 +813,7 @@ class PrivateInterpreter {
       return v;//empty value
     } else {
       cerr << "BUG: No built-in function called \"" << fname << "\"" << endl;
+      return v;
     }
   }
 
