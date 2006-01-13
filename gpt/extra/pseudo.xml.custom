@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO8859-1"?>
 <!DOCTYPE language SYSTEM "language.dtd">
-<language name="Pseudo código" section="Sources" extensions="*.pt" mimetype="text/x-ptsrc" version="1.0" kateversion="2.4" hidden="false" priority="6">
+<language name="G-Portugol" section="Sources" extensions="*.pt" mimetype="text/x-ptsrc" version="1.0" kateversion="2.4" hidden="false" priority="6">
   <highlighting>
     <list name="keywords">
       <item>fim-variáveis</item>
@@ -11,7 +11,7 @@
       <item>fim</item>
     </list>
     
-    <list name="datatypes">     
+    <list name="datatypes">
       <item>inteiro</item>
       <item>real</item>
       <item>caractere</item>
@@ -88,21 +88,25 @@
     </list>
     
     <contexts> 
-			<context name="Normal" lineEndContext="#stay" attribute="Normal Text">
-				<DetectSpaces />
-        
-        
+      <context name="Normal" lineEndContext="#stay" attribute="Normal Text">
+        <DetectSpaces />        
+          
         <Detect2Chars attribute="Comment" context="Commentar 1" char="/" char1="/"/>
         <Detect2Chars attribute="Comment" context="Commentar 2" char="/" char1="*" beginRegion="Comment"/>
         <DetectChar attribute="String" context="String" char="&quot;"/>
                 
-        
+        <RegExpr attribute="Binary" String="0b[01]+"  insensitive="true"  />
+        <RegExpr attribute="Octal"  String="0c[0-8]+" insensitive="true"  />
+
+
         <keyword attribute="Keyword"            context="#stay" String="keywords"/>
         <keyword attribute="Data Type"          context="#stay" String="datatypes"/>
         <keyword attribute="Decimal"            context="#stay" String="bool_values"/>
         <keyword attribute="Control Structure"  context="#stay" String="control_st"/>
         <keyword attribute="Symbol"             context="#stay" String="symbols"/>
-        <keyword attribute="Function"           context="#stay" String="functions"/> 
+        <keyword attribute="Builtin Function"   context="#stay" String="functions"/> 
+
+        <RegExpr attribute="Function" context="#stay" String="\b[_\w][_\w\d]*(?=\([^\)]*\))" />
         
         <keyword      attribute="Operator" context="#stay" String="operators"/>
         <Detect2Chars attribute="Operator" context="#stay" char=":" char1="="/>
@@ -115,14 +119,14 @@
         <!--matriz de... (Data Type)-->
         <keyword attribute="Data Type" context="#stay" String="de_key"/>                
         
-				<HlCOct attribute="Octal"              context="#stay"/>
-				<HlCHex attribute="Hex"                context="#stay"/>
-				<HlCChar attribute="Char"              context="#stay"/>
-				<HlCStringChar attribute="String Char" context="#stay"/>
+        <HlCOct attribute="Octal"              context="#stay"/>
+        <HlCHex attribute="Hex"                context="#stay"/>
+        <HlCChar attribute="Char"              context="#stay"/>
+        <HlCStringChar attribute="String Char" context="#stay"/>
         <Int attribute="Decimal"               context="#stay"/>
         
-      </context>			
-
+      </context>   
+      
       <!-- evitar conflitos entre <de> do "para x de 0 até..." e o <de> do "vetor de..." 
           um eh Keyword, o outro eh Data Type-->
       <context name="paraCmd" lineEndContext="#stay" attribute="Normal Text">
@@ -131,40 +135,43 @@
         <!-- "até" sai do contexto  -->
         <keyword attribute="Control Structure" context="#pop" String="ate_key"/>        
         <!-- importa as regras do contexto normal. ja que a regra 
-             para "de" foi setada, ele não vai ser sobrescrito pela regra 
-             do contexto (de_key -> Data Type) -->
+              para "de" foi setada, ele não vai ser sobrescrito pela regra 
+              do contexto (de_key -> Data Type) -->
         <IncludeRules context="Normal" />
       </context>
-      
-			<context attribute="String" lineEndContext="#pop" name="String">
-				<LineContinue attribute="String" context="#stay"/>
-				<HlCStringChar attribute="String Char" context="#stay"/>
-				<DetectChar attribute="String" context="#pop" char="&quot;"/>
-			</context>			
-			<context attribute="Comment" lineEndContext="#pop" name="Commentar 1">				
-			</context>
-			<context attribute="Comment" lineEndContext="#stay" name="Commentar 2">
-				<Detect2Chars attribute="Comment" context="#pop" char="*" char1="/" endRegion="Comment"/>
-			</context>
-
-    </contexts>
+        
+    <context attribute="String" lineEndContext="#pop" name="String">
+      <LineContinue attribute="String" context="#stay"/>
+      <HlCStringChar attribute="String Char" context="#stay"/>
+      <DetectChar attribute="String" context="#pop" char="&quot;"/>
+    </context>   
+    
+    <context attribute="Comment" lineEndContext="#pop" name="Commentar 1">    
+    </context>
+    
+      <context attribute="Comment" lineEndContext="#stay" name="Commentar 2">
+        <Detect2Chars attribute="Comment" context="#pop" char="*" char1="/" endRegion="Comment"/>
+      </context>  
+  </contexts>
     <itemDatas>
       <itemData name="Normal Text"  color="#000000"  bold="0" italic="0" underline="0" strikeout="0" selColor="#FFFFFF"/>
       <itemData name="Keyword"      color="#800156"  bold="1" italic="0" underline="0" strikeout="0" selColor="#FFFFFF"/>
       <itemData name="Data Type"    color="#800156"  bold="0" italic="0" underline="0" strikeout="0" selColor="#FFFFFF"/>
-      <itemData name="Decimal"      color="#0000FF"    bold="0" italic="0" underline="0" strikeout="0" selColor="#00FFFF"/>
-      <itemData name="Octal"        color="#0000FF"     bold="0" italic="0" underline="0" strikeout="0" selColor="#00FFFF"/>
-      <itemData name="Hex"          color="#0000FF"     bold="0" italic="0" underline="0" strikeout="0" selColor="#00FFFF"/>
-      <itemData name="Float"        color="#0000FF"     bold="0" italic="0" underline="0" strikeout="0" selColor="#00FFFF"/>
-      <itemData name="Char"         color="#E60000"     bold="0" italic="0" underline="0" strikeout="0" selColor="#FF00FF"/>
-      <itemData name="String Char"  color="#E60000"     bold="0" italic="0" underline="0" strikeout="0" selColor="#FF00FF"/>
-      <itemData name="String"       color="#E60000"    bold="0" italic="0" underline="0" strikeout="0" selColor="#FF00FF"/>
-      <itemData name="Comment"      color="#758D7D"   bold="0" italic="0" underline="0" strikeout="0" selColor="#A0A0A4"/>
-      <itemData name="Symbol"       color="#000000"   bold="0" italic="0" underline="0" strikeout="0" selColor="#FFFFFF"/>
-      <itemData name="Function"     color="#595D84"  bold="1" italic="0" underline="0" strikeout="0" selColor="#FFFFFF"/>
-      <itemData name="Operator"     color="#000080"      bold="0" italic="0" underline="0" strikeout="0" selColor="#FFFFFF"/>
+      <itemData name="Decimal"      color="#0000FF"  bold="0" italic="0" underline="0" strikeout="0" selColor="#00FFFF"/>
+      <itemData name="Binary"       color="#0000FF"  bold="0" italic="0" underline="0" strikeout="0" selColor="#00FFFF"/>
+      <itemData name="Octal"        color="#0000FF"  bold="0" italic="0" underline="0" strikeout="0" selColor="#00FFFF"/>
+      <itemData name="Hex"          color="#0000FF"  bold="0" italic="0" underline="0" strikeout="0" selColor="#00FFFF"/>
+      <itemData name="Float"        color="#0000FF"  bold="0" italic="0" underline="0" strikeout="0" selColor="#00FFFF"/>
+      <itemData name="Char"         color="#E60000"  bold="0" italic="0" underline="0" strikeout="0" selColor="#FF00FF"/>
+      <itemData name="String Char"  color="#E60000"  bold="0" italic="0" underline="0" strikeout="0" selColor="#FF00FF"/>
+      <itemData name="String"       color="#E60000"  bold="0" italic="0" underline="0" strikeout="0" selColor="#FF00FF"/>
+      <itemData name="Comment"      color="#758D7D"  bold="0" italic="0" underline="0" strikeout="0" selColor="#A0A0A4"/>
+      <itemData name="Symbol"       color="#000000"  bold="0" italic="0" underline="0" strikeout="0" selColor="#FFFFFF"/>      
+      <itemData name="Function"     color="#595D84"  bold="0" italic="0" underline="0" strikeout="0" selColor="#FFFFFF"/>
+      <itemData name="Operator"     color="#000080"  bold="0" italic="0" underline="0" strikeout="0" selColor="#FFFFFF"/>
       <itemData name="Control Structure" color="#29952E" bold="1" italic="0" underline="0" strikeout="0" selColor="#FFFFFF"/>
-    </itemDatas>    
+      <itemData name="Builtin Function"  color="#595D84"  bold="1" italic="0" underline="0" strikeout="0" selColor="#FFFFFF"/>
+    </itemDatas>
   </highlighting>
   <general>
     <comments>
