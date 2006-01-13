@@ -125,9 +125,7 @@ protected:
 
   string getTokenDescription(const RefToken& t);
 
-  int reportMismatchedError(int line, string expecting, string found = "", string after = "");
-  int reportCustomError(int line, string msg);  
-
+  int reportParserError(int line, string expecting, string found = "", string after = "");
 
   void handleVarDeclColonMissing(const MismatchedTokenException& e, const RefToken& id);
 

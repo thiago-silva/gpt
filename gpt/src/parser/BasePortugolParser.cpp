@@ -96,7 +96,7 @@ string BasePortugolParser::getTokenDescription(const RefToken& token) {
   return str;
 }
 
-int BasePortugolParser::reportMismatchedError(int line, string expecting, string found, string after) {
+int BasePortugolParser::reportParserError(int line, string expecting, string found, string after) {
   string str;
   if(found.length()) {
     str = ", encontrado ";
@@ -114,56 +114,6 @@ int BasePortugolParser::reportMismatchedError(int line, string expecting, string
   return ErrorHandler::self()->add(s, line);
        
 }
-
-int BasePortugolParser::reportCustomError(int line, string msg) {
-  return ErrorHandler::self()->add(msg, line);
-}
-
-
-// void BasePortugolParser::handleVarDeclColonMissing(const MismatchedTokenException& e, const RefToken& id) {
-//   reportMismatchedError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
-// 
-//   //if "a inteiro"
-//   //  printTip "colocar ':' entre 'a' e 'inteiro'
-//   //if "a b : ...(unknow)"
-//   //   printTip "colocar "," entre "a" e "b"
-//   //if "a b ...(unknow)" --> ":" nao está a vista!
-//   //  synchronizar até T_SEMICOL|T_FIM_VARIAVEIS e
-//   //  cair fora! (para que continue para a proxima decl ou T_KW_FIM_VARIAVEIS)
-// 
-//   if(e.token->getType() == PortugolParserTokenTypes::T_IDENTIFICADOR) {
-//     printTip(string("Coloque uma vírgula entre as variáveis \"") 
-//              + id->getText() + "\" e \"" + e.token->getText() + "\".", id->getLine());
-//   }
-// 
-//   //ex. "a inteiro"
-//   if(isDatatype(LA(1))) {
-//     printTip(string("Faltando colocar ':' entre \"") 
-//            + id->getText() + "\" e " + getTokenNames()[LA(1)], id->getLine());      
-// 
-//     //nao consumir. LA(1) eh datatype, continua a producao.
-// 
-//   //ex: a b : ...(unknow)
-//   } else if(LA(2) == PortugolParserTokenTypes::T_COLON) {
-// 
-//     consume(); //o que quer que o LA(1) seja //(b) no exemplo
-//     consume(); //o LA(2) (":")  
-// 
-//     //continuar a producao (LA(1) agora deve ser um datatype)
-// 
-//   //ex: a b (unknow)...(LA(1) == b)
-//   } else {
-//     BitSet b;
-//     b.add(PortugolParserTokenTypes::T_COLON);
-//     b.add(PortugolParserTokenTypes::T_KW_FIM_VARIAVEIS);
-//     consumeUntil(b);
-// 
-//     //se lookahead == ":", consumir e continuar (LA(1) deve ser datatype)
-//     if(LA(1) == PortugolParserTokenTypes::T_COLON) {
-//       consume();
-//     }
-//   }
-// }
 
 void BasePortugolParser::printTip(const string& msg, int line, int cd) {
   ErrorHandler::self()->addTip(msg, line, cd);
