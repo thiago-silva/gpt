@@ -2,60 +2,46 @@
 
 \CurrentEntry 1 TODO
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
-<ul type="disc"><li>parser.g error handling</li>
-<ul type="disc"><li>substituir getTokenNames()[DFASDF] por getTokenDescriptioN(TOKEN)</li>
-<ul type="disc"><li>overload getTokenDescripion(int)</li></ul>
-<li>Verificar todos os consumeUntil() nas excessoes</li>
-<li>Limpar comentarios, codigo...<br /></li></ul>
-<li>gpt.cpp</li>
-<ul type="disc"><li>remover tempnam() e usar mkstemp()<br /></li></ul>
-<li>pt2c:</li>
-<ul type="disc"><li>free(lit)! em leia_literal()<br /><br /></li></ul>
+<ul type="disc"><div> - - -------------------------- CODIGOS ------------------------------<br /></div>
+<li>enquanto leia() : leia() deve ser avaliado como expressão numerica.</li>
+<ul type="disc"><li>permitir que leia() seja termo em expressões com N termos.<br /></li></ul>
 <li>Interpreter:</li>
-<ul type="disc"><li>stm_ret</li>
-<li>Verificar casting na atribuicao</li>
-<li>Socket conn + step(into|over|out) + continue + breakpoint + watch<br /></li></ul>
-<li>Limpar codigos, comentarios.</li>
-<ul type="disc"><li>pt2c fix:</li>
-<ul type="disc"><li>/home/jester/projects/upis/trunk/pparser/gramaticas/pt2c.g:776:11: warning:Rule 'tipo_prim' returns a value</li>
-<li>dar uma olhada nas producoes de ret_type (funcao)<br /></li></ul></ul>
-<li>Editor + parser (online analysis check)</li>
+<ul type="disc"><li>Doublecheck dos castings em atribuicoes</li>
+<li>Debugger: Socket conn + step(into|over|out) + continue + breakpoint + watch<br /><br /></li></ul>
+<li>Adicionar &quot;coluna&quot; no error reporting</li>
+<ul type="disc"><li>&quot;para x de 1 até 10 faça&quot; (onde x eh literal:)</li>
+<ul type="disc"><li>Linha: 36 - Esperando uma expressão numérica. Encontrado expressão &quot;literal&quot;.<br />Esse erro eh muito vago. Para melhorar, teria que mudar bastante o esquema em semantic.g<br />para passar os termos como parametros para os metodos eval*.</li></ul>
+<li>Criar esquema de exibicao de erros baseado em Java</li>
+<ul type="disc"><li>Mostra trecho do codigo e aponta com uma seta onde esta o erro.<br /></li></ul></ul>
+<li>Implementar compilação real (ELF binary)<br /></li>
+<li>Unifromizar ponto flutuante (uso de double (float da warnings na traducao de C)</li>
+<ul type="disc"><li>impressao: compilacao e interpretacao deve imprimir no formato .XX (duas casas decimais)</li>
+<li>ver interpreter::atoif, e usar atod (ou o que quer que seja str2double)</li></ul></ul>
+<p> - ---------------------------------- FEATURES -----------------------------------<br /></p>
+<ul type="disc"><li>Editor + parser (online analysis check)</li>
 <ul type="disc"><li>Plugin não é bom:</li>
-<ul type="disc"><li>Funciona com outros tipos de arquivos</li>
-<li>Não tem widget mostrando as mensagens de erro</li></ul>
-<li>Protoeditor</li>
+<ul type="disc"><li>Funciona com outros tipos de arquivos (annoying)</li>
+<li>Não tem widget mostrando as mensagens de erro (apenas um icone dizendo q existe erro)</li>
+<li>Conclusao: usar editor proprio (protoeditor like)</li></ul>
+<li>Debugger: usar protoeditor</li>
 <ul type="disc"><li>Aproveita infraestrutura, add/removemarks, breakpoints, abstract variables, watches, error msgs, etc</li>
-<li>Fork()</li>
+<li>Fork (criar branch?)</li>
 <ul type="disc"><li>Fazer de um jeito em que evite replicação.</li>
-<li>Não ter settings relacionados a PHP.<br /></li></ul></ul></ul>
-<li>Interpreter/Debugger</li>
-<li>Adicionar mimetype com icone (x-pseudo-codigo)<br /></li>
+<li>Não ter settings relacionados a PHP.</li>
+<li>Adicionar live parser (eclipse/kdevelop like)<br /><br /></li></ul></ul></ul>
+<li>Adicionar mimetype com icone (x-gpt-source)<br /></li>
 <li>Release</li>
 <ul type="disc"><li>Site (html manual (wiki), comentarios de implementacao, exemplos, etc)</li>
 <li>configure.in configurations (check for antlr)</li>
 <li>README, TODO, NEWS<br /><br /></li></ul>
-<li>Parser Plugin:</li>
-<ul type="disc"><li>Action (enable/disable) pelo menu/shortcut</li>
-<li>Linkar com gpt</li></ul>
-<div><br />----------------------------------------------------------------------------------------------------------------<br />Checar divisão por 0<br /><br /></div>
-<li>Retirar no lexer os &quot; dos strings:</li>
-<ul type="disc"><li>STR_LIT: &quot;! (.*) &quot;!</li>
-<li>atualizar: na traducao para C, circular as strings com &quot;</li></ul>
-<div></div>
-<li>Highlight: numeros binarios e octais</li>
-<li>Highlight: funcoes()<br /><br />Checar se eh possivel: &quot;imprima()&quot; sem argumentos<br /></li>
-<li>Bugs:</li>
-<ul type="disc"><li>algoritmo inútil;<br />Linha: 1 - Variável/função &quot;inútil&quot; não pode ter caracteres especiais..<br />-&gt; &quot;inútil&quot; não é nem variável, nem, função. é o nome do algoritmo<br /></li></ul>
-<li>Verificação de igualdade de strings! Como está sendo traduzido?deveria ser strcmpi()<br /></li>
-<div><br />------------------------------------------------------------------------------------<br /></div>
+<li>Novos features:</li>
+<ul type="disc"><li>-faça/enquanto();</li>
+<li>-switch (escolha)</li>
 <li>-Fazer verificação de uso de variaveis?</li>
-<ul type="disc"><li>&quot;Aviso: variavel &quot;w&quot; nao esta sendo usada&quot;</li>
-<div><br /><br /></div></ul>
-<li>-faça/enquanto();</li>
-<li>-switch (escolha)<br /></li>
-<li>Fazer representacao de numeros binarios? (0 para oct, 0x para hex, 0b para bin?)?<br /><br /><br /></li>
-<li>-------------------------------------------------------------------------------------------------------------------<br /><br />Limpeza de codigo:<br /><br />lexer e parser: apenas polir.<br /><br />Semantic, pt2c, interpreter:</li>
-<ul type="disc"><li>Remodelar (codigo atual está muito experimental, therefore, mal feito)<br /></li></ul></ul>
+<ul type="disc"><li>&quot;Aviso: variavel &quot;w&quot; nao esta sendo usada&quot;<br /><br /></li></ul></ul>
+<li>A avaliação de expressões deve ter uma implementação centralizada.</li>
+<ul type="disc"><li>Codigos de avaliação em SemanticCheck e em Interpreter, por exemplo, estão replicados</li>
+<ul type="disc"><li>(regras para promoção de expressões, casting, etc..)<br /></li></ul></ul></ul>
 </body></html>
 
 
@@ -66,32 +52,18 @@
 <li>Casting:</li>
 <ul type="disc"><li>(literal)xx := 123; //valido (implicit cast)?</li>
 <ul type="disc"><li>Isso pode ser interessante no futuro mas:</li>
-<ul type="disc"><li>1: Complica muito mais a tradução para C.</li>
+<ul type="disc"><li>1: Complica a tradução para C.</li>
 <li>2: Nao sobra muita opcao para ensinar que tipos diferentes devem ser respeitados. </li>
 <ul type="disc"><li>E isso eh interessante pois em linguagens compiladas (tipadas), isso eh regra.</li></ul></ul></ul></ul></ul>
-<p></p>
-<ul type="disc"><li>Semantic:</li>
-<li>Checar se as funcoes que retornam dados tem seus respectivos comandos &quot;retorne&quot;.</li>
-<ul type="disc"><ul type="disc"><li>Complicado implementar (precisa-se avaliar se os &quot;retorne&quot; estão dentro de &quot;if&quot;s e se serão executados com certeza.)</li></ul></ul></ul>
 </body></html>
 
 \NewEntry 2 comentarios
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
-<ul type="disc"><li>matrizes podem receber valores que são outras matrizes de mesma dimensao/tipo.</li>
+<ul type="disc"><li>matrizes poderiam receber valores que são outras matrizes de mesma dimensao/tipo.</li>
 <li>ex: a ,x : matriz[2] de inteiros; a := x; //OK</li>
-<ul type="disc"><li>ex2: a : matriz[2] de inteiros; a := func(); //retorna matriz[2] de inteiros. OK<br /><br /><br />Eh possivel, ate de certa forma, interessante implementar isso. Penso que os C arrays devem ser criados dinamicamente. Para isso, seria mais facil criar uma funcao que crie essa matriz (new_matriz()?), informando dimensoes, tamanhos, tipos, etc.. </li>
-<ul type="disc"><li>No que se refere a programação, soa como um feature interessante. No entanto, nao creio que teria um bom valor para ensino. Seria mais interessante ter o aluno aprendendo a copiar e manipular as matrizes diretamente por meio das estruturas de controle (se/enquanto...).</li>
-<li><br /></li></ul></ul></ul>
-</body></html>
-
-\NewEntry 1 notes
-<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
-<p></p>
-<p>   </p>
-<ul type="disc"><li>A analise semantica (contextual parsing) não decora a AST, ja que a semelhança entre portugol e C permite uma traducao mais direta. No entanto, para compilar um fonte em portugol para uma linguagem de mais baixo nivel (codigo de maquina), seria nescessario esse esforco. A AST, então, conter informacoes sobre os operandos e tipos de expressões nos nós </li>
-<ul type="disc"><li>ex: &quot;1 == 2&quot; ::= #(== boolean (1 2) )</li>
-<li>ex; &quot;1 + 3.4&quot;    ::=  #(+ real (1  3.4) )</li></ul>
-<li>Eh ainda, possivel descartar a tabela de simbolos, decorando a AST com as informacoes de identificadores.</li></ul>
+<ul type="disc"><li>ex2: a : matriz[2] de inteiros; a := func(); //retorna matriz[2] de inteiros. OK<br /><br /></li></ul>
+<li>Dificuldades na implementacao:</li>
+<ul type="disc"><li></li></ul></ul>
 </body></html>
 
 \NewEntry 1 Tratamento de erros
@@ -104,9 +76,9 @@
 <li>Fazer disso uma opcao?</li></ul></ul></ul>
 </body></html>
 
-\NewEntry 1 interpret
+\NewEntry 1 debugger comments
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
-<p>[size]<br />&lt;data&gt;<br />  &lt;vars&gt;<br />    &lt;var name=&quot;x&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1&quot;/&gt;<br />    &lt;var name=&quot;vect&quot; type=&quot;integer&quot; primitive=&quot;false&quot;&gt;<br />      &lt;var name=&quot;0&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;100&quot;/&gt;<br />      &lt;var name=&quot;1&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;10&quot;/&gt;<br />      &lt;var name=&quot;2&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1110&quot;/&gt;<br />    &lt;/var&gt;<br />    &lt;var name=&quot;mat2&quot; type=&quot;integer&quot; primitive=&quot;false&quot;&gt;<br />      &lt;var name=&quot;0&quot; type=&quot;integer&quot; primitive=&quot;false&quot;&gt;<br />        &lt;var name=&quot;0&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1&quot;/&gt;<br />        &lt;var name=&quot;1&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1&quot;/&gt;<br />      &lt;/var&gt;<br />      &lt;var name=&quot;1&quot; type=&quot;integer&quot; primitive=&quot;false&quot;&gt;<br />        &lt;var name=&quot;0&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1&quot;/&gt;<br />        &lt;var name=&quot;1&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1&quot;/&gt;<br />      &lt;/var&gt;<br />    &lt;/var&gt;<br />  &lt;/vars&gt;<br /><br />  &lt;stackinfo&gt;<br />    &lt;entry function=&quot;bla()&quot; line=&quot;3&quot;/&gt;<br />    &lt;entry function=&quot;@global&quot; line=&quot;5&quot;/&gt;<br />  &lt;/stackinfo&gt;<br /><br />  &lt;message&gt;<br />     &lt;output&gt;Hello world!&lt;/output&gt;<br />     &lt;runtime_error line=&quot;3&quot;&gt;Linha 3 - tentando acessar indice 3 na matriz &quot;mat[2]&quot;&lt;/runtime_error&gt;<br />  &lt;/message&gt;<br />&lt;/data&gt;</p>
+<p>[size]\0<br />&lt;data&gt;<br />  &lt;vars scope=&quot;@global&quot;&gt;<br />    &lt;var name=&quot;x&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1&quot;/&gt;<br />    &lt;var name=&quot;vect&quot; type=&quot;integer&quot; primitive=&quot;false&quot;&gt;<br />      &lt;var name=&quot;0&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;100&quot;/&gt;<br />      &lt;var name=&quot;1&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;10&quot;/&gt;<br />      &lt;var name=&quot;2&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1110&quot;/&gt;<br />    &lt;/var&gt;<br />    &lt;var name=&quot;mat2&quot; type=&quot;integer&quot; primitive=&quot;false&quot;&gt;<br />      &lt;var name=&quot;0&quot; type=&quot;integer&quot; primitive=&quot;false&quot;&gt;<br />        &lt;var name=&quot;0&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1&quot;/&gt;<br />        &lt;var name=&quot;1&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1&quot;/&gt;<br />      &lt;/var&gt;<br />      &lt;var name=&quot;1&quot; type=&quot;integer&quot; primitive=&quot;false&quot;&gt;<br />        &lt;var name=&quot;0&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1&quot;/&gt;<br />        &lt;var name=&quot;1&quot; type=&quot;integer&quot; primitive=&quot;true&quot; value=&quot;1&quot;/&gt;<br />      &lt;/var&gt;<br />    &lt;/var&gt;<br />  &lt;/vars&gt;<br /><br />  &lt;stackinfo&gt;<br />    &lt;entry function=&quot;bla()&quot; line=&quot;3&quot;/&gt;<br />    &lt;entry function=&quot;@global&quot; line=&quot;5&quot;/&gt;<br />  &lt;/stackinfo&gt;<br /><br />  &lt;message&gt;<br />     &lt;output&gt;Hello world!&lt;/output&gt;<br />     &lt;runtime_error line=&quot;3&quot;&gt;Linha 3 - tentando acessar indice 3 na matriz &quot;mat[2]&quot;&lt;/runtime_error&gt;<br />  &lt;/message&gt;<br />&lt;/data&gt;</p>
 </body></html>
 
 \NewEntry 0 manual
