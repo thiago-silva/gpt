@@ -104,7 +104,7 @@ options {
     s << "void matrix_cpy__(void *src, void* dest, int type, int size) {\n"
          "   int i;\n"
          "   int *ds,*dd;\n"
-         "   float *fs,*fd;\n"
+         "   double *fs,*fd;\n"
          "   char *cs,*cd;\n"
          "   boolean *bs,*bd;\n"          
          "   switch(type) {\n"
@@ -114,8 +114,8 @@ options {
          "       for(i = 0; i < size; i++) dd[i] = ds[i];\n"
          "       break;\n"
          "     case 'f':\n"
-         "       fs = (float*) src;\n"
-         "       fd = (float*) dest;\n"
+         "       fs = (double*) src;\n"
+         "       fd = (double*) dest;\n"
          "       for(i = 0; i < size; i++) fd[i] = fs[i];\n"
          "       break;\n"
          "     case 'c':\n"
@@ -136,7 +136,7 @@ options {
     s << "void matrix_init__(void *matrix, int type, int size) {\n"
          "   int i;\n"
          "   int *d;\n"
-         "   float* f;\n"
+         "   double* f;\n"
          "   char* c;\n"
          "   boolean* b;\n"          
          "   switch(type) {\n"
@@ -145,7 +145,7 @@ options {
          "       for(i = 0; i < size; i++) d[i] = 0;\n"
          "       break;\n"
          "     case 'f':\n"
-         "       f = (float*) matrix;\n"
+         "       f = (double*) matrix;\n"
          "       for(i = 0; i < size; i++) f[i] = 0;\n"
          "       break;\n"
          "     case 'c':\n"
@@ -177,7 +177,7 @@ options {
          "         break;\n"
          "       case 'f':\n"
          "         f = va_arg(args, double);\n"
-         "         printf(\"%f\", f);\n"
+         "         printf(\"%.2f\", f);\n"
          "         break;\n"
          "       case 'c':\n"
          "         c = va_arg(args, int);\n"
@@ -209,13 +209,18 @@ options {
          "   printf(\"\\n\");\n"
          "}\n\n";
     s << "int leia_inteiro__() {\n"
-         "   int i;\n"
+         "   int i = 0;\n"
          "   scanf(\"%d\", &i);\n"
          "   return i;\n"
          "}\n";
-    s << "float leia_real__() {\n"
-         "   float f;\n"
-         "   scanf(\"%f\", &f);\n"
+    s << "char leia_caractere__() {\n"
+         "   char c = 0;\n"
+         "   scanf(\"%c\", &c);\n"
+         "   return c;\n"
+         "}\n";
+    s << "double leia_real__() {\n"
+         "   double f = 0;\n"
+         "   scanf(\"%lf\", &f);\n"
          "   return f;\n"
          "}\n";
     s << "char* leia_literal__() {\n"
@@ -229,6 +234,16 @@ options {
          "   lit[strlen(lit)-1] = 0;\n"
          "   collect(lit);\n"
          "   return lit;\n"
+         "}\n";
+    s << "boolean leia_logico__() {\n"
+         "   char* logico;\n"
+         "   logico = leia_literal__();\n"
+         "   if(strcmp(\"falso\",logico) == 0) {\n"
+         "      return FALSE;\n"
+         "   } else if(strcmp(\"0\",logico) == 0) {\n"
+         "      return FALSE;\n"
+         "   }\n"
+         "   return TRUE;\n"
          "}\n";
     s << "boolean str_comp__(char* left, char* right) {\n"
          "   if(left == 0) {\n"
@@ -301,7 +316,9 @@ options {
           case TIPO_LITERAL:
             return "leia_literal__";
           case TIPO_CARACTERE:
-            return "leia_caractere";
+            return "leia_caractere__";
+          case TIPO_LOGICO:
+            return "leia_logico__";
           case TIPO_INTEIRO:
           default:
             return "leia_inteiro__";
@@ -347,7 +364,7 @@ options {
     switch(type) {
       case TIPO_NULO:      str = "void"; break;
       case TIPO_INTEIRO:   str = "int"; break;
-      case TIPO_REAL:      str = "float"; break;
+      case TIPO_REAL:      str = "double"; break;
       case TIPO_CARACTERE: str = "char"; break;
       case TIPO_LITERAL:   str = "char*"; break;
       case TIPO_LOGICO:    str = "boolean"; break;    
