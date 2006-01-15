@@ -58,7 +58,7 @@
 %\usepackage{times}
 %\usepackage{aeguill}
 
-\usepackage{hyperref} %referencias para PDF
+% \usepackage{hyperref} %referencias para PDF
 
 \usepackage{float}
 
@@ -134,12 +134,30 @@
 \author{Thiago Silva}
 \email{\texttt{thiago.silva@kdemail.net}}
 
-% \usepackage[pdftex]{hyperref} %should be the LAST in the preamble
+
+\usepackage[pdftex,                %%% hyper-references for pdflatex
+    bookmarks=true,%                   %%% generate bookmarks ...
+    bookmarksnumbered=true,%           %%% ... with numbers
+    hypertexnames=false,%              %%% needed for correct links to figures !!!
+    breaklinks=true,%                  %%% break links if exceeding a single line
+    colorlinks=true,
+    linkcolor=blue,
+    pdfborder={0 0 0}]
+  {hyperref} %%% blue frames around links
+
+
+\hypersetup{
+ pdfauthor = {\@author},
+ pdftitle = {\@title},
+ pdfsubject = {Linguagem de programação},
+ pdfkeywords = {portugol, programação},
+ pdfcreator = {LaTeX with hyperref package},
+ pdfproducer = {dvips + ps2pdf}
+}
 
 \begin{document}
 
 \maketitle
-
 
 \tableofcontents
 
