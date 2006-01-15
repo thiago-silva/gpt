@@ -238,14 +238,7 @@ options {
 
 /*-----------------Constant literals ***********************/
 
-T_STRING_LIT
-options {
-  paraphrase = "literal";
-}
-  : '"'! (ESC|~('"'|'\\'|'\n'|'\r'))* '"'!
-  ;
-  
- 
+
 T_INT_LIT
 options {
   paraphrase = "número inteiro";
@@ -362,12 +355,24 @@ T_CARAC_LIT
 options {
   paraphrase = "caractere";
 }
-  : '\''! ( ~('\''|'\n'|'\r'|'\\') | ESC )? '\''!
+//  : '\''! ( ~('\''|'\n'|'\r'|'\\') | ESC )? '\''!
+  : '\''! ( ~( '\'' | '\\' ) | ESC )? '\''!
+  ;
+
+//"Digite um \");
+
+T_STRING_LIT
+options {
+  paraphrase = "literal";
+}
+//  : '"'! (ESC|~('"'|'\\'|'\n'|'\r'))* '"'!
+  : '"'! ( ~( '"' | '\\' | '\n' | '\r') | ESC)* '"'!
   ;
 
 protected
 ESC
-  : '\\' ('n'| 't' | 'r' | '\\')
+  //: '\\' ('n'| 't' | 'r' | '\\' | '\'' | '"')
+  : '\\' . //permite "\a" (possibilida ser avaliado posteriormente como "a")
   ;
 
 T_ATTR
