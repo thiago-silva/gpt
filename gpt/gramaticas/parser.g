@@ -309,9 +309,14 @@ stm_block!
     if(e.expecting == T_KW_FIM) {
       int cd = reportParserError(e.getLine(), expecting_stm_or_fim, getTokenDescription(e.token));
       if(e.token->getType() == T_IDENTIFICADOR) {
-        printTip(string("se \"") + e.token->getText() 
-          + "\" é uma variável, adicione o operador de atribuição " + getTokenNames()[T_ATTR]
-          + " logo após. Se for uma função, adicione " +  getTokenNames()[T_ABREP] , e.getLine(), cd);
+        printTip(string("Verifique o uso de \"[]\" (caso \"") + e.token->getText() + 
+                       "\" seja um vetor/matriz), do operador \":=\" (caso seja um comando de atribuição)"
+                       " e do uso de parêntesis (caso \"" + e.token->getText() +
+                       "\" seja uma chamada de função)", e.getLine(), cd);
+
+/*        printTip(string("se \"") + e.token->getText() 
+          + "\" é uma variável, verifique o uso de \"[]\" caso seja um vetor/matriz adicione o operador de atribuição " + getTokenNames()[T_ATTR]
+          + " logo após. Se for uma função, adicione " +  getTokenNames()[T_ABREP] , e.getLine(), cd);*/
       } 
     } else {
       reportParserError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
