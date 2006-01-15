@@ -55,10 +55,40 @@ options {
     PrivateInterpreter interpreter;
     RefPortugolAST topnode;
 
-    string parseChar(const string& str) {
-      //trata um caractere como um numero. 
-      //(facilita)
-  
+
+    string parseLiteral(string str) {
+      string::size_type idx = 0;
+      char c;
+      while((idx = str.find('\\', idx)) != string::npos) {
+        switch(str[idx+1]) {
+          case 'n':
+            c = '\n';
+            break;
+          case 't':
+            c = '\t';
+            break;
+          case 'r':
+            c = '\r';
+            break;
+          case '\\':
+            c = '\\';
+            break;
+          case '\'':
+            c = '\'';
+            break;
+          case '"':
+            c = '"';
+            break;
+          default:
+            c = str[idx+1];
+        }
+        str.replace(idx, 2, 1, c);
+        idx++;
+      }
+      return str;
+    }
+
+    string parseChar(string str) {
       stringstream ret;
       /*
         ''    => 0
@@ -68,8 +98,8 @@ options {
         '\r'  => \r
         '\i'  => i
       */
-      if(str[1] == '\\') {
-        switch(str[2]) {
+      if(str[0] == '\\') {
+        switch(str[1]) {
           case 't':
             ret << (int) '\t';
             break;
@@ -80,14 +110,12 @@ options {
             ret << (int) '\r';
             break;
           default:
-            ret << (int)str[2];
+            ret << (int)str[1];
         }
-      } else if(str[1] != '\'') {
-        ret << (int) str[1];
+        return ret.str();
       } else {
-        ret << "0";
-      }
-      return ret.str();
+        return str;
+      }      
     }
 
     RefPortugolAST getFunctionNode(const string& name) {
@@ -128,8 +156,8 @@ inicio
 stm
 {ExprValue retToDevNull;}
   : stm_attr
-  | {interpreter.beginFCall();} retToDevNull=fcall {interpreter.endFCall();}
-//   | stm_ret
+  | retToDevNull=fcall
+  | stm_ret
   | stm_se
   | stm_enquanto
   | stm_para
@@ -176,17 +204,17 @@ fcall returns [ExprValue v]
         RefPortugolAST current = _t; //saves current state
 
         RefPortugolAST fnode   = getFunctionNode(id->getText()); //gets the function node
-        func_decls(fnode, args);                                   //executes
-//         v = returnValue; //global ExprValue returnValue
+        func_decls(fnode, args, id->getLine());                  //executes
+        v = interpreter.getReturnExprValue();
       }
     }
   ;
 
-// stm_ret
-// {ExprValue etype;}
-//   : #(r:T_KW_RETORNE (TI_NULL|etype=expr))
-//     {evaluator.evaluateReturnCmd(etype, r->getLine());}
-//   ;
+stm_ret
+{ExprValue etype;}
+  : #(r:T_KW_RETORNE (TI_NULL|etype=expr))
+    {interpreter.setReturnExprValue(etype);}
+  ;
 
 stm_se
 {
@@ -334,18 +362,18 @@ element returns [ExprValue v]
   ;
 
 literal returns [ExprValue v]
-  : l:T_STRING_LIT     {v.setValue(l->getText());v.type = TIPO_LITERAL;} //remove the " and "
+  : l:T_STRING_LIT     {v.setValue(parseLiteral(l->getText()));v.type = TIPO_LITERAL;}
   | i:T_INT_LIT        {v.setValue(i->getText());v.type = TIPO_INTEIRO;}
   | r:T_REAL_LIT       {v.setValue(r->getText());v.type = TIPO_REAL;}
-  | c:T_CARAC_LIT      {v.setValue(c->getText());v.type = TIPO_CARACTERE;}
+  | c:T_CARAC_LIT      {v.setValue(parseChar(c->getText()));v.type = TIPO_CARACTERE;}
   | lv:T_KW_VERDADEIRO {v.setValue("1");v.type = TIPO_LOGICO;}
   | lf:T_KW_FALSO      {v.setValue("0");v.type = TIPO_LOGICO;}
   ;
 
-func_decls[list<ExprValue>& args]
+func_decls[list<ExprValue>& args, int line]
   : #(id:T_IDENTIFICADOR
       {
-        interpreter.initFCall(id->getText(), args);//push variables to stack and inits arguments
+        interpreter.beginFunctionCall(id->getText(), args, line);
 
         while(_t->getType() != T_KW_INICIO) {
           _t = _t->getNextSibling();
@@ -354,7 +382,7 @@ func_decls[list<ExprValue>& args]
       inicio
 
       {
-        interpreter.finishLastFCall(); //pops the variables stack
+        interpreter.endFunctionCall();
       }
     )
   ;
