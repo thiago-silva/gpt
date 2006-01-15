@@ -1,23 +1,55 @@
 % TODO: rever referencias a implementação da gramatica
 %       mudar aspas nos codigos verbantim para aspas reais (para que o leitor possa copiar e colar sem ter que mudar
 %         o caractere das aspas).              
+%       Glossario e padronizacao de termos: uso de vetor e matriz, significando coisas distintas, e o que significam
 
 \documentclass[a4paper,10pt]{report}
+\makeatletter
 
 % page setup
 \oddsidemargin  0.0in
 \evensidemargin 0.0in
 \textwidth      6.5in
-\headheight     0.0in
+\headheight     0.2in
 \topmargin      0.0in
 \textheight=9.0in
 
 \pagestyle{myheadings}     % Go for customized headings
 \newcommand{\capitulo}[1]  % Re-define the chaptering command
-        {                 
+        { 
           \chapter{#1}
-          \markright{Capítulo \thechapter.  {#1} \hfill}
+
+          %http://www.devdaily.com/blog/Content/2/18/408/
+          %\lhead{\nouppercase{\rightmark} (\nouppercase{\leftmark})}
+
+          \lhead{Capítulo \thechapter. \nouppercase{\leftmark} }
+          \chead{}
+          \rhead{}
+          \lfoot{\today}
+          \cfoot{}
+          \rfoot{\thepage}
+          \renewcommand{\headrulewidth}{0.4pt}
+          \renewcommand{\footrulewidth}{0.4pt}
+          \renewcommand{\sectionmark}[1]{%
+            \markboth{#1}{}
+          }
+
+          % seta o footer das paginas de capitulo (sem isso, aparece o pagenum centralizado apenas)
+          \fancypagestyle{plain}{%
+            \fancyhead{} % remoev o header
+            \renewcommand{\headrulewidth}{0pt} % e a linha
+          }
         }
+
+
+\usepackage{fancyhdr} %Declares the package fancyhdr
+\pagestyle{fancy} %Forces the page to use the fancy template
+
+\fancypagestyle{empty}
+\fancyhf{} %Clears all header and footer fields, in preparation.
+\fancyhead[EO]{\thepage} %Even and Odd pages: set the \thepage value
+\fancyhead[C]{} %clear center text
+\fancyhead[LO]{\rightmark} %Displays the lower-level (chapter) information - as
 
 
 \usepackage[brazilian]{babel} %traduz data, ``capitulo'', etc...
@@ -26,13 +58,13 @@
 %\usepackage{times}
 %\usepackage{aeguill}
 
-\usepackage{hyperref}
+\usepackage{hyperref} %referencias para PDF
 
 \usepackage{float}
 
 \floatstyle{ruled}
 \newfloat{program}{thp}{lop}
-\floatname{program}{Programa} 
+\floatname{program}{Programa}
 
 \floatstyle{plain}
 \newfloat{code}{thp}{lop}
@@ -40,10 +72,44 @@
 
 \renewcommand{\rmdefault}{phv} %helvetica
 
+\def\thickhrulefill{\leavevmode \leaders \hrule height 1pt\hfill \kern \z@}
+\renewcommand{\maketitle}{\begin{titlepage}%
+    
+    \let\footnotesize\small
+    \let\footnoterule\relax
+    \parindent \z@
+    \reset@font
+    \null
+    \vskip 50\p@
+    \begin{center}
+      \hrule
+      \vskip 1pt
+      \hrule
+      \vskip 1pt
+      {\huge \bfseries \strut \@title \strut}\par
+      \vskip 1pt
+      \hrule
+      \vskip 1pt
+      \hrule
+			\vskip 5pt 
+			\Large Manual
+    \end{center}
+    \vskip 5\p@
+    \vfil
+    \null
+		\vskip 350pt
+		\begin{flushright}
+		{\Large \@author \par}%
+		{\Large \@date\par}%
+		\end{flushright}  
+  \end{titlepage}%		
+  \setcounter{footnote}{0}%
+}
+\makeatother
 
+\title{G-Portugol \normalsize v1.0}
+\author{\texttt{thiago.silva@kdemail.net}}
 
-\title{G-Portugol}
-\author{Thiago Silva \texttt{thiago.silva@kdemail.net}}
 
 % \usepackage[pdftex]{hyperref} %should be the LAST in the preamble
 
@@ -51,9 +117,11 @@
 
 \maketitle
 
+
 \tableofcontents
 
 \capitulo{Introdução}
+
 % \begin{abstract}
 
 G-Portugol é um dialeto da linguagem portugol (ou portugês estruturado), muito usada para 
@@ -278,15 +346,15 @@ fim-variáveis
 \end{verbatim}
 
 O tipo do vetor ou matriz é dado pelo nome do tipo no plural (``inteiros'' para tipo inteiro, ``literais'' 
-para tipo literal, etc). Os subscritos na declaração indicam o tamanho da matriz, e sua dimensão é informada pelo numero de 
-subscritos. 
+para tipo literal, etc). Os subscritos na declaração (delimitados por ``[]'') indicam o tamanho da matriz, 
+e sua dimensão é informada pelo numero de subscritos. Portanto, ``bitset'' é um vetor de 10 valores lógicos,
+enquanto ``quadr'' é uma matriz bidimensional, onde as duas dimensões tem tamanho 4.
 
 É importante observar que matrizes são ``0 based'', logo, a matriz ``bitset'' pode ser usada 
 do indice 0 até o indice 9 (inclusive). Seu indice 10 não é válido e seu uso poderá acarretar em erros de execução
-(\textit{runtime errors}) que poderão serem detectados dependendo da forma como o programa foi compilado/executado. 
-Matrizes, assim como variáveis de tipos primitivos, são inicializadas com o valor 0/nulo em todas as suas posições. 
-Quando usadas como argumentos de funções, matrizes são passadas por valor. Vale ressaltar que argumentos do tipo 
-matriz não são aceitos pela função ``imprima'' e, também, não são válidas como lvalues:
+(\textit{runtime errors}). Matrizes, assim como variáveis de tipos primitivos, são inicializadas com o 
+valor 0 ou nulo em todas as suas posições. Quando usadas como argumentos de funções, matrizes 
+são passadas \textit{por valor}.
 
 \begin{program}
   \begin{verbatim}
@@ -387,7 +455,7 @@ início
   imprima("estou dentro ou fora do bloco \"se\"?");
 fim 
   \end{verbatim}
-  \caption{Uso incorreto de estrutura condicional}
+  \caption{Uso incorreto de estrutura condicional.}
 \end{program}
 
 
@@ -410,7 +478,7 @@ variáveis
 fim-variáveis
 
 início
-  imprima(``Digite um número:'');
+  imprima("Digite um número:");
   x := leia();
   
   fat := x;
@@ -421,16 +489,16 @@ início
     x   := x - 1;
   fim-enquanto
 
-  imprima(``fatorial de '',fat,`` é igual a '',res);  
+  imprima("fatorial de ",fat," é igual a ",res);  
 fim
   \end{verbatim}
-  \caption{Exemplo de programa que utiliza a estrutura ``enquanto''}
+  \caption{Exemplo de programa que utiliza a estrutura ``enquanto''.}
 \end{program}
 
 
-Parênteses em volta da expressão da estrutura ``enquanto'' são opcionais. Qualquer expressão que possa ser 
-avaliada como expressão numérica é uma expressão lógica válida. Expressões que não podem ser avaliadas
-lógicamente são expressões avaliadas como literais. Portanto, são comandos válidos:
+Parênteses em volta da expressão da estrutura ``enquanto'' são opcionais. Qualquer expressão que possa ter 
+seu valor avaliado como numérico é uma expressão lógica válida. As expressões que não podem ser avaliadas
+lógicamente tem seu valor avaliado como literal. Portanto, são comandos válidos:
 
 \begin{code}
  \begin{verbatim}
@@ -443,8 +511,6 @@ enquanto ``nome'' faça            //erro: valor de expressão literal não pode se
 
   \end{verbatim}
 \end{code}
-
-Nota: não há implementação para estrutura ``faça/enquanto''.
 
 \subsection{A estrutura ``para''}
 
@@ -506,12 +572,12 @@ início
 fim
 
   \end{verbatim}
-  \caption{Exemplo de programa que utiliza a estrutura ''para``}
+  \caption{Exemplo de programa que utiliza a estrutura ''para``.}
 \end{program}
 
 
 Em comparação com a estrutura ``for'' de linguagens com sintaxe baseadas em C, há diferenças não só de sintaxe,
-mas de implementação. Um ``for'' que itera sobre uma variável numérica de 0 até (=>) 10, ao sair do laço, 
+mas de implementação. Um ``for'' que itera sobre uma variável numérica de 0 até (incluindo) 10, ao sair do laço, 
 o valor dessa variável será 11. Em G-Portugol, a variável terá o valor 10 ao sair do laço. Essa diferença acontece 
 porque a sintaxe do ``para'' induz a esse comportamento, diferente da sintaxe do ``for'', que é mais detalhada
 e sua estrutura induz o mesmo raciocínio que a estrutura ``enquanto/while''.
@@ -541,20 +607,213 @@ Maiores detalhes sobre a implementação no capítulo *todo*.
 
 \section{Funções}
 
-Blabla
+Subprogramas em G-Portugol são implementados no modelo de funções, que podem ter 0 ou mais parâmetros de qualquer 
+tipo, tanto primitivos quanto complexos (vetores e matrizes). Opcionalmente, podem definir valores de retorno, que 
+deve ser de tipo primitivo. Tanto o retorno de dados como a passagem de argumentos são feitos \textit{por valor}.
+
+Para retorno prematuro ou retorno de dados, a palavra chave ``retorne'' é usada. Para funções que retornam dados,
+``retorne'' deve ser seguido de um operando, que é uma expressão cujo valor deve ser compatível com o tipo da função.
+Já funções que não declaram um tipo de retorno expliticamente  (equivalente a funções de retorno ``void'' em C), 
+``retorne'' deve ser usado sem operando.
+
+\begin{program}[h!t]
+ \begin{verbatim}
+algoritmo fatorial_recursivo;
+
+variáveis
+  x : inteiro;
+fim-variáveis
+
+início
+  imprima("Digite um número:");
+  x := leia();  
+  imprima("fatorial de ",x," é igual a ",fatorial(x));  
+fim
+
+função fatorial(z:inteiro) : inteiro
+início
+  se z = 1 então
+    retorne 1;
+  senão
+    retorne z * fatorial(z-1);
+  fim-se
+fim 
+  \end{verbatim}
+  \caption{Exemplo de algoritmo que utiliza funções.}
+\end{program}
+
+
+\subsection{Funções internas}
+
+Como já foi visto em exemplos anteriores, G-Portugol oferece duas funções internas: ``leia'' e ``imprima'', que
+permitem uso básico de entrada e saída, respectivamente.
+
+A função ``leia'' não recebe argumentos e retorna o valor lido da entrada padrão  (STDIN), o que significa, 
+geralmente, ler os dados que o usuário digitar no teclado, seguido do caractere ``nova linha'' (em geral, associado a 
+tecla ``Enter'' no teclado). O tipo de dado retornado por ``leia'' é implicitamente convertido para o tipo primitivo
+exigido no contexto em que ela é usada. 
+
+A função ``imprima'' recebe um número variável de argumentos de qualquer tipo primitivo, 
+sendo que pelo menos um argumento deve ser passado. Os valores passados como argumentos são convertidos para texto,
+concatenados na ordem definida e enviados para STDOUT (em geral, associado ao monitor). Não há 
+retorno de valor para esta função.
+
+Para maiores detalhes sobre funções internas, veja o capitulo sobre sua implementacao *todo*.
+
+\begin{program}
+ \begin{verbatim}
+algoritmo io;
+
+variáveis
+  c: caractere;
+  i: inteiro;
+  r: real;
+  l: literal;
+  z: lógico;
+  mat: matriz[2] de inteiros;
+fim-variáveis
+
+início  
+  imprima("digite um caractere");
+  c := leia();
+  imprima("Digite um número inteiro");
+  i := leia();
+  imprima("Digite um número real:");
+  r := leia();
+  imprima("Digite um texto:");
+  l := leia();
+  imprima("Digite um valor lógico (\"verdadeiro\" ou \"falso\"), um número ou um texto:");
+  z := leia();
+
+  imprima("caractere: ",c,", inteiro: ",i, ", real: ",r,", texto: ",l, ", lógico: ", z,"\n");
+fim
+  \end{verbatim}
+
+  \caption{Exemplo de usos das funções internas ``leia'' e ``imprima''.}
+\end{program}
 
 
 \capitulo{Implementação da linguagem G-Portugol}
 
 \section{Introdução}
 
-  preocupações, principios no design da linguagem, etc.
+Ao definir uma linguagem de programação voltada para o ensino de lógica e algoritmos, vários aspectos devem ser 
+considerados. Ao contrário de linguagens reais, não há preocupações como o poder expressivo da linguagem, dicionário
+em inglês, acesso a recursos de sistema, etc. A preocupação central está em oferecer uma ferramenta que:
 
-\section{Acentos}
+\begin{itemize}
+ \item 
+  reflita os processos computacionais, exigindo o mínimo de conhecimento e experiência do estudante;
 
-\section{Uniformidade na estrutura de blocos}
+  \item
+  evidencie os processos relacionados com o desenvolvimento de softwares;
+  
+  \item
+  estimule a abstração e raciocínio lógico do estudante;
 
+\end{itemize}
+
+\section{A linguagem}
+
+O ponto fundamental que guia as diretrizes da linguagem é seu propósito educacional: ela deve expressar processos 
+computacionais de forma que um leigo os compreenda sem enfatizar a si mesma. Isso é, a linguagem em si deve chamar 
+o mínimo de atenção possível, fazendo com que a compreensão dos processos computacionais seja tão natural quanto ler 
+sua descrição informal, ou não-estruturada. 
+
+A seguir, alguns tópicos serão comentados quanto as diretrizes por traz das formas léxicas e gramaticais da 
+linguagem G-Portugol.
+
+\subsection{Diretrizes para o design da linguagem}
+
+\subsubsection{A linguagem deve ser totalmente em português respeitando acentuações}
+
+Linguagens de programação reais, em geral, não se utilizam de caracteres especiais (ex. caracteres não pertencentes a 
+tabela ASCII) para definição de seu dicionário, visto que são baseadas na língua inglesa. Portanto, letras acentuadas
+não são consideradas.
+
+Refletir esse aspecto em G-Portugol evidenciaria as seguintes justificativas hipotéticas:
+
+\begin{itemize}
+ \item 
+  não acostumar o estudante no uso de termos da linguagem acentuados 
+  (já que linguagens de produção não incorporam termos acentuados);
+
+  \item 
+  poupar o número de teclas que o estudante tem que digitar ao longo da programação;
+
+  \item
+  provável dificuldade em implementar \textit{scanners} que reconheçam letras acentuadas.
+\end{itemize}
+
+
+Esses fatores, e demais não listados, não são suficientes para definir o dicionário de G-Portugol com termos que, 
+em portugês, utilizam acentos e caracteres como cedilha. O uso de acentos em termos não cria hábitos ou vícios
+que possam compremeter o aprendizado de linguagens reais. Também, o costume de abreviar termos da linguagem servem
+para se obter maior produção por parte dos programadores, entretanto G-Portugol não é uma linguagem de produção. E
+finalmente, a provável dificuldade em implementar scanners que reconhecem letras acentuadas não é uma justificativa
+válida para evitar sua implementação.
+
+A decisão de incorporar palavras que respeitam a lingua portuguesa tem base no ``princípio da menor surpresa''.
+A ausência de acentos forçaria o estudante a aprender seus termos excepcionais. Além do mais, o uso de termos 
+como ``nao'', chamaria atenção constante do estudante para o fato de a palavra não estar acentuada.
+
+Consequentemente, o uso de acentos permite que a linguagem seja o mais próximo do português quanto for possível,
+apoiando a regra de não chamar atenção para si.
+ 
+
+\begin{quotation}
+  \textit{``Programas devem ser escritos para pessoas lerem e, apenas incidentalmente, para máquinas executarem.''}
+   \begin{flushright}
+  -- Abelson and Sussman 
+  \end{flushright}
+\end{quotation}
+
+\subsubsection{A linguagem deve ter uniformidade e coerência estrutural}
+
+Seguindo o principio da "menor surpresa" (least surprise), evitar excessões e 
+surpresas ao máximo. Isso significa que estruturas e comandos devem ser simples, claros e óbvios. Naturalmente, a 
+linguagem portugol já detém uma parcela relevante de características que se acomodam nessas diretrizes, 
+no entanto, alguns detalhes ainda merecem atenção. 
+ 
+Deve ser simples, e evitar complexidades que desviam a atenção do propósito original para a detalhes da linguagem. 
+(Apenas recursos escenciais devem fazer parte do núcleo.) 
+
+Complementando a última diretriz, essa se refere a recursos disponíveis. 
+Para o objetivo em questão, em um primeiro momento, não é interessante equipar a linguagem com recursos como 
+alocação dinâmica de memória, threading, etc. De fato, deve ser uma "thin language". Manipulação de memória 
+(por meio de variáveis), controles básicos de fluxo, e recursos para entrada e saída simples, devem preencher o 
+propósito geral. Esse argumento é baseado na previsão de que a linguagem é utilizada apenas uma porta de 
+entrada na área de programação e, portanto, tais recursos devem ser ensinados por meio de linguagens de 
+produção, em uma etapa posterior. 
+
+ 
+\subsubsection{Deve ser configurável naquilo que diz respeito a diferentes abordagens de ensino e estilo do professor}
+
+Essa diretriz diz respeito a permitir que a linguagem mude em certos aspectos 
+(ou disponibilizar meios simples para realizar essas mudanças) de acordo com o gosto do professor, 
+ou literatura usada. Pode-se dizer que dialetos de portugol variam de literatura para literatura, e 
+assume-se que pode ser interessante permitir que a linguagem se adapte.
+
+
+  
+  *sobre a gramatica
+  *sobre a semantica (castings, tipos escolhidos, matrizes, vetores, lack of struct, etc)
+
+\section{Uniformidade estrutural}
+
+  excecoes:
+  blocos de variaveis
   *excessão, nos blocos de variáveis locais em escopo de funcao
+
+  declaracao de multiplas variaveis em blocos VS. declaracao de parametros:
+    variavies
+      x,y : inteiro; //ok
+
+    função f(x,y:inteiro); //erro
+
+  *As funcoes leia e imprima:
+    leia() retornando tipos variaveis
+    imprima() recebendo numero variavel de argumentos.
 
 \section{Expressões}
 
@@ -567,32 +826,86 @@ Blabla
   *avaliações aritméticas
   *avaliações lógicas 
   *literais
+    *reais usam ``.'' e não ``,''
+  
+  *matrizes nao sao aceitas como lvalue
+  mat := mat2 !!
 
+  subscritos de matrizes são expressões que devem ser avaliadas como numeros inteiros.
+
+\section{Funções}
+No contexto de uma função, variáveis locais com o mesmo nome que variáveis globais são permitidas, sendo que as últimas
+são impossibilitadas de serem usadas, enquanto o contexto durar.
+
+  *Não suporte a funções aninhadas
+  *suporte a recursão
+  *retorno apenas para tipos primitivos.
+ 
 \section {Funções internas}
 
-  \subsection{imprimir}
+  \subsection{A função ``imprima''}
+    argumentos variaveis
+    retorno: null
+    minimo: um arg
 
-  \subsection{ler}
 
-\capitulo{O compilador GPT}
+  \subsection{A função ``leia''}
 
-\section{Erros de compilação}
+    limitacoes da v1: nao pode ser usado em expressões binarias
+        
+    retorna o valor convertido para o tipo que o contexto exige.
+      ex: mat[leia()] //inteiro
+    
+    Conversoes:      
 
-  trying to be smart!
+      Inteiros como lvalue (os mesmos valem para float):
+      (inteiro) := leia(); ``123 456'' => ``123''
+      (inteiro) := leia(); ``abc'' => ``0''
+      (inteiro) := leia(); ``123s'' => ``123''
+  
+      Logico:
+      (logico) := leia(); ``falso'' => ``falso''
+      (logico) := leia(); ``0'' => ``0''
+      (logico) := leia(); ``falso 123'' => ``verdadeiro''
+      (logico) := leia(); ``0 umdoistrez '' => ``verdadeiro''
+      e demais: ``verdadeiro''
+    
+  Preferencia ao uso da função ``leia'' sem parametros:
+    Comentarios e justificativa contra o uso de ``void leia(x)''
+      
+\capitulo{O programa GPT}
+
+\section{Intrudução}
+  
+  traducao (C)
+  interpretacao/depuracao
+  compilacao (ELF)
+
+  Comportamento uniforme entre os tipos de execução
+    *programa compilado em C deve ter o mesmo comportamento do programa interpretado
+
+
+\section{Tratamento de erros}
+
+  *sobre o tratamento de erros. 
+    -Importancia de ``verbose''
 
 \section{Tradução para C}
 
 
   \subsection{Limitações}
+      *nomes de identificadores em conflito com os nomes em C/glibc
 
 \section{Interpretação de código}
 
   \subsection{Erros de execução (runtime errors)}
+    boundcheck, etc...
 
   \subsection{Depuração iterativa}
 
-\section{Compilação para executável nativo}
+      *estrutura do XML
+      *command line debugger.
 
-
+\section{Compilação para codigo nativo (ELF)}
 
 \end{document}
