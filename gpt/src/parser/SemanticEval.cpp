@@ -239,13 +239,12 @@ void SemanticEval::evaluateAttribution(ExpressionValue&  lv, ExpressionValue& rv
     return;
   }
 
-  if(!lv.isCompatibleWidth(rv)) {
-    if(rv.primitiveType() != TIPO_NULO) {
-      msg << "Variável não pode receber valores do tipo '"
-        << rv.toString() << "'";  
-    } else {
-      msg << "Expressão não retorna resultado para variável";  
-    }
+  if(rv.primitiveType() == TIPO_NULO) {
+    msg << "Expressão não retorna resultado para variável";  
+    ErrorHandler::self()->add(msg, line);
+  } else  if(!lv.isCompatibleWidth(rv)) {
+    msg << "Variável não pode receber valores do tipo '"
+        << rv.toString() << "'";      
     ErrorHandler::self()->add(msg, line);
   }
 }
@@ -276,6 +275,13 @@ ExpressionValue SemanticEval::evaluateLValue(RefPortugolAST id, list<ExpressionV
   }
 
   ret.setPrimitiveType(lvalue.type.primitiveType());
+
+  if(lvalue.isFunction) {
+    stringstream msg;
+    msg << "Função \"" << id->getText() << "\" não pode ser usada como variável";
+    ErrorHandler::self()->add(msg, id->getLine());
+    return ret;    
+  }
 
   if(lvalue.type.isPrimitive()) {
     ret.set(lvalue.type);
