@@ -904,7 +904,7 @@ A forma de um programa escrito em G-Portugol tem o seguinte formato:
   que, embora não seja um comentário, tem o mesmo efeito prático.
   A adoção dessa declaração pode ser discutida, e foi escolhida por ser bastante utilizada em literaturas.
   
-\subsection{Declaração de variáveis globais}
+\subsection{Declaração de variáveis}
 
   Como visto no capítulo 2, essa declaração é opicional, e seu formato pode ser visto no exemplo a seguir:
 
@@ -919,6 +919,11 @@ fim-variáveis
 
   Delimitar o bloco permite maior consistência com outras estruturas, que são delimitadas em seu início e fim.
 
+  * tipos escolhidos, matrizes, vetores, lack of struct, 
+  * declaracao de variaveis locais
+
+
+  
 \subsection{Bloco Principal}
 
 
@@ -943,20 +948,56 @@ fim-variáveis
   de forma a promover maior consistencia e coerência estrutural. Portanto, embora possa ser vantajoso,
   sua implementação pode ser discutida para versões futuras.
 
-  No cabeçalho das estruturas, é comum se encontrar expressões que devem ser avaliadas, ao final, com um valor lógico.
-  É vetado o uso de enunciados como atribuição em locais onde se espera uma expressão. A avaliação de expressões
-  é discutida a seguir.
+  No cabeçalho das estruturas como ``enquanto'' e ``se, as expressões não precisam ser delimitadas por parêntesis.
+
 
   \subsubsection{Expressões}
+
+  Expressões são operações que sintetizam, ao final, um valor. Em geral constituem operações aritiméticas
+  e os termos podem ser variáveis, constantes ou chamadas a funções.
+
+  Em G-Portugol, não há coerção (''casting``) de tipos expliticamente. Todos os tipos numéricos
+  (inteiro, real, lógico e caractere) são compativeis entre si, no entanto, dados podem ser perdidos
+  durante a conversão (como por exemplo, de real para inteiro).
+  
+  A precedencia de operadores segue a seguinte tabela (da menor precedência para a maior):
+
+
+% \begin{table}[ht]
+% \begin{center}
+%   \begin{tabular}{|l|l|}
+%     \hline
+%     \multicolumn{2}{|c|}{Precedência de Operadores} \\
+%     \hline
+%       Operador & Nome \\
+%     \hline
+%     ou, ||  & OR lógico  \\
+% %     e, \&\&  & AND lógico \\
+%     | & OR binário \\
+% %     \^ &  XOR binário \\
+% %     \& & AND binário \\
+%     =, <> & op. de igualdade \\
+%     >, >=, <, <= & op. relacionais \\
+%     +, - & op. aritméticos soma e subtração \\
+%     *, /, \% & op. aritméticos multi, div, mod \\
+%     +, -, \thicksim, não & op. unários pos,neg,NOT binário e lógico \\
+%     \hline
+%   \end{tabular}
+%   \label{tb_tipos_primitivos}
+%   \caption{Precedência de Operadores}
+% \end{center}
+% \end{table}
+
+
+  É vetado o uso de enunciados como atribuição em locais onde se espera uma expressão. A avaliação de expressões
+  é discutida a seguir.
 
 
   *operadores e operandos
   *precendencia e associatividade
 
 
-
-  *sobre a gramatica
-  *sobre a semantica (castings, tipos escolhidos, matrizes, vetores, lack of struct, etc)
+  *sobre a semantica (castings, etc)
 
   *promoções de tipos e castings automaticos (inteiro para real, real para inteiro)
   *avaliações aritméticas
