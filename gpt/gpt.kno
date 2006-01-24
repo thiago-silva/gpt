@@ -1,6 +1,6 @@
 \NewEntry 0 devel
 
-\NewEntry 1 TODO
+\CurrentEntry 1 TODO
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><div>GPTEditor</div>
 <ul type="disc"><li>Settings:</li>
@@ -11,9 +11,6 @@
 <li>GPTEditor</li>
 <ul type="disc"><li>Adicionar icones ao pacote</li></ul>
 <li>Ambos</li>
-<ul type="disc"><li>cvs2cl (ChangeLog) README, TODO, NEWS, FAQ</li>
-<li>atualizar readme, install, dockbook, etc, com as dependencias (antlr, pcre,etc) e modo de isntalacao</li>
-<li>colocar/verificar URL no projeto, man, docbook, about dialog, etc</li></ul>
 <li>Site (html manual (wiki), comentarios de implementacao, exemplos, etc)<br /></li></ul>
 <li>GPT</li>
 <ul type="disc"><li>Checar implementacao de operadores &quot;e&quot;, &quot;ou&quot;, &quot;xou&quot;</li>
@@ -24,6 +21,7 @@
 <li>Implementar compilação real (ELF binary)</li>
 <li>terminar o manual</li></ul></ul>
 </body></html>
+
 
 \NewEntry 1 Notas ideias etc
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
@@ -48,7 +46,7 @@
 <li>Adicionar arquivos-fonte automaticamente? (implicit include)</li></ul></ul>
 </body></html>
 
-\CurrentEntry 1 Bugs
+\NewEntry 1 Bugs
 
 \NewEntry 0 release
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">

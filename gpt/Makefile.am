@@ -4,6 +4,8 @@ AUTOMAKE_OPTIONS = foreign 1.4
 
 SUBDIRS = src doc exemplos
 
+EXTRA_DIST = INSTALL.default
+
 uninstall-devel:
 	rm -rf $(includedir)/${PACKAGE} 
 	rm -f $(libdir)/libgportugol*

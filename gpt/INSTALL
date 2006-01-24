@@ -21,17 +21,6 @@ Instalacao Basica
     # make install
 
 
-  o  CVS
-
-		Se voce baixou os fontes do CVS:
-    
-    $ make -f Makefile.cvs
-    $ ./configure
-    $ make
-    $ su
-    # make install
-
-
   o  Opcoes de configuracao
 
     ANTLR:
