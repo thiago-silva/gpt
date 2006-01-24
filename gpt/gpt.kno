@@ -1,6 +1,6 @@
 \NewEntry 0 devel
 
-\CurrentEntry 1 TODO
+\NewEntry 1 TODO
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><div>GPTEditor</div>
 <ul type="disc"><li>Settings:</li>
@@ -25,7 +25,6 @@
 <li>terminar o manual</li></ul></ul>
 </body></html>
 
-
 \NewEntry 1 Notas ideias etc
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>GPTEditor</li>
@@ -48,4 +47,18 @@
 <li>&quot;Aviso: variavel &quot;w&quot; nao esta sendo usada&quot;</li>
 <li>Adicionar arquivos-fonte automaticamente? (implicit include)</li></ul></ul>
 </body></html>
+
+\CurrentEntry 1 Bugs
+
+\NewEntry 0 release
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><li>Test current CVS version on other distro/KDE versions</li>
+<li>Change version on kdevelop file, configure.in/configure.in.in</li>
+<li>Create NEWS file</li>
+<li>Create ChangeLog file</li>
+<li>Update README version</li>
+<li>TAG current CVS version</li>
+<li>Update site</li></ul>
+</body></html>
+
 
