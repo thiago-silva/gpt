@@ -1,0 +1,28 @@
+GPTEditor - versao: 0.8b
+=========================
+
+o O programa GPTEditor
+
+  GPTEditor é um front-end que permite programar em G-Portugol de forma
+	mais amigavel. Alguns dos recursos presentes na versao atual:
+
+		-icones/mimetype para arquivos com extensao .gpt;
+		-Syntax highlight para codigos escritos em G-Portugol (para uso com 
+		 o GPTEditor, kwrite, kate, e outros editores baseados no katepart);
+		-Analise em segundo plano do codigo enquanto se digita, informando
+		 erros, se houver;
+		-Front-end para compilacao e depuracao interativa de programas em 
+		 modo "Interpretacao";
+
+o Maiores Informacoes
+
+  Website: http://gpt.berlios.de
+
+  Lista de discussao: https://lists.berlios.de/mailman/listinfo/gpt-usuarios
+
+  Autor: Thiago Silva <thiago.silva@kdemail.net> 
+
+o Copyright
+
+ Esse pacote eh distribuido nos termos da GNU GENERAL PUBLIC LICENSE v2
+ (ver arquivo COPYRIGHT para maiores detalhes)
