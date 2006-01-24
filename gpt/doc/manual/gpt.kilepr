@@ -1,7 +1,7 @@
 [General]
 img_extIsRegExp=false
 img_extensions=.eps .pdf .dvi .ps .fig .gif .jpg .jpeg .png
-lastDocument=manual.texmanual.tex
+lastDocument=
 masterDocument=manual.texmanual.tex
 name=gpt
 pkg_extIsRegExp=false
@@ -23,8 +23,8 @@ open=false
 
 [item:manual.tex]
 archive=true
-column=26
+column=0
 encoding=ISO 8859-1
 highlight=LaTeX
-line=30
+line=0
 open=true
