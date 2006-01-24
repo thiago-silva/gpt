@@ -2,4 +2,8 @@
 # have all needed files, that a GNU package needs
 AUTOMAKE_OPTIONS = foreign 1.4
 
-SUBDIRS = src gramaticas doc
+SUBDIRS = src doc
+
+uninstall-devel:
+	rm -rf $(includedir)/${PACKAGE} 
+	rm -f $(libdir)/libgportugol*

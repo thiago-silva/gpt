@@ -26,9 +26,12 @@
       <terminal>false</terminal>
       <directoryradio>executable</directoryradio>
       <customdirectory>/</customdirectory>
-      <programargs>../../exemplos/teste.pt</programargs>
+      <programargs>-i ../../exemplos/teste.gpt</programargs>
       <autocompile>true</autocompile>
       <envvars/>
+      <runarguments>
+        <gpt/>
+      </runarguments>
     </run>
     <configurations>
       <optimized>
@@ -39,7 +42,7 @@
         <cxxflags>-O2 -g0</cxxflags>
       </optimized>
       <debug>
-        <configargs>--enable-debug=full</configargs>
+        <configargs>--enable-debug=full --enable-install-devel</configargs>
         <builddir>debug</builddir>
         <ccompiler>kdevgccoptions</ccompiler>
         <cxxcompiler>kdevgppoptions</cxxcompiler>
@@ -189,7 +192,7 @@
   </cppsupportpart>
   <kdevdebugger>
     <general>
-      <programargs>../../exemplos/teste.pt</programargs>
+      <programargs>~/teste.gpt -i -P 7680 -H localhost</programargs>
       <gdbpath/>
       <dbgshell>libtool</dbgshell>
       <configGdbScript/>
@@ -205,4 +208,8 @@
       <outputradix>10</outputradix>
     </display>
   </kdevdebugger>
+  <ctagspart>
+    <customArguments/>
+    <customTagfilePath/>
+  </ctagspart>
 </kdevelop>

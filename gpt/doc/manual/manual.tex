@@ -2,6 +2,7 @@
 %       mudar aspas nos codigos verbantim para aspas reais (para que o leitor possa copiar e colar sem ter que mudar
 %         o caractere das aspas).              
 %       Glossario e padronizacao de termos: uso de vetor e matriz, significando coisas distintas, e o que significam
+%       Mudar reticencias "..." pelo comando de reticencias
 
 \documentclass[a4paper,10pt]{report}
 \makeatletter
@@ -161,11 +162,17 @@
 
 \tableofcontents
 
+% Prefacio
+
+Esse livro não é um livro que ensina programação, algoritmos ou lógica. Seu objetivo é servir de manual para a linguagem G-Portugol
+e ferramentas relacionadas. Portanto, ele assume que o leitor seja versado em linguagens de programação e desenvolvimento de software.
+
+
 \capitulo{Introdução}
 
 % \begin{abstract}
 
-G-Portugol é um dialeto da linguagem portugol (ou portugês estruturado), muito usada para 
+G-Portugol é um dialeto da linguagem portugol (ou portugês estruturado), que é muito usada para 
 descrever algoritmos em português, de forma livre e espontânea. Em geral, livros dedicados 
 ao ensino de algoritmos, lógica e estruturas de dados utilizam alguma forma dessa linguagem. 
 
@@ -257,7 +264,7 @@ leitor seja familiarizado com programação.
 \section{Olá Mundo}
 
 Mantendo a tradição, vamos criar nosso primeiro programa. O propósito dele será exibir na tela o 
-texto "Olá mundo". Abra seu editor favorito e crie um arquivo  chamado "exemplo1.pt" com o seguinte 
+texto "Olá mundo". Abra seu editor favorito e crie um arquivo  chamado "olamundo.pt" com o seguinte 
 conteúdo:
 
 \begin{program}
@@ -279,7 +286,7 @@ fim
 Após salvar o arquivo, digite o seguinte na linha de comando:
 
 \begin{verbatim}
-$ gpt exemplo1.pt
+$ gpt -o olamundo olamundo.pt
 \end{verbatim}
 
 Se tudo ocorrer como esperado, um novo arquivo aparecerá no diretório atual, 
@@ -539,7 +546,7 @@ fim
 
 Parênteses em volta da expressão da estrutura ``enquanto'' são opcionais. Qualquer expressão que possa ter 
 seu valor avaliado como numérico é uma expressão lógica válida. As expressões que não podem ser avaliadas
-lógicamente tem seu valor avaliado como literal. Portanto, são comandos válidos:
+lógicamente são as que tem seu valor avaliado como literal. Portanto, são comandos válidos:
 
 \begin{code}
  \begin{verbatim}
@@ -548,7 +555,7 @@ enquanto 3+5 faça                 //ok, avalia 8 como verdadeiro
 enquanto 0 faça                   //ok, avalia 0 como falso
 enquanto x faça                   //ok, sendo x uma variável numérica ou lógica
 enquanto ``nome'' = ``nome'' faça //ok, valor de expressão lógica (=) avaliada como verdadeiro
-enquanto ``nome'' faça            //erro: valor de expressão literal não pode ser avaliada como valor lógico.
+enquanto ``nome'' faça            //erro: literal não pode ser avaliado como lógico
 
   \end{verbatim}
 \end{code}
@@ -756,91 +763,97 @@ em inglês, acesso a recursos de sistema, etc. A preocupação central está em ofer
 
 \section{A linguagem}
 
-O ponto fundamental que guia as diretrizes da linguagem é seu propósito educacional: ela deve expressar processos 
+O ponto fundamental que guia as diretrizes da linguagem G-Portugol é seu propósito educacional: ela deve expressar processos 
 computacionais de forma que um leigo os compreenda sem enfatizar a si mesma. Isso é, a linguagem em si deve chamar 
 o mínimo de atenção possível, fazendo com que a compreensão dos processos computacionais seja tão natural quanto ler 
 sua descrição informal, ou não-estruturada. 
+
+Esse objetivo encontra restrições, quando se leva em consideração o uso e forma popular atual da linguagem portugol, principalmente
+em literaturas. É de interesse que G-Portugol ofereça compatibilidade com essas formas, o que pode gerar conflitos quanto
+a decisões de design. Portanto, embora as diretrizes marquem a base do design, muitas vezes, elas devem ser 
+sacrificadas ou ajustadas para incorporar formas populares.
 
 A seguir, alguns tópicos serão comentados quanto as diretrizes por traz das formas léxicas e gramaticais da 
 linguagem G-Portugol.
 
 \subsection{Diretrizes para o design da linguagem}
 
-\subsubsection{A linguagem deve ser totalmente em português respeitando acentuações}
+\subsubsection{A linguagem deve ser totalmente em português e deve respeitar acentuações}
 
-Linguagens de programação reais, em geral, não se utilizam de caracteres especiais (ex. caracteres não pertencentes a 
+Linguagens de programação, em geral, não se utilizam de caracteres especiais (ex. caracteres não pertencentes a 
 tabela ASCII) para definição de seu dicionário, visto que são baseadas na língua inglesa. Portanto, letras acentuadas
-não são consideradas.
+não são consideradas. Refletir esse aspecto em G-Portugol evidenciaria justificativas insuficientes.
 
-Refletir esse aspecto em G-Portugol evidenciaria as seguintes justificativas hipotéticas:
-
-\begin{itemize}
- \item 
-  não acostumar o estudante no uso de termos da linguagem acentuados 
-  (já que linguagens de produção não incorporam termos acentuados);
-
-  \item 
-  poupar o número de teclas que o estudante tem que digitar ao longo da programação;
-
-  \item
-  provável dificuldade em implementar \textit{scanners} que reconheçam letras acentuadas.
-\end{itemize}
-
-
-Esses fatores, e demais não listados, não são suficientes para definir o dicionário de G-Portugol com termos que, 
-em portugês, utilizam acentos e caracteres como cedilha. O uso de acentos em termos não cria hábitos ou vícios
-que possam compremeter o aprendizado de linguagens reais. Também, o costume de abreviar termos da linguagem servem
-para se obter maior produção por parte dos programadores, entretanto G-Portugol não é uma linguagem de produção. E
-finalmente, a provável dificuldade em implementar scanners que reconhecem letras acentuadas não é uma justificativa
-válida para evitar sua implementação.
-
-A decisão de incorporar palavras que respeitam a lingua portuguesa tem base no ``princípio da menor surpresa''.
+A decisão de incorporar palavras que respeitam a lingua portuguesa tem base no ``princípio da menor surpresa''. 
 A ausência de acentos forçaria o estudante a aprender seus termos excepcionais. Além do mais, o uso de termos 
-como ``nao'', chamaria atenção constante do estudante para o fato de a palavra não estar acentuada.
+como ``nao'', chamaria atenção constante do estudante para o fato de a palavra não estar acentuada, o que costuma desviar
+atenção do estudo.
 
 Consequentemente, o uso de acentos permite que a linguagem seja o mais próximo do português quanto for possível,
-apoiando a regra de não chamar atenção para si.
- 
+apoiando a regra de não chamar atenção para si. Ademais, o código fica mais legível e agradável de se ler.
+
+Além dos acentos, é exigido que as palavras-chave usadas sejam completas ou por extenso, sem permitir abreviações 
+(ex. ``proc'', ``func'', ``char'', ``int'', ...), o que dificulta a leitura de programas por um leigo.
 
 \begin{quotation}
   \textit{``Programas devem ser escritos para pessoas lerem e, apenas incidentalmente, para máquinas executarem.''}
    \begin{flushright}
-  -- Abelson and Sussman 
+  -- Abelson e Sussman
   \end{flushright}
 \end{quotation}
 
 \subsubsection{A linguagem deve ter uniformidade e coerência estrutural}
 
-Seguindo o principio da "menor surpresa" (least surprise), evitar excessões e 
-surpresas ao máximo. Isso significa que estruturas e comandos devem ser simples, claros e óbvios. Naturalmente, a 
-linguagem portugol já detém uma parcela relevante de características que se acomodam nessas diretrizes, 
-no entanto, alguns detalhes ainda merecem atenção. 
+Evitar excessões e surpresas a medida do possível. Isso significa que estruturas e comandos devem ser simples, 
+claros e óbvios. Naturalmente, a linguagem portugol já detém uma parcela relevante de características que 
+se acomodam nessas diretrizes, no entanto, alguns detalhes ainda merecem atenção, como a representação de blocos
+estruturais.
  
-Deve ser simples, e evitar complexidades que desviam a atenção do propósito original para a detalhes da linguagem. 
-(Apenas recursos escenciais devem fazer parte do núcleo.) 
+A simplicidade implica em evitar complexidades que desviam a atenção do propósito original para detalhes da linguagem. 
+Isso é, apenas recursos escenciais devem fazer parte de seu núcleo. Portanto, em um primeiro momento, 
+não é interessante equipar a linguagem com recursos como leitura de arquivos, alocação dinâmica de memória, 
+etc. Outros recursos oferecidos por sistemas operacionais como threading estão fora de escopo.
 
-Complementando a última diretriz, essa se refere a recursos disponíveis. 
-Para o objetivo em questão, em um primeiro momento, não é interessante equipar a linguagem com recursos como 
-alocação dinâmica de memória, threading, etc. De fato, deve ser uma "thin language". Manipulação de memória 
-(por meio de variáveis), controles básicos de fluxo, e recursos para entrada e saída simples, devem preencher o 
-propósito geral. Esse argumento é baseado na previsão de que a linguagem é utilizada apenas uma porta de 
-entrada na área de programação e, portanto, tais recursos devem ser ensinados por meio de linguagens de 
-produção, em uma etapa posterior. 
+De fato, G-Portugol deve ser uma "thin language". Manipulação de memória (por meio de variáveis), controles básicos de 
+fluxo, e recursos para entrada e saída simples devem ser suficientes para evidenciar os aspectos basicos 
+envolvidos no desenvolvimento de softwares. Esse argumento é baseado na previsão de que a linguagem deve ser utilizada 
+apenas como uma porta de entrada para a área de programação e, portanto, recursos mais avançados devem ser vistos em 
+linguagens de produção, numa etapa posterior.
 
  
 \subsubsection{Deve ser configurável naquilo que diz respeito a diferentes abordagens de ensino e estilo do professor}
 
 Essa diretriz diz respeito a permitir que a linguagem mude em certos aspectos 
 (ou disponibilizar meios simples para realizar essas mudanças) de acordo com o gosto do professor, 
-ou literatura usada. Pode-se dizer que dialetos de portugol variam de literatura para literatura, e 
-assume-se que pode ser interessante permitir que a linguagem se adapte.
+ou como modo de adapatar a forma de portugol de uma dada literatura. 
+Dialetos e formas da linguagem portugol variam de literatura para literatura, e pode ser interessante permitir que a 
+linguagem se adapte.
+
+Entre os aspectos que podem ser adaptados com facilidade se encontram os termos léxicos (palavras-chave, operadores,etc),
+e algumas formas de expressar estruturas, como algumas declarações e enunciados.
+
+Por exemplo, pode ser interessante que, para se declarar uma varíavel, não se use um bloco iniciado por 
+``variáveis'' e terminado por ``fim-variáveis''.
 
 
-  
+
   *sobre a gramatica
   *sobre a semantica (castings, tipos escolhidos, matrizes, vetores, lack of struct, etc)
 
 \section{Uniformidade estrutural}
+
+
+Objectivo:
+	educacao
+	-compatibilidade com o uso popular da linguagem (o que impede que seja feita uma nova linguagem)
+		-em um futuro, uma nova linguagem poerá ser desenvolvida, de forma que não seja limitada por esse aspecto (e tenha a oportunidade de ser melhor,
+		 mais ortogonal, expressiva, etc)
+	-abreviacoes/extenso
+		-todas as palavras chave devem ser escritas por extenso, de forma a 
+			-tornar o algoritmo acessivel para leigos.
+			-nao trazer atencao para a linguagem, de forma a ter que aprender seus termos (que são diferentes do uso comum, "int", "var", "proc")
+
+	-uso do imperativo ("imprima, faça") sobre infinitivo ("imprimir","fazer")
 
   excecoes:
   blocos de variaveis
@@ -856,11 +869,18 @@ assume-se que pode ser interessante permitir que a linguagem se adapte.
     leia() retornando tipos variaveis
     imprima() recebendo numero variavel de argumentos.
 
+	tratamento de erros:
+erá que atrapalha mais do que ajuda continuar a analise sintatica apos errors encontrados?
+Muitos erros seguintes ao primeiro podem acabar atrapalhando mais.
+Ao catch[], pode-se lancar um custom exception, a ser recuperado em main.c
+Fazer disso uma opcao?
+A dificuldade em deixar as mensagens de erro uniformes, ao tentar elaborar tratamentos de erros mais detalhados e prestativos.
+	
 \section{Expressões}
 
   *operadores e operandos
   *precendencia e associatividade
-  
+
   \subsection{Avaliação de expressões}
 
   *promoções de tipos e castings automaticos (inteiro para real, real para inteiro)
@@ -881,7 +901,7 @@ são impossibilitadas de serem usadas, enquanto o contexto durar.
   *Não suporte a funções aninhadas
   *suporte a recursão
   *retorno apenas para tipos primitivos.
- 
+
 \section {Funções internas}
 
   \subsection{A função ``imprima''}
@@ -913,7 +933,7 @@ são impossibilitadas de serem usadas, enquanto o contexto durar.
     
   Preferencia ao uso da função ``leia'' sem parametros:
     Comentarios e justificativa contra o uso de ``void leia(x)''
-      
+
 \capitulo{O programa GPT}
 
 \section{Intrudução}
@@ -937,6 +957,10 @@ são impossibilitadas de serem usadas, enquanto o contexto durar.
   \subsection{Limitações}
       *nomes de identificadores em conflito com os nomes em C/glibc
 
+	*diferencas:
+		*array bound check
+		*precedencia de operadores de C vs. precendencia de operadores de G-Portugol (pesquisar para saber se sao equivalentes)
+
 \section{Interpretação de código}
 
   \subsection{Erros de execução (runtime errors)}
@@ -949,6 +973,9 @@ são impossibilitadas de serem usadas, enquanto o contexto durar.
 
 \section{Compilação para codigo nativo (ELF)}
 
+\section{Depuração interativa}
+
+  
 %%%
 %  Apendice
 %   *gramatica da linguagem
