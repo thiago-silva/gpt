@@ -1,4 +1,4 @@
-protoeditoricondir = $(kde_datadir)/gpteditor/icons
-protoeditoricon_ICON = AUTO
+gpteditoricondir = $(kde_datadir)/gpteditor/icons
+gpteditoricon_ICON = AUTO
 
-KDE_ICON = gpteditor
+KDE_ICON = gpteditor source_gpt
