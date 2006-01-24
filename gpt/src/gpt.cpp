@@ -73,8 +73,8 @@ void showhelp(void) {
 void showversion(void) {
   cout << "GPT - Compilador G-Portucol\n"
           "versão  : " << VERSION << "\n"
-          "Website : http://codigolivre.org/compuclass\n"
-          "Copyright (C) 2003-2005 Thiago Silva <thiago.silva@kdemail.net>\n\n";
+          "Website : http://gpt.berlios.de\n"
+          "Copyright (C) 2003-2006 Thiago Silva <thiago.silva@kdemail.net>\n\n";
 }
 
 bool init(int argc, char** argv) {
