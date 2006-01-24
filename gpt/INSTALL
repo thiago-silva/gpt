@@ -3,13 +3,14 @@ Instalacao Basica
 
   o Pre-requisitos
 
-    - gcc/g++   : Gnu Compiler Collection (especificamente, precisamos do gcc/g++)
-                http://directory.fsf.org/gcc.html)
+    - GCC    : Gnu Compiler Collection (precisamos do gcc/g++)
+               http://directory.fsf.org/gcc.html)
 
-    - Antlr     : Ferramenta para construcao de compiladores
-                http://directory.fsf.org/gcc.html
+    - ANTLR  : Ferramenta para construcao de compiladores (testado com v2.7.5)
+               http://www.antlr.org
 
-  o Comandos para instalacao padrao:
+
+  o  Comandos para instalacao padrao:
     
     $ tar xvfz gpt-xxx.tar.gz
     $ cd gpt-xxx
@@ -19,7 +20,8 @@ Instalacao Basica
     # make install
 
 
-  o CVS
+  o  CVS
+
 		Se voce baixou os fontes do CVS:
     
     $ make -f Makefile.cvs
@@ -27,5 +29,19 @@ Instalacao Basica
     $ make
     $ su
     # make install
- 	
-  Para maiores detalhes, leia INSTALL.default
+
+
+  o  Opcoes de configuracao
+
+    Se voce instalou o ANTLR em um diretorio nao-padrao ou se o binario "antlr"
+    nao pode ser encontrado pela variavel de ambiente PATH, use o 
+    argumento --with-antlr-path.
+
+    Exemplo:
+      $ ./configure --with-antlr-path=/home/user/bin
+  
+    de forma que "/home/user/bin/antlr" seja o caminho do antlr no sistema.
+
+  o  Outras opcoes
+
+    Para maiores detalhes, leia INSTALL.default
