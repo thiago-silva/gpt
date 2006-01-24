@@ -60,6 +60,17 @@ options {
 
   SymbolTable& stable;
 
+  int _currentScopeType;
+
+  string _currentScope;
+
+  string _indent;
+
+  stringstream _scope_init_stms;
+
+  stringstream _txt;
+
+  stringstream _head;
 
 
   void indent() {
@@ -260,7 +271,15 @@ options {
          "     return 0;\n"
          "   }\n"
          "   return strlen(str);\n"
+         "}\n";
+    s << "char* return_literal__(char* str) {\n"
+         "  char* lit = NULL;\n"
+         "  lit = (char*) malloc(sizeof(char)*(str_strlen__(str)+1));\n"
+         "  strcpy(lit, str);\n"
+         "  collect(lit);\n"
+         "  return lit;\n"
          "}\n\n";
+
 
     _head << s.str();
 
@@ -428,18 +447,7 @@ options {
           exit(1);
     }
     return ret.str();
-  }
-
-  string _currentScope;
-
-  string _indent;
-
-  stringstream _scope_init_stms;
-
-  stringstream _txt;
-
-  stringstream _head;
-  
+  }  
 }
 
 /********************************* Producoes **************************************/
@@ -677,8 +685,14 @@ stm_ret
   stringstream str;
 }
   : #(T_KW_RETORNE (TI_NULL|e=expr[expecting_type]))
-    {  
-      str << "return " << e.expr.second << ";";
+    {
+      str << "return ";
+      if(_currentScopeType == TIPO_LITERAL) {
+        str << "return_literal__(" << e.expr.second << ")";
+      } else {
+        str << e.expr.second;
+      }
+      str << ";";
       writeln(str);
     }
   ;
@@ -841,15 +855,14 @@ func_decls
   stringstream cpy;
   stringstream decl;
   string comma;
-  int fret;
 }
   : #(id:T_IDENTIFICADOR   
       {
         setScope(id->getText());
         //nota: nao estamos usando a producao "ret_type" para saber o tipo de retorno.
         //      Procuramos diretamente na tabela de simbolos. (conveniencia)
-        fret = stable.getSymbol(SymbolTable::GlobalScope, id->getText(), true).type.primitiveType();
-        str << translateType(fret);
+        _currentScopeType = stable.getSymbol(SymbolTable::GlobalScope, id->getText(), true).type.primitiveType();
+        str << translateType(_currentScopeType);
         str << " " << id->getText() << "(";
       }
 
@@ -907,7 +920,7 @@ func_decls
       //(ret_type)?
 
       {
-        if((_t->getFirstChild() != antlr::nullAST) && (_t->getFirstChild()->getType() == TI_FRETURN)) {
+        if((_t != antlr::nullAST) && (_t->getType() == TI_FRETURN)) {
           _t = _t->getNextSibling();
         }
 
@@ -925,12 +938,14 @@ func_decls
       stm_block
       {
         //força retorno, se o usuario esqueceu:
-        if(fret != TIPO_NULO) {
-          writeln("return -1;");
-        }
+//         if(fret != TIPO_NULO) {
+//           writeln("return -1;");
+//         }
+
         unindent();
         writeln("}");
         setScope(SymbolTable::GlobalScope);
+        _currentScopeType = -1;
       }
     )
   ;
