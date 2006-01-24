@@ -323,7 +323,11 @@ func_decl
         | argsm=matriz    /*{f.addParams(argsm);}*/
       )* 
 
-      {_t = _t->getNextSibling();}
+      {
+        if((_t != antlr::nullAST) && (_t->getType() == TI_FRETURN)) {
+          _t = _t->getNextSibling();
+        }
+      }
 //       ret_type[f]
 //         {evaluator.declareFunction(f);}
       (variaveis)?
