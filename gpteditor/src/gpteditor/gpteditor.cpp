@@ -30,7 +30,7 @@
 static const char description[] =
   I18N_NOOP("G-Portugol editor");
 
-static const char url[] = "http://TODO.com";
+static const char url[] = "http://gpt.berlios.de";
   
 static const char version[] = VERSION;
 
