@@ -1,7 +1,7 @@
 G-Portugol
 versao: 0.5b
 
-o Sobre
+o Sobre a linguagem
 
  G-Portugol eh um dialeto da linguagem portugol 
  (ou portugues estruturado), muito usada para descrever 
@@ -16,37 +16,19 @@ o Sobre
  primeiros passos no aprendizado de desenvolvimento de softwares, 
  bem como professores.
 
+o O programa GPT
 
-o O Pacote
+  GPT é o programa que implementa a linguagem G-Portugol, permitindo:
 
- Descricao dos diretorios do pacote
-  
- exemplos/
-   Exemplos de algoritmos escritos em G-Portugol
-  
- extra/
-   Arquivos de syntax highlight para os editores baseados no 
-   kate/kwrite do ambiente KDE
-  
- gramaticas/
-   As gramaticas ANTLR da linguagem G-Portugol
-  
- doc/
-   Man pages e outros documentos
-  
- src/
-   Fontes do tradutor
-  
- test/
-   Scripts e programas de teste
-
+    -executar programas escritos em G-Portugol de forma interpretada;
+    -traduzir programas para C;
+    -depurar programas interativamente.
 
 o Maiores Informacoes
 
- Website: http://compuclass.codigolivre.org.br/
+ Website: http://gpt.berlios.de/
  
  Autor: Thiago Silva <thiago.silva@kdemail.net> 
-
 
 o Copyright
 
