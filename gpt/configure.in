@@ -27,13 +27,14 @@ AC_SUBST(ANTLR_BIN)
 if test ${ANTLR} = "no"; then
   AC_MSG_ERROR(
   [
-    GPT precisa do ANTLR (versao 2.7.5) instalado 
+    O programa "antlr" nao foi encontrado no seu sistema (PATH).
+    GPT precisa do ANTLR (versao 2.7.5) instalado.
     Baixe em: http://www.antlr.org
   ])
 fi
 
 dnl
-dnl checks if we want install the libs and headers
+dnl checks if we want to install the libs and headers
 dnl
 
 AC_ARG_ENABLE([install-devel],
@@ -67,10 +68,11 @@ dnl
 dnl the end
 dnl
 
-AC_OUTPUT(Makefile 
+AC_OUTPUT(Makefile        
         src/Makefile 
         doc/Makefile 
         doc/man/Makefile 
+        exemplos/Makefile
         src/compiler/Makefile 
         src/compiler/parser/Makefile 
         src/compiler/interpreter/Makefile 
