@@ -14,9 +14,7 @@
 <ul type="disc"><li>cvs2cl (ChangeLog) README, TODO, NEWS, FAQ</li>
 <li>atualizar readme, install, dockbook, etc, com as dependencias (antlr, pcre,etc) e modo de isntalacao</li>
 <li>colocar/verificar URL no projeto, man, docbook, about dialog, etc</li></ul>
-<li>Converter CVS do codigolivre para SVN do Berlios?</li>
-<ul type="disc"><li>Colocar o projeto no Berlios.</li>
-<li>Site (html manual (wiki), comentarios de implementacao, exemplos, etc)<br /></li></ul></ul>
+<li>Site (html manual (wiki), comentarios de implementacao, exemplos, etc)<br /></li></ul>
 <li>GPT</li>
 <ul type="disc"><li>Checar implementacao de operadores &quot;e&quot;, &quot;ou&quot;, &quot;xou&quot;</li>
 <li>Semantic: checar se subscritos são &quot;0&quot; na declaracao de vetores</li>
@@ -27,15 +25,6 @@
 <li>terminar o manual</li></ul></ul>
 </body></html>
 
-
-\NewEntry 2 NOW
-<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
-<ul type="disc"><li>Help -&gt; handbook (docbook)</li>
-<li>cvs2cl (ChangeLog) README, TODO, NEWS, FAQ</li>
-<li>atualizar manual, readme etc, com as dependencias (antlr, pcre,etc) e modo de isntalacao</li>
-<li>Criar/converter repositorio</li>
-<li>colocar o xml highlight em gpteditor</li></ul>
-</body></html>
 
 \NewEntry 1 Notas ideias etc
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
