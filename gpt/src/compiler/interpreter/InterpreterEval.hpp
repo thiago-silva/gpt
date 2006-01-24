@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Thiago Silva                                    *
+ *   Copyright (C) 2003-2006 by Thiago Silva                               *
  *   thiago.silva@kdemal.net                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -23,11 +23,11 @@
 
 #include "Symbol.hpp"
 #include "SymbolTable.hpp"
-#include "Net.hpp"
 
 #include <string>
 #include <sstream>
 #include <list>
+#include <stack>
 #include <map>
 #include <iostream>
 
@@ -79,13 +79,14 @@ public:
 
 class Variables {
 public:
-  void setupGlobals();
-  void pushState();
+  void init(map<string, Variable>&);
+
+  void pushLocalContext(map<string, Variable>&);
   void add(Variable& v);
 
   Variable& get(const string& name);
 
-  void popState();
+  void popContext();
 
   map<string, Variable>& getLocals();
 
@@ -94,9 +95,9 @@ public:
 private:
   typedef map<string, Variable> VariableState_t;
 
-  list<VariableState_t> varstates;
-  map<string, Variable> currentVars;//map<varname, Variable>
-  map<string, Variable> globalVars;
+  list<VariableState_t*> varstates;
+  map<string, Variable> *currentVars;//map<varname, Variable>
+  map<string, Variable> *globalVars;
 };
 
 
@@ -105,10 +106,10 @@ private:
 
 
 
-class PrivateInterpreter {
+class InterpreterEval {
   public:
 
-  PrivateInterpreter(SymbolTable& st);
+  InterpreterEval(SymbolTable& st, string host, int port);
   
   void init();
  
@@ -154,19 +155,26 @@ class PrivateInterpreter {
   void nextCmd(int line);
   
 private:
-  string castValue(Variable& var, ExprValue& v);
+  string castLeiaChar(Variable& var, ExprValue& v);
 
   ExprValue executeLeia();
 
   void executeImprima(list<ExprValue>& args);
 
-  Variables variables;
-  SymbolTable& stable;
-
-  list<pair<string, int> > program_stack;//pair<context, line>
   
+  SymbolTable& stable;
+  string dbg_host;
+  int dbg_port;
   int currentLine;
-  bool skipCmd;
+
+  bool currentSkip;
+  bool globalSkip;
+
+  stack<bool> skipStack;
+
+  Variables variables;  
+  list<pair<string, int> > program_stack;//pair<context, line>
+
   ExprValue retExpr;
 };
 

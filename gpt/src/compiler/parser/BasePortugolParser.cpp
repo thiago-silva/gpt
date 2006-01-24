@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Thiago Silva                                    *
+ *   Copyright (C) 2003-2006 by Thiago Silva                               *
  *   thiago.silva@kdemal.net                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -27,12 +27,12 @@
 string BasePortugolParser::expecting_algorithm_name = "nome do algoritmo";
 string BasePortugolParser::expecting_variable = "uma variável";
 string BasePortugolParser::expecting_datatype = "um tipo (inteiro, literal,...)";
+string BasePortugolParser::expecting_datatype_pl = "um tipo de vetor/matriz (inteiros, literais,...)";
 string BasePortugolParser::expecting_identifier = "identificador";
 string BasePortugolParser::expecting_expression = "expressão";
 string BasePortugolParser::expecting_valid_sentence = "sentença válida";
 string BasePortugolParser::expecting_attr_op = "operador \":=\"";
 string BasePortugolParser::expecting_fimse= "\"fim-se\"";
-string BasePortugolParser::expecting_datatype_pl = "um tipo de vetor/matriz (inteiros, literais,...)";
 string BasePortugolParser::expecting_fimvar_or_var = "\"fim-variáveis\" ou declaração de variável";
 string BasePortugolParser::expecting_stm_or_fim = "\"fim\" ou comando válido";
 string BasePortugolParser::expecting_stm_or_fimse = "\"fim-se\" ou comando válido";
@@ -111,7 +111,7 @@ int BasePortugolParser::reportParserError(int line, string expecting, string fou
   
   stringstream s; 
   s << "Esperando " << expecting << str;
-  return ErrorHandler::self()->add(s, line);
+  return ErrorHandler::self()->add(s.str(), line);
        
 }
 

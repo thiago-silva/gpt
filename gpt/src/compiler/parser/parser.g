@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2005 by Thiago Silva                                    *
+ *   Copyright (C) 2003-2006 by Thiago Silva                               *
  *   thiago.silva@kdemal.net                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
-                                                                          */
+                                                                           */
 
 
 header {
@@ -99,10 +99,11 @@ var_decl_block
     int cd;
     if(e.getLine() == tvars->getLine()) {
       cd = reportParserError(e.getLine(), expecting_variable, "", tvars->getText());
+      printTip("Pelo menos uma variável deve ser declarada", e.getLine(), cd);
     } else {
-      cd = reportParserError(e.getLine(), expecting_variable, getTokenDescription(e.token));
-    }
-    printTip("Pelo menos uma variável deve ser declarada", e.getLine(), cd);
+      cd = reportParserError(tvars->getLine(), expecting_variable, "", tvars->getText());
+      printTip("Pelo menos uma variável deve ser declarada", tvars->getLine(), cd);
+    }    
   
     BitSet b;
     b.add(T_KW_INICIO);
@@ -174,7 +175,7 @@ var_decl!
     if(e.getLine() == colon->getLine()) {
       reportParserError(e.getLine(), expecting_datatype,  getTokenDescription(e.token));
     } else {
-      reportParserError(e.getLine(), expecting_datatype, "", colon->getText());
+      reportParserError(colon->getLine(), expecting_datatype, "", colon->getText());
     }
     consumeUntil(T_SEMICOL);
   }
@@ -290,9 +291,9 @@ tp_prim_pl
 exception
 catch[antlr::NoViableAltException e] {
   if(lst->getLine() == e.getLine()) {
-    reportParserError(e.getLine(), expecting_datatype, getTokenDescription(e.token));
+    reportParserError(e.getLine(), expecting_datatype_pl, getTokenDescription(e.token));
   } else {
-    reportParserError(lst->getLine(), expecting_datatype, "", lst->getText());
+    reportParserError(lst->getLine(), expecting_datatype_pl, "", lst->getText());
   }
   consumeUntil(T_SEMICOL);
 }
@@ -300,8 +301,8 @@ catch[antlr::NoViableAltException e] {
 
 stm_block!
 {RefToken lst = lastToken;}
-  : T_KW_INICIO stms:stm_list T_KW_FIM
-      {#stm_block = #(T_KW_INICIO, stms);}
+  : T_KW_INICIO stms:stm_list f:T_KW_FIM
+      {#stm_block = #(T_KW_INICIO, stms);#stm_block->setEndLine(f->getLine());}
   ;
 
   exception
@@ -368,7 +369,12 @@ stm_list
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 stm_ret!
-  : t:T_KW_RETORNE^ (e:expr {#stm_ret = #(t,e);}|{#stm_ret = #(t,[TI_NULL,"null!"]);})
+  : t:T_KW_RETORNE^ 
+    (
+      e:expr {#stm_ret = #(t,e);}
+      | /*emtpy*/ {#stm_ret = #(t,[TI_NULL,"null!"]);}
+    )
+    {#stm_ret->setLine(t->getLine());}
   ;
 
   exception
@@ -748,7 +754,8 @@ expr_elemento
 
 fcall!
 {RefToken tk;}
-  : id:T_IDENTIFICADOR T_ABREP a:fargs {tk=lastToken;} T_FECHAP {#fcall = #([TI_FCALL,"fcall!"], id, a);}
+  : id:T_IDENTIFICADOR T_ABREP a:fargs {tk=lastToken;} T_FECHAP 
+      {#fcall = #([TI_FCALL,"fcall!"], id, a);#fcall->setLine(id->getLine());}
   ; 
 
   exception //T_FECHAP

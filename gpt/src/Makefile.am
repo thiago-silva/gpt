@@ -1,11 +1,11 @@
 bin_PROGRAMS = gpt
-gpt_SOURCES = gpt.cpp ErrorHandler.cpp
+gpt_SOURCES  = gpt.cpp 
 
-# set the include path found by configure
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/src/parser -Iparser \
-	$(all_includes)
+INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/src -I$(top_srcdir)/src/compiler \
+	-I$(top_srcdir)/src/compiler/c_translator -I$(top_srcdir)/src/compiler/interpreter \
+	-I$(top_srcdir)/src/compiler/parser $(all_includes) -I$(top_builddir)/src/compiler/parser \
+	-I$(top_builddir)/src/compiler/c_translator -I$(top_builddir)/src/compiler/interpreter
 
-gpt_LDADD = $(top_builddir)/src/parser/libparser.a -lantlr
- 
-SUBDIRS = parser
-noinst_HEADERS = ErrorHandler.hpp
+SUBDIRS = compiler
+gpt_LDADD = $(top_builddir)/src/compiler/libgportugol.la -lantlr -lpcrecpp
+AM_LDFLAGS = -static

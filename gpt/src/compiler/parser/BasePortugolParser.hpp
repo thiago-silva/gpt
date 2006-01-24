@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Thiago Silva                                    *
+ *   Copyright (C) 2003-2006 by Thiago Silva                               *
  *   thiago.silva@kdemal.net                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -53,12 +53,12 @@ protected:
   static string expecting_algorithm_name;
   static string expecting_variable;
   static string expecting_datatype;
+  static string expecting_datatype_pl;
   static string expecting_identifier;
   static string expecting_expression;
   static string expecting_valid_sentence;  
   static string expecting_attr_op;
   static string expecting_fimse;
-  static string expecting_datatype_pl;
   static string expecting_fimvar_or_var;
   static string expecting_stm_or_fim;
   static string expecting_stm_or_fimse;

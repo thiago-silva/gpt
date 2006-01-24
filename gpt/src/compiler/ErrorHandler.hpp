@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Thiago Silva                                    *
+ *   Copyright (C) 2003-2006 by Thiago Silva                               *
  *   thiago.silva@kdemal.net                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -28,31 +28,68 @@
 
 using namespace std;
 
+class UniqueErrorException {
+public:
+  UniqueErrorException(const string& msg, int line)
+    : _msg(msg), _line(line) {  }
+
+  ~UniqueErrorException() {}
+
+   string message() {return _msg;}
+   int line()       {return _line;}
+private:
+  string _msg;
+  int _line;  
+};
+
+
+
 class ErrorHandler {
 public:
+
+  class ErrorMsg {
+    public:
+    ErrorMsg() : line(0), hasTip(false), cd(0) {}
+    int line;
+    bool hasTip;
+    int cd;
+    string msg;
+    string tip;
+  };
+
   ~ErrorHandler();
 
   static ErrorHandler* self();
+  
+  void stopOnError(bool);
 
   int add(const string& msg, int line);  
-//   int add(const string& msg);  
-  int add(const stringstream& msg, int line);
-//   int add(const stringstream& msg);
-
   void addTip(const string& msg, int line, int cd);
 
-  void addFatal(const string&);
-  void addFatal(const stringstream&);
+//   void addInternalError(const string&);
+//   void addInternalError(const stringstream&);
 
-  void showErrors();
+  ErrorMsg getFirstError();
+  
+  void showErrors(bool);
   bool hasError();
+
+  void clear();
 private:
   ErrorHandler();
 
   static ErrorHandler* _self;
-  bool _hasError;
 
-  typedef map<int, list<string> > errors_map_t;
+  void showError(ErrorMsg&);
+  void showTip(ErrorMsg&);
+
+  void processAndAdd(const string&, int);
+  void ErrorHandler::processTipAndAdd(const string& msg, int line, int cd);
+
+  bool _hasError;
+  bool _stopOnError;
+
+  typedef map<int, list<ErrorMsg> > errors_map_t;
   errors_map_t _errors;
 };
 

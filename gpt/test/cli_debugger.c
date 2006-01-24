@@ -50,12 +50,12 @@ int create_server_socket(int port) {
 }
 
 int main() {
-	int port = 5555;
+	int port = 7680;
 	int serversock;
 	int clientsock;
 	struct sockaddr_in clientname;
 	size_t size = 0;
-  char buffer[500];
+  char buffer[10000];
 	int received;
 
 
@@ -85,7 +85,7 @@ int main() {
       printf("no data received\n");
       break;
     } else {
-      printf("total pack: %d, data received: \n>>>\n%s\n<<<\n", received, buffer);
+      printf("total pack: %d, data received: \n>>>\n%s\n<<<\n", received, buffer +1+ (strlen(buffer)*sizeof(char)));
     }
     printf("\n\n");
 

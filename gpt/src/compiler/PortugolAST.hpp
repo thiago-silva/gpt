@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Thiago Silva                                    *
+ *   Copyright (C) 2003-2006 by Thiago Silva                               *
  *   thiago.silva@kdemal.net                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -37,6 +37,9 @@ public:
   void setLine(int line);
   int getLine();
 
+  void setEndLine(int endLine);
+  int getEndLine();
+
   void setEvalType(int type) {
     eval_type = type;
   }
@@ -54,6 +57,7 @@ public:
   static const char* const TYPE_NAME;
 protected:
   int line;
+  int endLine;
   int eval_type; //evaluated type of expression
 };
 

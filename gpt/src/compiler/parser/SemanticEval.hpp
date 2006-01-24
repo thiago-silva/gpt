@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Thiago Silva                                    *
+ *   Copyright (C) 2003-2006 by Thiago Silva                               *
  *   thiago.silva@kdemal.net                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -122,7 +122,7 @@ public:
 
   void declareFunction(Funcao& f);
   ExpressionValue  evaluateFCall(RefPortugolAST f, list<ExpressionValue>& args);  
-  void evaluateAllFCalls();
+//   void evaluateAllFCalls();
   
   void evaluatePasso(int line, const string& str);
 protected:

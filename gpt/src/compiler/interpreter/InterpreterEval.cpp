@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Thiago Silva                                    *
+ *   Copyright (C) 2003-2006 by Thiago Silva                               *
  *   thiago.silva@kdemal.net                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,9 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "config.h"
 
-#include "InterpreterHelper.hpp"
-
+#include "InterpreterEval.hpp"
+#include "InterpreterDBG.hpp"
 
 void ExprValue::setValue(string str) {
   value = str;
@@ -123,64 +124,60 @@ string LValue::dimsToString() {
 
 
 
-void Variables::setupGlobals() { //init glovals
-  //currentVars must have all global vars at this point
+void Variables::init(map<string, Variable>& vars) {
+  currentVars = new map<string, Variable>;
+  *currentVars = vars;
   globalVars = currentVars;
 }
 
-void Variables::pushState() {
-  varstates.push_back(currentVars);
-  currentVars.clear();
-}
-
-void Variables::add(Variable& v) {
-  currentVars[v.name] = v;
+void Variables::pushLocalContext(map<string, Variable>& vars) {
+  varstates.push_back(currentVars);  
+  currentVars = new map<string, Variable>;
+  *currentVars = vars;
 }
 
 Variable& Variables::get(const string& name) {
-  if(varstates.size() == 0) {
-    return globalVars[name];
-  }
-
-  if(currentVars.find(name) == currentVars.end()) {
-    if(globalVars.find(name) == globalVars.end()) {
+  if(currentVars->find(name) == currentVars->end()) {
+    if(globalVars->find(name) == globalVars->end()) {
       cerr << "BUG: variável " << name << " não encontrada." << endl;
       exit(1);
     } else {        
-      return globalVars[name];
+      return (*globalVars)[name];
     }
   } else {
-    return currentVars[name];
+    return (*currentVars)[name];
   }
 }
 
-void Variables::popState() {
-  if(varstates.size() == 1) {
-    currentVars = globalVars;
-  } else {
-    currentVars = varstates.back();
-  }
+void Variables::popContext() {
+  delete currentVars;
+  currentVars = varstates.back();
   varstates.pop_back();
 }
 
 map<string, Variable>& Variables::getLocals() {
-  return currentVars;
+  return *currentVars;
 }
 
 map<string, Variable>& Variables::getGlobals() {
-  return globalVars;
+  return *globalVars;
 }
 
 
 
 //------------------------------------------------------------------------
 
-PrivateInterpreter::PrivateInterpreter(SymbolTable& st) : stable(st), currentLine(-1), skipCmd(false) {
+InterpreterEval::InterpreterEval(SymbolTable& st, string host, int port) 
+  : stable(st), dbg_host(host), dbg_port(port), currentLine(-1)
+    , currentSkip(false), globalSkip(false)
+{
+  skipStack.push(false);
 }
 
-void PrivateInterpreter::init() {
+void InterpreterEval::init() {
   list<Symbol> globals = stable.getSymbols(SymbolTable::GlobalScope);
 
+  map<string, Variable> vars;
   for(list<Symbol>::iterator it = globals.begin(); it != globals.end(); ++it) {
     if((*it).isFunction) {
       continue;
@@ -194,20 +191,20 @@ void PrivateInterpreter::init() {
     if(v.isPrimitive && (v.type != TIPO_LITERAL)) {
       v.primitiveValue = "0";
     }
-    variables.add(v);
+    vars[v.name] = v;
   }
 
-  variables.setupGlobals();
-  Net::self()->init();
+  variables.init(vars);
+  program_stack.push_back(pair<string,int>(SymbolTable::GlobalScope, 0));
+
+  InterpreterDBG::self()->init(dbg_host, dbg_port);
 }
 
 
 
-ExprValue PrivateInterpreter::evaluateOu(ExprValue& left, ExprValue& right) {
-  //1 || 1
-  //"ou" || "eu"
-  // "" || 'a'
+ExprValue InterpreterEval::evaluateOu(ExprValue& left, ExprValue& right) {
 
+	
   ExprValue v;
   v.type = TIPO_LOGICO;
 
@@ -230,7 +227,7 @@ ExprValue PrivateInterpreter::evaluateOu(ExprValue& left, ExprValue& right) {
   return v;
 }
 
-ExprValue PrivateInterpreter::evaluateE(ExprValue& left, ExprValue& right) {
+ExprValue InterpreterEval::evaluateE(ExprValue& left, ExprValue& right) {
   ExprValue v;
   v.type = TIPO_LOGICO;
 
@@ -254,7 +251,7 @@ ExprValue PrivateInterpreter::evaluateE(ExprValue& left, ExprValue& right) {
   return v;
 }
 
-ExprValue PrivateInterpreter::evaluateBitOu(ExprValue& left, ExprValue& right) {
+ExprValue InterpreterEval::evaluateBitOu(ExprValue& left, ExprValue& right) {
   ExprValue v;
   v.type = TIPO_INTEIRO;
 
@@ -264,7 +261,7 @@ ExprValue PrivateInterpreter::evaluateBitOu(ExprValue& left, ExprValue& right) {
   return v;
 }
 
-ExprValue PrivateInterpreter::evaluateBitXou(ExprValue& left, ExprValue& right) {
+ExprValue InterpreterEval::evaluateBitXou(ExprValue& left, ExprValue& right) {
   ExprValue v;
   v.type = TIPO_INTEIRO;
 
@@ -274,7 +271,7 @@ ExprValue PrivateInterpreter::evaluateBitXou(ExprValue& left, ExprValue& right) 
   return v;
 }
 
-ExprValue PrivateInterpreter::evaluateBitE(ExprValue& left, ExprValue& right) {
+ExprValue InterpreterEval::evaluateBitE(ExprValue& left, ExprValue& right) {
   ExprValue v;
   v.type = TIPO_INTEIRO;
 
@@ -284,7 +281,7 @@ ExprValue PrivateInterpreter::evaluateBitE(ExprValue& left, ExprValue& right) {
   return v;
 }
 
-ExprValue PrivateInterpreter::evaluateIgual(ExprValue& left, ExprValue& right) {
+ExprValue InterpreterEval::evaluateIgual(ExprValue& left, ExprValue& right) {
   ExprValue v;
   v.type = TIPO_LOGICO;
 
@@ -306,7 +303,7 @@ ExprValue PrivateInterpreter::evaluateIgual(ExprValue& left, ExprValue& right) {
   return v;
 }
 
-ExprValue PrivateInterpreter::evaluateDif(ExprValue& left, ExprValue& right) {
+ExprValue InterpreterEval::evaluateDif(ExprValue& left, ExprValue& right) {
   ExprValue v;
   v.type = TIPO_LOGICO;
 
@@ -328,7 +325,7 @@ ExprValue PrivateInterpreter::evaluateDif(ExprValue& left, ExprValue& right) {
   return v;
 }
 
-ExprValue PrivateInterpreter::evaluateMaior(ExprValue& left, ExprValue& right) {
+ExprValue InterpreterEval::evaluateMaior(ExprValue& left, ExprValue& right) {
   ExprValue v;
   v.type = TIPO_LOGICO;
   
@@ -350,7 +347,7 @@ ExprValue PrivateInterpreter::evaluateMaior(ExprValue& left, ExprValue& right) {
   return v;
 }
 
-ExprValue PrivateInterpreter::evaluateMaiorEq(ExprValue& left, ExprValue& right) {
+ExprValue InterpreterEval::evaluateMaiorEq(ExprValue& left, ExprValue& right) {
   ExprValue v;
   v.type = TIPO_LOGICO;
 
@@ -372,7 +369,7 @@ ExprValue PrivateInterpreter::evaluateMaiorEq(ExprValue& left, ExprValue& right)
   return v;
 }
 
-ExprValue PrivateInterpreter::evaluateMenor(ExprValue& left, ExprValue& right) {
+ExprValue InterpreterEval::evaluateMenor(ExprValue& left, ExprValue& right) {
   ExprValue v;
   v.type = TIPO_LOGICO;
 
@@ -394,7 +391,7 @@ ExprValue PrivateInterpreter::evaluateMenor(ExprValue& left, ExprValue& right) {
   return v;
 }
 
-ExprValue PrivateInterpreter::evaluateMenorEq(ExprValue& left, ExprValue& right) {
+ExprValue InterpreterEval::evaluateMenorEq(ExprValue& left, ExprValue& right) {
   ExprValue v;
   v.type = TIPO_LOGICO;
 
@@ -416,7 +413,7 @@ ExprValue PrivateInterpreter::evaluateMenorEq(ExprValue& left, ExprValue& right)
   return v;
 }
 
-ExprValue PrivateInterpreter::evaluateMais(ExprValue& left, ExprValue& right) {
+ExprValue InterpreterEval::evaluateMais(ExprValue& left, ExprValue& right) {
   ExprValue v;
 
   stringstream s;
@@ -432,7 +429,7 @@ ExprValue PrivateInterpreter::evaluateMais(ExprValue& left, ExprValue& right) {
   return v;
 }
   
-ExprValue PrivateInterpreter::evaluateMenos(ExprValue& left, ExprValue& right) {
+ExprValue InterpreterEval::evaluateMenos(ExprValue& left, ExprValue& right) {
   ExprValue v;
 
   stringstream s;
@@ -449,11 +446,11 @@ ExprValue PrivateInterpreter::evaluateMenos(ExprValue& left, ExprValue& right) {
 }
 
 
-ExprValue PrivateInterpreter::evaluateDiv(ExprValue& left, ExprValue& right) {
+ExprValue InterpreterEval::evaluateDiv(ExprValue& left, ExprValue& right) {
   ExprValue v;
 
   if(atof(right.value.c_str()) == 0) {
-    cerr << "Erro de execução próximo a linha " << currentLine 
+    cerr << PACKAGE << ": Erro de execução próximo a linha " << currentLine 
         << " - Divisão por 0 é ilegal. Abortando..." << endl;
     exit(1);      
   }
@@ -471,7 +468,7 @@ ExprValue PrivateInterpreter::evaluateDiv(ExprValue& left, ExprValue& right) {
   return v;
 }
 
-ExprValue PrivateInterpreter::evaluateMultip(ExprValue& left, ExprValue& right) {
+ExprValue InterpreterEval::evaluateMultip(ExprValue& left, ExprValue& right) {
   ExprValue v;
 
   stringstream s;
@@ -487,7 +484,7 @@ ExprValue PrivateInterpreter::evaluateMultip(ExprValue& left, ExprValue& right) 
   return v;
 }
 
-ExprValue PrivateInterpreter::evaluateMod(ExprValue& left, ExprValue& right) {
+ExprValue InterpreterEval::evaluateMod(ExprValue& left, ExprValue& right) {
   ExprValue v;
 
   stringstream s;
@@ -500,7 +497,7 @@ ExprValue PrivateInterpreter::evaluateMod(ExprValue& left, ExprValue& right) {
 }
 
 
-ExprValue PrivateInterpreter::evaluateUnNeg(ExprValue& v) {
+ExprValue InterpreterEval::evaluateUnNeg(ExprValue& v) {
   stringstream s;
   s << -(atof(v.value.c_str()));
       
@@ -508,14 +505,14 @@ ExprValue PrivateInterpreter::evaluateUnNeg(ExprValue& v) {
   return v;
 }
 
-ExprValue PrivateInterpreter::evaluateUnPos(ExprValue& v) {
+ExprValue InterpreterEval::evaluateUnPos(ExprValue& v) {
   stringstream s;
   s << +(atof(v.value.c_str()));
   v.setValue(s);
   return v;
 }
 
-ExprValue PrivateInterpreter::evaluateUnNot(ExprValue& v) {
+ExprValue InterpreterEval::evaluateUnNot(ExprValue& v) {
   v.type = TIPO_LOGICO;
 
   if(v.type == TIPO_LITERAL) {
@@ -527,7 +524,7 @@ ExprValue PrivateInterpreter::evaluateUnNot(ExprValue& v) {
   return v;
 }
 
-ExprValue PrivateInterpreter::evaluateUnBNot(ExprValue& v) {
+ExprValue InterpreterEval::evaluateUnBNot(ExprValue& v) {
   stringstream s;
   s << ~(atoi(v.value.c_str()));
   v.setValue(s);
@@ -535,7 +532,7 @@ ExprValue PrivateInterpreter::evaluateUnBNot(ExprValue& v) {
 }
 
 
-ExprValue PrivateInterpreter::getLValueValue(LValue& l) {
+ExprValue InterpreterEval::getLValueValue(LValue& l) {
   ExprValue value;
 
   Variable var = variables.get(l.name);
@@ -547,7 +544,8 @@ ExprValue PrivateInterpreter::getLValueValue(LValue& l) {
       value.value = var.getValue(l.dims);
       value.values = var.values;
     } else {
-      cerr << "Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << l.name 
+      cerr << PACKAGE << ": Erro de execução próximo a linha " << currentLine 
+          << " - Overflow em \"" << l.name 
           << l.dimsToString() << "\". Abortando..." << endl;
       exit(1);
     }
@@ -555,7 +553,7 @@ ExprValue PrivateInterpreter::getLValueValue(LValue& l) {
   return value;
 }
 
-void PrivateInterpreter::execPasso(LValue& lvalue, int passo) {
+void InterpreterEval::execPasso(LValue& lvalue, int passo) {
   //1: get the symbol
   //3: set the v.value to the variable in the current scope
   Variable& var = variables.get(lvalue.name);
@@ -570,14 +568,14 @@ void PrivateInterpreter::execPasso(LValue& lvalue, int passo) {
       s << (atoi(val.c_str()) + passo);
       var.setValue(lvalue.dims, s.str());
     } else {
-      cerr << "Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lvalue.name 
+      cerr << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lvalue.name 
           << lvalue.dimsToString() << "\". Abortando..." << endl;
       exit(1);
     }
   }
 }
 
-bool PrivateInterpreter::execLowerEq(LValue& lv, ExprValue& ate) {
+bool InterpreterEval::execLowerEq(LValue& lv, ExprValue& ate) {
   Variable var = variables.get(lv.name);
 
   if(var.isPrimitive) {
@@ -587,14 +585,14 @@ bool PrivateInterpreter::execLowerEq(LValue& lv, ExprValue& ate) {
       string val = var.getValue(lv.dims);
       return atoi(val.c_str()) <= atoi(ate.value.c_str());
     } else {
-      cerr << "Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lv.name 
+      cerr << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lv.name 
           << lv.dimsToString() << "\". Abortando..." << endl;
       exit(1);
     }
   }
 }
 
-bool PrivateInterpreter::execBiggerEq(LValue& lv, ExprValue& ate) {
+bool InterpreterEval::execBiggerEq(LValue& lv, ExprValue& ate) {
   Variable var = variables.get(lv.name);
 
   if(var.isPrimitive) {
@@ -604,30 +602,30 @@ bool PrivateInterpreter::execBiggerEq(LValue& lv, ExprValue& ate) {
       string val = var.getValue(lv.dims);
       return atoi(val.c_str()) <= atoi(ate.value.c_str());
     } else {
-      cerr << "Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lv.name 
+      cerr << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lv.name 
           << lv.dimsToString() << "\". Abortando..." << endl;
       exit(1);
     }
   }
 }
 
-void PrivateInterpreter::execAttribution(LValue& lvalue, ExprValue& v) {
+void InterpreterEval::execAttribution(LValue& lvalue, ExprValue& v) {
   Variable& var = variables.get(lvalue.name);
 
   if(var.isPrimitive) {
-    var.setValue(castValue(var, v));
+    var.setValue(castLeiaChar(var, v));
   } else {
     if(var.checkBounds(lvalue.dims)) {
       var.setValue(lvalue.dims, v.value);        
     } else {
-      cerr << "Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lvalue.name 
+      cerr << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lvalue.name 
           << lvalue.dimsToString() << "\". Abortando..." << endl;
       exit(1);
     }
   } 
 }
 
-string PrivateInterpreter::castValue(Variable& var, ExprValue& v) {
+string InterpreterEval::castLeiaChar(Variable& var, ExprValue& v) {
   if((var.type == TIPO_CARACTERE) && (v.type == TIPO_LITERAL)) {
 
     /*************************
@@ -655,13 +653,12 @@ string PrivateInterpreter::castValue(Variable& var, ExprValue& v) {
   }
 }
 
-void PrivateInterpreter::beginFunctionCall(const string& fname, list<ExprValue>& args, int line) {
-  variables.pushState();
-
-  //setup local vars
+void InterpreterEval::beginFunctionCall(const string& fname, list<ExprValue>& args, int line) {
+  //setup local vars  
 
   list<Symbol> globals = stable.getSymbols(fname);
 
+  map<string, Variable> vars;
   for(list<Symbol>::iterator it = globals.begin(); it != globals.end(); ++it) {
     Variable v;
     v.name = (*it).lexeme;
@@ -673,8 +670,9 @@ void PrivateInterpreter::beginFunctionCall(const string& fname, list<ExprValue>&
       v.primitiveValue = "0";
     }
 
-    variables.add(v);
+    vars[v.name] = v;
   }
+  variables.pushLocalContext(vars);
 
   //init params
   Symbol func = stable.getSymbol(SymbolTable::GlobalScope,fname);
@@ -697,18 +695,22 @@ void PrivateInterpreter::beginFunctionCall(const string& fname, list<ExprValue>&
   }
 
   program_stack.push_back(pair<string, int>(fname, line));
+
+  skipStack.push(currentSkip);
 }
 
-void PrivateInterpreter::endFunctionCall() {
-  variables.popState();
+void InterpreterEval::endFunctionCall() {
+  variables.popContext();
   program_stack.pop_back();
+
+  skipStack.pop();
 }
 
-bool PrivateInterpreter::isBuiltInFunction(const string& fname) {
+bool InterpreterEval::isBuiltInFunction(const string& fname) {
   return stable.getSymbol(SymbolTable::GlobalScope, fname).isBuiltin;    
 }
 
-ExprValue PrivateInterpreter::execBuiltInFunction(const string& fname, list<ExprValue>& args) {
+ExprValue InterpreterEval::execBuiltInFunction(const string& fname, list<ExprValue>& args) {
   ExprValue v;
   if(fname == "leia") {
     return executeLeia();
@@ -716,36 +718,53 @@ ExprValue PrivateInterpreter::execBuiltInFunction(const string& fname, list<Expr
     executeImprima(args);
     return v;//empty value
   } else {
-    cerr << "BUG: No built-in function called \"" << fname << "\"" << endl;
+    cerr << PACKAGE << ":BUG: No built-in function called \"" << fname << "\"" << endl;
     return v;
   }
 }
 
-void PrivateInterpreter::setReturnExprValue(ExprValue& v) {
+void InterpreterEval::setReturnExprValue(ExprValue& v) {
   retExpr = v;
 }
 
-ExprValue PrivateInterpreter::getReturnExprValue() {
+ExprValue InterpreterEval::getReturnExprValue() {
   return retExpr;
 }
 
 //----------- Debugger -------------------------
 
-void PrivateInterpreter::nextCmd(int line) {
-  if(currentLine == -1) { //first cmd
-    program_stack.push_back(pair<string,int>(SymbolTable::GlobalScope, line));
-  } else {
-    (*(program_stack.begin())).second = line;
-  }
+void InterpreterEval::nextCmd(int line) {
+  program_stack.back().second = line;
 
   currentLine = line;
 
-  Net::self()->sendInfo(currentLine, variables, program_stack);
+  if((!skipStack.top() && !globalSkip) || InterpreterDBG::self()->breakOnLine(line)) {
+    int cmd;
+    cmd = InterpreterDBG::self()->nextCmd(currentLine, variables, program_stack);
+    switch(cmd) {
+      case InterpreterDBG::CMDStepInto:
+        currentSkip = false;
+        break;
+      case InterpreterDBG::CMDStepOver:
+        currentSkip = true;
+        break;
+      case InterpreterDBG::CMDStepOut:
+        skipStack.pop(); 
+        skipStack.push(true);
+        break;
+      case InterpreterDBG::CMDContinue:
+        globalSkip = true;
+        break;
+      default:
+        cerr << PACKAGE << ": BUG: unknown cmd." << endl;
+        break;
+    }
+  } 
 }
 
 //private
 
-ExprValue PrivateInterpreter::executeLeia() {
+ExprValue InterpreterEval::executeLeia() {
   ExprValue ret;
   ret.type = TIPO_LITERAL;
 //   cin >> ret.value;
@@ -754,7 +773,7 @@ ExprValue PrivateInterpreter::executeLeia() {
   return ret;
 }
 
-void PrivateInterpreter::executeImprima(list<ExprValue>& args) {      
+void InterpreterEval::executeImprima(list<ExprValue>& args) {      
   for(list<ExprValue>::iterator it = args.begin(); it != args.end(); ++it) {
     ExprValue ss = (*it);
     switch((*it).type) {
@@ -785,6 +804,6 @@ void PrivateInterpreter::executeImprima(list<ExprValue>& args) {
   cout.flush();
 }
 
-// void PrivateInterpreter::parseLiteral(string& lit) {
+// void InterpreterEval::parseLiteral(string& lit) {
 //   
 // }

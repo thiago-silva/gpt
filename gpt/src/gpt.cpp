@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Thiago Silva                                    *
- *   thiago.silva@kdemal.net                                               *
+ *   Copyright (C) 2003-2006 by Thiago Silva                               *
+ *   thiago.silva@kdemail.net                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "config.h"
-
 #include <unistd.h>
 
 #include <iostream>
@@ -29,25 +28,31 @@
 #include "antlr/AST.hpp"
 #include "PortugolLexer.hpp"
 #include "PortugolParser.hpp"
-#include "Portugol2C.hpp"
+#include "Portugol2CWalker.hpp"
+#include "SemanticWalker.hpp"
 #include "SymbolTable.hpp"
-#include "SemanticCheck.hpp"
 #include "PortugolAST.hpp"
 #include "ErrorHandler.hpp"
-#include "Interpreter.hpp"
+#include "InterpreterWalker.hpp"
 
-  ANTLR_USING_NAMESPACE(std)
-  ANTLR_USING_NAMESPACE(antlr)
+#define DEFAULT_PORT "7680"
+
+using namespace std;
+using namespace antlr;
 
 bool debug_flag = false;
 
 bool translate_only = false;
 bool interpret_only = false;
-
+bool show_tips = false;
 string ifilepath; //pt source
 string ofilepath; //binary output
 string trpath;    //translated C source
 char cfilepath[] = "/tmp/c__XXXXXX"; //tmp translated C source
+
+//conexao com debugger
+string host;
+string port;
 
 bool frompipe = false;
 
@@ -55,10 +60,13 @@ void showhelp(void) {
   cout << PACKAGE << " [opções] arquivo\n"
           "Opções:\n"
           "   -v            mostra versão do programa\n"
-          "   -h            mostra esse texto\n"          
+          "   -h            mostra esse texto\n"
+          "   -d            exibe dicas no relatório de erros\n"
           "   -o <arquivo>  compila e salva executável como <arquivo>\n"
           "   -t <arquivo>  traduz para C e salva como <arquivo>\n"
-          "   -i            não compila, apenas interpreta\n"          
+          "   -i            não compila, apenas interpreta\n"
+          "   -H <host>     host do client debugger (deve ser usado com -i)\n"
+          "   -P <porta>    porta do client debugger (deve ser usado com -i)\n"
           "\n";
 }
 
@@ -70,19 +78,32 @@ void showversion(void) {
 }
 
 bool init(int argc, char** argv) {
+
+  if(argc == 1) {
+    showhelp();
+    return false;
+  }
+
   int c;
   opterr = 0;  
+
+	ofilepath = "a.out";
+  port = DEFAULT_PORT;
+
 #ifdef DEBUG
-    while((c = getopt(argc, argv, "o:t:hvipd")) != -1) {
+    while((c = getopt(argc, argv, "o:t:H:P:hvipdD")) != -1) {
 #else
-    while((c = getopt(argc, argv, "o:t:hvi")) != -1) {
+    while((c = getopt(argc, argv, "o:t:H:P:hvid")) != -1) {
 #endif
     switch(c) {
 #ifdef DEBUG
-      case 'd':
+      case 'D':
         debug_flag = true;
         break;
 #endif
+       case 'd':
+        show_tips = true;
+        break;
        case 't':
         translate_only = true;
         if(optarg) {
@@ -91,6 +112,16 @@ bool init(int argc, char** argv) {
         break;
       case 'i':
         interpret_only = true;
+        break;
+      case 'H':
+        if(optarg) {
+          host = optarg;
+        }
+        break;
+      case 'P':
+        if(optarg) {
+          port = optarg;
+        }
         break;
       case 'p':
         frompipe = true;
@@ -128,6 +159,12 @@ bool init(int argc, char** argv) {
     }
   }
 
+  if(interpret_only) {
+    if((port != DEFAULT_PORT) && (atoi(port.c_str()) == 0)) {      
+      cerr << PACKAGE << ": porta de conexão inválida: \"" << port << "\"" << endl;
+      return false;
+    }
+  }
   
   return true;
 }
@@ -146,10 +183,10 @@ bool do_parse(istream& in, ostream& out) {
     parser.setASTFactory(&ast_factory);
 
     parser.algoritmo();
-    ofilepath = parser.getAlgName();
+//     ofilepath = parser.getAlgName();
 
     if(ErrorHandler::self()->hasError()) {
-      ErrorHandler::self()->showErrors();
+      ErrorHandler::self()->showErrors(show_tips);
       return false;
     }
     
@@ -159,21 +196,21 @@ bool do_parse(istream& in, ostream& out) {
       if(debug_flag) {cerr << tree->toStringList() << endl << endl;} 
 
       SymbolTable stable;
-      SemanticCheck semantic(stable);
+      SemanticWalker semantic(stable);
       semantic.algoritmo(tree);
 
       if(ErrorHandler::self()->hasError()) {
-        ErrorHandler::self()->showErrors();
+        ErrorHandler::self()->showErrors(show_tips);
         return false;
       }      
 
       //parsing complete!
 
       if(interpret_only) {
-        Interpreter interpreter(stable);
+        InterpreterWalker interpreter(stable, host, atoi(port.c_str()));
         interpreter.algoritmo(tree);
       } else {
-        Portugol2C pt2c(stable);        
+        Portugol2CWalker pt2c(stable);        
         string c_src = pt2c.algoritmo(tree);
 
         out << c_src << endl;

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Thiago Silva                                    *
+ *   Copyright (C) 2003-2006 by Thiago Silva                               *
  *   thiago.silva@kdemal.net                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -25,7 +25,7 @@
 const char* const PortugolAST::TYPE_NAME = "PortugolAST";
 
 PortugolAST::PortugolAST()
-    : CommonAST(), line(-1)
+    : CommonAST(), line(-1), endLine(-1)
 {
 
 }
@@ -74,6 +74,17 @@ void PortugolAST::setLine(int line_) {
 int PortugolAST::getLine() {
   return line;
 }
+
+void PortugolAST::setEndLine(int line)
+{
+  endLine = line;
+}
+
+int PortugolAST::getEndLine()
+{
+  return endLine;
+}
+
 
 RefAST PortugolAST::factory()
 {

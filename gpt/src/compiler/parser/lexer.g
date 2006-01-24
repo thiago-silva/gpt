@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2005 by Thiago Silva                                    *
+ *   Copyright (C) 2003-2006 by Thiago Silva                               *
  *   thiago.silva@kdemal.net                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
-                                                                          */
+                                                                           */
 
 
 header {
@@ -267,14 +267,14 @@ T_OCTAL_LIT
         if(str.find("9",0) != string::npos) {
           stringstream s;
           s << "\"" << $getText << "\" não é um valor octal válido";
-          ErrorHandler::self()->add(s, getLine());          
+          ErrorHandler::self()->add(s.str(), getLine());          
           haserror = true;
         } else {
           for(unsigned int i = 2; i < str.length(); ++i) {
             if(!isdigit(str[i])) {
               stringstream s;
               s << "\"" << str << "\" não é um valor hexadecimal válido";
-              ErrorHandler::self()->add(s, getLine());
+              ErrorHandler::self()->add(s.str(), getLine());
               haserror = true;
               break;
             }
@@ -304,7 +304,7 @@ T_HEX_LIT
         if(!isxdigit(str[i])) {
           stringstream s;
           s << "\"" << str << "\" não é um valor hexadecimal válido";
-          ErrorHandler::self()->add(s, getLine());
+          ErrorHandler::self()->add(s.str(), getLine());
           haserror = true;
           break;
         }
@@ -332,7 +332,7 @@ T_BIN_LIT
       if((str[i] != '0') && (str[i] != '1')) {
         stringstream s;
         s << "\"" << str << "\" não é um valor binário válido";
-        ErrorHandler::self()->add(s, getLine());
+        ErrorHandler::self()->add(s.str(), getLine());
         haserror = true;
         break;
       }
@@ -437,7 +437,7 @@ exception
 catch[antlr::RecognitionException] {  
   stringstream s;
   s << "AVISO: comentário iniciado na linha " << line << " não termina com \"*/\".";
-  ErrorHandler::self()->add(s, getLine());
+  ErrorHandler::self()->add(s.str(), getLine());
 
   _ttype = antlr::Token::SKIP;
 }
@@ -515,7 +515,7 @@ options {
     if(hasLatim && (testLiteralsTable(_ttype) == T_IDENTIFICADOR)) {
       stringstream s;
       s << "Identificador \"" << $getText << "\" não pode ter caracteres especiais.";
-      ErrorHandler::self()->add(s, getLine());
+      ErrorHandler::self()->add(s.str(), getLine());
     }
   }
   ;
@@ -542,6 +542,6 @@ T_INVALID
       } else {
         s << "Faltando fechar aspas";
       }
-      ErrorHandler::self()->add(s, getLine());
+      ErrorHandler::self()->add(s.str(), getLine());
     }
   ;

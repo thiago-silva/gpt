@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Thiago Silva                                    *
+ *   Copyright (C) 2003-2006 by Thiago Silva                               *
  *   thiago.silva@kdemal.net                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -21,10 +21,12 @@
 
 #include <iostream>
 
+using namespace std;
+
 ErrorHandler* ErrorHandler::_self = 0L;
 
 ErrorHandler::ErrorHandler()
-  : _hasError(false)
+  : _hasError(false), _stopOnError(false)
 {
 }
 
@@ -32,15 +34,22 @@ ErrorHandler::~ErrorHandler()
 {
 }
 
+void ErrorHandler::stopOnError(bool val) {
+  _stopOnError = val;
+}
+
 bool ErrorHandler::hasError() {
   return _hasError;
 }
 
-void ErrorHandler::showErrors() {
+void ErrorHandler::showErrors(bool showTips) {
   errors_map_t::iterator it;
   for(it = _errors.begin(); it != _errors.end(); ++it) {
-    for(list<string>::iterator lit = it->second.begin(); lit != it->second.end(); ++lit) {
-      cerr << (*lit);
+    for(list<ErrorMsg>::iterator lit = it->second.begin(); lit != it->second.end(); ++lit) {
+      showError((*lit));
+      if(showTips && (*lit).hasTip) {
+        showTip((*lit));
+      }           
     }
   }
 }
@@ -52,39 +61,42 @@ ErrorHandler* ErrorHandler::self() {
   return ErrorHandler::_self;
 }
 
-int ErrorHandler::add(const string& msg, int line) {
+int ErrorHandler::add(const string& msg, int line) {  
   _hasError = true;
+  if(_stopOnError) throw UniqueErrorException(msg, line);
 
-  stringstream s;
-  s << "Linha: " << line << " - " << msg << "." << endl;
-  _errors[line].push_back(s.str());
-  return _errors[line].size();
-}
 
-int ErrorHandler::add(const stringstream& msg, int line) {
-  _hasError = true;
-  stringstream s;
-  s << "Linha: " << line << " - " <<  msg.str() << "." << endl;
-  _errors[line].push_back(s.str());
+  ErrorMsg err;
+  err.line = line;
+  err.msg = msg;
+
+  _errors[line].push_back(err);
 
   return _errors[line].size();
 }
 
-void ErrorHandler::addTip(const string& msg, int line, int cd) {  
-  stringstream s;
-  s << "\tDica: " << msg << "." << endl;
-  list<string>::iterator it = _errors[line].begin();
-
-   for(int i = 0; i < cd; ++i,++it);
-//    ++it;
-
-  _errors[line].insert(it,s.str());
+void ErrorHandler::showError(ErrorMsg& err) {
+  cerr << "Linha: " << err.line << " - " << err.msg << "." << endl;
 }
 
-void ErrorHandler::addFatal(const string& msg) {
-  cerr << msg << "." << endl;
+
+void ErrorHandler::showTip(ErrorMsg& err) {
+  cerr << "\tDica: " << err.tip << "." << endl;
 }
 
-void ErrorHandler::addFatal(const stringstream& msg) {
-  cerr << msg.str() << "." << endl;
+void ErrorHandler::addTip(const string& msg, int line, int cd) {    
+  list<ErrorMsg>::iterator it = _errors[line].begin();
+
+  for(int i = 0; i < cd-1; ++i,++it);
+  (*it).hasTip = true;
+  (*it).tip = msg;
+}
+
+ErrorHandler::ErrorMsg ErrorHandler::getFirstError() {
+  return *(_errors.begin()->second.begin());
+}
+
+void ErrorHandler::clear() {
+  _errors.clear();
+  _hasError = false;
 }
