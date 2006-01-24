@@ -1,5 +1,6 @@
-G-Portugol
-versao: 0.5b
+G-Portugol - versao: 0.8b
+=========================
+
 
 o Sobre a linguagem
 
@@ -16,6 +17,7 @@ o Sobre a linguagem
  primeiros passos no aprendizado de desenvolvimento de softwares, 
  bem como professores.
 
+
 o O programa GPT
 
   GPT é o programa que implementa a linguagem G-Portugol, permitindo:
@@ -24,11 +26,14 @@ o O programa GPT
     -traduzir programas para C;
     -depurar programas interativamente.
 
+
 o Maiores Informacoes
 
- Website: http://gpt.berlios.de/
- 
- Autor: Thiago Silva <thiago.silva@kdemail.net> 
+  Website: http://gpt.berlios.de
+
+  Lista de discussao: https://lists.berlios.de/mailman/listinfo/gpt-usuarios
+
+  Autor: Thiago Silva <thiago.silva@kdemail.net> 
 
 o Copyright
 
