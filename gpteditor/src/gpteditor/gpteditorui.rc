@@ -1,0 +1,180 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="gpteditor" version="1">
+
+  <MenuBar>
+    <Merge/>
+    <Menu name="file" noMerge="1">
+      <text>&amp;File</text>    
+      <Action name="file_new"/>
+      <Separator/>        
+      <Action name="file_open"/>      
+      <Action name="file_open_recent"/>
+      <Separator/>      
+<!--       <DefineGroup name="save_merge"/> -->
+      <Action name="file_save"/>
+      <Action name="file_save_as"/>
+      <Separator/>
+      <DefineGroup name="revert_merge"/>
+      <Separator/>
+      <DefineGroup name="print_merge"/>     
+
+      <Action name="file_close"/>
+      <Action name="file_close_all"/>
+      <Separator/>      
+      <Action name="file_quit"/>            
+    </Menu>
+
+    <Menu name="menu_script" noMerge="1">
+      <text>Algorithm</text>
+      <Action name="compile_application"/>
+      <Action name="run_application"/>
+      <Separator />            
+      <Action name="debug_start"/>
+      <Action name="debug_stop"/>
+      <Action name="debug_interrupt"/>
+      <Action name="debug_start_to_cursor"/>
+      <Separator />     
+      <Action name="debug_step_over"/>
+      <Action name="debug_step_into"/>
+      <Action name="debug_step_out"/>
+      <Separator />
+      <Action name="debug_toggle_bp"/>
+    </Menu>
+
+    <Menu name="settings" noMerge="1"><text>&amp;Settings</text>
+      <Merge name="StandardToolBarMenuHandler" />
+      <Action name="options_configure_keybinding" />
+      <Action name="options_configure_toolbars" />
+      <Separator/>
+      <Merge/>
+      <Action name="settings_gpteditor" />
+   </Menu>
+
+  </MenuBar>
+
+  <Menu name="ktexteditor_popup" noMerge="1">
+    <DefineGroup name="popup_operations" />
+<!--     <Action name="editor_add_watch"/> -->
+    <Separator/>    
+    <Action name="debug_toggle_bp"/>    
+  </Menu>
+
+  <ToolBar name="mainToolBar" noMerge="1">
+    <text>Main Toolbar</text>
+    <Action name="file_new"/>
+    <Action name="file_open"/>
+    <Action name="file_save"/>
+    <Action name="file_save_as"/>
+    <Merge/>
+  </ToolBar>
+
+  <ToolBar name="debug_toolbar" noMerge="1" newline="true">
+    <text>Debug Toolbar</text>
+    <Action name="compile_application"/>
+    <Action name="run_application"/>
+    <Separator />
+    <Action name="debug_start"/>
+    <Action name="debug_stop"/>
+    <Action name="debug_step_over"/>
+    <Action name="debug_step_into"/>
+    <Action name="debug_step_out"/>zz
+  </ToolBar>
+
+  <!--         States        -->
+
+  <State name="init">
+    <disable>
+      <Action name="file_close"/>
+      <Action name="file_close_all"/>
+      <Action name="debug_start"/>
+      <Action name="compile_application"/>
+      <Action name="run_application"/>
+      <Action name="debug_stop"/>
+      <Action name="debug_step_over"/>
+      <Action name="debug_step_into"/>
+      <Action name="debug_step_out"/>
+      <Action name="debug_toggle_bp"/>
+      <Action name="file_save"/>
+      <Action name="file_save_as"/>
+    </disable>
+  </State>
+  
+
+  <State name="debug_stopped">
+    <enable>
+      <Action name="debug_start"/>
+      <Action name="compile_application"/>
+      <Action name="run_application"/>
+    </enable>
+    <disable>
+      <Action name="debug_stop"/>
+      <Action name="debug_step_over"/>
+      <Action name="debug_step_into"/>
+      <Action name="debug_step_out"/>
+    </disable>
+  </State>
+
+  <State name="debug_started">
+    <enable>
+      <Action name="debug_start"/>
+      <Action name="debug_stop"/>
+      <Action name="debug_toggle_bp"/>
+      <Action name="debug_step_over"/>
+      <Action name="debug_step_into"/>
+      <Action name="debug_step_out"/>
+    </enable>
+    <disable>      
+      <Action name="compile_application"/>
+      <Action name="run_application"/>
+    </disable>
+  </State>
+  
+  <State name="executable_started">
+    <enable>
+      <Action name="debug_stop"/>
+    </enable>
+    <disable>
+      <Action name="debug_start"/>
+      <Action name="compile_application"/>
+      <Action name="run_application"/>
+    </disable>
+  </State>
+    
+  <State name="compile_started">
+    <enable>
+      <Action name="debug_stop"/>
+    </enable>
+    <disable>
+      <Action name="debug_start"/>
+      <Action name="compile_application"/>
+      <Action name="run_application"/>
+    </disable>
+  </State>
+  
+  <State name="has_nofileopened">
+    <disable>
+      <Action name="debug_start"/>
+      <Action name="run_application"/>
+      <Action name="compile_application"/>
+      <Action name="file_close"/>
+      <Action name="file_close_all"/>
+      <Action name="debug_toggle_bp"/>      
+      <Action name="file_save"/>
+      <Action name="file_save_as"/>
+    </disable>
+  </State>
+
+  <State name="has_fileopened">
+    <enable>
+      <Action name="run_application"/>
+      <Action name="compile_application"/>
+      <Action name="debug_start"/>
+      <Action name="file_close"/>
+      <Action name="file_close_all"/>
+      <Action name="debug_toggle_bp"/>
+      <Action name="file_save"/>
+      <Action name="file_save_as"/>
+    </enable>
+  </State>
+  
+</kpartgui>

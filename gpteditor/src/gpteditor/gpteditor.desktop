@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=GPTEditor
+Exec=gpteditor
+Type=Application
+Comment=G-Portugol Editor
+Comment[pt_BR]=Editor G-Portugol
+Icon=gpteditor

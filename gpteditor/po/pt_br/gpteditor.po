@@ -1,0 +1,316 @@
+# translation of gpteditor.po to Brazilian portuguese
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Thiago Silva <thiago.silva@kdemail.net>, 2006.
+msgid ""
+msgstr ""
+"Project-Id-Version: gpteditor\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-01-23 13:20+0000\n"
+"PO-Revision-Date: 2006-01-23 13:56+0000\n"
+"Last-Translator: Thiago Silva <thiago.silva@kdemail.net>\n"
+"Language-Team: Brazilian portuguese\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11\n"
+"Plural-Forms:  nplurals=2; plural=(n > 1);\n"
+
+#: src/gpteditor/variableslistview.cpp:40
+msgid "Name"
+msgstr "Nome"
+
+#: src/gpteditor/variableslistview.cpp:41
+msgid "Value"
+msgstr "Valor"
+
+#: src/gpteditor/variableslistview.cpp:42
+msgid "Type"
+msgstr "Tipo"
+
+#: src/gpteditor/variableslistview.cpp:136
+msgid "Copy variable"
+msgstr "Copiar Variável"
+
+#: src/gpteditor/variableslistview.cpp:137
+msgid "Copy value"
+msgstr "Copiar Valor"
+
+#: src/gpteditor/gpteditor.cpp:31
+msgid "G-Portugol editor"
+msgstr "Editor G-Portugol"
+
+#: src/gpteditor/gpteditor.cpp:46
+msgid "GPTEditor"
+msgstr "GPTEditor"
+
+#: src/gpteditor/document.cpp:303 src/gpteditor/document.cpp:305
+msgid "Breakpoint"
+msgstr "Ponto de parada"
+
+#: src/gpteditor/messagelistview.cpp:76
+msgid "Message"
+msgstr "Mensagem"
+
+#: src/gpteditor/messagelistview.cpp:77
+#: src/gpteditor/breakpointlistview.cpp:37
+msgid "Line"
+msgstr "Linha"
+
+#: src/gpteditor/debuggermanager.cpp:172
+msgid "No file opened."
+msgstr "Nenhum arquivo aberto."
+
+#: src/gpteditor/debuggermanager.cpp:238
+msgid "Stoping..."
+msgstr "Interrompendo..."
+
+#: src/gpteditor/debuggermanager.cpp:246 src/gpteditor/debuggermanager.cpp:254
+#: src/gpteditor/debuggermanager.cpp:262
+msgid "Steping..."
+msgstr "Executando passo..."
+
+#: src/gpteditor/debuggermanager.cpp:510
+msgid "Compiling..."
+msgstr "Compilando..."
+
+#: src/gpteditor/debuggermanager.cpp:523 src/gpteditor/debuggermanager.cpp:549
+msgid "Finished"
+msgstr "Terminado"
+
+#: src/gpteditor/debuggermanager.cpp:536
+msgid "Executable started"
+msgstr "Executável iniciado"
+
+#: src/gpteditor/debuggermanager.cpp:576
+msgid "Debug started"
+msgstr "Depuração iniciada"
+
+#: src/gpteditor/debuggermanager.cpp:604 src/gpteditor/mainwindow.cpp:152
+msgid "Start Debug"
+msgstr "Iniciar depuração"
+
+#: src/gpteditor/debuggermanager.cpp:606
+msgid "Stopped"
+msgstr "Interrompido"
+
+#: src/gpteditor/debuggermanager.cpp:641
+msgid "Done"
+msgstr "Pronto"
+
+#: src/gpteditor/breakpointlistview.cpp:34
+msgid "Status"
+msgstr "Status"
+
+#: src/gpteditor/breakpointlistview.cpp:35
+msgid "File name"
+msgstr "Arquivo"
+
+#: src/gpteditor/breakpointlistview.cpp:36
+msgid "File path"
+msgstr "Caminho"
+
+#: src/gpteditor/breakpointlistviewitem.cpp:68
+msgid "Enabled"
+msgstr "Ativo"
+
+#: src/gpteditor/breakpointlistviewitem.cpp:73
+msgid "Disabled"
+msgstr "Inativo"
+
+#: src/gpteditor/breakpointlistviewitem.cpp:79
+msgid "Unresolved"
+msgstr "Desconhecido"
+
+#: src/gpteditor/editortabwidget.cpp:334
+msgid "%1/untitled_%2.gpt"
+msgstr "%1/sem_titulo_%2.gpt"
+
+#: src/gpteditor/editortabwidget.cpp:513
+msgid "Close Other Tabs"
+msgstr "Fechar as Outras Abas"
+
+#: src/gpteditor/editortabwidget.cpp:514 src/gpteditor/mainwindow.cpp:137
+msgid "Close All"
+msgstr "Fechar Todos"
+
+#: src/gpteditor/mainwindow.cpp:146
+msgid "Compile"
+msgstr "Compilar"
+
+#: src/gpteditor/mainwindow.cpp:149
+msgid "Run"
+msgstr "Executar"
+
+#: src/gpteditor/mainwindow.cpp:155
+msgid "Stop Debug"
+msgstr "Interromper Depuração"
+
+#: src/gpteditor/mainwindow.cpp:158
+msgid "Step Over"
+msgstr "Passo Sobre"
+
+#: src/gpteditor/mainwindow.cpp:161
+msgid "Step Into"
+msgstr "Passo"
+
+#: src/gpteditor/mainwindow.cpp:164
+msgid "Step Out"
+msgstr "Passo Para Fora"
+
+#: src/gpteditor/mainwindow.cpp:170
+msgid "Toggle Breakpoint"
+msgstr "Alternar Ponto de Parada"
+
+#: src/gpteditor/mainwindow.cpp:231
+msgid "Global"
+msgstr "Global"
+
+#: src/gpteditor/mainwindow.cpp:238
+msgid "Stack:"
+msgstr "Pilha:"
+
+#: src/gpteditor/mainwindow.cpp:248
+msgid "Local"
+msgstr "Local"
+
+#: src/gpteditor/mainwindow.cpp:281
+msgid "Breakpoints"
+msgstr "Pontos de Parada"
+
+#: src/gpteditor/mainwindow.cpp:288
+msgid "Messages"
+msgstr "Mensagens"
+
+#: src/gpteditor/mainwindow.cpp:330
+msgid ""
+"*.gpt|G-Portugol Source\n"
+"*|All"
+msgstr ""
+"*.gpt|Código G-Portugol\n"
+"*|Todos"
+
+#: src/gpteditor/mainwindow.cpp:354
+msgid "\"%1\" is unreadable."
+msgstr "Não é possível ler \"%1\"."
+
+#: src/settings/widgets/debuggersettingswidget.cpp:23
+msgid "Host:"
+msgstr "Host:"
+
+#: src/settings/widgets/debuggersettingswidget.cpp:27
+msgid "Port:"
+msgstr "Porta:"
+
+#: src/settings/widgets/parsersettingswidget.cpp:17
+msgid "Enable background parsing"
+msgstr "Habilitar análise em segundo plano"
+
+#: src/settings/widgets/configdlg.cpp:48 src/settings/widgets/configdlg.cpp:53
+msgid "GPT"
+msgstr "GPT"
+
+#: src/settings/widgets/configdlg.cpp:58 src/settings/widgets/configdlg.cpp:59
+msgid "Debugger"
+msgstr "Depurador"
+
+#: src/settings/widgets/configdlg.cpp:64 src/settings/widgets/configdlg.cpp:65
+msgid "Parser"
+msgstr "Analisador"
+
+#: src/settings/widgets/compilersettingswidget.cpp:23
+msgid "Execution mode:"
+msgstr "Modo de execução:"
+
+#: src/settings/widgets/compilersettingswidget.cpp:27
+msgid "Compilation"
+msgstr "Compilação"
+
+#: src/settings/widgets/compilersettingswidget.cpp:28
+msgid "Interpretation"
+msgstr "Interpretação"
+
+#: src/settings/widgets/compilersettingswidget.cpp:33
+msgid "Arguments:"
+msgstr "Argumentos:"
+
+#: src/settings/widgets/compilersettingswidget.cpp:40
+msgid "Shell:"
+msgstr "Shell:"
+
+#: src/settings/widgets/compilersettingswidget.cpp:44
+msgid "|All"
+msgstr "|Todos"
+
+#: src/debuggergpt/gptvariableparser.cpp:127
+msgid "true"
+msgstr "verdadeiro"
+
+#: src/debuggergpt/gptvariableparser.cpp:127
+msgid "false"
+msgstr "falso"
+
+#: src/debuggergpt/gptvariable.cpp:39 src/debuggergpt/gptvariable.cpp:142
+msgid "Vector"
+msgstr "Vetor"
+
+#: src/debuggergpt/gptvariable.cpp:67
+msgid "Integer"
+msgstr "Inteiro"
+
+#: src/debuggergpt/gptvariable.cpp:69
+msgid "Float"
+msgstr "Real"
+
+#: src/debuggergpt/gptvariable.cpp:71
+msgid "Boolean"
+msgstr "Lógico"
+
+#: src/debuggergpt/gptvariable.cpp:73
+msgid "String"
+msgstr "Literal"
+
+#: src/debuggergpt/gptvariable.cpp:75
+msgid "Character"
+msgstr "Caractere"
+
+#: src/debuggergpt/gptvariable.cpp:77
+msgid "Undefined"
+msgstr "Indefinido"
+
+#: src/debuggergpt/debuggergpt.cpp:82
+msgid "Unable to compile file \"%1\"."
+msgstr "Não foi possível compilar o arquivo \"%1\"."
+
+#: src/debuggergpt/debuggergpt.cpp:135
+msgid "%1 %2;echo \"Press Enter to continue...\";read"
+msgstr "%1 %2;echo \"Pressione Enter para continuar...\";read"
+
+#: src/debuggergpt/debuggergpt.cpp:165
+msgid "Unable to execute the file \"%1\". Check if it was compiled."
+msgstr "Não foi possível executar o arquivo \"%1\". Verifique se ele foi compilado."
+
+#: src/debuggergpt/debuggergpt.cpp:175
+msgid ";echo \"Press Enter to continue...\";read"
+msgstr ";echo \"Pressione Enter para continuar...\";read"
+
+#: src/debuggergpt/debuggergpt.cpp:292
+msgid "Unable to listen on port: %1"
+msgstr "Não foi possível escutar na porta: %1"
+
+#: debug/src/debuggergpt/gptnet.moc.cpp:34
+#: debug/src/debuggergpt/gptnet.moc.cpp:42
+msgid "GPTNet"
+msgstr "GPTNet"
+
+#: rc.cpp:6
+#, no-c-format
+msgid "Algorithm"
+msgstr "Algoritmo"
+
+#: rc.cpp:15
+#, no-c-format
+msgid "Debug Toolbar"
+msgstr "Barra de ferramentas de Depuração"
+

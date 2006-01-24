@@ -1,0 +1,2 @@
+POFILES = AUTO
+KDE_LANG = pt_BR

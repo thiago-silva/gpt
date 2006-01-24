@@ -1,0 +1,2 @@
+KDE_DOCS = gpteditor
+SUBDIRS = $(AUTODIRS)

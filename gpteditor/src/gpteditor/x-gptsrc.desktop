@@ -1,0 +1,14 @@
+[Desktop Entry]
+Encoding=UTF-8
+Comment=G-Portugol Source File
+Comment[pt]=Código G-Portugol
+Comment[pt_BR]=Arquivo-fonte G-Portugol
+Icon=source_gpt
+Type=MimeType
+MimeType=text/x-gptsrc
+Patterns=*.gpt;
+X-KDE-IsAlso=text/plain
+
+[Property::X-KDE-text]
+Type=bool
+Value=true

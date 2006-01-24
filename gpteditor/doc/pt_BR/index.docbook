@@ -1,0 +1,362 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [  
+	<!ENTITY gpteditor '<application>GPTEditor</application>'>
+  <!ENTITY gptwebsite   '<ulink url="http://gpt.berlios.de">GPT</ulink>'>
+  <!ENTITY website      '<ulink url="http://gpt.berlios.de">http://gpt.berlios.de</ulink>'>
+	<!ENTITY kapp "&gpteditor;">
+  <!ENTITY package "kde-module">
+  <!ENTITY % Brazilian-Portuguese "INCLUDE">
+  <!ENTITY % addindex "IGNORE">
+]>
+
+
+<book lang="&language;">
+
+<bookinfo>
+<title> O Manual do &gpteditor;</title>
+
+<authorgroup>
+<author>
+<firstname>Thiago</firstname>
+<othername>B. L.</othername>
+<surname>Silva</surname>
+<affiliation>
+<address><email>thiago.silva@kdemail.net</email></address>
+</affiliation>
+</author>
+</authorgroup>
+
+
+<copyright>
+<year>2006</year>
+<holder>Thiago Silva</holder>
+</copyright>
+
+<legalnotice>&GPLNotice;</legalnotice>
+
+<date>2006-01-23</date>
+<releaseinfo>0.50</releaseinfo>
+
+<abstract>
+<para>
+&gpteditor; &#233; um editor front-end para a programas feitos em G-Portugol.
+</para>
+</abstract>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>GPTEditor</keyword>
+<keyword>G-portugol</keyword>
+<keyword>compilador</keyword>
+<keyword>interpretador</keyword>
+<keyword>programação</keyword>
+<keyword>editor</keyword>
+<keyword>front-end</keyword>
+<keyword>algoritmo</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="introduction">
+<title>Intrudução</title>
+
+<para>
+&kapp; é um editor front-end que permite compilar,
+executar e depurar programas feitos em G-Portugol de forma amigável.
+Baseado no aplicativo <ulink url="http://www.sourceforge.net/projects/protoeditor">Protoeditor</ulink>,
+utiliza o compilador/interpretador &gptwebsite;.
+</para>
+</chapter>
+
+<chapter id="using-kapp">
+<title>Usando &kapp;</title>
+
+<sect1 id="Interface">
+<title>Interface</title>
+<para>
+A janela principal do &kapp; é formada por 2 partes principais: a área de edição e a área de 
+compilação e depuração. 
+A área de edição permite vários arquivos abertos simultaneamente. 
+A área de compilação e depuração contém visões &#250;teis para atividades de execução.
+
+<screenshot>
+<screeninfo>A tela principal do &kapp;</screeninfo>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="ss1.png" format="PNG"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>Tela</phrase>
+	  </textobject>
+	</mediaobject>
+</screenshot>
+</para>
+
+<para>
+O editor é o mesmo usado em aplicações como <ulink url="help:kwrite">&kwrite;</ulink> e
+<ulink url="help:kate">&kate;</ulink>, portanto, as funcionalidades de edição
+são, basicamente, as mesmas que esses aplicativos.
+</para>
+     
+<para>
+As seguintes abas são encontradas na área de compilação e depuração:
+<itemizedlist>
+<listitem><simpara>Global: visualização de variáveis globais durante a depuração.</simpara></listitem>
+<listitem><simpara>Local: visualização de variáveis locais durante a depuração.</simpara></listitem>
+<listitem><simpara>Pontos de Parada: visualização dos pontos de parada marcados nos arquivos abertos.</simpara></listitem>
+<listitem><simpara>Mensagens: mensagens de avisos, erros e outras informações geradas pelo compilador ap&#243;s.</simpara></listitem>
+</itemizedlist>
+</para>
+
+<para>
+  A barra de status contém informações sobre o andamento da atividade atual, assim como informações
+sobre a edição do arquivo atual. Um <emphasis>led</emphasis> vermelho indica que não há nenhuma atividade
+em andamento, ao contrário de um <emphasis>led</emphasis> verde.
+</para>
+
+</sect1>
+
+
+<sect1 id="operations">
+<title>Operações</title>
+
+<sect2>
+<title>Compilação</title>
+<para>
+Para compilar um algoritmo, basta ter seu arquivo fonte aberto e ativo (isso é, no editor, a aba ativa deve ser
+do arquivo desejado) e selecionar no menu 
+<menuchoice><guimenu>Algoritmo</guimenu><guisubmenu>Compilar</guisubmenu></menuchoice>. 
+Caso existam erros de compilação,
+eles serão mostrados na aba "Mensagens" na áera de depuração e execução. 
+</para>
+</sect2>
+
+<sect2>
+<title>Execução</title>
+<para>
+  Para executar um algoritmo, basta ter seu arquivo fonte aberto e ativo (isso é, no editor, a aba ativa deve 
+  ser do arquivo desejado) e selecionar no menu 
+  <menuchoice><guimenu>Algoritmo</guimenu><guisubmenu>Executar</guisubmenu></menuchoice>. 
+  Então uma janela de terminal
+  aparecerá, permitindo a interação de entrada e saída com o programa. Ao fim da execução, essa janela
+  será fechada.
+</para>
+
+
+  <note>
+  <para>
+  Se o modo de execução atual for "Compilação", será nescessário compilar o arquivo antes de sua execução
+  (o arquivo binário, produto da compilação, será gravado no mesmo diret&#243;rio onde se encontra seu
+  algoritmo).
+  Entretanto, se o modo de execução for "Interpretação", o c&#243;digo será executado e, caso exista 
+  algum erro, ele aparecerá na janela do terminal, e não, na aba "Mensagens". Para maiores informações
+  sobre o modo de execução veja o <xref linkend="configuration" />.
+  </para>
+</note>
+
+</sect2>
+
+<sect2>
+  <title>Depuração</title>
+  <para>
+    Para depurar um algorimo, basta ter o respectivo arquivo ativo na parte de edição e acionar    
+    no menu 
+    <menuchoice><guimenu>Algoritmo</guimenu><guisubmenu>Iniciar Depuração</guisubmenu></menuchoice>. 
+    Isso fará com que o programa seja executado, abrindo
+    uma janela de terminal, como uma execução normal, entretanto, a execução será pausada na linha
+    do primeiro comando no programa. Essa linha será identificada por uma seta e pela mudança
+    de cor da linha (de acordo com as configurações do editor).
+    A partir da&#237;, é poss&#237;vel:
+
+<variablelist>
+  <varlistentry>
+    <term><guilabel>Executar o programa passo a passo</guilabel></term><listitem>
+      <para>
+        Existem 3 maneiras de executar o programa passo a passo. 
+        
+<itemizedlist>
+<listitem><simpara>
+<emphasis>Passo</emphasis>: executa um comando por vez. Se o comando for uma chamada de função,
+entra no escopo da função.
+</simpara>
+</listitem>
+<listitem><simpara><emphasis>Passo Sobre</emphasis>: executa um comando por vez, entretanto, trata chamadas de funções como
+apenas um comando.</simpara>
+</listitem>
+<listitem><simpara><emphasis>Passo para Fora</emphasis>: permite sair do escopo atual para o escopo da função chamadora.</simpara></listitem>
+</itemizedlist>        
+</para>
+    </listitem>
+</varlistentry>
+
+  <varlistentry>
+    <term><guilabel>Executar o programa até um Ponto de Parada</guilabel></term><listitem>
+      <para>
+        Para executar o programa até uma linha espec&#237;fica, ativa-se um Ponto de Parada na linha
+        desejada por meio da borda do editor ou por meio do menu 
+        <menuchoice><guimenu>Algoritmo</guimenu><guisubmenu>Alternar Ponto de Parada</guisubmenu></menuchoice>.
+        Sempre que a execução do programa passar pela linha especificada, o programa pausará.
+        Os Pontos de Parada podem ser gerenciados na aba Pontos de Parada, onde é poss&#237;vel ativá-los,
+        desativá-los ou remov&#234;-los.
+        
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term><guilabel>Inspecionar variáveis e a pilha de execução</guilabel></term><listitem>
+      <para>
+        A cada pausa do programa é poss&#237;vel inspecionar as variáveis globais, locais e a pilha de
+        execução.
+        As variáveis globais podem ser vistas na aba "Global", e as locais, na aba "Local".
+        Nessas abas, são apresentados o nome, valor e tipo da variável. 
+        Tipos agregados como vetores também são vis&#237;veis.        
+      </para>
+      
+      <para>
+        A pilha de execução se encontra na aba "Locais", logo acima da área das variáveis.
+        A pilha mostra o nível de aninhamento de chamadas de funções em que o programa se encontra
+        em dado momento.
+      </para>
+    </listitem>
+  </varlistentry>  
+</variablelist>
+  
+  </para>
+  
+</sect2>
+</sect1>
+
+</chapter>
+
+<chapter id="configuration">
+<title>Configurações</title>
+
+  <sect1 id="config-gpt">
+    <title>GPT</title>
+    <para>
+      Nesta sessão se encontram opções para a execução do programa GPT.
+      
+      <itemizedlist>
+        <listitem><simpara>
+            <emphasis>Modo de execução</emphasis>: No modo <emphasis>interpretação</emphasis>, o algoritmo é avaliado e executado
+            logo em seguida, sem gerar arquivos extras. Já no modo <emphasis>compilação</emphasis>,
+            o algoritmo é compilado e gravado em um arquivo binário para, então, ser executado.
+          </simpara>
+        </listitem>
+        <listitem>
+          <simpara><emphasis>Argumentos</emphasis>: Permite passar argumentos extras para o programa GPT.</simpara>
+        </listitem>
+        <listitem><simpara><emphasis>Shell</emphasis>: permite escolher o shell no qual o programa será executado. Por padrão
+            esse valor é "/bin/sh".</simpara></listitem>
+      </itemizedlist> 
+      
+    </para>
+  </sect1>
+  
+  <sect1 id="config-debugger">
+    <title>Depurador</title>
+    <para>
+      Para que a depuração ocorra, é nescessário que o &kapp; escute em uma porta para receber conexões.
+      Nessa sessão, especifica-se o <emphasis>host</emphasis> e a <emphasis>porta</emphasis> onde o 
+      programa GPT se conectará. Os valores padrões ("localhost" e "7680", respectivamente) são suficientes
+      na maioria dos casos.
+    </para>
+  </sect1>
+
+  <sect1 id="config-parser">
+    <title>Analisador</title>
+    <para>
+      Nesta sessão, pode-se ativar ou desativar a análise de c&#243;digo em segundo plano.
+      Caso seja ativado, a medida que se escreve algoritmos, estes serão análisados a procura de erros.
+      Caso um erro seja encontrado, aparecerá na borda do editor um &#237;cone indicando que foi
+      detectado um erro na linha apontada.
+    </para>
+  </sect1>
+
+</chapter>
+
+<chapter id="about">
+
+<chapterinfo>
+  <authorgroup>
+    <author>
+      <firstname>Thiago</firstname>
+      <othername>B. L.</othername>
+      <surname>Silva</surname>
+      <affiliation>
+        <address> 
+          <email>thiago.silva@kdemail.net</email>
+        </address>
+      </affiliation>
+    </author>
+  </authorgroup>  
+  <date>23-01-2006</date> 
+  <releaseinfo>0.5</releaseinfo> 
+</chapterinfo>
+
+<title>Sobre o &gpteditor;</title>
+
+<sect1 id="credits">
+  <title>Créditos e Licença</title>
+  
+
+<para>&kapp;: Direitos autorais para a equipe de desenvolvimento do &kapp;, 2006</para>
+&underGPL;
+
+</sect1>
+</chapter>
+
+
+<appendix id="installation">
+<title>Instalação</title>
+
+<sect1 id="getting-kapp">
+<title>Como obter &kapp;</title>
+<para>
+  No website: &website;
+</para>
+</sect1>
+
+<sect1 id="requirements">
+<title>Requerimentos</title>
+
+<para>
+Para usar o &kapp;, é nescessário o &kde; versão 3.x (recomendado 3.5.x) e o GPT, que
+pode ser encontrado em: &website;
+</para>
+
+</sect1>
+
+<sect1 id="compilation">
+<title>Compilação e Instalação</title>
+<para>
+  Para compilar e instalar &kapp; no seu sistema, digite os comandos a seguir
+  no diret&#243;rio base da distribuição do &kapp;:
+  <screen width="40">
+    <prompt>%</prompt> <userinput>./configure</userinput>
+    <prompt>%</prompt> <userinput>make</userinput>
+    <prompt>%</prompt> <userinput>make install</userinput>
+  </screen>
+  
+  <note>
+    <para>
+      Para habilitar a análise em segundo plano, a opção <userinput>--enable-bg-parser</userinput>
+      deve ser passada para o script "configure":
+    
+      <screen width="40">
+        <prompt>%</prompt> <userinput>./configure --enable-bg-barser</userinput>
+        <prompt>%</prompt> <userinput>make</userinput>
+        <prompt>%</prompt> <userinput>make install</userinput>
+      </screen>
+</para>
+  </note>
+</para>
+
+<para>Em caso de problemas, contate o autor.</para>
+</sect1>
+
+</appendix>
+
+&documentation.index;
+</book>
