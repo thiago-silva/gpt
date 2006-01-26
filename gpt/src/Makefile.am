@@ -7,5 +7,5 @@ INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/src -I$(top_srcdir)/src/compiler \
 	-I$(top_builddir)/src/compiler/c_translator -I$(top_builddir)/src/compiler/interpreter
 
 SUBDIRS = compiler
-gpt_LDADD = $(top_builddir)/src/compiler/libgportugol.la -lantlr -lpcrecpp
+gpt_LDADD = $(top_builddir)/src/compiler/libgportugol.la $(ANTLR_LIB) -lpcrecpp
 AM_LDFLAGS = -static
