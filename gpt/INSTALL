@@ -29,7 +29,7 @@ Instalacao Basica
       ambiente PATH, use o  argumento --with-antlr-path.
   
       Exemplo:
-        $ ./configure --with-antlr-path=/path/to/antlr
+        $ ./configure --with-antlr=/path/to/antlr
   
       de forma que "/path/to/antlr" seja o caminho do antlr no sistema.
 
