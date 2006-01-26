@@ -24,7 +24,7 @@ AC_ARG_WITH(antlr-path,
 ])
 AC_SUBST(ANTLR_BIN)
 
-if test ${ANTLR} = "no"; then
+if test "x${ANTLR}" = "x"; then
   AC_MSG_ERROR(
   [
     O programa "antlr" nao foi encontrado no seu sistema (PATH).
