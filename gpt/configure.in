@@ -11,17 +11,21 @@ dnl
 dnl Checks for ANTLR
 dnl
 
-AC_ARG_WITH(antlr-path,
-    [  --with-antlr-path=PATH  caminho do programa "antlr"],
+AC_ARG_WITH(antlr,
+    [  --with-antlr=PATH  caminho da instalacao do ANTLR (ex: /usr/local)],
 [
-  AC_PATH_PROG(ANTLR, antlr, no, $withval)
-  ANTLR_BIN=${ANTLR}
+  AC_PATH_PROG(ANTLR, "${antlr}bin/antlr", no, $withval)
+  ANTLR_BIN="${ANTLR}"
+  ANTLR_LIB=`${ANTLR}-config --libs`
 ],
 [
   AC_PATH_PROG(ANTLR, antlr)
   ANTLR_BIN="antlr"
-  
+  ANTLR_LIB=`antlr-config --libs`
 ])
+
+AC_SUBST(ANTLR_LIB)
+
 AC_SUBST(ANTLR_BIN)
 
 if test "x${ANTLR}" = "x"; then
