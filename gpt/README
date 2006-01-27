@@ -10,10 +10,10 @@ o Sobre a linguagem
  em geral, livros dedicados ao ensino de algoritmos, logica 
  e estruturas de dados incorporam uma forma dessa linguagem. 
   
- A proposta de G-Portugol eh oferecer uma implementação dessa 
+ A proposta de G-Portugol eh oferecer uma implementacao dessa 
  linguagem, fornecendo ferramentas que oferecam recursos 
  de edicao, compilacao e execução de programas escritos nessa 
- linguagem, de forma a favorecer estudantes de que dao os 
+ linguagem, de forma a favorecer estudantes que dao os 
  primeiros passos no aprendizado de desenvolvimento de softwares, 
  bem como professores.
 
