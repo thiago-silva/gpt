@@ -264,7 +264,8 @@ T_OCTAL_LIT
       {
         bool haserror = false;
         string str = $getText;
-        if(str.find("9",0) != string::npos) {
+        if((str.find("8",0) != string::npos) ||
+           (str.find("9",0) != string::npos) )
           stringstream s;
           s << "\"" << $getText << "\" não é um valor octal válido";
           ErrorHandler::self()->add(s.str(), getLine());          
