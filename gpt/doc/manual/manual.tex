@@ -1,8 +1,8 @@
-% TODO: rever referencias a implementação da gramatica
-%       mudar aspas nos codigos verbantim para aspas reais (para que o leitor possa copiar e colar sem ter que mudar
-%         o caractere das aspas).              
-%       Glossario e padronizacao de termos: uso de vetor e matriz, significando coisas distintas, e o que significam
-%       Mudar reticencias "..." pelo comando de reticencias
+% TODO: -rever referencias a implementação da gramatica%       
+%       -Glossario e padronizacao de termos: uso de vetor e matriz,
+%        significando coisas distintas, e o que significam
+%       -Convenções (uso de shell unix, etc)
+%       -Mudar reticencias "..." pelo comando de reticencias
 
 \documentclass[a4paper,10pt]{report}
 \makeatletter
@@ -159,31 +159,44 @@
 \begin{document}
 
 \maketitle
-
 \tableofcontents
 
+
+
+
 \begin{abstract}
-Esse não é um livro que ensina programação, algoritmos ou lógica. Seu objetivo é servir de manual para a linguagem G-Portugol
-e ferramentas relacionadas. Portanto, ele assume que o leitor seja versado em linguagens de programação e desenvolvimento de software.
+
+Esse não é um livro que ensina programação, algoritmos ou lógica. Seu objetivo é
+servir de manual para a linguagem G-Portugol e ferramentas relacionadas.
+Portanto, ele assume que o leitor seja versado em linguagens de programação
+e desenvolvimento de software.
 
 \end{abstract}
 
 
 
+%%%%%%%%%%%%%%%%% Introducao
+
+
+
 \capitulo{Introdução}
+\label{ch:intro}
 
-G-Portugol é um dialeto da linguagem portugol (ou portugês estruturado), que é muito usada para 
-descrever algoritmos em português, de forma livre e espontânea. Em geral, livros dedicados 
-ao ensino de algoritmos, lógica e estruturas de dados utilizam alguma forma dessa linguagem. 
+G-Portugol é um dialeto da linguagem portugol (ou portugês estruturado), que
+é muito usada para descrever algoritmos em português, de forma livre
+e espontânea. Em geral, livros dedicados ao ensino de algoritmos, lógica
+e estruturas de dados utilizam alguma forma dessa linguagem. 
 
-A proposta de G-Portugol é disponibilizar uma implementação da linguagem portugol, 
-fornecendo ferramentas que ofereçam recursos de edição, compilação, execução e depuração de 
-programas escritos nessa linguagem, de forma a favorecer estudantes que dão os primeiros 
-passos no aprendizado de desenvolvimento de softwares, bem como professores que ensinam 
-disciplinas relacionadas a computação. Portanto, seu foco é primariamente didático.
+A proposta de G-Portugol é disponibilizar uma implementação da
+linguagem portugol, fornecendo ferramentas que ofereçam recursos de edição,
+compilação, execução e depuração de programas escritos nessa linguagem, de forma
+a favorecer estudantes que dão os primeiros passos no aprendizado de
+desenvolvimento de softwares, bem como professores que ensinam disciplinas
+relacionadas a computação. Portanto, seu foco é primariamente didático.
 
-Se encontram disponíveis atualmente um tradutor/interpretador para a linguagem (GPT) e um ambiente visual simples (GPTEditor)
-que permite execução e depuração de programas escritos em G-Portugol. 
+Se encontram disponíveis atualmente um tradutor/interpretador para a
+linguagem (GPT) e um ambiente visual simples (GPTEditor) que permite execução
+e depuração de programas escritos em G-Portugol. 
 
 A seguir é apresentado os assuntos abordados nos capítulos seguintes:
 
@@ -206,7 +219,14 @@ A seguir é apresentado os assuntos abordados nos capítulos seguintes:
 
 No apêndice deste livro pode ser encontrado a gramática da linguagem G-Portugol.
 
+
+
+%%%%%%%%%%%%%%%%% Caracteristicas Gerais
+
+
+
 \capitulo{Características Gerais}
+\label{ch:caracgerais}
 
 A linguagem em si não difere fundamentalmente ou apresenta novidades em relação ao uso popular de 
 portugol. Semelhante à linguagens como Pascal e C, é uma linguagem imperativa, com comandos de 
@@ -214,9 +234,9 @@ controle de fluxo, manipulação de dados e recursos de entrada e saída básicos.
 
 \section{Tipos de dados}
 
-Tipos primitivos como inteiro e literal são suportados, assim como matrizes "n" dimensionais de tipos primitivos. 
-Além das estruturas de controle, subprogramas são suportados no modelo de funções parametrizadas com retorno
-de dados primitivos. Entre os tipos primitivos, se encontram:
+Tipos primitivos como inteiro e literal são suportados. Além das estruturas de
+controle, subprogramas são suportados no modelo de funções parametrizadas com
+retorno de dados primitivos. Entre os tipos primitivos, se encontram:
 
 \begin{table}[ht]
 \begin{center}
@@ -238,18 +258,21 @@ de dados primitivos. Entre os tipos primitivos, se encontram:
 \end{center}
 \end{table}
 
-Com esses tipos, pode-se criar conjuntos como vetores ou matrizes ``n'' dimensionais. Tipos mais complexos,
-não são suportados, pois o objetivo é ter um conjunto básico o suficiente para o ensino de algorítmos e 
-suas estruturas de controle. 
+Com esses tipos, pode-se criar conjuntos como vetores ou matrizes ``n''
+dimensionais. Tipos mais complexos não são suportados.
+\newline
+\newline
+\newline
 
 \section{Estruturas de controle}
 
-Da mesma forma, o conjunto de estruturas de controle são os mais primitivos. Uma estrutura condicional 
-(se/senão) e duas estruturas de repetição (enquanto/para) são suportadas. Embora a estrutura ``para''
-seja uma especialização de um laço simples como o ``enquanto'', ela foi implementada, visto
-que tanto uma variedade de livros como professores, discutem seu funcionamento.
+O conjunto de estruturas de controle são os mais primitivos. Uma
+estrutura condicional (se/senão) e duas estruturas de repetição (enquanto/para)
+são suportadas. Embora a estrutura ``para'' seja uma especialização de um laço
+simples como o ``enquanto'', ela foi implementada, visto que uma variedade
+de livros e muitos professores os discutem.
 
-\begin{table}[ht]
+\begin{table}[h!t]
   \begin{center}
     \begin{tabular}{|l|l|}
       \hline
@@ -277,7 +300,13 @@ funções com parâmetros variáveis. Vale ressaltar que passagem de parâmetros é se
 \textit{valor}.
 
 
+
+%%%%%%%%%%%%%%%%% Programando em G-Portugol
+
+
+
 \capitulo{Programando em G-Portugol}
+\label{ch:programando}
 
 A proposta desse capítulo é mostrar os elementos da linguagem G-Portugol usando programas como exemplos. Não 
 é um capítulo sobre como programar, nem tem como intuito ensinar algorítmos. Portanto, é esperado que o 
@@ -286,7 +315,7 @@ leitor seja familiarizado com programação.
 \section{Olá Mundo}
 
 Mantendo a tradição, vamos criar nosso primeiro programa. O propósito dele será exibir na tela o 
-texto "Olá mundo". Abra seu editor favorito e crie um arquivo  chamado "olamundo.gpt" com o seguinte 
+texto "Olá mundo". Crie um arquivo  chamado "olamundo.gpt" com o seguinte 
 conteúdo:
 
 \begin{program}
@@ -311,37 +340,36 @@ Após salvar o arquivo, digite o seguinte na linha de comando:
 $ gpt -o olamundo olamundo.gpt
 \end{verbatim}
 
-Se tudo ocorrer como esperado, um novo arquivo aparecerá no diretório atual, 
-chamado "olamundo". Podemos, agora, executar o programa da seguinte forma:
+Esse comando compila o algoritmo e salva o arquivo binário resultante como
+``olamundo'' no diretório atual. Pode-se, agora, executar o programa da seguinte
+forma:
 
 \begin{verbatim}
 $ ./olamundo
 Olá mundo! 
 \end{verbatim}
 
-Então, observe ``Olá mundo!'' aparecer na tela. Note que o arquivo executável é batizado de acordo com o nome 
-do algoritmo e não, de acordo com o arquivo fonte.
-
-Como já deve ter assumido, comentários ao estilo C (/**/) e C++ (//) são permitidos e o que estiver entre aspas 
-duplas (") é tratado como uma string ou constante literal. 
-Escapes são permitidos como EOL ($\backslash$n), tabulação ($\backslash$t) dentre outros. Não é permitido a 
-concatenação em multiplas linhas como na linguagem C:
+Como já deve ter assumido, comentários ao estilo C (/**/) e C++ (//) são
+permitidos e o que estiver entre aspas duplas (") é tratado como uma string ou
+constante literal. Escapes são permitidos como EOL ($\backslash$n), tabulação
+($\backslash$t) dentre outros. Não é permitido a concatenação em multiplas
+linhas como na linguagem C:
 
 \begin{verbatim}
   imprima("Isso é uma "
           "Concatenação"); //erro!
 \end{verbatim}
 
-Outro detalhe é a pontuação. Da mesma forma que em C, o ``;'' é utilizado como finalizador de enunciados.
-
+Outro detalhe é a pontuação. Da mesma forma que em C, o ``;'' é utilizado como
+finalizador de enunciados.
 
 \section{Variáveis}
 
 A declaração de variáveis deve ser feita dentro de um bloco específico, que deve aparecer logo após a 
 declaração do algoritmo. O bloco é iniciado pela palavra-chave ``variáveis'' (sim, com acento) e 
-termina com a palavra chave ``fim-variáveis''. Pelo menos uma variável deve ser declarada dentro do bloco 
-(embora o bloco em si seja opcional), e apenas um bloco em escopo global deve ser declarado. 
-Eis um exemplo para estudo:
+termina com a palavra chave ``fim-variáveis''. Pelo menos uma variável deve
+ser declarada dentro do bloco (embora o bloco em si seja opcional) e apenas
+um bloco em escopo global deve ser declarado. Eis um exemplo para estudo:
 
 \begin{program}  
   \begin{verbatim}  
@@ -372,41 +400,46 @@ Como pode-se notar, é parecido com Pascal. Assim que um programa é executado, to
 iniciadas com um valor nulo ou ``0'' automaticamente. Vale ressaltar que constantes (const, final, etc) não são 
 suportados. Os tipos primitivos suportados encontram-se na tabela \ref{tb_tipos_primitivos}
 
-A fim explorar melhor os aspectos da declaração, seguem-se cinco comentários a respeito do último 
-exemplo (programa \ref{programa_inutil})
+A fim explorar melhor os aspectos da declaração, seguem-se alguns comentários a
+respeito do último exemplo (programa \ref{programa_inutil})
 
 \begin{itemize}
  \item 
-  O primeiro é o nome do algoritmo (inutil): ele não tem acento. Se declarar o algoritmo como ``inútil'' 
-  e tentar compilar o código, o seguinte erro será exibido:
+  Observe que o nome do algoritmo (``inutil'') não tem acento. Se declarar o
+algoritmo como ``inútil'' e tentar compilar o código, o seguinte erro será
+exibido:
 
   \textbf{Linha: 1 - ``inútil'' não pode ter caracteres especiais.}
 
-  Como está claro, identificadores (nomes de variáveis, funções e do algoritmo) não podem ter acentos ou 
-  caracteres especiais. A definição de um identificador em G-Portugol é equivalente ao das linguagens 
-  populares: uma letra (a-z ou A-Z) seguido de qualquer número de letras ou números (e underscores). 
-  Cedilhas, portanto, também não formam identificadores válidos.
+  Portanto, identificadores (nomes de variáveis, funções e do algoritmo) não
+  podem ter acentos ou caracteres especiais. A definição de um identificador em
+  G-Portugol é equivalente ao das linguagens populares: uma letra (a-z ou
+  A-Z) seguido de qualquer número de letras ou  números (e underscores).
+  Cedilhas, portanto, também não formam identificadores válidos. 
 
  \item 
   O segundo ponto, é a palavra-chave ``variáveis'': ela tem acento, e isso é permitido e de propósito. 
-  Veja o capítulo sobre a implementação para maiores detalhes sobre esse assunto.
 
   \item
   O terceiro, é a definição do bloco e sua (falta de) semelhança com o Pascal. Todas os blocos em G-Portugol 
   tentam seguir o formato ``nome/fim-nome'', em favor da uniformidade e em detrimento de exceções linguísticas 
-  que causam dor de cabeça aos estudantes (no entanto, ainda existem excessões. Mais informações no capítulo
-  sobre a implementação *todo*.). 
-
+  que confundem os estudantes.
 
   \item 
   E, finalmente, o quarto ponto é a ausência de código entre ``início'' e ``fim''. 
   O programa não é obrigado a ter enunciados ou comandos. Meros detalhes... 
 \end{itemize}
 
+  Para maiores detalhes, veja o capítulo \ref{ch:impl}, sobre a implementação
+da linguagem.
+
 
 \subsection{Vetores e matrizes}
 
-Vetores e matrizes ``n'' dimensionais de tipos primitivos são suportados. Um exemplo de declaração de uma matriz:
+
+Vetores e matrizes ``n'' dimensionais de tipos primitivos são suportados. Um
+exemplo de declaração de uma matriz:
+
 
 \begin{verbatim}
 variáveis
@@ -420,28 +453,13 @@ para tipo literal, etc). Os subscritos na declaração (delimitados por ``[]'') in
 e sua dimensão é informada pelo numero de subscritos. Portanto, ``bitset'' é um vetor de 10 valores lógicos,
 enquanto ``quadr'' é uma matriz bidimensional, onde as duas dimensões tem tamanho 4.
 
-É importante observar que matrizes são ``0 based'', logo, a matriz ``bitset'' pode ser usada 
-do indice 0 até o indice 9 (inclusive). Seu indice 10 não é válido e seu uso poderá acarretar em erros de execução
-(\textit{runtime errors}). Matrizes, assim como variáveis de tipos primitivos, são inicializadas com o 
-valor 0 ou nulo em todas as suas posições. Quando usadas como argumentos de funções, matrizes 
-são passadas \textit{por valor}.
-
-\begin{program}
-  \begin{verbatim}
- variáveis
-  m1 : matriz[2] de inteiros;
-  m2 : matriz[2] de inteiros;
-fim-variáveis
-
-início
-  m1 := m2;    //erro
-  imprima(m1); //erro
-fim
-  \end{verbatim}
-  
-  \caption{Uso incorreto de matrizes.}
-\end{program}
-
+É importante observar que matrizes são ``0 based'', isso é, iniciam no
+índice 0. Logo, a matriz ``bitset'' pode ser usada do indice 0 até o indice 9
+(inclusive). Seu indice 10 não é válido e seu uso poderá acarretar em erros de
+execução (\textit{runtime errors}). Matrizes, assim como variáveis de tipos
+primitivos, são inicializadas com o valor ``0'' ou ``nulo'' em todas as suas
+posições. Quando usadas como argumentos de funções, matrizes são passadas
+\textit{por valor}.
 
 \section{Estruturas condicionais}
 
@@ -460,18 +478,20 @@ fim-variáveis
 início
   imprima("Digite seu nome:");
   nome := leia();
-  imprima(nome, ", digite sua idade:");
-  idade := leia();
 
-  se idade >= 18 então
-    se nome = "Malkovich" então
-       imprima("Malkovich, malkivich malkovich? Malkovich!");       
+  imprima(nome, ", digite sua idade:");
+  idade := leia();  
+
+  se idade >= 18 então    
+    se idade < 60 então
+      imprima("adulto!");
     senão
-       imprima("Bem vindo senhor ", nome, '!');
+      imprima("ancião", '!');
+    fim-se
   senão
-    imprima("Larga o computador, guri!");
+    imprima("menor", "!");
   fim-se
-fim 
+fim
   \end{verbatim}
   %\label{programa_exemplo_condicional}
   \caption{Exemplo de programa que utiliza estrutura condicional.}
@@ -482,37 +502,40 @@ Alguns pontos a serem considerados:
 
 \begin{itemize}
   \item 
-  O nome do algoritmo é ``idade'', assim como o nome de uma variável. Não há conflitos. 
+  O nome do algoritmo é ``idade'', assim como o nome de uma variável. Não há
+conflitos.
 
   \item
-  O operador de atribuição é o pascal-like ``:=''. (ver detalhes de implementação *todo*) 
+  O operador de atribuição é o pascal-like ``:=''.4
 
   \item
-  A função interna ``leia'' pode ser usada por variáveis de qualquer tipo primitivo. Para evitar surpresas 
-  (números inteiros recebendo strings, por exemplo), leia sobre a implementação interna aqui *todo*.
+  A função interna ``leia'' pode ser usada por variáveis de qualquer
+tipo primitivo. 
 
   \item
-  A função ``imprima'' recebe um número de argumentos variáveis, que podem ser constantes literais ou variáveis 
-  primitivas. Os valores são concatenados e adicionados de um caractere EOL (end of line, ou fim de linha). 
+  A função ``imprima'' recebe um número de argumentos variáveis, que podem ser
+  constantes literais, variáveis primitivas ou indices de vetores/matrizes. Os
+  valores são concatenados e adicionados de um caractere EOL (end of line, ou
+  fim de linha).
 
   \item
   Já vimos que strings/literais constantes são denotados por texto entre aspas duplas ("). Tal qual em C, 
   um caractere entre aspas simples (') é um caractere constante que, da mesma forma, pode permitir escapes como 
-  '$\backslash$n'. 
+  '$\backslash$n'.
 
   \item
   Assim como a palavra-chave ``variáveis'', ``então'' e ``senão'' devem ser acentuadas. 
 
-  \item
-  Como em ``variáveis/fim-variáveis'', blocos ``se'' tem seus respectivos e obrigatórios ``fim-se''. 
-  Não há a exceção de "um enunciado, apenas" encontrado na linguagem C onde o uso de ``{}'' é opcional. 
-  Também, não há imposições sobre a indentação.
+  \item 
+  Parêntesis ao redor da expressão da estrutura ``se/então'' são opicionais.
 
   \item
-  A equivalência da expressão ``nome = "Malkovich'' é computada como se espera (comparação caractere por caractere), 
-  respeitando os tipos de dados. Salienta-se que comparações de tipos literais são feitas em case sensitive. 
-  Para maiores informações sobre operações sobre literais, veja o capitulo *todo*.
-\end{itemize} 
+  Como em ``variáveis/fim-variáveis'', blocos ``se'' tem seus respectivos e obrigatórios ``fim-se''. 
+  Não há a opção de ignorar a definição do bloco quando apenas um enunciado é
+  usado, como na linguagem C onde o uso de ``{}'' é opcional. Também, não há 
+  imposições  sobre a indentação.
+
+\end{itemize}
 
 \begin{program}
   \begin{verbatim}
@@ -566,11 +589,12 @@ fim
 \end{program}
 
 
-Parênteses em volta da expressão da estrutura ``enquanto'' são opcionais. Qualquer expressão que possa ter 
-seu valor avaliado como numérico é uma expressão lógica válida. As expressões que não podem ser avaliadas
-lógicamente são as que tem seu valor avaliado como literal. Portanto, são comandos válidos:
+Assim como na estrutura ``se/então'', parênteses em volta da expressão são
+opcionais. Qualquer expressão que possa ter seu valor avaliado como numérico é
+uma expressão lógica válida. As expressões que não podem ser avaliadas
+lógicamente são as que tem seu valor avaliado como literal. Portanto, são
+comandos válidos:
 
-\begin{code}
  \begin{verbatim}
 enquanto verdadeiro faça          //ok
 enquanto 3+5 faça                 //ok, avalia 8 como verdadeiro
@@ -580,7 +604,9 @@ enquanto ``nome'' = ``nome'' faça //ok, valor de expressão lógica (=) avaliada c
 enquanto ``nome'' faça            //erro: literal não pode ser avaliado como lógico
 
   \end{verbatim}
-\end{code}
+
+
+Para maiores detalhes sobre expressões, veja a seção \ref{sec:expr}.
 
 \subsection{A estrutura ``para''}
 
@@ -590,34 +616,45 @@ diferente de linguagens populares como C e Java.
 
 A estrutura ``para'' tem a seguinte forma:
 
-\begin{code}
- para <variável numérica> de <expressão numérica> até <expressão numérica> [passo <constante inteiro>] faça
+\begin{verbatim}
+ para <variável> de <expressão> até <expressão> [passo <inteiro>] faça
   [lista de comandos]
  fim-para
-\end{code}
+\end{verbatim} 
 
-O uso de delimitadores (expressões de/até) constrolam os valores que a variável numérica terá no início e no fim do
-laço. Tanto o controle de passos, quanto a decisão de incrementar ou decrementar a variável de controle
-é feita pelo termo opicional ``passo''. Ele informa a frequência do incremento ou decremento, e 
-seu valor padrão é 1. Por exemplo, para iterar o valor de uma variável numérica ``x'' de 0 até 10, de 2 em 2, escreve-se: 
 
-\begin{code}
+Onde:
+\begin{itemize}
+ \item 
+  ``variável'' deve ser uma variável numérica;
+  \item
+  ``expressão'' deve ser uma expressão numérica
+  \item
+  ``passo'', se existir, deve ser seguido por um inteiro constante.
+\end{itemize}
+  
+As expressões de/até constrolam os valores que a variável numérica terá no
+início e no fim do laço, respectivamente. Tanto o controle da frequência, quanto
+a decisão de incrementar ou decrementar a variável de controle é feita pelo
+termo opicional ``passo'', e seu valor padrão é 1. Por exemplo, para iterar o
+valor de uma variável numérica ``x'' de 0 até 10, de 2 em 2, escreve-se: 
+
   \begin{verbatim}
 para x de 0 até 10 passo 2 faça
   //comandos...
 fim-para
   \end{verbatim}
-\end{code}
+
 
 Da mesma forma, para uma iteração decrescente, de 2 em 2, escreve-se:
 
-\begin{code}
+
   \begin{verbatim}
 para x de 0 até 10 passo -2 faça
   //comandos...
 fim-para
   \end{verbatim}
-\end{code}
+
 
 
 \begin{program}
@@ -646,11 +683,13 @@ fim
 \end{program}
 
 
-Em comparação com a estrutura ``for'' de linguagens com sintaxe baseadas em C, há diferenças não só de sintaxe,
-mas de implementação. Um ``for'' que itera sobre uma variável numérica de 0 até (incluindo) 10, ao sair do laço, 
-o valor dessa variável será 11. Em G-Portugol, a variável terá o valor 10 ao sair do laço. Essa diferença acontece 
-porque a sintaxe do ``para'' induz a esse comportamento, diferente da sintaxe do ``for'', que é mais detalhada
-e sua estrutura induz o mesmo raciocínio que a estrutura ``enquanto/while''.
+Em comparação com a estrutura ``for'' de linguagens com sintaxe baseadas em C,
+há diferenças não só de sintaxe, mas de implementação. Um ``for'' que itera
+sobre uma variável numérica de 0 até (incluindo) 10, ao sair do laço, o
+valor dessa variável será 11. Em G-Portugol, a variável terá o valor 10 ao
+sair do laço. Essa diferença acontece porque a sintaxe do ``para'' induz a esse
+comportamento, diferente da sintaxe do ``for'', que tem um aspecto de mais
+baixo nível.
 
 \begin{verbatim}  
 //código em C
@@ -671,15 +710,14 @@ Ademais, da mesma forma que o ``for'', é possível que a variável de controle ten
 alterado pelos comandos aninhados. Isso permite que o laço seja encerrado prematuramente, como também é comum
 em estruturas como ``enquanto''. A utilidade dessa técnica está no fato de G-Portugol não incorporar mecanismos
 para refinar o controle de laços (como ``break'' e ``continue'', encontrados em linguagens populares).
-Maiores detalhes sobre a implementação no capítulo *todo*.
-
-\newpage
 
 \section{Funções}
 
-Subprogramas em G-Portugol são implementados no modelo de funções, que podem ter 0 ou mais parâmetros de qualquer 
-tipo, tanto primitivos quanto complexos (vetores e matrizes). Opcionalmente, podem definir valores de retorno, que 
-deve ser de tipo primitivo. Tanto o retorno de dados como a passagem de argumentos são feitos \textit{por valor}.
+Subprogramas em G-Portugol são implementados no modelo de funções, que podem
+ter zero ou mais parâmetros de qualquer tipo, tanto primitivos quanto
+complexos (vetores e matrizes). Opcionalmente, elas podem definir valores de
+retorno, que deve ser de tipo primitivo. Tanto o retorno de dados como a
+passagem de argumentos são feitos \textit{por valor}.
 
 Para retorno prematuro ou retorno de dados, a palavra chave ``retorne'' é usada. Para funções que retornam dados,
 ``retorne'' deve ser seguido de um operando, que é uma expressão cujo valor deve ser compatível com o tipo da função.
@@ -714,21 +752,23 @@ fim
 
 
 \subsection{Funções internas}
+\label{sec:func_internas}
 
 Como já foi visto em exemplos anteriores, G-Portugol oferece duas funções internas: ``leia'' e ``imprima'', que
 permitem uso básico de entrada e saída, respectivamente.
 
-A função ``leia'' não recebe argumentos e retorna o valor lido da entrada padrão  (STDIN), o que significa, 
-geralmente, ler os dados que o usuário digitar no teclado, seguido do caractere ``nova linha'' (em geral, associado a 
-tecla ``Enter'' no teclado). O tipo de dado retornado por ``leia'' é implicitamente convertido para o tipo primitivo
-exigido no contexto em que ela é usada. 
+A função ``leia'' não recebe argumentos e retorna o valor lido da entrada padrão
+(``STDIN''), o que significa, geralmente, ler os dados que o usuário digitar
+no teclado, seguido do caractere ``nova linha'' (em geral, associado a
+tecla ``Enter'' no teclado). O tipo de dado retornado por ``leia''
+é implicitamente convertido para o tipo primitivo exigido no contexto em que ela
+é usada.
 
-A função ``imprima'' recebe um número variável de argumentos de qualquer tipo primitivo, 
-sendo que pelo menos um argumento deve ser passado. Os valores passados como argumentos são convertidos para texto,
-concatenados na ordem definida e enviados para STDOUT (em geral, associado ao monitor). Não há 
-retorno de valor para esta função.
-
-Para maiores detalhes sobre funções internas, veja o capitulo sobre sua implementacao *todo*.
+A função ``imprima'' recebe um número variável de argumentos de qualquer tipo
+primitivo, sendo que pelo menos um argumento deve ser passado. Os
+valores passados como argumentos são convertidos para texto, concatenados
+na ordem definida e enviados para ``STDOUT'' (em geral, associado ao
+\textit{display} ou monitor). Não há retorno de valor para esta função.
 
 \begin{program}
  \begin{verbatim}
@@ -764,14 +804,21 @@ fim
 
 
 
+%%%%%%%%%%%%%%%%% Implementação da linguagem G-Portugol
+
+
+
 
 \capitulo{Implementação da linguagem G-Portugol}
+\label{ch:impl}
 
 \section{Introdução}
 
-Ao definir uma linguagem de programação voltada para o ensino de lógica e algoritmos, vários aspectos devem ser 
-considerados. Ao contrário de linguagens reais, não há preocupações como o poder expressivo da linguagem, dicionário
-em inglês, acesso a recursos de sistema, etc. A preocupação central está em oferecer uma ferramenta que:
+Ao definir uma linguagem de programação voltada para o ensino de lógica e
+algoritmos, vários aspectos devem ser considerados. Ao contrário de linguagens
+de produção, não há preocupações como o poder expressivo da linguagem,
+dicionário em inglês, acesso a recursos de sistema, etc. A preocupação central
+está em oferecer uma ferramenta que:
 
 \begin{itemize}
  \item 
@@ -787,49 +834,65 @@ em inglês, acesso a recursos de sistema, etc. A preocupação central está em ofer
 
 \section{A linguagem}
 
-O ponto fundamental que guia as diretrizes da linguagem G-Portugol é seu propósito educacional: ela deve expressar processos 
-computacionais de forma que um leigo os compreenda sem enfatizar a si mesma. Isso é, a linguagem em si deve chamar 
-o mínimo de atenção possível, fazendo com que a compreensão dos processos computacionais seja tão natural quanto ler 
-sua descrição informal, ou não-estruturada. 
+O ponto fundamental que guia as diretrizes da linguagem G-Portugol é seu
+propósito educacional: ela deve expressar processos computacionais de forma
+que um leigo os compreenda sem enfatizar a si mesma. Isso é, a linguagem em
+si deve chamar o mínimo de atenção possível, fazendo com que a compreensão
+dos processos computacionais seja tão natural quanto ler sua descrição
+informal, ou não-estruturada. 
 
-Esse objetivo encontra restrições, quando se leva em consideração o uso e forma popular atual da linguagem portugol,
-principalmente em literaturas. É de interesse que G-Portugol ofereça compatibilidade com essas formas, o que pode gerar 
-conflitos quanto a decisões de design. Portanto, embora as diretrizes marquem a base do design, muitas vezes, elas devem ser 
-sacrificadas ou ajustadas para incorporar formas populares. Portanto, criar uma linguagem totalmente nova, qyue utiliza 
-outros paradigmas como, por exemplo, orientação a objeto, não são de interesse embora outros paradigmas se provem mais 
-eficiêntes no ensino de disciplinas computacionais.
+Esse objetivo encontra restrições, quando se leva em consideração a natureza
+das linguagens artificiais e o uso e forma popular atual da linguagem
+portugol, principalmente em literaturas. É de interesse que G-Portugol
+ofereça compatibilidade com essas formas, o que pode gerar conflitos quanto
+a decisões de design e restringir suas características. Portanto, embora
+as diretrizes marquem a base do design, muitas vezes, elas devem ser
+sacrificadas ou ajustadas para incorporar formas populares.
 
-A seguir, alguns tópicos serão comentados quanto as diretrizes por traz das formas léxicas e gramaticais da 
-linguagem G-Portugol.
+É interessante ressaltar que criar uma linguagem totalmente nova, que
+utiliza outros paradigmas como, por exemplo, orientação a objeto, possa ser
+interessantes e, talvez, mais eficientes como ferramentas de ensino,
+mas G-Portugol está, no momento, comprometida com a compatibilidade.
+
+A seguir, alguns tópicos serão comentados quanto as diretrizes por traz
+das formas léxicas e gramaticais da linguagem G-Portugol.
 
 \subsection{Diretrizes para o design da linguagem}
 
 \subsubsection{A linguagem deve ser totalmente em português e deve respeitar acentuações}
 
-Linguagens de programação, em geral, não se utilizam de caracteres especiais (ex. caracteres acentuados, cedilhas,
-e outros que não pertencem ao alfabeto inglês) para definição de seu dicionário, visto que são baseadas na língua inglesa. 
-Portanto, letras acentuadas não são consideradas. Refletir esse aspecto em G-Portugol ignoraria seu objetivo principal.
+Linguagens de programação, em geral, não se utilizam de caracteres especiais
+(ex. caracteres acentuados, cedilhas, e outros que não pertencem ao
+alfabeto inglês) para definição de seu dicionário, visto que são baseadas
+na língua inglesa. Portanto, letras acentuadas não são consideradas. Refletir
+esse aspecto em G-Portugol ignoraria seu objetivo principal.
 
-A decisão de incorporar palavras que respeitam a língua portuguesa é importante, visto que ao modificar a linguagem
-de forma a se afastar de sua língua (o português) evidenciaria excessões as quais forçariam os usuários 
-(estudantes e professores) a se ater mais com o estudo da linguagem do que com o estudo da disciplina em questão.
-Isso é, a ausência de acentos forçaria o estudante, por exemplo, a aprender seus termos excepcionais. Além do mais, o uso 
-de termos como ``nao'', chamaria atenção constante do estudante para o fato de a palavra não estar acentuada, 
-o que costuma desviar atenção do estudo.
+A decisão de incorporar palavras que respeitam a língua portuguesa é
+importante, visto que modificar a linguagem de forma a se afastar de
+sua língua natural (o português) evidencia excessões as quais forçariam os
+usuários (estudantes e professores) a se ater mais com o estudo da linguagem do
+que com o estudo da disciplina em questão. Isso é, a ausência de acentos, por
+exemplo, obriga o usuário a aprender seus termos excepcionais. Além do mais,
+o uso de termos como ``nao'', chama a atenção constante do usuário para o fato
+de a palavra não estar acentuada, o que costuma desviar atenção do estudo.
 
-Consequentemente, o uso de acentos permite que a linguagem seja o mais próximo do português quanto for possível,
-apoiando a regra de não chamar atenção para si. Ademais, o código fica mais legível e agradável de se ler.
+Consequentemente, o uso de acentos permite que a linguagem seja o mais próximo
+do português quanto for possível, apoiando a regra de não chamar atenção para
+si. Ademais, o código fica mais legível e permite uma leitura mais agradável.
 
-Além dos acentos, é exigido que as palavras-chave usadas sejam completas ou por extenso, sem permitir abreviações 
-(ex. ``proc'', ``func'', ``char'', ``int'', ...), o que dificulta a leitura de programas por um leigo.
+Além dos acentos, é exigido que as palavras-chave usadas sejam completas ou por
+extenso, sem permitir abreviações (ex. ``proc'', ``func'', ``char'', ``int'',
+...), o que dificulta a leitura de programas por um leigo.
 
-Há também decisões quanto a forma verbal de comandos e funções. Em geral, na literatura, os verbos nos algoritmos
-são expressos no imperativo. Isso evidencia a característica imperativa da própria linguagem, assim como linguagens
-imperativas populares como C e Pascal. Entretanto, vale notar que, mesmo em linguagens imperativas, é comum ver
-programas que, escritos usando termos em português, usam verbos no infinitivo.
+Há também decisões quanto a forma verbal de comandos e funções. Em geral,
+na literatura, os verbos nos algoritmos são expressos no imperativo, visto que
+a linguagem é caracterizada como imperativa. Por outro lado, vale notar que,
+mesmo em linguagens imperativas, é comum ver programas que utilizam
+termos em português usando verbos no infinitivo.
 
-Evitando especular a respeito dessa prática, G-Portugol se utiliza de verbos no infinitivo para seus termos,
-de forma a se aproximar das formas utilizadas nas literaturas sobre algoritmos.
+Mesmo com essa perspectiva em vista, G-Portugol se utiliza de verbos no
+imperativo para seus termos, de forma a se aproximar das formas utilizadas nas
+literaturas sobre algoritmos.
 
 \begin{quotation}
   \textit{``Programas devem ser escritos para pessoas lerem e, apenas incidentalmente, para máquinas executarem.''}
@@ -838,40 +901,40 @@ de forma a se aproximar das formas utilizadas nas literaturas sobre algoritmos.
   \end{flushright}
 \end{quotation}
 
-\subsubsection{A linguagem deve ter uniformidade e coerência estrutural}
+\subsubsection{A linguagem deve ser simples, uniforme e coerente}
 
-Essa diretriz diz respeito a evitar excessões e surpresas a medida do possível. 
-Isso significa que estruturas e comandos devem ser simples, 
-claros e óbvios. Também, significa que as estruturas devem ter um formato uniforme.
-Naturalmente, a linguagem portugol já detém uma parcela relevante de características que 
-se acomodam nessas diretrizes, no entanto, alguns detalhes ainda merecem atenção, como a representação de blocos
-estruturais. 
- 
-A simplicidade implica em evitar complexidades que desviam a atenção do propósito original para detalhes da linguagem. 
-Isso é, apenas recursos escenciais devem fazer parte de seu núcleo. Portanto, em um primeiro momento, 
-não é interessante equipar a linguagem com recursos como leitura de arquivos, alocação dinâmica de memória, 
-etc. Outros recursos oferecidos por sistemas operacionais como threading estão fora de escopo.
+Essa diretriz diz respeito a evitar excessões entre as formas gramaticais e
+comportamentos semânticos na medida do possível. Isso significa não só que as
+estruturas e comandos devem ser simples, claros e óbvios, como também, sua forma
+e comportamento devem ter um princípio em comum, evidenciando um formato
+uniforme. Naturalmente, a linguagem portugol já detém uma parcela relevante
+de características que se acomodam nessas diretrizes, no entanto, alguns
+detalhes ainda merecem atenção, como a representação de blocos estruturais.
 
-De fato, G-Portugol deve ser uma "thin language". Manipulação de memória (por meio de variáveis), controles básicos de 
-fluxo, e recursos para entrada e saída simples devem ser suficientes para evidenciar os aspectos basicos 
-envolvidos no desenvolvimento de softwares. Esse argumento é baseado na previsão de que a linguagem deve ser utilizada 
-apenas como uma porta de entrada para a área de programação e, portanto, recursos mais avançados devem ser vistos em 
-linguagens de produção, numa etapa posterior.
+A simplicidade implica em evitar complexidades que desviam a atenção do
+propósito original para detalhes da linguagem. Isso é, apenas recursos
+essenciais devem fazer parte de seu núcleo. Portanto, em um primeiro momento,
+não é interessante equipar a linguagem com recursos como alocação dinâmica de
+memória, controle de threads, etc.
 
-\subsubsection{Deve ser configurável naquilo que diz respeito a diferentes abordagens de ensino e estilo do professor}
+\subsubsection{Deve ser configurável naquilo que diz respeito a
+diferentes abordagens de ensino e estilo do professor}
 
-Essa diretriz diz respeito a permitir que a linguagem mude em certos aspectos 
-(ou disponibilizar meios simples para realizar essas mudanças) de acordo com o gosto do professor, 
-ou como modo de adapatar a forma de portugol de uma dada literatura. 
-Dialetos e formas da linguagem portugol variam de literatura para literatura, e pode ser interessante permitir que a 
-linguagem se adapte.
+Essa diretriz diz respeito a permitir que a linguagem mude em certos aspectos
+(ou disponibilizar meios simples para realizar essas mudanças) de acordo com
+o gosto do professor, ou como modo de adapatar a forma de portugol de uma
+dada literatura. Dialetos e formas da linguagem portugol variam de
+literatura para literatura, e pode ser interessante permitir que a linguagem se
+adapte.
 
-Entre os aspectos que podem ser adaptados com facilidade se encontram os termos léxicos (palavras-chave, operadores,etc),
-e algumas formas de expressar estruturas, como algumas declarações e enunciados.
+Entre os aspectos que podem ser adaptados com facilidade se encontram os
+termos léxicos (palavras-chave, operadores,etc), e algumas formas de expressar
+estruturas, como algumas declarações e enunciados.
 
-Por exemplo, pode ser interessante que, para se declarar uma varíavel, não se use um bloco iniciado por 
-``variáveis'' e terminado por ``fim-variáveis'', mas como um bloco parecido com a declaração de variáveis
-em Pascal, ou em C (que sequer exige delimitação de bloco de variáveis).
+Por exemplo, pode ser interessante que, para se declarar uma varíavel, não se
+use um bloco iniciado por ``variáveis'' e terminado por ``fim-variáveis'', mas
+como um bloco parecido com a declaração de variáveis em Pascal, ou até em C (que
+sequer exige delimitação de bloco de variáveis).
 
 \section{Formato Estrutural}
 
@@ -891,22 +954,19 @@ A forma de um programa escrito em G-Portugol tem o seguinte formato:
   declaração de funções
 \end{itemize}
 
-
-  Esse formato não está salvo de possíveis mudanças futuras, visto que um importante aspecto que guia o design
-  da linguagem é sua compatibilidade com as formas populares de portugol e este, evidentemente, está sujeito
-  a mudanças.
-  
   A seguir, alguns pontos serão discutidos a respeito do formato da linguagem.
 
 \subsection{Declaração do algoritmo}
 
-  A declaração do algoritmo não influencia o programa ou sua execução, visto que é apenas uma sessão informativa no código
-  que, embora não seja um comentário, tem o mesmo efeito prático.
-  A adoção dessa declaração pode ser discutida, e foi escolhida por ser bastante utilizada em literaturas.
+A declaração do algoritmo não influencia o programa ou sua execução, visto que é
+apenas uma sessão informativa no código que, embora não seja um comentário, tem
+o mesmo efeito prático. A adoção dessa declaração pode ser discutida, e
+foi escolhida por ser bastante utilizada em literaturas.
   
 \subsection{Declaração de variáveis}
 
-  Como visto no capítulo 2, essa declaração é opicional, e seu formato pode ser visto no exemplo a seguir:
+  Como visto no capítulo 2, essa declaração é opcional, e seu formato pode ser
+visto no exemplo a seguir:
 
 \begin{verbatim}
 variáveis
@@ -914,173 +974,294 @@ variáveis
 fim-variáveis
 \end{verbatim}
 
-  Esse formato diferente de linguagens como Pascal e C.
-  Em Pascal, o bloco não tem um delimitador final (como ``fim-variáveis'') e em C, não existe qualquer delimitador.
+Esse formato difere de linguagens como Pascal e C. Em Pascal, o bloco não tem um
+delimitador final (como ``fim-variáveis'') e em C, não existe qualquer
+delimitador.
 
-  Delimitar o bloco permite maior consistência com outras estruturas, que são delimitadas em seu início e fim.
+Delimitar o bloco permite maior consistência com outras formas gramaticais
+como os blocos de comando e estruturas de controle.
 
-  * tipos escolhidos, matrizes, vetores, lack of struct, 
-  * declaracao de variaveis locais
-
-
+Os tipos primitivos englibam os tipos mais básicos das linguagens populares.
+No momento, agregados heterogêneos como, por exemplo, estruturas/registros
+(``struct'' em C) não são suportados.
   
 \subsection{Bloco Principal}
 
+As linguagens de programação devem, de alguma forma, oferecer um ``entry point''
+(ponto de entrada), de onde se inicia a execução do programa. O ponto de entrada
+pode ser uma função ou um bloco anônimo. Na literatura, em geral, o bloco
+principal é delimitado pelos termos ``início''e ``fim''. Essa é uma abordagem
+interessante que, em relação a uma função como ponto de entrada. Sendo assim,
+G-Portugol se utiliza de ``início'' e ``fim'' como delimitadores do bloco
+principal. Essa decisão mantém um nível satisfatório de coerência com o bloco de
+variáveis globais e estruturas de controle, embora não sejam intimamente
+relacionados.
 
-  Muitas linguagens oferecem delimitadores de blocos e, de alguma forma, devem oferecer um ``entry point'' 
-  (ponto de entrada), de onde se inicia a execução do programa. O ponto de entrada pode ser uma função
-  ou um bloco anonimo. Na literatura, em geral, o bloco principal é delimitado pelos termos ``início'' e 
-  ``fim''. Essa é uma abordagem interessante que, em contra ponto com uma função como ponto de entrada,
-  não obriga o usuário a ignorar o que vem a ser uma função ou estudar seus conceitos antes de ter aprendido
-  conceitos básicos.
-  
-  Sendo assim, G-Portugol se utiliza de ``início'' e ``fim'' como delimitadores do bloco principal.
-  Essa decisão mantém um nível satisfatório de coerência com o bloco de variáveis globais e estruturas de controle,
-  embora não sejam intimamente relacionados.
+Vale ressaltar que não se faz imposição sobre a identação do código. Esse
+recurso pode ser vantajoso no ensino, promovendo a clareza de código,
+portanto, sua implementação pode ser discutida para versões futuras.
 
   \subsubsection{Estruturas de Controle}
 
-  Estruturas de controle, usualmente são formados por um cabeçalho seguido por um bloco de comandos.
-  Embora os delimitadores do bloco não sejam ``início'' e ``fim'', há um grau de semelhança: o delimitador inicial 
-  é omitido e o delimitador final é o termo ``fim-'' seguido do nome da estrutura.   
+Estruturas de controle são formadas por um cabeçalho seguido por
+um bloco de comandos e terminados por um delimitador final. Embora os
+delimitadores do bloco não sejam ``início'' e ``fim'', há um grau de semelhança
+mantido: o delimitador inicial é omitido (uma vez que o cabeçalho é entendido
+como delimitador inicial) e o delimitador final é o termo ``fim-'' seguido do
+nome da estrutura.
 
-  Vale ressaltar que não se faz imposição sobre a identação do código. Esse recurso pode ser interessante,
-  de forma a promover maior consistencia e coerência estrutural. Portanto, embora possa ser vantajoso,
-  sua implementação pode ser discutida para versões futuras.
-
-  No cabeçalho das estruturas como ``enquanto'' e ``se, as expressões não precisam ser delimitadas por parêntesis.
+No cabeçalho das estruturas como ``enquanto'' e ``se'', as expressões não
+precisam ser delimitadas por parêntesis.
 
 
   \subsubsection{Expressões}
+  \label{sec:expr}
 
-  Expressões são operações que sintetizam, ao final, um valor. Em geral constituem operações aritiméticas
-  e os termos podem ser variáveis, constantes ou chamadas a funções.
+Expressões são operações que sintetizam, ao final, um valor. Em geral
+constituem valores ou operações aritiméticas com um ou mais termos que podem
+ser variáveis, constantes ou chamadas a funções e são usadas em atribuições,
+estruturas de controle e subscritos de matrizes e vetores. Enunciados (como
+atribuições) não podem ser avaliados como expressões.
 
-  Em G-Portugol, não há coerção (''casting``) de tipos expliticamente. Todos os tipos numéricos
-  (inteiro, real, lógico e caractere) são compativeis entre si, no entanto, dados podem ser perdidos
-  durante a conversão (como por exemplo, de real para inteiro).
+Constantes são valores \textit{inline}, e cada tipo de dado tem uma forma de
+ser representada.
+
+\begin{itemize}
+ \item 
+  Inteiros: Podem ser representados em base decimal, hexadecimal, octal e
+binária. Representações decimais são formadas por um ou mais algarismos (ex.
+``120''). Representações hexadecimais são representadas com o prefixo ``0x'' ou
+`` 0X'', seguido de algarismos entre ``0'' e ``9'' e letras entre ``a'' e ``f''
+ou ``A'' e ``F'' (ex. ``0xF1A5''). Representações octais são representadas com o
+prefixo ``0c'' ou ``0C'', seguido de algarismos entre ``0'' e ``7'' (ex.
+``0c61''). Finalmente, representações binárias são formadas pelo prefixo ``0b''
+ou ``0B'', seguido de algarismos ``0'' e ``1'' (ex. ``0b101'').
+
+  \item
+  Reais: são representados por algarismos separados por um ``.'' como ``2.5''.
+
+  \item
+  Caracteres: são representados por um único simbolo entre aspas simples.
+Alguns caracteres especiais são representados com escape (``$\backslash$'')
+seguido de símbolo identificador. Esses caracteres são o LF (``$\backslash$n''),
+CR (``$\backslash$r'') e barra invertida (``$\backslash$$\backslash$''). A
+ausência de símbolos entre as aspas simples indica um caractere ``nulo''.
+Internamente, caracteres são representados como números inteiros, o que permite
+sua compatibilidade numérica.
+
+  \item
+  Literais: são representados por um conjunto de caracteres entre aspas duplas.
+Eles podem conter caracteres especiais (como CR) e devem ser definidos em
+apenas uma linha de código. Valores literais são os únicos que não tem uma
+representação numérica, o que permitira sua participação em expressões com
+operadores aritméticos (soma, divisão, AND, etc).
+
+  \Lógicos: são representados por ``verdadeiro'' e ``falso''. Numericamente,
+qualquer valor diferente de ``0'' representa o valor verdadeiro e ``0''
+representa o valor falso.
+
+\end{itemize}
+
+A precedencia de operadores é mostrada na tabela \ref{tb_precedencia_op} (da
+menor precedência para a maior) e pode ser expliticamente modificada com o uso
+de parêntesis.
+
+
+\begin{table}[ht]
+\begin{center}
+  \begin{tabular}{|l|l|}
+    \hline
+    \multicolumn{2}{|c|}{Precedência de Operadores} \\
+    \hline
+      Operador & Nome \\
+    \hline
+    ou, ||          & OR lógico  \\
+    e, \&\&         & AND lógico \\
+    |               & OR binário \\
+    \^{}            &  XOR binário \\
+    \&              & AND binário \\
+    =, <>           & operadores de igualdade \\
+    >, >=, <, <=    & operadores relacionais \\
+    +, -            & operadores aritméticos soma e subtração \\
+    \symbol{42}, /, \%     & operadores aritméticos multiplicação,
+divisão, módulo \\
+    +, -, \~{}, não & operadores unários positivo, negativo, NOT binário, NOT
+lógico \\
+    \hline
+  \end{tabular}
+  \label{tb_tipos_primitivos}
+  \caption{Precedência de Operadores \label{tb_precedencia_op}}
+\end{center}
+\end{table}
+
+
+Em G-Portugol, não há coerção ou \textit{casting} de tipos expliticamente.
+Todos os tipos numéricos (inteiro, real, lógico e caractere) são compativeis
+entre si.
+
+Existem dois casos em que ocorre uma coerção implicita. O primeiro caso ocorre
+durante a avaliação de uma expressão que tem operandos de tipos diferentes (mas
+compatíveis entre si), mas não há perda de dados. O segundo caso é discutido na
+seção \ref{subsec:atribuicoes}.
+
+
+
+  \subsection{Atribuições}
+
+Atribuições permitem a manipulação de valores na memória. Em G-Portugol,
+como já foi visto, é usado o operador ``:='', onde o termo a esquerda ou
+``\textit{lvalue}'' deve ser uma variável primitiva ou indice de uma
+matriz/vetor, e o termo a esquerda, uma expressão que, quando avaliada, tem seu
+tipo compatível com o \textit{lvalue}.
+
+Pode haver coerção de tipos durante a atribuição, quando o resultado da
+expressão é de um tipo diferente (mas compatível) do tipo de \textit{lvalue}.
+É possível que dados sejam comprometidos, por exemplo, tendo uma expressão
+avaliada como real sendo atribuida a uma variável de tipo inteiro (o valor será
+truncado).
+
+Matrizes não são aceitas como \textit{lvalue}, como pode ser visto no programa
+\ref{bad_matrix}.
+
+\begin{program}
+  \begin{verbatim}
+algoritmo bad_matrix;
+
+variáveis
+  m1 : matriz[2] de inteiros;
+  m2 : matriz[2] de inteiros;
+fim-variáveis
+
+início
+  m1 := m2;    //erro
+  imprima(m1); //erro
+fim
+  \end{verbatim}
   
-  A precedencia de operadores segue a seguinte tabela (da menor precedência para a maior):
+  \caption{Uso incorreto de matrizes. \label{bad_matrix}}
+\end{program}
 
-
-% \begin{table}[ht]
-% \begin{center}
-%   \begin{tabular}{|l|l|}
-%     \hline
-%     \multicolumn{2}{|c|}{Precedência de Operadores} \\
-%     \hline
-%       Operador & Nome \\
-%     \hline
-%     ou, ||  & OR lógico  \\
-% %     e, \&\&  & AND lógico \\
-%     | & OR binário \\
-% %     \^ &  XOR binário \\
-% %     \& & AND binário \\
-%     =, <> & op. de igualdade \\
-%     >, >=, <, <= & op. relacionais \\
-%     +, - & op. aritméticos soma e subtração \\
-%     *, /, \% & op. aritméticos multi, div, mod \\
-%     +, -, \thicksim, não & op. unários pos,neg,NOT binário e lógico \\
-%     \hline
-%   \end{tabular}
-%   \label{tb_tipos_primitivos}
-%   \caption{Precedência de Operadores}
-% \end{center}
-% \end{table}
-
-
-  É vetado o uso de enunciados como atribuição em locais onde se espera uma expressão. A avaliação de expressões
-  é discutida a seguir.
-
-
-  *operadores e operandos
-  *precendencia e associatividade
-
-
-  *sobre a semantica (castings, etc)
-
-  *promoções de tipos e castings automaticos (inteiro para real, real para inteiro)
-  *avaliações aritméticas
-  *avaliações lógicas 
-  *literais
-    *reais usam ``.'' e não ``,''
-  
-  *matrizes nao sao aceitas como lvalue
-  mat := mat2 !!
-
-  subscritos de matrizes são expressões que devem ser avaliadas como numeros inteiros.
 
 \section{Funções}
-No contexto de uma função, variáveis locais com o mesmo nome que variáveis globais são permitidas, sendo que as últimas
-são impossibilitadas de serem usadas, enquanto o contexto durar.
 
-  *Não suporte a funções aninhadas
-  *suporte a recursão
-  *retorno apenas para tipos primitivos.
+Funções são os subprogramas de G-Portugol. São definidas após o bloco principal
+e podem receber argumentos e retornar valores. Em tempo de execução, as funções
+criam um novo escopo sobreposto ao escopo principal. Isso permite recursos
+como recursão e possibilita que variáveis locais (no escopo da função) tenham o
+mesmo nome que variáveis globais, onde essas últimas ficam ``escondidas'', isso
+é, incapazes de serem acessadas enquanto o escopo durar. Ressalta-se que não há
+suporte para funções aninhadas, isso é, funções declaradas dentro de funções. 
 
-  excecoes:
-  blocos de variaveis
-  *excessão, nos blocos de variáveis locais em escopo de funcao
+O retorno de dados é feito por meio da instrução ``retorne'' e o valor de
+retorno (se houver) deve ser compatível com o tipo da função. Esse tipo não
+pode ser um tipo agregado como matrizes e vetores.
 
-  declaracao de multiplas variaveis em blocos VS. declaracao de parametros:
-    variavies
-      x,y : inteiro; //ok
+Tanto a passagem de argumentos quanto o retorno é feito \textit{por valor},
+isso é, a copia do valor é feita, ao invez de a copia de endereço ou passagem
+\textit{por referência}.
 
-    função f(x,y:inteiro); //erro
+As variáveis locais de uma função são formadas por seus parâmetros e pelas
+variáveis declaradas em seu escopo. A declaração de variáveis locais é feita
+entre o cabeçalho da função e a palavra-chave ``início'', portanto, não é
+uniforme em relação a declaração global, onde se usa as palavras-chave
+``variáveis'' e ``fim-variáveis''. 
 
+A declaração dos parâmetros da função também não segue estritamente o formato
+de declaração de variáveis. Sua definição pode ser vista no capítulo *todo*.
+%capitulo da gramatica
 
 
 \section {Funções internas}
 
-  \subsection{A função ``imprima''}
-    argumentos variaveis
-    retorno: null
-    minimo: um arg
+G-Portugol oferece duas funções internas para manipulação básica de entrada e
+saída. Ambas as funções tem comportamentos excepcionais quando comparadas
+com as funções de usuário. Essas funções são discutidas na sessão a seguir.
 
-  *As funcoes leia e imprima:
-    leia() retornando tipos variaveis
-    restrição de leia() usado em expressões com multiplos termos
-    imprima() recebendo numero variavel de argumentos.
+  \subsection{A função ``imprima''}
+
+A função imprima tem como objetivo imprimir texto no dispositivo de saída.
+Ela recebe um número variável de argumentos (pelo menos um), onde cada
+argumento deve ser um valor primitivo, e os imprime em sequencia. Ao final, é
+impresso um caractere de nova linha (LF) e a função retorna.
+
+Essa função se comporta de forma excepcional visto que não é
+possível declarar funções em G-Portugol que recebem um número variável de
+argumentos.
 
 
 
   \subsection{A função ``leia''}
 
-    limitacoes da v1: nao pode ser usado em expressões binarias
-        
-    retorna o valor convertido para o tipo que o contexto exige.
-      ex: mat[leia()] //inteiro
-    
-    Conversoes:      
+A função ``leia'' espera por uma entrada do teclado seguida do caractere LF (em
+geral, associado a tecla ``Enter'') e retorna o valor lido. Esse valor é
+convertido implicitamente para o tipo do \textit{lvalue}. Alguns exemplos de
+conversões podem ser vistos na tabela \ref{tb_conv_leia}:
 
-      Inteiros como lvalue (os mesmos valem para float):
-      (inteiro) := leia(); ``123 456'' => ``123''
-      (inteiro) := leia(); ``abc'' => ``0''
-      (inteiro) := leia(); ``123s'' => ``123''
-  
-      Logico:
-      (logico) := leia(); ``falso'' => ``falso''
-      (logico) := leia(); ``0'' => ``0''
-      (logico) := leia(); ``falso 123'' => ``verdadeiro''
-      (logico) := leia(); ``0 umdoistrez '' => ``verdadeiro''
-      e demais: ``verdadeiro''
-    
-  Preferencia ao uso da função ``leia'' sem parametros:
-    Comentarios e justificativa contra o uso de ``void leia(x)''
+\begin{table}[ht]
+\begin{center}
+  \begin{tabular}{|l|l|l|}
+    \hline
+    \multicolumn{3}{|c|}{Conversões da função ``leia''} \\
+    \hline
+      Tipo Esperado & Texto lido & Valor convertido \\
+      inteiro & ``123'' & 123 \\
+      inteiro & ``123 456'' & 123 \\
+      inteiro & ``abc'' & 0 \\
+      inteiro & ``123s'' & 123 \\
+      lógico  & ``falso'' & falso \\
+      lógico & ``0'' & falso \\
+      lógico & ``falso 12wtc'' & verdadeiro \\
+      lógico & ``0 umdois3'' & verdadeiro\\
+    \hline
+  \end{tabular}
+  \label{tb_tipos_primitivos}
+  \caption{Conversões implícitas da função ``leia'' \label{tb_conv_leia}}
+\end{center}
+\end{table}
+
+
+Essa função se comporta de forma excepcional visto que seu tipo de retorno não
+é absoluto (depende do tipo de \textit{lvalue}) e é restrita expressões isentas
+de operadores. Isso é, não é permitido aplicá-la a operadores em expressões,
+embora seja possível utilizá-la em subscritos de vetores e matrizes, assim como
+em expressões de estruturas de controle. 
+
+Em princípio, pode-se levar em conta duas formas de implementar uma função de
+leitura. A primeira, e mais simples é o uso de funções sobrecarregadas, que
+não retornam valor e recebem um parâmetro de certo tipo, que é alimentado com o
+valor lido. Essa forma exige que a passagem seja feita por referência. A outra
+forma, é a implementada em G-Portugol, onde a função não recebe parâmetros e
+retorna o valor lido.
+
+As duas formas exigem comportamentos excepcionais, visto que G-Portugol não tem
+recursos suficientes para compreender sobrecarga de funções ou passagem de
+parâmetros por referência.
+
 
 \capitulo{O programa GPT}
 
 \section{Intrudução}
+  
   
   traducao (C)
   interpretacao/depuracao
   compilacao (ELF)
 
   Comportamento uniforme entre os tipos de execução
-    *programa compilado em C deve ter o mesmo comportamento do programa interpretado
+    *traducao, compilacao e interpretacao devem ter o mesmo comportamento 
 
+\section{Opções gerais}
+
+  *versão e ajuda.
+
+  *mudanca de linguagem (sub linguagens, variacoes de gramatica) (nao
+implementado ainda)
+
+  
 
 \section{Tratamento de erros}
+  
+  *opcao para mais verbose (-d: dicas)
 
   *sobre o tratamento de erros. 
     -Importancia de ``verbose''
@@ -1092,30 +1273,34 @@ Ao catch[], pode-se lancar um custom exception, a ser recuperado em main.c
 Fazer disso uma opcao?
 A dificuldade em deixar as mensagens de erro uniformes, ao tentar elaborar tratamentos de erros mais detalhados e prestativos.
 
+\section{Geração Execução de programas}
 
-\section{Tradução para C}
+\subsection{Tradução para C}
 
+  *opcao -t
 
-  \subsection{Limitações}
+  \subsubsection{Limitações}
       *nomes de identificadores em conflito com os nomes em C/glibc
 
 	*diferencas:
 		*array bound check
 		*precedencia de operadores de C vs. precendencia de operadores de G-Portugol (pesquisar para saber se sao equivalentes)
 
-\section{Interpretação de código}
+\subsection{Interpretação de código}
 
-  \subsection{Erros de execução (runtime errors)}
+  *opcao -i
+
+  \subsubsection{Erros de execução (runtime errors)}
     boundcheck, etc...
 
-  \subsection{Depuração iterativa}
+  \subsubsection{Depuração interativa}
 
       *estrutura do XML
       *command line debugger.
 
-\section{Compilação para codigo nativo (ELF)}
+\subsection{Compilação para codigo nativo (ELF)}
 
-\section{Depuração interativa}
+  *opcao default
 
   
 %%%
