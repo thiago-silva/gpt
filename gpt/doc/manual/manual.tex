@@ -196,7 +196,7 @@ relacionadas a computação. Portanto, seu foco é primariamente didático.
 
 Se encontram disponíveis atualmente um tradutor/interpretador para a
 linguagem (GPT) e um ambiente visual simples (GPTEditor) que permite execução
-e depuração de programas escritos em G-Portugol. 
+e depuração de programas escritos em G-Portugol.
 
 A seguir é apresentado os assuntos abordados nos capítulos seguintes:
 
@@ -929,12 +929,17 @@ adapte.
 
 Entre os aspectos que podem ser adaptados com facilidade se encontram os
 termos léxicos (palavras-chave, operadores,etc), e algumas formas de expressar
-estruturas, como algumas declarações e enunciados.
+estruturas, como algumas declarações e enunciados. 
 
 Por exemplo, pode ser interessante que, para se declarar uma varíavel, não se
 use um bloco iniciado por ``variáveis'' e terminado por ``fim-variáveis'', mas
 como um bloco parecido com a declaração de variáveis em Pascal, ou até em C (que
 sequer exige delimitação de bloco de variáveis).
+
+Isso pode ser interessante quando se quer, por exemplo, ensinar uma linguagem
+específica como Pascal, fazendo com que G-Portugol possa usar estruturas
+e operadores semelhantes a esta linguagem, de forma a oferecer uma transição
+mais direta e que aproveita melhor os conhecimentos do estudante.
 
 \section{Formato Estrutural}
 
@@ -1089,7 +1094,6 @@ divisão, módulo \\
 lógico \\
     \hline
   \end{tabular}
-  \label{tb_tipos_primitivos}
   \caption{Precedência de Operadores \label{tb_precedencia_op}}
 \end{center}
 \end{table}
@@ -1107,7 +1111,7 @@ seção \ref{subsec:atribuicoes}.
 
 
   \subsection{Atribuições}
-
+  \label{subsec:atribuicoes}
 Atribuições permitem a manipulação de valores na memória. Em G-Portugol,
 como já foi visto, é usado o operador ``:='', onde o termo a esquerda ou
 ``\textit{lvalue}'' deve ser uma variável primitiva ou indice de uma
@@ -1195,7 +1199,7 @@ argumentos.
 A função ``leia'' espera por uma entrada do teclado seguida do caractere LF (em
 geral, associado a tecla ``Enter'') e retorna o valor lido. Esse valor é
 convertido implicitamente para o tipo do \textit{lvalue}. Alguns exemplos de
-conversões podem ser vistos na tabela \ref{tb_conv_leia}:
+conversões podem ser vistos na tabela \ref{tb_leia_casts}:
 
 \begin{table}[ht]
 \begin{center}
@@ -1204,6 +1208,7 @@ conversões podem ser vistos na tabela \ref{tb_conv_leia}:
     \multicolumn{3}{|c|}{Conversões da função ``leia''} \\
     \hline
       Tipo Esperado & Texto lido & Valor convertido \\
+    \hline
       inteiro & ``123'' & 123 \\
       inteiro & ``123 456'' & 123 \\
       inteiro & ``abc'' & 0 \\
@@ -1214,98 +1219,412 @@ conversões podem ser vistos na tabela \ref{tb_conv_leia}:
       lógico & ``0 umdois3'' & verdadeiro\\
     \hline
   \end{tabular}
-  \label{tb_tipos_primitivos}
-  \caption{Conversões implícitas da função ``leia'' \label{tb_conv_leia}}
+  \caption{Conversões implícitas da função ``leia'' \label{tb_leia_casts}}
 \end{center}
 \end{table}
 
 
 Essa função se comporta de forma excepcional visto que seu tipo de retorno não
 é absoluto (depende do tipo de \textit{lvalue}) e é restrita expressões isentas
-de operadores. Isso é, não é permitido aplicá-la a operadores em expressões,
-embora seja possível utilizá-la em subscritos de vetores e matrizes, assim como
-em expressões de estruturas de controle. 
+de operadores. Isso é, não é permitido aplicá-la como um termo em uma expressão
+com multiplos termos, embora seja possível utilizá-la em subscritos de vetores e
+matrizes, assim como em expressões de estruturas de controle. 
 
 Em princípio, pode-se levar em conta duas formas de implementar uma função de
 leitura. A primeira, e mais simples é o uso de funções sobrecarregadas, que
-não retornam valor e recebem um parâmetro de certo tipo, que é alimentado com o
-valor lido. Essa forma exige que a passagem seja feita por referência. A outra
-forma, é a implementada em G-Portugol, onde a função não recebe parâmetros e
-retorna o valor lido.
+não retornam valor e recebem um parâmetro de um dado tipo (inteiro, real, etc),
+que é alimentado com o valor lido. Essa forma exige que a passagem seja feita
+por referência. A outra forma, é a implementada em G-Portugol, onde a função não
+recebe parâmetros e retorna o valor lido.
 
 As duas formas exigem comportamentos excepcionais, visto que G-Portugol não tem
-recursos suficientes para compreender sobrecarga de funções ou passagem de
+suporte para sobrecarga de funções (por parâmetro ou retorno) ou passagem de
 parâmetros por referência.
-
 
 \capitulo{O programa GPT}
 
 \section{Intrudução}
   
-  
-  traducao (C)
-  interpretacao/depuracao
-  compilacao (ELF)
+GPT é a ferramenta principal da linguagem G-Portugol. Entre suas funções
+principais estão:
 
-  Comportamento uniforme entre os tipos de execução
-    *traducao, compilacao e interpretacao devem ter o mesmo comportamento 
+\begin{itemize}
+ \item 
+  Traduzir algortimos para outras linguagens;
+  \item
+  Compilar algoritmos;
+  \item
+  Executar algoritmos.
+\end{itemize}
+
+Na versão atual é possível traduzir algoritmos para a linguagem C. O resultado
+é um código em C 100\% equivalente ao algoritmo.
+
+Atualmente, a compilação é possível apenas usando o compilador GCC (uma vez que
+GPT o usa como \textit{backend}) mas, futuramente, a compilação será feita sem
+dependências externas.
+
+A execução de algorítmos é feita de forma interpretada, isso é, sem gerar
+arquivos binários. Por meio da interpretação, é possível depurar passo a passo
+o algorítmo com o uso de uma ferramenta auxiliar (um cliente de depuração).
+
+Vale ressaltar que, qualquer que seja o modo de uso do algoritmo
+(compilado, interpretado ou traduzido), eles terão sempre comportamentos
+equivalentes. Isso é, o resultado de uma execução interpretada deve ser o mesmo
+se a execução fosse feita por meio de um binário compilado.
 
 \section{Opções gerais}
 
-  *versão e ajuda.
+Ao executar o programa ``gpt'' com o argumento ``-h'', é mostrado:
 
-  *mudanca de linguagem (sub linguagens, variacoes de gramatica) (nao
-implementado ainda)
+\begin{verbatim}
+   -v            mostra versão do programa
+   -h            mostra esse texto
+   -d            exibe dicas no relatório de erros
+   -o <arquivo>  compila e salva executável como <arquivo>
+   -t <arquivo>  traduz para C e salva como <arquivo>
+   -i            não compila, apenas interpreta
+   -H <host>     host do client debugger (deve ser usado com -i)
+   -P <porta>    porta do client debugger (deve ser usado com -i) 
+\end{verbatim}
 
+As opções são comentadas a seguir.
+
+\begin{itemize}
+ \item 
+  v: Exibe a versão do programa ``gpt'', assim como informações de copyright;
+
+  \item
+  h: exibe todas as opções suportadas pelo programa ``gpt'';
+
+  \item
+  d: Exibe maiores informações para erros de compilação, quando disponível.
+Essas informações são dicas de como proceder para resolver o erro;
   
+  \item
+  o <arquivo>: Ao compilar um algoritmo, salva o executável com o nome de
+\textit{<arquivo>};
+  
+  \item
+  t: Ao traduzir um algoritmo para C, salva o arquivo fonte como
+\textit{<arquivo>.c};
+
+  \item 
+  i: Executa o algoritmo diretamente, sem compilar ou criar arquivos binários
+executáveis. Opção conhecida como ``interpretação'' ou ``scripting''.
+
+  \item
+  H: Usado em conjunto com a opção ``-P'', para se conectar a um
+\textit{client debugger};
+
+  \item
+  P: Usado em conjunto com a opção ``-P'' para se conectar a um \textit{client
+debugger}.
+\end{itemize}
+
+
+%  *mudanca de linguagem (sub linguagens, variacoes de gramatica) 
+% (nao implementado ainda)
+
 
 \section{Tratamento de erros}
   
-  *opcao para mais verbose (-d: dicas)
+Em geral, as ferramentas de diversas linguagens de programação oferecem o
+mínimo de informações a cerca de erros de compilação, as vezes, tendo uma
+forma ``criptica'' dificultando seu entendimento e posterior correção.
+Comum, também a possibilide de que determinados erros sejam reportados em
+localizações distantes de onde o erro efetivamente se encontra no código
+fonte. Ademais, é importante notar que nessas linguagens, os erros são
+reportados em inglês. 
 
-  *sobre o tratamento de erros. 
-    -Importancia de ``verbose''
+O tratamento de erros é um aspecto importante do programa GPT. A reportagem de
+erros deve ser o mais claro possível e ter um formato uniforme, informando o
+local exato onde o erro foi localizado (linha e coluna no código fonte).
+Deve, também, fornecer dicas de como proceder para corrigir o erro, em
+alguns casos.
 
-	tratamento de erros:
-será que atrapalha mais do que ajuda continuar a analise sintatica apos errors encontrados?
-Muitos erros seguintes ao primeiro podem acabar atrapalhando mais.
-Ao catch[], pode-se lancar um custom exception, a ser recuperado em main.c
-Fazer disso uma opcao?
-A dificuldade em deixar as mensagens de erro uniformes, ao tentar elaborar tratamentos de erros mais detalhados e prestativos.
+No momento, o analisador do GPT percorre o código fonte a procura de erros e,
+mesmo que encontre, continua a análise a procura de mais erros. Uma outra
+abordagem, seria interromper a análise assim que um erro fosse encontrado.
 
 \section{Geração Execução de programas}
 
 \subsection{Tradução para C}
 
-  *opcao -t
+É possível usar o GPT para traduzir algoritmos escritos em G-Portugol para
+linguagem C. O código resultante, entretanto, não é criado com o intuito de ser
+facilmente lido, visto que a tradução não é direta. Isso é, o comportamento
+esperado pelo algoritmo deve refletir o comportamento que o código em C. Sendo
+assim, códigos extras são adicionados no arquivo resultante, para, por exemplo,
+permitir passagem de matrizes por valor, inicialização automática de variáveis
+e outras abstrações.
 
-  \subsubsection{Limitações}
-      *nomes de identificadores em conflito com os nomes em C/glibc
+A tradução para C é limitada no que diz respeito a nomes e identificadores. É
+possível, por exemplo, declarar uma variável em G-Portugol com o nome de
+\textit{printf}. Ao traduzir para C e tentar compilar o código resultante, o
+compilador pode emitir erros, visto que \textit{printf} é uma função da
+biblioteca padrão, usada no código C resultante. Da mesma forma, variáveis com o
+nome de \textit{leia\_inteiro\_\_} no algoritmo podem causar conflitos da mesma
+forma, visto que este é o nome de uma das funçõess incluídas pelo tradutor GPT.
 
-	*diferencas:
-		*array bound check
-		*precedencia de operadores de C vs. precendencia de operadores de G-Portugol (pesquisar para saber se sao equivalentes)
 
 \subsection{Interpretação de código}
 
-  *opcao -i
+GPT permite que o algoritmo seja executado sem gerar código binário. Esse modo
+é conhecido como ``interpretação'' e linguagens como Perl, PHP e Ruby utilizam
+esta técnica.
 
-  \subsubsection{Erros de execução (runtime errors)}
-    boundcheck, etc...
+Esse modo permite depurar algoritmos passo a passo (por meio de um
+\textit{client debugger} como o GPTEditor) e inspecionar variáveis e a pilha de
+funções enquanto o algoritmo está em execução.
 
-  \subsubsection{Depuração interativa}
+A unica diferença na execução de algoritmos em modo interpretado em relação a
+outros modos é que as matrizes/vetores tem seus subscritos checados
+(``\textit{bound checking}''). Isso é, erros de execução são emitidos se um
+índice não existir em uma matriz/vetor.
 
-      *estrutura do XML
-      *command line debugger.
+\subsubsection{Depuração interativa}
 
-\subsection{Compilação para codigo nativo (ELF)}
+A depuração interativa é feita em modo ``interpretação'', portanto não gera
+código binário, executando o algoritmo diretamente. Para depurar
+interativamente um algoritmo é nescessário um programa extra: o \textit{client
+debugger}. Atualmente, o programa GPTEditor suporta a depuração interativa.
 
-  *opcao default
+Entre os recursos disponíveis, pode-se citar a execução passo a passo em 3
+modos (comumente conhecidas como ``step into'', ``step over'' e ``step out''),
+inspeção de variáveis locais/globais e pontos de parada
+(``\textit{breakpoints}'').
+
+A depuração ocorre tendo o programa GPT se comunicando via socket com o cliente
+(ex: GPTEditor), iniciando transmissão de dados entre esses dois pontos. As
+informações enviadas pelo GPT (variáveis, breakpoints, etc) usam o formato XML,
+enquanto o cliente envia comandos simples (o que evita que o programa GPT
+nescessite de um XML parser).
+
+Por exemplo, a pilha de funções pode ser representada da seguinte forma:
+
+\begin{verbatim}
+<stackinfo>
+  <entry id="0"  function="@global" line="10"/>
+  <entry id="1"  function="funcTeste" line="18"/>
+</stackinfo> 
+\end{verbatim}
+
 
   
-%%%
-%  Apendice
-%   *gramatica da linguagem
-%%%
+%      *estrutura do XML
+%      *command line debugger.
+
+%\subsection{Compilação para codigo nativo (ELF)}
+
+%  *opcao default
+
+\appendix
+
+\capitulo{Gramática da linguagem G-Portugol}
+
+
+\section{Termos léxicos}
+
+A seguir é apresentado as convenções léxicas usadas em G-Portugol, usando
+notações de expressões regulares.
+
+\begin{verbatim} 
+    Regras para identificar literais numéricos
+
+T_INT_LIT : T_OCTAL_LIT | T_HEX_LIT | T_BIN_LIT | (T_DIGIT)+
+
+T_OCTAL_LIT : '0' ('c'|'C') [0-8]+
+
+T_HEX_LIT : '0' ('x'|'X') [0-9a-zA-Z]+
+
+T_BIN_LIT : '0' ('b'|'B') ('0'|'1')
+
+T_REAL_LIT : [0-9]+ '.' [0-9]+
+
+    Regras para identificar caracteres e cadeias de caracteres
+
+T_CARAC_LIT  : '\'' ( ~('\''|'\\') |'\\' . )? '\''
+
+T_STRING_LIT : '"' ( ~( '"' | '\\' | '\n' | '\r') | '\\' .)* '"'
+
+  Regras para identificar comentários
+
+SL_COMMENT  : "//" (~('\n'))* ('\n')?
+
+ML_COMMENT  : "/*" 
+    ( 
+      '\n'
+      | '\r' '\n' 
+      | '\r' 
+      | ~( '*' | '\n' | '\r' ) 
+      | '*' 
+    )* "*/"
+
+  Regra para identificar nomes de variáveis, funções, etc
+
+T_IDENTIFICADOR  : [a-zA-Z] [a-zA-Z0-9]*
+\end{verbatim}
+
+A tabela \ref{tb_palavras_chave} contém as palavras-chave padrão da linguagem
+G-Portugol.
+
+\begin{table}[ht]
+\begin{center}
+  \begin{tabular}{|l l l l l|}
+    \hline
+    \multicolumn{5}{|c|}{Palavras-chave de G-Portugol} \\
+    \hline
+  fim-variáveis & algoritmo & variáveis  & inteiro & real \\
+  caractere & literal & lógico & início & verdadeiro \\
+  falso & fim & ou & e & não \\
+  se & senão & então & fim-se &  enquanto \\
+  faça & fim-enquanto & para & de & até \\
+  fim-para  & matriz  & inteiros  & reais  & caracteres \\
+  literais  & lógicos  & função  & retorne  & passo \\
+  \hline
+  \end{tabular}
+  \caption{Palavras-chave de G-Portugol\label{tb_palavras_chave}}
+\end{center}
+\end{table}
+
+
+\section{Gramática}
+
+A seguir é apresentado a gramática da linguagem G-Portugol em notação EBNF.
+
+\begin{verbatim}
+algoritmo 
+  : declaracao_algoritmo (var_decl_block)? stm_block (func_decls)* EOF
+  ;
+
+declaracao_algoritmo 
+  : "algoritmo" T_IDENTIFICADOR ";"
+  ;
+
+var_decl_block  
+  : "variáveis" (var_decl ";")+ "fim-variáveis"
+  ;
+
+var_decl
+  : T_IDENTIFICADOR ("," T_IDENTIFICADOR)* ":" (tp_primitivo | tp_matriz)
+  ;
+
+tp_primitivo
+  : "inteiro"
+  | "real"
+  | "caractere"
+  | "literal"
+  | "lógico"
+  ;
+
+tp_matriz
+  : "matriz" ("[" T_INT_LIT  "]")+ "de" tp_prim_pl
+  ;
+
+tp_prim_pl
+  : "inteiros"
+  | "reais"
+  | "caracteres"
+  | "literais"
+  | "lógicos"
+  ;
+
+stm_block
+  : "início" (stm_list)* "fim"
+  ;
+
+stm_list
+  : stm_attr ";"
+  | fcall ";"
+  | stm_ret
+  | stm_se
+  | stm_enquanto
+  | stm_para
+  ;
+stm_ret
+  : "retorne" expr? ";"
+  ;
+
+lvalue
+  : T_IDENTIFICADOR ("[" expr "]")*
+  ;
+
+stm_attr
+  : lvalue ":=" expr
+  ;
+
+stm_se
+  : "se" expr "então" stm_list ("senão" stm_list)? "fim-se"
+  ;
+
+stm_enquanto
+  : "enquanto" expr "faça" stm_list "fim-enquanto"
+  ;
+
+stm_para 
+  : "para" lvalue "de" expr "até" expr  passo? "faça" stm_list "fim-para"
+  ;
+
+passo
+  : "passo" ("+"|"-")? T_INT_LIT
+  ;
+
+expr
+  : expr ("ou"|"||") expr
+  | expr ("e"|"&&") expr
+  | expr "|" expr
+  | expr "^" expr
+  | expr "&" expr
+  | expr ("="|"<>") expr
+  | expr (">"|">="|"<"|"<=") expr
+  | expr ("+" | "-") expr
+  | expr ("/"|"*"|"%") expr
+  | ("+"|"-"|"~"|"não")? termo
+  ;
+
+termo
+  : fcall  
+  | lvalue
+  | literal
+  | "(" expr ")" 
+  ;
+
+fcall
+  : T_IDENTIFICADOR "(" fargs? ")"
+  ; 
+
+fargs
+  : expr ("," expr)*
+  ;
+
+literal
+  : T_STRING_LIT
+  | T_INT_LIT
+  | T_REAL_LIT
+  | T_CARAC_LIT
+  | T_KW_VERDADEIRO 
+  | T_KW_FALSO
+  ;
+
+func_decls
+  : "função" T_IDENTIFICADOR "(" fparams? ")" (":" tb_primitivo)?
+    fvar_decl
+    stm_block
+  ;
+
+fvar_decl
+  : (var_decl ";")*
+  ;
+
+fparams
+  : fparam ("," fparam)*
+  ;
+
+fparam
+  : T_IDENTIFICADOR ":" (tp_primitivo | tp_matriz)
+  ;
+
+\end{verbatim}
 
 \end{document}
