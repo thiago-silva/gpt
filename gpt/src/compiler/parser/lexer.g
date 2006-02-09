@@ -175,7 +175,7 @@ options {
   
 T_MAIS
 options {
-  paraphrase = "operador '='";
+  paraphrase = "operador '+'";
 }
   : '+'
   ;
