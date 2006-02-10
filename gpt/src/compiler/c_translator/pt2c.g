@@ -58,6 +58,8 @@ options {
   Portugol2CWalker(SymbolTable& st) 
     : stable(st) { }
 
+  private:
+
   SymbolTable& stable;
 
   int _currentScopeType;

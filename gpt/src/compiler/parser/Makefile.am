@@ -29,7 +29,7 @@ lexer: $(lexer_g)
 	$(ANTLR_BIN) $(lexer_g)
 	cp PortugolTokenTypes.txt ../c_translator
 	cp PortugolTokenTypes.txt ../interpreter
-
+	cp PortugolTokenTypes.txt ../x86
 
 parser: $(parser_g)
 	$(ANTLR_BIN) $(parser_g)
