@@ -58,8 +58,8 @@ section .data
     __str_no_mem_left db 'Não foi possível alocar memória.',0
 
     ;for testing
-    __buffer1   db  '123',0
-    __buffer2   db  'xxxxxxx',0
+    __buffer1   db  '+12.345',0
+    __buffer2   db  'xxxxxxxxxxxxxxxxxxxxx',0
 
     _zerozero db    '0.00',0
     _fnum     dd    -3.59
@@ -71,10 +71,12 @@ global _start
 
 _start:    
 
-    call __leia_inteiro
+    addarg __buffer1
+    call __atof
+    clargs 1
 
     addarg eax
-    call __imprima_inteiro
+    call __imprima_real
     clargs 1
 
     exit 0
@@ -112,6 +114,22 @@ __imprima_inteiro:
 
     return
 
+__imprima_real:
+    ;params
+    %define num ebp+8
+    begin 0
+
+    addarg __buffer1
+    addarg dword [num]    
+    call __ftoa
+    clargs 2
+
+    addarg __buffer1
+    call __imprima_literal
+    clargs 1
+
+    return
+  
 __print_c:
     %define carac ebp+8
     begin 0
@@ -160,9 +178,10 @@ __imprima_logico:
   
     return
 
-__strlen:
+__strpos:
     ;params
-    %define string ebp+8
+    %define string ebp+12
+    %define carac  ebp+8
 
     begin 0
 
@@ -177,11 +196,33 @@ __strlen:
       mov eax, 0
       .do:
         mov ebx, [string]
-        cmp [ebx+eax], byte 0
+        mov ecx, [carac]
+        cmp [ebx+eax], cl
         jz  .break
+
+        cmp [ebx+eax], byte 0
+        jz .notfound
+
         inc eax
         jnz .do
       .break:
+
+    return
+
+    .notfound
+      mov eax, -1
+      return
+
+__strlen:
+    ;params
+    %define string ebp+8
+
+    begin 0
+
+    addarg dword [string]
+    addarg 0
+    call __strpos
+    clargs 2
 
     return
 
@@ -240,7 +281,10 @@ __atoi:
     addarg dword [string]
     call __strlen
     clargs 1
-  
+
+    cmp eax, dword 0
+    jz .ret_zero
+
     mov dword [len], eax
     mov dword [i], 0
 
@@ -345,6 +389,127 @@ __atoi:
     .ret_zero
       mov eax, 0
       return
+
+__atof:
+    ;params
+    %define string ebp+8
+
+    ;locals
+    %define negt     ebp-4
+    %define dotpos   ebp-8
+    %define declen   ebp-12
+    %define str_dec  ebp-16
+    %define inte     ebp-20
+    %define deci     ebp-24
+    %define p        ebp-28
+    %define float    ebp-32
+    
+    begin 32
+
+    addarg dword [string]
+    call __strlen
+    clargs 1
+
+    cmp eax, dword 0
+    jz .ret_zero
+
+    ;checks for signal (+-)
+    %define minus_sig 45 
+    %define plus_sig 43
+    mov eax, [string]
+    xor ebx, ebx
+    mov bl, [eax]
+
+    cmp ebx, minus_sig
+    jz .negative
+
+    cmp ebx, plus_sig
+    jz .positive
+
+    jmp .conv
+
+    .negative
+      mov dword [negt], 1
+      mov eax, [string]
+      inc eax
+      mov [string], eax
+      jmp .conv
+
+    .positive
+      mov dword [negt], 0
+      mov eax, [string]
+      inc eax
+      mov [string], eax
+
+  .conv:
+
+    addarg dword [string]
+    addarg '.'
+    call __strpos
+    clargs 2
+    
+    mov dword [dotpos], eax
+
+    ;get decimal str
+    mov eax, [string]
+    add eax, [dotpos]
+    inc eax
+
+    mov [str_dec], eax
+
+    addarg dword [str_dec]
+    call __strlen
+    clargs 1
+    
+    mov dword [declen], eax    
+
+    addarg dword [str_dec]
+    call __atoi
+    clargs 1
+
+    mov dword [deci], eax
+
+    mov eax, [string]
+    add eax, [dotpos]
+    mov [eax], byte 0
+
+    addarg dword [string]
+    call __atoi
+    clargs 1
+
+    mov [inte], eax
+
+    mov eax, dword [declen]
+    
+    addarg 10
+    addarg eax
+    call __pow
+    clargs 2
+
+    mov dword [p], eax
+
+    finit
+    fld   dword [deci]
+    fdiv  dword [p]
+    fiadd  dword [inte]
+    fstp  dword [float]
+
+    cmp dword [negt], 1
+    jnz .return_pos
+
+    mov eax, [float]
+    or eax, 0x80000000
+    return
+   
+    .return_pos
+      mov eax, [float]
+      return
+
+    .ret_zero
+      mov eax, 0
+      return
+
+    exit 0
 
 __itoa:
     ;params
@@ -915,6 +1080,40 @@ __malloc:
       clargs 1
       exit 1
 
+__leia_caractere:
+    %define buffer   ebp-BUFFER_SIZE
+    begin BUFFER_SIZE
+    
+    ;read from stdin
+    lea eax, [buffer]
+    addarg eax
+    addarg BUFFER_SIZE
+    call __readline
+    clargs 2
+    
+    lea ebx, [buffer]
+    xor eax, eax
+    mov al, [ebx]
+
+    return
+
+__leia_real:
+    %define buffer   ebp-BUFFER_SIZE    
+    begin BUFFER_SIZE
+    
+    ;read from stdin
+    lea eax, [buffer]
+    addarg eax
+    addarg BUFFER_SIZE
+    call __readline
+    clargs 2
+    
+    lea eax, [buffer]
+    addarg eax
+    call __atof
+    clargs 1
+
+    return
 
 __leia_inteiro:
     %define buffer   ebp-BUFFER_SIZE
@@ -936,7 +1135,7 @@ __leia_inteiro:
 
 __leia_logico:
     %define zero_str ebp-4
-    %define buffer   ebp-BUFFER_SIZE
+    %define buffer   ebp-4-BUFFER_SIZE
     begin (4+BUFFER_SIZE)
     
     mov [zero_str], dword 0x00000030 ;"0\0"
@@ -1012,5 +1211,3 @@ __readline:
     mov [ebx+eax-1], byte 0
 
     return
-
-;TODO: leia_caractere, leia_real
