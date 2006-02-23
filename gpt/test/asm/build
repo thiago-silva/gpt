@@ -1,0 +1,2 @@
+nasm -O1 -f elf -o test.o test.asm && \
+ld -o test test.o && rm test.o
