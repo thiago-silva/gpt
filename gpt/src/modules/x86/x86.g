@@ -42,120 +42,27 @@ options {
 {
   public:
   X86Walker(SymbolTable& st) 
-    : stable(st) { }
+    : stable(st), _currentScope("@global"), indent("        ") { }
 
   private:
 
   void init(string name) {
-    head << "; algoritmo: " << name << endl;
-    data << "section .data" << endl;
+    head << "; algoritmo: " << name << "\n\n";
 
-    bss << "section .bss" << endl;
-    bss << "__buffer resb 1024" << endl;
+    #include <asm_tmpl.h>
+
+    bss << "section .bss\n"
+           "    __mem    resb  __MEMORY_SIZE\n\n";
+
+    data << "section .data\n"
+            "    __mem_ptr   dd 0\n"
+            "    __aux       dd 0\n"
+            "    __str_true  db 'verdadeiro',0\n"
+            "    __str_false db 'falso',0\n"
+            "    __str_no_mem_left db 'Não foi possível alocar memória.',0\n\n";
 
 
-    txt << "section .text" << endl;
-    txt << "global _start" << endl;
-
-    txt << "__strlen:\n"
-           "mov ebx, 0\n"
-           ".do:\n"
-           "cmp [eax+ebx], byte 0\n"
-           "jz  .break\n"
-           "inc ebx\n"
-           "jnz .do\n"
-           ".break\n"
-           "ret\n\n";
-
-    txt << "__imprima_literal:\n"
-           "push eax\n"
-           "push ebx\n"
-           "push ecx\n"
-           "push edx\n"
-           "call __strlen\n"
-           "mov ecx, eax\n"
-           "mov edx, ebx\n"
-           "inc edx\n"
-           "mov eax, 4\n"
-           "mov ebx, 1\n"            
-           "int 80h\n"
-           "pop edx\n"
-           "pop ecx\n"
-           "pop ebx\n"
-           "pop eax\n"
-           "ret\n\n";
-
-    txt << "__imprima_caractere:\n"
-           "push eax\n"
-           "push ebx\n"
-           "push ecx\n"
-           "push edx\n"
-	         "segment .data\n"
-	         ".carac db 0\n"
-	         "segment .text\n"
-           "mov [.carac], eax\n"
-	         "mov ecx, .carac\n"
- 	         "mov edx, 1\n"
-	         "mov eax, 4\n"
-           "mov ebx, 1\n"
- 	         "int 80h\n"
-           "pop edx\n"
-           "pop ecx\n"
-           "pop ebx\n"
-           "pop eax\n"
-	         "ret\n\n";
-
-    txt << "__imprima_inteiro:\n"
-           "push eax\n"
-           "push ebx\n"
-           "push ecx\n"
-           "push edx\n"
-           "call __itoa\n"
-           "mov eax, __buffer\n"
-           "call __imprima_literal\n"
-           "pop edx\n"
-           "pop ecx\n"
-           "pop ebx\n"
-           "pop eax\n"
-           "ret\n\n";
-
-    txt << "__itoa:\n"
-           "push eax\n"
-           "push ebx\n"
-           "push ecx\n"
-           "push edx\n"
-           "mov ecx, 0\n"
-           "mov ebx, 10\n"
-           ".trans:\n"
-           "mov edx, 0\n"
-           "idiv ebx\n"
-           "add edx, BYTE 48\n"
-           "push edx\n"
-           "inc ecx\n"            
-           "cmp eax, 0\n"
-           "jz  .btrans\n"
-           "jnz .trans\n"
-           ".btrans:\n"
-           "mov ebx, 0\n"
-           ".reorder:\n"
-           "pop edx\n"
-           "mov [ebx+__buffer], edx\n"
-           "inc ebx;\n"
-           "dec ecx\n"
-           "cmp ecx, 0\n"
-           "jnz .reorder\n"
-           "pop edx\n"
-           "pop ecx\n"
-           "pop ebx\n"
-           "pop eax\n"
-           "ret\n\n";
-
-    txt << "__exit_success:\n"
-           "mov eax,1\n"
-           "mov ebx,0\n"
-           "int 80h\n\n";
-  
-    _currentScope = "@global";
+    txt << "section .text" << endl;    
   }
 
   void declarePrimitive(bool isGlobal, int type, string name) {
@@ -171,7 +78,7 @@ options {
           data << name << " dd 0" << endl;
           break;
         case TIPO_LITERAL:
-          data << name << " db 0" << endl;
+          data << name << " dd 0" << endl;
           break;
         case TIPO_LOGICO:
           data << name << " dd 0" << endl;
@@ -217,16 +124,20 @@ options {
     }
   }
 
-  string createLabel(string tmpl) {
+  string createLabel(bool local, string tmpl) {
     static int c = 0;
     stringstream s;
-    s << "___" << tmpl << "_" << c;
+    if(local) {
+      s << ".___" << tmpl << "_" << c;
+    } else {
+      s << "." << tmpl << "_" << c;
+    }
     c++;
     return s.str();
   }
 
   string insertString(string str) {
-    string lb = createLabel("str");
+    string lb = createLabel(false, "str");
     data << lb << " db '" << str << "',0" << endl;
     return lb;
   }
@@ -265,22 +176,26 @@ options {
     }
   }
   
-  void writeln(string str) {
-    txt << str << endl;
+  void writeln(string str) {    
+    txt << indent << str << endl;
   }
 
   void writeFooter() {
-    txt << "call __exit_success\n";
+    txt << "exit 0\n";    
   }
 
-  stringstream bss;
-  stringstream data;
-  stringstream head;
-  stringstream txt;
-
+  SymbolTable& stable;
   string _currentScope;
 
-  SymbolTable& stable;
+  string indent;
+  stringstream head;
+  stringstream bss;
+  stringstream data;  
+  stringstream txt;
+  stringstream lib;
+
+  
+  
 }
 
 /********************************* Producoes **************************************/
@@ -292,10 +207,11 @@ algoritmo returns [string str]
 //     (func_decls)*
 
   {
-    str = head.str(); 
-    str += data.str(); 
-    str += bss.str(); 
+    str =  head.str();
+    str += bss.str();
+    str += data.str();     
     str += txt.str();
+    str += lib.str();
   }
   ;
 
@@ -376,7 +292,10 @@ tipo_matriz returns [pair<int, list<string> > p] //pair<type, list<dimsize> >
   ;
 
 principal
-{writeln("_start:");}
+{
+  writeln("_start:");
+  writeln("_start_no equ $");
+}
   : stm_block
 {writeFooter();}
   ;
@@ -390,7 +309,7 @@ stm
   : stm_attr
   | t=fcall[TIPO_ALL]
 //   | stm_ret
-  | stm_se
+//   | stm_se
 //   | stm_enquanto
 //   | stm_para
   ;
@@ -399,6 +318,7 @@ stm_attr
 {
   pair<int, string> lv;
   int expecting_type;
+  int etype;
   stringstream s;
 
   writeln("; atribuicao");
@@ -406,16 +326,26 @@ stm_attr
   : #(T_ATTR lv=lvalue
       {
         expecting_type = stable.getSymbol(_currentScope, lv.second, true).type.primitiveType();
-
-        writeln("push ebx");//push dimension offset if it is matrix
       }
 
-      expr[expecting_type]
+      etype=expr[expecting_type]
 		)
 
     {
-      writeln("pop ebx");//pops the dimension offset if it is matrix
-      s << "mov [" << lv.second << " + ebx], eax";
+      //casts
+      if((etype != TIPO_REAL) && (expecting_type == TIPO_REAL)) {
+        //int to float
+        writeln("mov dword [__aux], eax");
+        writeln("fild dword [__aux]");
+        writeln("fstp dword [__aux]");
+        writeln("mov eax, dword [__aux]");
+      } else if((etype == TIPO_REAL) && (expecting_type != TIPO_REAL)) {
+        writeln("mov dword [__aux], eax");
+        writeln("fld dword [__aux]");
+        writeln("fistp dword [__aux]");
+        writeln("mov eax, dword [__aux]");
+      }
+      s << "mov [" << lv.second << "], eax";
       writeln(s.str());
     }
   ;
@@ -440,40 +370,40 @@ lvalue returns [pair<int, string> p]
 
         if(dims.size() > 0) {
           writeln("push eax");
-          writeln("mov ebx, 1");
-          writeln("push ebx");
+          writeln("mov edx, 1");
+          writeln("push edx");
         } else {
-          writeln("mov ebx, 0");
+//           writeln("mov edx, 0");
         }
       }
 
       (
         expr[TIPO_INTEIRO]
         {
-          writeln("pop ebx");
+          writeln("pop edx");
 
           if(c == dims.size()) {
             if(dims.size() == 1) {
-              writeln("mov ebx, eax");
+              writeln("mov edx, eax");
             } else {
-              writeln("add ebx, eax");
+              writeln("add edx, eax");
             }
           } else {
-            s << "mul ebx, " << *it;
+            s << "mul edx, " << *it;
             writeln(s.str());
           }
 
-          writeln("push ebx");
+          writeln("push edx");
           c++;
           it++;
         }
       )*
 
       {
-        if(dims.size() > 0) {
-          writeln("pop ebx");
+/*        if(dims.size() > 0) {
+          writeln("pop edx");
           writeln("pop eax");
-        }
+        }*/
       }
     )
   ;
@@ -483,8 +413,9 @@ fcall[int expct_type] returns [int type]
   Symbol f;
   int count = 0;
 
-  string fname, fimp;
   stringstream s;
+  string fname, fimp;
+  int args = 0;
   int etype;
   int ptype;
 }
@@ -504,28 +435,28 @@ fcall[int expct_type] returns [int type]
         {
           if(fname == "imprima") {
             fimp = translateFuncImprima(id->getText(), etype);
-  
-            s << "call " << fimp;
-            writeln(s.str());
-            s.str("");
+
+            writeln("addarg eax");
+            writeln(string("call ") + fimp);
+            writeln("clargs 1");
           } else {
-            writeln("push eax"); //push params
+            writeln("addarg eax");
             ptype = f.param.paramType(count++);
           }
+          args++;
         }
       )*
     )
     {
       if(fname == "imprima") {
-        writeln("mov eax, 10"); //\n
-        writeln("call __imprima_caractere");
+        writeln("print_lf"); //\n
       } else {
-        s << "call " << fname;
+        writeln(string("call ") + fname);
+        s << "clargs " << args;
         writeln(s.str());
       }
     }
   ;
-
 
 /*
 stm_ret
@@ -536,15 +467,14 @@ stm_ret
 }
   : #(T_KW_RETORNE (TI_NULL|e=expr[expecting_type]))
   ;
-
 */
 stm_se
 {
   stringstream s;
   string lbnext, lbfim;
 
-  lbnext = createLabel("next_se");
-  lbfim = createLabel("fim_se");
+  lbnext = createLabel(true, "next_se");
+  lbfim = createLabel(true, "fim_se");
 
   bool hasElse = false;
 
@@ -632,27 +562,348 @@ passo returns [production p]
 
 expr[int expecting_type, string reg = "eax"] returns [int etype]
 {
+  int e1, e2;
   stringstream s;
+  etype = #expr->getEvalType();
 }
-  : #(T_BIT_OU    etype=expr[expecting_type] etype=expr[expecting_type])
-  | #(T_BIT_XOU   etype=expr[expecting_type] etype=expr[expecting_type])
-  | #(T_BIT_KW_E  etype=expr[expecting_type] etype=expr[expecting_type])
-  | #(T_BIT_NOT   etype=expr[expecting_type] etype=expr[expecting_type])
-  | #(T_IGUAL     etype=expr[expecting_type] etype=expr[expecting_type, "ebx"]) {writeln("sub eax, ebx");}
-  | #(T_DIFERENTE etype=expr[expecting_type] etype=expr[expecting_type])
-  | #(T_MAIOR     etype=expr[expecting_type] etype=expr[expecting_type])
-  | #(T_MENOR     etype=expr[expecting_type] etype=expr[expecting_type])
-  | #(T_MAIOR_EQ  etype=expr[expecting_type] etype=expr[expecting_type])
-  | #(T_MENOR_EQ  etype=expr[expecting_type] etype=expr[expecting_type])
-  | #(T_MAIS      etype=expr[expecting_type] etype=expr[expecting_type])
-  | #(T_MENOS     etype=expr[expecting_type] etype=expr[expecting_type])
-  | #(T_DIV       etype=expr[expecting_type] etype=expr[expecting_type])
-  | #(T_MULTIP    etype=expr[expecting_type] etype=expr[expecting_type])
-  | #(T_MOD       etype=expr[expecting_type] etype=expr[expecting_type])
+  : #(T_KW_OU     e1=expr[expecting_type] e2=expr[expecting_type, "ebx"]) 
+      {
+        writeln("cmp eax, 0");
+        writeln("setne al");
+        writeln("and eax, 0xff");
+        writeln("cmp ebx, 0");
+        writeln("setne bl");
+        writeln("and ebx, 0xff");
+        writeln("or al, bl");
+      }
+  | #(T_KW_E      e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+      {
+        writeln("cmp eax, 0");        
+        writeln("setne al");
+        writeln("and eax, 0xff");
+        writeln("cmp ebx, 0");
+        writeln("setne bl");
+        writeln("and ebx, 0xff");
+        writeln("and al, bl");        
+      }
+  | #(T_BIT_OU    e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+      {
+        writeln("or eax, ebx");
+      }
+  | #(T_BIT_XOU   e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+      {
+        writeln("xor eax, ebx");
+      }
+  | #(T_BIT_E     e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+      {
+        writeln("and eax, ebx");
+      }
+  | #(T_IGUAL     e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+      {
+        writeln("cmp eax, ebx");
+        writeln("sete al");
+        writeln("and eax, 0xff");
+      }
+  | #(T_DIFERENTE e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+      {
+        writeln("cmp eax, ebx");
+        writeln("setne al");
+        writeln("and eax, 0xff");
+      }
+  | #(T_MAIOR     e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+      {
+        //fcomp assumes ST0 is left-hand operand aways
+        //flags after comp:
+        //5.0 @ 4 : ax -> 0
+        //5.0 @ 5 : ax -> 0x4000
+        //4.0 @ 6 : ax -> 0x100
+        if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
+          writeln("fninit");
+          if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
+            writeln("mov [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], ebx");
+            writeln("ficomp dword [__aux]");
+            writeln("fstsw ax");
+            writeln("cmp ax, 0");
+          } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
+            writeln("mov [__aux], ebx");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], eax");
+            writeln("ficomp dword [__aux]");
+            writeln("fstsw ax");
+            writeln("cmp ax, 0x100");
+          } else { //float/float
+            writeln("mov [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], ebx");
+            writeln("fcomp dword [__aux]");
+            writeln("fstsw ax");
+            writeln("cmp ax, 0");
+          }
+          writeln("sete al");
+          writeln("and eax, 0xff");
+        } else {
+          writeln("cmp eax, ebx");
+          writeln("setg al");
+          writeln("and eax, 0xff");
+        }
+      }
+  | #(T_MENOR     e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+      {
+        if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
+          writeln("fninit");
+          if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
+            writeln("mov [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], ebx");
+            writeln("ficomp dword [__aux]");
+            writeln("fstsw ax");
+            writeln("cmp ax, 0x100");
+          } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
+            writeln("mov [__aux], ebx");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], eax");
+            writeln("ficomp dword [__aux]");
+            writeln("fstsw ax");
+            writeln("cmp ax, 0");
+          } else { //float/float
+            writeln("mov [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], ebx");
+            writeln("fcomp dword [__aux]");
+            writeln("fstsw ax");
+            writeln("cmp ax, 0x100");
+          }
+          writeln("sete al");
+          writeln("and eax, 0xff");
+        } else {
+          writeln("cmp eax, ebx");
+          writeln("setl al");
+          writeln("and eax, 0xff");
+        }
+      }
+  | #(T_MAIOR_EQ  e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+      {
+        if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
+          writeln("fninit");
+          if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
+            writeln("mov [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], ebx");
+            writeln("ficomp dword [__aux]");
+            writeln("fstsw ax");
+            writeln("cmp ax, 0");
+          } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
+            writeln("mov [__aux], ebx");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], eax");
+            writeln("ficomp dword [__aux]");
+            writeln("fstsw ax");
+            writeln("cmp ax, 0x100");
+          } else { //float/float
+            writeln("mov [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], ebx");
+            writeln("fcomp dword [__aux]");
+            writeln("fstsw ax");
+            writeln("cmp ax, 0");
+          }
+          writeln("sete bl");
+          writeln("and ebx, 0xff");
+          
+          writeln("cmp ax, 0x4000");
+          writeln("sete al");
+          writeln("and eax, 0xff");
+          writeln("or eax, ebx");
+        } else {
+          writeln("cmp eax, ebx");
+          writeln("setge al");
+          writeln("and eax, 0xff");
+        }
+      }
+  | #(T_MENOR_EQ  e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+      {
+        if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
+          writeln("fninit");
+          if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
+            writeln("mov [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], ebx");
+            writeln("ficomp dword [__aux]");
+            writeln("fstsw ax");
+            writeln("cmp ax, 0x100");
+          } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
+            writeln("mov [__aux], ebx");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], eax");
+            writeln("ficomp dword [__aux]");
+            writeln("fstsw ax");
+            writeln("cmp ax, 0");
+          } else { //float/float
+            writeln("mov [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], ebx");
+            writeln("fcomp dword [__aux]");
+            writeln("fstsw ax");
+            writeln("cmp ax, 0x100");
+          }
+          writeln("sete bl");
+          writeln("and ebx, 0xff");
+          
+          writeln("cmp ax, 0x4000");
+          writeln("sete al");
+          writeln("and eax, 0xff");
+          writeln("or eax, ebx");
+        } else {
+          writeln("cmp eax, ebx");
+          writeln("setle al");
+          writeln("and eax, 0xff");
+        }
+      }
+  | #(T_MAIS      e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+      {
+        if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
+          string addpop;
+          writeln("fninit");
+          if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
+            writeln("mov [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], ebx");
+            addpop = "fiadd dword [__aux]";
+          } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
+            writeln("mov [__aux], ebx");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], eax");
+            addpop = "fiadd dword [__aux]";
+          } else { //float/float
+            writeln("mov [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], ebx");
+            addpop = "fadd dword [__aux]";
+          }
+            writeln(addpop);
+            writeln("fstp dword [__aux]");
+            writeln("mov eax, dword [__aux]");
+        } else {
+          writeln("add eax, ebx");
+        }
+      }
+  | #(T_MENOS     e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+      {
+        if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
+          string subop;
+          writeln("fninit");
+          if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
+            writeln("mov [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], ebx");
+            subop = "fisub dword [__aux]";
+          } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
+            writeln("mov [__aux], ebx");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], eax");
+            subop = "fisub dword [__aux]";
+          } else { //float/float
+            writeln("mov [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], ebx");
+            subop = "fsub dword [__aux]";
+          }
+            writeln(subop);
+            writeln("fstp dword [__aux]");
+            writeln("mov eax, dword [__aux]");
+        } else {
+          writeln("sub eax, ebx");
+        }
+      }
+  | #(T_DIV       e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+      {
+        if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
+          string divpop;
+          writeln("fninit");
+          if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
+            writeln("mov [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], ebx");
+            divpop = "fidiv dword [__aux]";
+          } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
+            writeln("mov [__aux], ebx");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], eax");
+            divpop = "fidivr dword [__aux]";
+          } else { //float/float
+            writeln("mov [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], ebx");
+            divpop = "fdiv dword [__aux]";
+          }
+            writeln(divpop);
+            writeln("fstp dword [__aux]");
+            writeln("mov eax, dword [__aux]");
+        } else {
+          writeln("xor edx, edx");
+          writeln("idiv ebx");
+        }
+      }
+  | #(T_MULTIP    e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+      {
+        if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
+          string mulpop;
+          writeln("fninit");
+          if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
+            writeln("mov [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], ebx");
+            mulpop = "fimul dword [__aux]";
+          } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
+            writeln("mov [__aux], ebx");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], eax");
+            mulpop = "fimul dword [__aux]";
+          } else { //float/float
+            writeln("mov [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("mov [__aux], ebx");
+            mulpop = "fmul dword [__aux]";
+          }
+            writeln(mulpop);
+            writeln("fstp dword [__aux]");
+            writeln("mov eax, dword [__aux]");
+        } else {
+          writeln("imul eax, ebx");
+        }
+      }
+  | #(T_MOD       e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+      {
+        writeln("xor edx, edx");
+        writeln("idiv ebx");        
+        writeln("mov eax, edx");
+      }
   | #(TI_UN_NEG   etype=element[expecting_type, reg])
+      {
+        if(etype == TIPO_REAL) {
+          s << "or " << reg << ",0x80000000";
+        } else {
+          s << "neg " << reg;          
+        }
+        writeln(s.str());
+      }
   | #(TI_UN_POS   etype=element[expecting_type, reg])
+      {
+        //nothing
+      }
   | #(TI_UN_NOT   etype=element[expecting_type, reg])
+      {
+        writeln("mov ebx, eax");
+        writeln("xor eax, eax");
+        writeln("cmp ebx, 0");
+        writeln("sete al");        
+      }
   | #(TI_UN_BNOT  etype=element[expecting_type, reg])
+      {
+        writeln("not eax");
+      }
   | etype=element[expecting_type, reg]
   ;
 
@@ -664,18 +915,31 @@ element[int expecting_type, string reg] returns [int etype]
 }
   : p=literal {s << "mov " << reg << ", " << p.second; writeln(s.str());etype = p.first;}
   | etype=fcall[expecting_type]
-  | p=lvalue  {s << "mov " << reg << ", [" << p.second << " + ebx]"; writeln(s.str());etype = p.first;}
+  | p=lvalue  {s << "mov " << reg << ", [" << p.second << "]"; writeln(s.str());etype = p.first;}
   | #(TI_PARENTHESIS etype=expr[expecting_type, reg])
   ;
 
 literal returns [pair<int, string> p]
-{stringstream ss;}
+{
+  stringstream ss;
+}
   : s:T_STRING_LIT        {p.second = insertString(s->getText());p.first = TIPO_LITERAL;}
   | i:T_INT_LIT           {p.second = i->getText();p.first = TIPO_INTEIRO;}
-  | r:T_REAL_LIT          {p.second = r->getText();p.first = TIPO_REAL;}
   | c:T_CARAC_LIT         {ss << (int) c->getText().c_str()[0]; p.second = ss.str();p.first = TIPO_CARACTERE;}
   | v:T_KW_VERDADEIRO     {p.second = "1";p.first = TIPO_LOGICO;}
   | f:T_KW_FALSO          {p.second = "0";p.first = TIPO_LOGICO;}
+  | r:T_REAL_LIT          {
+                            //get the content of a float variable to integer.
+                            float fvalue; //sizeof(float) should be 4
+                            long  *fvaluep; //sizeof(long) should be 4
+                            void *pt;
+                            fvalue = atof(r->getText().c_str()); 
+                            pt = &fvalue; 
+                            fvaluep = (long*) pt;
+                            ss << *fvaluep; 
+                            p.second = ss.str();
+                            p.first = TIPO_REAL;
+                          }
   ;
 
 
@@ -782,4 +1046,4 @@ func_decls
       }
     )
   ;*/
-
+  
