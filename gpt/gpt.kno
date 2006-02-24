@@ -2,24 +2,39 @@
 
 \CurrentEntry 1 TODO
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
-<ul type="disc"><div>GPTEditor</div>
-<ul type="disc"><li>Settings:</li>
-<ul type="disc"><li>Remover &quot;argumentos&quot; e colocar &quot;Tratamento de erros: mostrar dicas [x]&quot;<br /><br /></li></ul></ul>
+<ul type="disc"><div></div>
+<li>GPT:</li>
+<ul type="disc"><li>resolver os Makefile.am e o &quot;make dist&quot; issue</li>
+<ul type="disc"><li>Sources que devem ser gerados estão sendo incluidos no pacote</li>
+<li>gramaticas nao estao sendo incluidas</li></ul>
+<li>configure.in</li>
+<ul type="disc"><li>quando antlr nao eh encontrado, checar o resultado de AC_PATH_PROG(ANTLR, antlr)</li>
+<ul type="disc"><li>esta dando erro de shell pq esta executando ANTLR_LIB=`antlr-config --libs` sendo que o antlr-config pode nao existir no sistema<br /></li></ul></ul></ul>
+<li>Win32</li>
+<ul type="disc"><li>Usar biblioteca portavel para sockets / pcre (ver CommonC++)</li>
+<li>Criar pacote binario (win32) para o GPT</li>
+<li>Verificar instalação do kdelibs/kate (para o GPTEditor)<br /><br /></li></ul>
 <li>Publish:</li>
-<ul type="disc"><li>GPT</li>
-<ul type="disc"><li>Manual: tirar o capitulo de implementacao. Publicar a primeira versão simples.</li></ul>
-<li>GPTEditor</li>
-<ul type="disc"><li>Adicionar icones ao pacote</li></ul>
-<li>Ambos</li>
-<li>Site (html manual (wiki), comentarios de implementacao, exemplos, etc)<br /></li></ul>
+<ul type="disc"><li>Colocar no site uma lista de links de aplicativos relacionados<br /></li></ul>
 <li>GPT</li>
 <ul type="disc"><li>Checar implementacao de operadores &quot;e&quot;, &quot;ou&quot;, &quot;xou&quot;</li>
 <li>Semantic: checar se subscritos são &quot;0&quot; na declaracao de vetores</li>
 <li>Uniformizar ponto flutuante (uso de double! (usar float gera warnings na traducao de C)</li>
 <li>impressao: compilacao e interpretacao deve imprimir no formato .XX (duas casas decimais)</li>
-<li>interpreter: atoif -&gt; &quot;a2double&quot;, (ou o que quer que seja str2double)</li>
-<li>Implementar compilação real (ELF binary)</li>
-<li>terminar o manual</li></ul></ul>
+<li>interpreter: atoif -&gt; &quot;a2double&quot;, (ou o que quer que seja str2double)<br /><br /></li></ul>
+<li>Documentacao</li>
+<ul type="disc"><li>Sobre compilacao (nasm/32)</li>
+<ul type="disc"><li>tamanho dos tipos </li>
+<li>Overflow aritmetico</li>
+<li>Notas:</li>
+<ul type="disc"><li>real x := 2 / 5; /* res=2. Like &quot;C&quot;, não há promoção dos operandos. Resultado concatenado */</li></ul></ul>
+<li>Sobre compilacao (implementacao)</li>
+<ul type="disc"><li>elf</li>
+<li>etc</li></ul>
+<li><br /></li></ul>
+<li>GPTEditor</li>
+<ul type="disc"><li>Settings:</li>
+<ul type="disc"><li>Remover &quot;argumentos&quot; e colocar &quot;Tratamento de erros: mostrar dicas [x]&quot;</li></ul></ul></ul>
 </body></html>
 
 
@@ -43,10 +58,51 @@
 <li>-switch (escolha)</li>
 <li>-Fazer verificação de uso de variaveis?</li>
 <li>&quot;Aviso: variavel &quot;w&quot; nao esta sendo usada&quot;</li>
-<li>Adicionar arquivos-fonte automaticamente? (implicit include)</li></ul></ul>
+<li>adicionar arquivos-fonte automaticamente? (implicit include)<br /><br /></li>
+<li>Ter mecanismos de gramaticas dinamicas ou sublinguagens</li>
+<ul type="disc"><li>Remodelagem de estruturas, palavras-chaves, etc.</li>
+<li>Estilos gramaticais ou sublinguagens:</li>
+<ul type="disc"><li>Pascal-like: se utiliza de &quot;inicio&quot;,&quot;fim&quot;, &quot;:=&quot;, &quot;escreva&quot;</li>
+<li>C-Like: se utiliza de &quot;{ }&quot;, &quot;==&quot;, &quot;imprima&quot;, &quot;()&quot; entre as expr de estruturas, etc.</li>
+<li>Indenter: não utiliza marcadores de bloco, indentação faz parte das estruturas.</li></ul>
+<li>Talvez, criar um compiler para uma gramatica que pode ser escrita por professores (ver StringTemplates, talvez?)<br /><br /></li></ul></ul>
+<li></li></ul>
 </body></html>
 
 \NewEntry 1 Bugs
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><li>manua.tex:</li>
+<ul type="disc"><li>extensao dos arquivos &quot;.pt&quot; -&gt; &quot;.gpt&quot;</li></ul></ul>
+</body></html>
+
+\NewEntry 1 latex2html
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><li>Remover o preambulo quase todo (deixar simples), inclusive o renewcommand{\maketitle}</li>
+<li>Remover os capitulos incompletos</li>
+<li>latex2html nao reconhece \capítulo. :/ tem que fazer um s/capitulo/chapter</li></ul>
+</body></html>
+
+\NewEntry 1 Projeto GPT++
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><li>Linguagem baseada em portugol (ou extensão da linguagem portugol....)</li>
+<li>Utiliza abstrações para manipulação de dispositivos de entrada (mouse, teclado) e manipulação de imagens e gráficos.<br /><br /></li>
+<li>Motivação</li>
+<ul type="disc"><li>Aprender algoritmos com construções primitivas nem sempre permite que alunos expressem sua criatividade e sejam motivados a estudar. A idéia de possibilitar &quot;eye-candy&quot;'s e jogos de forma fácil e simples pode trazer bons resultados no ensino de programação. </li></ul>
+<li>Referências</li>
+<ul type="disc"><li>Portugol/Plus</li>
+<li>Macromedia Flash<br /><br /></li></ul>
+<li>Versão para programação estruturada.</li>
+<li>Versão para orientação a objeto (Smalltalk/portugol)<br /><br /><br /><br /></li>
+<li></li></ul>
+</body></html>
+
+\NewEntry 1 assembly blocks
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><li>Notas sobre permitir assembly em blocos parecido com C (asm {})<br /></li>
+<li>A proposta para permitir esses blocos consiste em permitir expandir a linguagem.<br />Entretanto, traria dificuldades para a interpretação de codigo, que exigiria um interpretador ASM, e isso não é viável.</li>
+<li>A próxima sugestão seria ter apenas uma função interna do g-portugol: _syscall(...)</li>
+<ul type="disc"><li>essa função permitiria acesso aos recursos do sistema, que é o objetivo dos blocos asm{}.<br /><br /></li></ul></ul>
+</body></html>
 
 \NewEntry 0 release
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
@@ -58,5 +114,4 @@
 <li>TAG current CVS version</li>
 <li>Update site</li></ul>
 </body></html>
-
 
