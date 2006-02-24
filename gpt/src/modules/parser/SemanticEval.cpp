@@ -431,7 +431,7 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
       ret = evaluateNumTypes(left, right);
       if(!ret.isNumeric(true)) {
         stringstream msg;
-        msg << "Operador \"" << op->getText() << "\" não pode ser usado com termos "
+        msg << "Operador \"" << op->getText() << "\" só pode ser usado com termos "
             << "numéricos inteiros e compatíveis";
             ErrorHandler::self()->add(msg.str(), op->getLine());          
             return nulo;
