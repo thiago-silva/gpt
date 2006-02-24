@@ -943,7 +943,7 @@ mais direta e que aproveita melhor os conhecimentos do estudante.
 
 \section{Formato Estrutural}
 
-A forma de um programa escrito em G-Portugol tem o seguinte formato:
+Um programa escrito em G-Portugol tem o seguinte formato:
 
 \begin{itemize}
  \item 
@@ -1067,8 +1067,8 @@ representa o valor falso.
 
 \end{itemize}
 
-A precedencia de operadores é mostrada na tabela \ref{tb_precedencia_op} (da
-menor precedência para a maior) e pode ser expliticamente modificada com o uso
+A precedência de operadores é mostrada na tabela \ref{tb_precedencia_op} (da
+menor precedência para a maior) e pode ser explícicamente modificada com o uso
 de parêntesis.
 
 
@@ -1105,7 +1105,10 @@ entre si.
 
 Existem dois casos em que ocorre uma coerção implicita. O primeiro caso ocorre
 durante a avaliação de uma expressão que tem operandos de tipos diferentes (mas
-compatíveis entre si), mas não há perda de dados. O segundo caso é discutido na
+compatíveis entre si), onde não há perda de dados e um dos termos é promovido
+para o tipo do seu termo complementar. Por exemplo, na expressão ``2+1.5'', o
+termo ``2'' é promovido para o tipo ``real'', tendo o valor ``2.0'' antes
+ que  a soma seja processada. O segundo caso é discutido na
 seção \ref{subsec:atribuicoes}.
 
 
@@ -1198,8 +1201,9 @@ argumentos.
 
 A função ``leia'' espera por uma entrada do teclado seguida do caractere LF (em
 geral, associado a tecla ``Enter'') e retorna o valor lido. Esse valor é
-convertido implicitamente para o tipo do \textit{lvalue}. Alguns exemplos de
-conversões podem ser vistos na tabela \ref{tb_leia_casts}:
+convertido implicitamente para o tipo do \textit{lvalue}. A tabela
+\ref{tb_leia_casts} apresenta conversões implícitas processadas pela
+função ``leia'' para o enunciado de exemplo ``x := leia()''.
 
 \begin{table}[ht]
 \begin{center}
@@ -1207,16 +1211,16 @@ conversões podem ser vistos na tabela \ref{tb_leia_casts}:
     \hline
     \multicolumn{3}{|c|}{Conversões da função ``leia''} \\
     \hline
-      Tipo Esperado & Texto lido & Valor convertido \\
+      Tipo do LValue ``x'' & Texto lido & Valor final de ``x'' \\
     \hline
-      inteiro & ``123'' & 123 \\
-      inteiro & ``123 456'' & 123 \\
-      inteiro & ``abc'' & 0 \\
-      inteiro & ``123s'' & 123 \\
-      lógico  & ``falso'' & falso \\
-      lógico & ``0'' & falso \\
-      lógico & ``falso 12wtc'' & verdadeiro \\
-      lógico & ``0 umdois3'' & verdadeiro\\
+      inteiro & 123 & 123 \\
+      inteiro & 123 456 & 123 \\
+      inteiro & abc & 0 \\
+      inteiro & 123s & 123 \\
+      lógico  & falso & falso \\
+      lógico & 0'' & falso \\
+      lógico & falso 12wtc & verdadeiro \\
+      lógico & 0 umdois3 & verdadeiro\\
     \hline
   \end{tabular}
   \caption{Conversões implícitas da função ``leia'' \label{tb_leia_casts}}
@@ -1225,17 +1229,18 @@ conversões podem ser vistos na tabela \ref{tb_leia_casts}:
 
 
 Essa função se comporta de forma excepcional visto que seu tipo de retorno não
-é absoluto (depende do tipo de \textit{lvalue}) e é restrita expressões isentas
-de operadores. Isso é, não é permitido aplicá-la como um termo em uma expressão
-com multiplos termos, embora seja possível utilizá-la em subscritos de vetores e
-matrizes, assim como em expressões de estruturas de controle. 
+é absoluto (\textit{overloaded}, depende do tipo de \textit{lvalue}) e, no mome
+nto, é restrita expressões isentas de operadores. Isso é, não é permitido
+aplicá-la como um termo em uma expressão com multiplos termos (ex. ``x :=  y +
+leia()``), embora seja possível utilizá-la em subscritos de vetores e matrizes,
+assim como em expressões de estruturas de controle. 
 
 Em princípio, pode-se levar em conta duas formas de implementar uma função de
-leitura. A primeira, e mais simples é o uso de funções sobrecarregadas, que
-não retornam valor e recebem um parâmetro de um dado tipo (inteiro, real, etc),
-que é alimentado com o valor lido. Essa forma exige que a passagem seja feita
-por referência. A outra forma, é a implementada em G-Portugol, onde a função não
-recebe parâmetros e retorna o valor lido.
+leitura em alto nível. A primeira, e mais simples é o uso de funções
+sobrecarregadas, que não retornam valor e recebem um parâmetro de um dado tipo
+(inteiro, real, etc), que é alimentado com o valor lido. Essa forma exige que a
+passagem seja feita por referência. A outra forma, é a implementada em
+G-Portugol, onde a função não recebe parâmetros e retorna o valor lido.
 
 As duas formas exigem comportamentos excepcionais, visto que G-Portugol não tem
 suporte para sobrecarga de funções (por parâmetro ou retorno) ou passagem de
@@ -1347,9 +1352,9 @@ No momento, o analisador do GPT percorre o código fonte a procura de erros e,
 mesmo que encontre, continua a análise a procura de mais erros. Uma outra
 abordagem, seria interromper a análise assim que um erro fosse encontrado.
 
-\section{Geração Execução de programas}
+\section{Geração e Execução de programas}
 
-\subsection{Tradução para C}
+\subsection{Tradução para a linguagem C}
 
 É possível usar o GPT para traduzir algoritmos escritos em G-Portugol para
 linguagem C. O código resultante, entretanto, não é criado com o intuito de ser
@@ -1363,10 +1368,11 @@ A tradução para C é limitada no que diz respeito a nomes e identificadores. É
 possível, por exemplo, declarar uma variável em G-Portugol com o nome de
 \textit{printf}. Ao traduzir para C e tentar compilar o código resultante, o
 compilador pode emitir erros, visto que \textit{printf} é uma função da
-biblioteca padrão, usada no código C resultante. Da mesma forma, variáveis com o
-nome de \textit{leia\_inteiro\_\_} no algoritmo podem causar conflitos da mesma
-forma, visto que este é o nome de uma das funçõess incluídas pelo tradutor GPT.
-
+biblioteca padrão, usada no código C resultante. Da mesma forma,
+identificadores com \textit(underlines) antes ou depois em seus nomes
+(como ``__leia_texto'') devem ser evitados, pois muitos identificadores
+internos utilizam essas convenções de nomeação, e seu uso pode acarretar em
+conflitos durante a tradução.
 
 \subsection{Interpretação de código}
 
@@ -1432,11 +1438,11 @@ notações de expressões regulares.
 \begin{verbatim} 
     Regras para identificar literais numéricos
 
-T_INT_LIT : T_OCTAL_LIT | T_HEX_LIT | T_BIN_LIT | (T_DIGIT)+
+T_INT_LIT : T_OCTAL_LIT | T_HEX_LIT | T_BIN_LIT | [0-9]+
 
 T_OCTAL_LIT : '0' ('c'|'C') [0-8]+
 
-T_HEX_LIT : '0' ('x'|'X') [0-9a-zA-Z]+
+T_HEX_LIT : '0' ('x'|'X') [0-9a-fA-F]+
 
 T_BIN_LIT : '0' ('b'|'B') ('0'|'1')
 
@@ -1452,18 +1458,11 @@ T_STRING_LIT : '"' ( ~( '"' | '\\' | '\n' | '\r') | '\\' .)* '"'
 
 SL_COMMENT  : "//" (~('\n'))* ('\n')?
 
-ML_COMMENT  : "/*" 
-    ( 
-      '\n'
-      | '\r' '\n' 
-      | '\r' 
-      | ~( '*' | '\n' | '\r' ) 
-      | '*' 
-    )* "*/"
+ML_COMMENT  : "/*" ( ~('*') | '*' ~'/' )* "*/"
 
   Regra para identificar nomes de variáveis, funções, etc
 
-T_IDENTIFICADOR  : [a-zA-Z] [a-zA-Z0-9]*
+T_IDENTIFICADOR  : [a-zA-Z] [a-zA-Z0-9_]*
 \end{verbatim}
 
 A tabela \ref{tb_palavras_chave} contém as palavras-chave padrão da linguagem
