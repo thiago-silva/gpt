@@ -77,8 +77,9 @@ AC_OUTPUT(Makefile
         doc/Makefile 
         doc/man/Makefile 
         exemplos/Makefile
-        src/compiler/Makefile 
-        src/compiler/parser/Makefile 
-        src/compiler/interpreter/Makefile 
-        src/compiler/c_translator/Makefile
+        src/modules/Makefile 
+        src/modules/parser/Makefile 
+        src/modules/interpreter/Makefile 
+        src/modules/c_translator/Makefile
+        src/modules/x86/Makefile
       )
