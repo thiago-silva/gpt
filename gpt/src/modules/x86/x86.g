@@ -130,7 +130,7 @@ options {
     if(local) {
       s << ".___" << tmpl << "_" << c;
     } else {
-      s << "." << tmpl << "_" << c;
+      s << "___" << tmpl << "_" << c;
     }
     c++;
     return s.str();
@@ -309,9 +309,9 @@ stm
   : stm_attr
   | t=fcall[TIPO_ALL]
 //   | stm_ret
-//   | stm_se
-//   | stm_enquanto
-//   | stm_para
+  | stm_se
+  | stm_enquanto
+  | stm_para
   ;
 
 stm_attr
@@ -486,10 +486,10 @@ stm_se
       writeln("; se: resultado");
 
       writeln("cmp eax, 0");
-      s << "jne " << lbnext;
+      s << "je " << lbnext;
       writeln(s.str());
 
-      writeln("; se: caso verdadeiro:");
+      writeln("; se: verdadeiro:");
     }
 
       (stm)*
@@ -503,7 +503,7 @@ stm_se
         s << "jmp " << lbfim;
         writeln(s.str());
 
-        writeln("; se: caso falso:");
+        writeln("; se: falso:");
 
         s.str("");
         s << lbnext << ":";
@@ -526,39 +526,164 @@ stm_se
     }
   ;
 
-/*
 stm_enquanto
 {
-  production e;
-  stringstream str;
+  stringstream s;
+  string lbenq = createLabel(true, "enquanto");;
+  string lbfim = createLabel(true, "fim_enquanto");;
+
+  s << lbenq << ":";
+  writeln(lbenq);
+  s.str("");
+
+  writeln("; while: expressao");
 }
-  : #(T_KW_ENQUANTO e=expr[TIPO_LOGICO]
+  : #(T_KW_ENQUANTO expr[TIPO_LOGICO]
+      {
+        writeln("; while: resultado");
+        writeln("cmp eax, 0");
+        s << "je " << lbfim;
+        writeln(s.str());
+      }
       (stm)*
+
+      {
+        s.str("");
+        s << "jmp " << lbenq;
+        writeln(s.str());
+
+        s.str("");
+        s << lbfim << ":";
+        writeln(s.str());
+      }
     )
   ;
 
 stm_para
 {
-  bool haspasso = false;
-  production de,ate, ps;
-  stringstream str;
+  stringstream s;
+  pair<int, string> lv;
+  pair<int, string> ps;
+  int de_type, ate_type;
+  bool hasPasso = false;
+
+  string lbpara = createLabel(true, "para");
+  string lbfim = createLabel(true, "fim_para");
+
+  writeln("; para:");
 }
-  : #(T_KW_PARA id:T_IDENTIFICADOR de=expr[TIPO_INTEIRO] ate=expr[TIPO_INTEIRO] (ps=passo {haspasso=true;})?
+  : #(T_KW_PARA 
+
+        lv=lvalue  
+        de_type=expr[TIPO_INTEIRO] 
+
+        {
+          //atribuindo "de" para "lv"
+          //casts (warning: replicacao de codigo da producao attribution)
+          if((de_type != TIPO_REAL) && (lv.first == TIPO_REAL)) {
+            //int to float
+            writeln("mov dword [__aux], eax");
+            writeln("fild dword [__aux]");
+            writeln("fstp dword [__aux]");
+            writeln("mov eax, dword [__aux]");
+          } else if((de_type == TIPO_REAL) && (lv.first != TIPO_REAL)) {
+            writeln("mov dword [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("fistp dword [__aux]");
+            writeln("mov eax, dword [__aux]");
+          }
+          writeln("; para de:");
+          s << "mov [" << lv.second << "], eax";
+          writeln(s.str());
+        }
+
+      ate_type=expr[TIPO_INTEIRO]
+
+        {          
+          //casts (warning: replicacao de codigo da producao attribution)
+          if((ate_type != TIPO_REAL) && (lv.first == TIPO_REAL)) {
+            //int to float
+            writeln("mov dword [__aux], eax");
+            writeln("fild dword [__aux]");
+            writeln("fstp dword [__aux]");
+            writeln("mov eax, dword [__aux]");
+          } else if((ate_type == TIPO_REAL) && (lv.first != TIPO_REAL)) {
+            writeln("mov dword [__aux], eax");
+            writeln("fld dword [__aux]");
+            writeln("fistp dword [__aux]");
+            writeln("mov eax, dword [__aux]");
+          }
+          writeln("; para ate:");
+          writeln("push eax");//top stack tem "ate"
+        }
+
+      (
+        ps=passo {hasPasso=true;}
+      )?
+
+        {
+          s.str("");
+          s << lbpara << ":";
+          writeln(s.str());
+        }
+
       (stm)*
+
+        {
+          //calcular passo [eax]
+          s.str("");
+          s << "mov eax, dword [" << lv.second << "]";
+          writeln(s.str());
+
+          s.str("");
+          if(!hasPasso) {
+            writeln("inc eax");
+          } else {
+            if(ps.first) { //dec
+              s << "sub eax, " << ps.second;
+            } else { //cresc
+              s << "add eax, " << ps.second;
+            }
+          }
+          writeln(s.str());
+          
+          //desviar constrole          
+          writeln("mov ebx, dword [esp]");
+          writeln("cmp eax, ebx");
+
+          s.str("");
+          if(hasPasso && ps.first) {
+            s << "jl " << lbfim;
+          } else {
+            s << "jg " << lbfim;
+          }
+          writeln(s.str());
+
+          s.str("");
+          s << "mov dword [" << lv.second << "], eax";
+          writeln(s.str());
+
+          s.str("");
+          s << "jmp " << lbpara;
+          writeln(s.str());
+
+          s.str("");
+          s << lbfim << ":";
+          writeln(s.str());
+          writeln("pop eax");
+          writeln("; fimpara");
+        }
     )
   ;
 
-passo returns [production p]
-{p.passo.first=true;}
+passo returns [pair<int, string> p]
   : #(T_KW_PASSO (
-          T_MAIS  {p.passo.first=true;} //crescente
-        | T_MENOS {p.passo.first=false;} //decrescente
+          T_MAIS   {p.first = 0;}
+        | T_MENOS  {p.first = 1;}
         )? 
-      i:T_INT_LIT {p.passo.second = i->getText();}
+      i:T_INT_LIT {p.second = i->getText();}
     )
   ;
-
-*/
 
 expr[int expecting_type, string reg = "eax"] returns [int etype]
 {
