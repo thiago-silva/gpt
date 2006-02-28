@@ -33,7 +33,7 @@ header {
       pair<int, list<string> > primvars;
       pair<int, pair< list<string>, list<string> > > matrizvars;//pair<type, pair<list<ids>,list<dims> > >
       pair<int, list<string> > tipo_matriz; //pair<type, list<dimsize> >
-      pair<int, string> lvalue;    //pair<id, text> : ex "a","a[1][2]".
+      pair<int, string> lvalue;    //pair<type, text> : ex TIPO_INTEIRO,"a[1][2]".
       pair<int, string> fcall; //pair<type, text>
       pair<bool,string> passo;
       pair<int, string> expr;
@@ -641,18 +641,18 @@ stm_attr
 lvalue returns [production p]
 {
   stringstream s;  
-  production e; //pair<int, string> expr;
+  production e; //pair<int type, string expr> lvalue;
 }
   : #(id:T_IDENTIFICADOR
       {
         p.lvalue.first = stable.getSymbol(_currentScope, id->getText(), true).type.primitiveType();
-        p.lvalue.second = id->getText();
+        s << id->getText();
       }
       (
         e=expr[TIPO_INTEIRO] {s << "[" << e.expr.second <<  "]";}
       )*
     )
-    {p.lvalue.second += s.str();}
+    {p.lvalue.second = s.str();}
   ;
 
 
@@ -755,24 +755,24 @@ stm_enquanto
 stm_para
 {
   bool haspasso = false;
-  production de,ate, ps;
+  production var, de, ate, ps;
   stringstream str;
 }
-  : #(T_KW_PARA id:T_IDENTIFICADOR de=expr[TIPO_INTEIRO] ate=expr[TIPO_INTEIRO] (ps=passo {haspasso=true;})?
+  : #(T_KW_PARA var=lvalue de=expr[TIPO_INTEIRO] ate=expr[TIPO_INTEIRO] (ps=passo {haspasso=true;})?
       {
         if(!haspasso) {
-            str  << "for(" << id->getText() << "=" << de.expr.second << ";" 
-                              << id->getText() << "<=" << ate.expr.second << ";" 
-                              << id->getText() << "+=" << 1 << ") {";
+            str  << "for(" <<    var.lvalue.second << "=" << de.expr.second << ";" 
+                              << var.lvalue.second << "<=" << ate.expr.second << ";" 
+                              << var.lvalue.second << "+=" << 1 << ") {";
         } else {
           if(ps.passo.first) {//crescente
-            str  << "for(" << id->getText() << "=" << de.expr.second << ";" 
-                              << id->getText() << "<=" << ate.expr.second << ";" 
-                              << id->getText() << "+=" << ps.passo.second << ") {";            
+            str  << "for(" << var.lvalue.second << "=" << de.expr.second << ";" 
+                              << var.lvalue.second << "<=" << ate.expr.second << ";" 
+                              << var.lvalue.second << "+=" << ps.passo.second << ") {";            
           } else { //decrescente
-            str  << "for(" << id->getText() << "=" << de.expr.second << ";" 
-                              << id->getText() << ">=" << ate.expr.second << ";" 
-                              << id->getText() << "-=" << ps.passo.second << ") {";
+            str  << "for(" << var.lvalue.second << "=" << de.expr.second << ";" 
+                              << var.lvalue.second << ">=" << ate.expr.second << ";" 
+                              << var.lvalue.second << "-=" << ps.passo.second << ") {";
           }
         }
         writeln(str);
