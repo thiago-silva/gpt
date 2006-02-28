@@ -11,8 +11,7 @@ INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/src -I$(top_srcdir)/src/modules \
 SUBDIRS = modules
 
 if SO_WINDOWS
-#using stlport
-gpt_LDADD = -lpthread -lstlport $(top_builddir)/src/modules/libgportugol.la $(ANTLR_LIB) $(PCRE_LIB) -lwsock32 
+gpt_LDADD = $(top_builddir)/src/modules/libgportugol.la $(ANTLR_LIB) $(PCRE_LIB) -lwsock32
 else
 gpt_LDADD = $(top_builddir)/src/modules/libgportugol.la $(ANTLR_LIB) $(PCRE_LIB) 
 endif

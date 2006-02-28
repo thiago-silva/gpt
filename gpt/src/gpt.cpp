@@ -32,7 +32,7 @@
 #include "SemanticWalker.hpp"
 #include "SymbolTable.hpp"
 #include "PortugolAST.hpp"
-#include "ErrorHandler.hpp"
+#include "Display.hpp"
 #include "InterpreterWalker.hpp"
 
 #define DEFAULT_PORT "7680"
@@ -57,7 +57,8 @@ string port;
 bool frompipe = false;
 
 void showhelp(void) {
-  cout << PACKAGE << " [opções] arquivo\n"
+  stringstream s;
+  s << PACKAGE << " [opções] arquivo\n"
           "Opções:\n"
           "   -v            mostra versão do programa\n"
           "   -h            mostra esse texto\n"
@@ -68,13 +69,16 @@ void showhelp(void) {
           "   -H <host>     host do client debugger (deve ser usado com -i)\n"
           "   -P <porta>    porta do client debugger (deve ser usado com -i)\n"
           "\n";
+  Display::self()->showMessage(s);
 }
 
 void showversion(void) {
-  cout << "GPT - Compilador G-Portucol\n"
+  stringstream s;
+  s << "GPT - Compilador G-Portucol\n"
           "versão  : " << VERSION << "\n"
           "Website : http://gpt.berlios.de\n"
           "Copyright (C) 2003-2006 Thiago Silva <thiago.silva@kdemail.net>\n\n";
+  Display::self()->showMessage(s);
 }
 
 bool init(int argc, char** argv) {
@@ -83,6 +87,7 @@ bool init(int argc, char** argv) {
     showhelp();
     return false;
   }
+  stringstream s;
 
   int c;
   opterr = 0;
@@ -139,13 +144,15 @@ bool init(int argc, char** argv) {
         break;
         case '?':
            if((optopt == 'o') || (optopt == 't')) {
-            cerr << PACKAGE << ": faltando argumento para opção -" << (char)optopt << endl;
+            s << PACKAGE << ": faltando argumento para opção -" << (char)optopt << endl;
            } else {
-             cerr << PACKAGE << ": opção inválida: -" <<  char(optopt) << endl;
+            s << PACKAGE << ": opção inválida: -" <<  char(optopt) << endl;
            }
+           Display::self()->showError(s);
            return false;
      default:
-         cerr << PACKAGE << ": erro interno." << endl;
+         s << PACKAGE << ": erro interno." << endl;
+         Display::self()->showError(s);
         return false;
     }
   }
@@ -154,14 +161,16 @@ bool init(int argc, char** argv) {
     if(optind < argc) {
       ifilepath = argv[optind];
     } else {
-      cerr << PACKAGE << ": nenhum arquivo especificado." << endl;
+      s << PACKAGE << ": nenhum arquivo especificado." << endl;
+      Display::self()->showError(s);
       return false;
     }
   }
 
   if(interpret_only) {
     if((port != DEFAULT_PORT) && (atoi(port.c_str()) == 0)) {
-      cerr << PACKAGE << ": porta de conexão inválida: \"" << port << "\"" << endl;
+      s << PACKAGE << ": porta de conexão inválida: \"" << port << "\"" << endl;
+      Display::self()->showError(s);
       return false;
     }
   }
@@ -170,7 +179,7 @@ bool init(int argc, char** argv) {
 }
 
 bool do_parse(istream& in, ostream& out) {
-
+  stringstream s;
   DEBUG_PARSER = false;
 
   try
@@ -185,8 +194,8 @@ bool do_parse(istream& in, ostream& out) {
     parser.algoritmo();
 //     ofilepath = parser.getAlgName();
 
-    if(ErrorHandler::self()->hasError()) {
-      ErrorHandler::self()->showErrors(show_tips);
+    if(Display::self()->hasError()) {
+      Display::self()->showErrors(show_tips);
       return false;
     }
 
@@ -199,8 +208,8 @@ bool do_parse(istream& in, ostream& out) {
       SemanticWalker semantic(stable);
       semantic.algoritmo(tree);
 
-      if(ErrorHandler::self()->hasError()) {
-        ErrorHandler::self()->showErrors(show_tips);
+      if(Display::self()->hasError()) {
+        Display::self()->showErrors(show_tips);
         return false;
       }
 
@@ -224,26 +233,31 @@ bool do_parse(istream& in, ostream& out) {
       return true;
     }
     else {
-      cerr << PACKAGE << ": erro interno: No tree produced" << endl;
+      s << PACKAGE << ": erro interno: No tree produced" << endl;
+      Display::self()->showError(s);
       return false;
     }
   }
   catch(ANTLRException& e)
   {
-    cerr << PACKAGE << ": erro interno: " << e.toString() << endl;
+    s << PACKAGE << ": erro interno: " << e.toString() << endl;
+    Display::self()->showError(s);
     return false;
   }
   catch(exception& e)
   {
-    cerr << PACKAGE << ": erro interno: " << e.what() << endl;
+    s << PACKAGE << ": erro interno: " << e.what() << endl;
+    Display::self()->showError(s);
     return false;
   }
 
-  cerr << "main::do_parse: bug, nao deveria executar essa linha!" << endl;
+  s << "main::do_parse: bug, nao deveria executar essa linha!" << endl;
+  Display::self()->showError(s);
   return true;
 }
 
 bool parse(void) {
+  stringstream s;
   bool success = false;
   ofstream fout;
 
@@ -261,13 +275,15 @@ bool parse(void) {
 
 
   if(!fout) {
-    cerr << PACKAGE << ": não foi possível abrir o arquivo: \"" << cfilepath << "\"" << std::endl;
+    s << PACKAGE << ": não foi possível abrir o arquivo: \"" << cfilepath << "\"" << std::endl;
+    Display::self()->showError(s);
     goto end;
   }
 
   if(frompipe) {
     if(cin.rdbuf()->in_avail() == 0) {
-      cerr << PACKAGE << ": não existem dados na entrada padrão" << std::endl;
+      s << PACKAGE << ": não existem dados na entrada padrão" << std::endl;
+      Display::self()->showError(s);
       goto end;
     } else {
       success = do_parse(cin, fout);
@@ -277,7 +293,8 @@ bool parse(void) {
     ifstream fin;
     fin.open(ifilepath.c_str(), ios_base::in);
     if(!fin) {
-      cerr << PACKAGE << ": não foi possível abrir o arquivo: \"" << ifilepath << "\"" << std::endl;
+      s << PACKAGE << ": não foi possível abrir o arquivo: \"" << ifilepath << "\"" << std::endl;
+      Display::self()->showError(s);
       goto end;
     } else {
       success = do_parse(fin, fout);
@@ -297,13 +314,16 @@ bool compile(void) {
   if(debug_flag) {cerr << "cmd: " << cmd.str() << endl;}
 
   if(system(cmd.str().c_str()) == -1) {
-    cerr << PACKAGE << ": não foi possível invocar gcc." << endl;
+    stringstream s;
+    s << PACKAGE << ": não foi possível invocar gcc." << endl;
+    Display::self()->showError(s);
     return false;
   }
   return true;
 }
 
 bool copy_source() {
+  stringstream s;
   ofstream out(trpath.c_str());
   ifstream in(cfilepath);
 
@@ -311,7 +331,8 @@ bool copy_source() {
 //   in.open(cfilepath, ios_base::in);
 
   if(!out || !in) {
-    cerr << PACKAGE << ": não foi possível criar arquivo fonte." << endl;
+    s << PACKAGE << ": não foi possível criar arquivo fonte." << endl;
+    Display::self()->showError(s);
     return  false;
   }
 
@@ -321,7 +342,8 @@ bool copy_source() {
   }
 
   if(!in.eof() || !out) {
-    cerr << PACKAGE << ": ocorreu um erro ao criar arquivo fonte." << endl;
+    s << PACKAGE << ": ocorreu um erro ao criar arquivo fonte." << endl;
+    Display::self()->showError(s);
     return false;
   }
 

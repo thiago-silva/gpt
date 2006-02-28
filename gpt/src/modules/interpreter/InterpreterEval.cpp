@@ -22,6 +22,7 @@
 
 #include "InterpreterEval.hpp"
 #include "InterpreterDBG.hpp"
+#include "Display.hpp"
 
 void ExprValue::setValue(string str) {
   value = str;
@@ -45,11 +46,11 @@ bool ExprValue::ifTrue() {
 bool Variable::checkBounds(list<string>& d) {
   list<int>::iterator it = dimensions.begin();
   list<string>::iterator ot = d.begin();
-  
+
   //no need for dim.size() == d.size(). Semantic check wouldn't allow
-  
+
   int num;
-  for( ; it != dimensions.end(); ++it, ++ot) {      
+  for( ; it != dimensions.end(); ++it, ++ot) {
     num = atoi((*ot).c_str());
 
     if((num < 0) || (num >= (*it))) {
@@ -87,7 +88,7 @@ void Variable::setValue(list<string>& d, string value) {
 string Variable::castVal(string value) {
   stringstream ss;
   switch(type) {
-    case TIPO_INTEIRO:        
+    case TIPO_INTEIRO:
       ss << atoi(value.c_str());
       return ss.str();
     case TIPO_LOGICO:
@@ -108,13 +109,13 @@ string Variable::castVal(string value) {
 
 void LValue::addMatrixIndex(ExprValue& e) {
   dims.push_back(e.value);
-}        
+}
 
 string LValue::dimsToString() {
   stringstream sub;
   for(list<string>::iterator it = dims.begin(); it != dims.end(); ++it) {
     sub << "[" << *it << "]";
-  }    
+  }
   return sub.str();
 }
 
@@ -131,17 +132,20 @@ void Variables::init(map<string, Variable>& vars) {
 }
 
 void Variables::pushLocalContext(map<string, Variable>& vars) {
-  varstates.push_back(currentVars);  
+  varstates.push_back(currentVars);
   currentVars = new map<string, Variable>;
   *currentVars = vars;
 }
 
 Variable& Variables::get(const string& name) {
+  stringstream s;
   if(currentVars->find(name) == currentVars->end()) {
     if(globalVars->find(name) == globalVars->end()) {
-      cerr << "BUG: variável " << name << " não encontrada." << endl;
+      stringstream s;
+      s << "BUG: variável " << name << " não encontrada." << endl;
+      Display::self()->showError(s);
       exit(1);
-    } else {        
+    } else {
       return (*globalVars)[name];
     }
   } else {
@@ -167,7 +171,7 @@ map<string, Variable>& Variables::getGlobals() {
 
 //------------------------------------------------------------------------
 
-InterpreterEval::InterpreterEval(SymbolTable& st, string host, int port) 
+InterpreterEval::InterpreterEval(SymbolTable& st, string host, int port)
   : stable(st), dbg_host(host), dbg_port(port), currentLine(-1)
     , currentSkip(false), globalSkip(false)
 {
@@ -204,7 +208,7 @@ void InterpreterEval::init() {
 
 ExprValue InterpreterEval::evaluateOu(ExprValue& left, ExprValue& right) {
 
-	
+
   ExprValue v;
   v.type = TIPO_LOGICO;
 
@@ -328,7 +332,7 @@ ExprValue InterpreterEval::evaluateDif(ExprValue& left, ExprValue& right) {
 ExprValue InterpreterEval::evaluateMaior(ExprValue& left, ExprValue& right) {
   ExprValue v;
   v.type = TIPO_LOGICO;
-  
+
   bool res;
 
   if((left.type == TIPO_LITERAL) || (right.type == TIPO_LITERAL)) {
@@ -428,7 +432,7 @@ ExprValue InterpreterEval::evaluateMais(ExprValue& left, ExprValue& right) {
   v.setValue(s);
   return v;
 }
-  
+
 ExprValue InterpreterEval::evaluateMenos(ExprValue& left, ExprValue& right) {
   ExprValue v;
 
@@ -450,9 +454,11 @@ ExprValue InterpreterEval::evaluateDiv(ExprValue& left, ExprValue& right) {
   ExprValue v;
 
   if(atof(right.value.c_str()) == 0) {
-    cerr << PACKAGE << ": Erro de execução próximo a linha " << currentLine 
+    stringstream s;
+    s << PACKAGE << ": Erro de execução próximo a linha " << currentLine
         << " - Divisão por 0 é ilegal. Abortando..." << endl;
-    exit(1);      
+    Display::self()->showError(s);
+    exit(1);
   }
 
   stringstream s;
@@ -500,7 +506,7 @@ ExprValue InterpreterEval::evaluateMod(ExprValue& left, ExprValue& right) {
 ExprValue InterpreterEval::evaluateUnNeg(ExprValue& v) {
   stringstream s;
   s << -(atof(v.value.c_str()));
-      
+
   v.setValue(s);
   return v;
 }
@@ -544,9 +550,11 @@ ExprValue InterpreterEval::getLValueValue(LValue& l) {
       value.value = var.getValue(l.dims);
       value.values = var.values;
     } else {
-      cerr << PACKAGE << ": Erro de execução próximo a linha " << currentLine 
-          << " - Overflow em \"" << l.name 
+      stringstream s;
+      s << PACKAGE << ": Erro de execução próximo a linha " << currentLine
+          << " - Overflow em \"" << l.name
           << l.dimsToString() << "\". Abortando..." << endl;
+      Display::self()->showError(s);
       exit(1);
     }
   }
@@ -568,8 +576,10 @@ void InterpreterEval::execPasso(LValue& lvalue, int passo) {
       s << (atoi(val.c_str()) + passo);
       var.setValue(lvalue.dims, s.str());
     } else {
-      cerr << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lvalue.name 
+      stringstream err;
+      err << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lvalue.name
           << lvalue.dimsToString() << "\". Abortando..." << endl;
+      Display::self()->showError(err);
       exit(1);
     }
   }
@@ -585,8 +595,10 @@ bool InterpreterEval::execLowerEq(LValue& lv, ExprValue& ate) {
       string val = var.getValue(lv.dims);
       return atoi(val.c_str()) <= atoi(ate.value.c_str());
     } else {
-      cerr << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lv.name 
+      stringstream s;
+      s << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lv.name
           << lv.dimsToString() << "\". Abortando..." << endl;
+      Display::self()->showError(s);
       exit(1);
     }
   }
@@ -602,8 +614,10 @@ bool InterpreterEval::execBiggerEq(LValue& lv, ExprValue& ate) {
       string val = var.getValue(lv.dims);
       return atoi(val.c_str()) <= atoi(ate.value.c_str());
     } else {
-      cerr << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lv.name 
+      stringstream s;
+      s << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lv.name
           << lv.dimsToString() << "\". Abortando..." << endl;
+      Display::self()->showError(s);
       exit(1);
     }
   }
@@ -616,13 +630,15 @@ void InterpreterEval::execAttribution(LValue& lvalue, ExprValue& v) {
     var.setValue(castLeiaChar(var, v));
   } else {
     if(var.checkBounds(lvalue.dims)) {
-      var.setValue(lvalue.dims, v.value);        
+      var.setValue(lvalue.dims, v.value);
     } else {
-      cerr << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lvalue.name 
+      stringstream s;
+      s << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lvalue.name
           << lvalue.dimsToString() << "\". Abortando..." << endl;
+      Display::self()->showError(s);
       exit(1);
     }
-  } 
+  }
 }
 
 string InterpreterEval::castLeiaChar(Variable& var, ExprValue& v) {
@@ -631,20 +647,20 @@ string InterpreterEval::castLeiaChar(Variable& var, ExprValue& v) {
     /*************************
       caractere c := leia();
 
-      se entrar com "1", var.value == 49      
+      se entrar com "1", var.value == 49
 
       se entrar com "abc"? opces:
-        1: var.value = 0 
-          manter uniformidade com por ex:  
+        1: var.value = 0
+          manter uniformidade com por ex:
             "inteiro i = leia(); //"abc", resultado: i == 0 (interpretado), i=1243249 (compilado/C)
         2: var.value = 'a'
-          eh o que acontece em modo compilado/C (scanf(%c))        
+          eh o que acontece em modo compilado/C (scanf(%c))
     *******************************/
 
 /*    if(v.value.length() > 1) {
       return "0";
     }*/
-    
+
     stringstream s;
     s << (int)v.value[0];
     return s.str();
@@ -654,7 +670,7 @@ string InterpreterEval::castLeiaChar(Variable& var, ExprValue& v) {
 }
 
 void InterpreterEval::beginFunctionCall(const string& fname, list<ExprValue>& args, int line) {
-  //setup local vars  
+  //setup local vars
 
   list<Symbol> globals = stable.getSymbols(fname);
 
@@ -689,7 +705,7 @@ void InterpreterEval::beginFunctionCall(const string& fname, list<ExprValue>& ar
     } else {
       var.values = (*ait).values;
     }
-    
+
     ++ait;
     ++pit;
   }
@@ -707,7 +723,7 @@ void InterpreterEval::endFunctionCall() {
 }
 
 bool InterpreterEval::isBuiltInFunction(const string& fname) {
-  return stable.getSymbol(SymbolTable::GlobalScope, fname).isBuiltin;    
+  return stable.getSymbol(SymbolTable::GlobalScope, fname).isBuiltin;
 }
 
 ExprValue InterpreterEval::execBuiltInFunction(const string& fname, list<ExprValue>& args) {
@@ -718,7 +734,9 @@ ExprValue InterpreterEval::execBuiltInFunction(const string& fname, list<ExprVal
     executeImprima(args);
     return v;//empty value
   } else {
-    cerr << PACKAGE << ":BUG: No built-in function called \"" << fname << "\"" << endl;
+    stringstream s;
+    s << PACKAGE << ":BUG: No built-in function called \"" << fname << "\"" << endl;
+    Display::self()->showError(s);
     return v;
   }
 }
@@ -739,6 +757,7 @@ void InterpreterEval::nextCmd(int line) {
   currentLine = line;
 
   if((!skipStack.top() && !globalSkip) || InterpreterDBG::self()->breakOnLine(line)) {
+    stringstream s;
     int cmd;
     cmd = InterpreterDBG::self()->nextCmd(currentLine, variables, program_stack);
     switch(cmd) {
@@ -749,17 +768,18 @@ void InterpreterEval::nextCmd(int line) {
         currentSkip = true;
         break;
       case InterpreterDBG::CMDStepOut:
-        skipStack.pop(); 
+        skipStack.pop();
         skipStack.push(true);
         break;
       case InterpreterDBG::CMDContinue:
         globalSkip = true;
         break;
       default:
-        cerr << PACKAGE << ": BUG: unknown cmd." << endl;
+        s << PACKAGE << ": BUG: unknown cmd." << endl;
+        Display::self()->showError(s);
         break;
     }
-  } 
+  }
 }
 
 //private
@@ -773,7 +793,8 @@ ExprValue InterpreterEval::executeLeia() {
   return ret;
 }
 
-void InterpreterEval::executeImprima(list<ExprValue>& args) {      
+void InterpreterEval::executeImprima(list<ExprValue>& args) {
+  stringstream s;
   for(list<ExprValue>::iterator it = args.begin(); it != args.end(); ++it) {
     ExprValue ss = (*it);
     switch((*it).type) {
@@ -788,9 +809,9 @@ void InterpreterEval::executeImprima(list<ExprValue>& args) {
         break;
       case TIPO_LOGICO:
         if(atoi((*it).value.c_str())) {
-          cout << "verdadeiro";
+          s << "verdadeiro";
         } else {
-          cout << "falso";
+          s << "falso";
         }
         break;
       case TIPO_LITERAL:
@@ -798,12 +819,12 @@ void InterpreterEval::executeImprima(list<ExprValue>& args) {
         break;
       default:
         cout << (*it).value;
-    }        
+    }
   }
   cout << endl;
   cout.flush();
 }
 
 // void InterpreterEval::parseLiteral(string& lit) {
-//   
+//
 // }

@@ -17,51 +17,77 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "ErrorHandler.hpp"
+#include "Display.hpp"
+
+#ifdef WIN32
+  #include <windows.h>
+#endif
 
 #include <iostream>
 
 using namespace std;
 
-ErrorHandler* ErrorHandler::_self = 0L;
+Display* Display::_self = 0L;
 
-ErrorHandler::ErrorHandler()
+Display::Display()
   : _hasError(false), _stopOnError(false)
 {
 }
 
-ErrorHandler::~ErrorHandler()
+Display::~Display()
 {
 }
 
-void ErrorHandler::stopOnError(bool val) {
+string Display::toOEM(const string& str) {
+  #ifdef WIN32
+    string ret;
+    char buffer [str.length()];
+    CharToOem(str.c_str(), buffer);
+    ret = buffer;
+    return ret;
+  #else
+    return str;
+  #endif
+}
+
+void Display::showError(stringstream& s) {
+  cerr << toOEM(s.str());
+}
+
+void Display::showMessage(stringstream& s) {
+  cout << toOEM(s.str());
+  cout.flush();
+}
+
+
+void Display::stopOnError(bool val) {
   _stopOnError = val;
 }
 
-bool ErrorHandler::hasError() {
+bool Display::hasError() {
   return _hasError;
 }
 
-void ErrorHandler::showErrors(bool showTips) {
+void Display::showErrors(bool showTips) {
   errors_map_t::iterator it;
   for(it = _errors.begin(); it != _errors.end(); ++it) {
     for(list<ErrorMsg>::iterator lit = it->second.begin(); lit != it->second.end(); ++lit) {
       showError((*lit));
       if(showTips && (*lit).hasTip) {
         showTip((*lit));
-      }           
+      }
     }
   }
 }
 
-ErrorHandler* ErrorHandler::self() {
-  if(!ErrorHandler::_self) {
-    ErrorHandler::_self = new ErrorHandler();
+Display* Display::self() {
+  if(!Display::_self) {
+    Display::_self = new Display();
   }
-  return ErrorHandler::_self;
+  return Display::_self;
 }
 
-int ErrorHandler::add(const string& msg, int line) {  
+int Display::add(const string& msg, int line) {
   _hasError = true;
   if(_stopOnError) throw UniqueErrorException(msg, line);
 
@@ -75,16 +101,20 @@ int ErrorHandler::add(const string& msg, int line) {
   return _errors[line].size();
 }
 
-void ErrorHandler::showError(ErrorMsg& err) {
-  cerr << "Linha: " << err.line << " - " << err.msg << "." << endl;
+void Display::showError(ErrorMsg& err) {
+  stringstream s;
+  s << "Linha: " << err.line << " - " << err.msg << "." << endl;
+  showError(s);
 }
 
 
-void ErrorHandler::showTip(ErrorMsg& err) {
-  cerr << "\tDica: " << err.tip << "." << endl;
+void Display::showTip(ErrorMsg& err) {
+  stringstream s;
+  s << "\tDica: " << err.tip << "." << endl;
+  showError(s);
 }
 
-void ErrorHandler::addTip(const string& msg, int line, int cd) {    
+void Display::addTip(const string& msg, int line, int cd) {
   list<ErrorMsg>::iterator it = _errors[line].begin();
 
   for(int i = 0; i < cd-1; ++i,++it);
@@ -92,11 +122,11 @@ void ErrorHandler::addTip(const string& msg, int line, int cd) {
   (*it).tip = msg;
 }
 
-ErrorHandler::ErrorMsg ErrorHandler::getFirstError() {
+Display::ErrorMsg Display::getFirstError() {
   return *(_errors.begin()->second.begin());
 }
 
-void ErrorHandler::clear() {
+void Display::clear() {
   _errors.clear();
   _hasError = false;
 }

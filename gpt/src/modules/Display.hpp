@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef ERRORHANDLER_HPP
-#define ERRORHANDLER_HPP
+#ifndef DISPLAY_HPP
+#define DISPLAY_HPP
 
 #include <map>
 #include <list>
@@ -39,12 +39,12 @@ public:
    int line()       {return _line;}
 private:
   string _msg;
-  int _line;  
+  int _line;
 };
 
 
 
-class ErrorHandler {
+class Display {
 public:
 
   class ErrorMsg {
@@ -57,34 +57,40 @@ public:
     string tip;
   };
 
-  ~ErrorHandler();
+  ~Display();
 
-  static ErrorHandler* self();
-  
+  static Display* self();
+
+
+  void showError(stringstream& s);
+  void showMessage(stringstream& s);
+
   void stopOnError(bool);
 
-  int add(const string& msg, int line);  
+  int add(const string& msg, int line);
   void addTip(const string& msg, int line, int cd);
 
 //   void addInternalError(const string&);
 //   void addInternalError(const stringstream&);
 
   ErrorMsg getFirstError();
-  
+
   void showErrors(bool);
   bool hasError();
 
   void clear();
 private:
-  ErrorHandler();
+  Display();
 
-  static ErrorHandler* _self;
+  static Display* _self;
+
+  string toOEM(const string& str);
 
   void showError(ErrorMsg&);
   void showTip(ErrorMsg&);
 
   void processAndAdd(const string&, int);
-  void ErrorHandler::processTipAndAdd(const string& msg, int line, int cd);
+  void Display::processTipAndAdd(const string& msg, int line, int cd);
 
   bool _hasError;
   bool _stopOnError;

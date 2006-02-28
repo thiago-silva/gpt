@@ -22,6 +22,7 @@
 
 #include "InterpreterDBG.hpp"
 #include "InterpreterEval.hpp"
+#include "Display.hpp"
 
 #ifndef WIN32
   #include <sys/socket.h>
@@ -36,7 +37,6 @@
 
 #ifndef WIN32
   void sigPipeHandler(int signum) {
-    cerr << "Con closed!!\n";
     InterpreterDBG::self()->closeSock();
   }
 #endif
@@ -80,7 +80,9 @@ void InterpreterDBG::init(string host, int port) {
 
   clientsock = socket(PF_INET, SOCK_STREAM, 0);
   if(clientsock < 0) {
-    cerr << PACKAGE << ": não foi possível criar socket\n";
+    stringstream s;
+    s << PACKAGE << ": não foi possível criar socket\n";
+    Display::showError(s);
     return;
   }
 
@@ -90,7 +92,9 @@ void InterpreterDBG::init(string host, int port) {
     closeSock();
   } else {
     if(SIG_ERR == signal(SIGPIPE, sigPipeHandler)) {
-      cerr << PACKAGE << ": erro interno em InterpreterDBG::init" << endl;
+      stringstream s;
+      s << PACKAGE << ": erro interno em InterpreterDBG::init" << endl;
+      Display::showError(s);
     }
   }
 #else

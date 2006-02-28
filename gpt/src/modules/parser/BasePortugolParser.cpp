@@ -21,7 +21,7 @@
 
 #include "BasePortugolParser.hpp"
 #include "PortugolParserTokenTypes.hpp"
-#include "ErrorHandler.hpp"
+#include "Display.hpp"
 
 
 string BasePortugolParser::expecting_algorithm_name = "nome do algoritmo";
@@ -48,12 +48,12 @@ BasePortugolParser::BasePortugolParser(const ParserSharedInputState& lexer, int 
 {
 }
 
-BasePortugolParser::BasePortugolParser(TokenBuffer& tokenBuf, int k_) 
+BasePortugolParser::BasePortugolParser(TokenBuffer& tokenBuf, int k_)
   : LLkParser(tokenBuf,k)
 {
 }
 
-BasePortugolParser::BasePortugolParser(TokenStream& lexer, int k_) 
+BasePortugolParser::BasePortugolParser(TokenStream& lexer, int k_)
   : LLkParser(lexer,k)
 {
 }
@@ -105,16 +105,16 @@ int BasePortugolParser::reportParserError(int line, string expecting, string fou
   if(after.length()) {
     str += " após \"";
     str += after;
-    str += "\"";    
+    str += "\"";
   }
-  
-  
-  stringstream s; 
+
+
+  stringstream s;
   s << "Esperando " << expecting << str;
-  return ErrorHandler::self()->add(s.str(), line);
-       
+  return Display::self()->add(s.str(), line);
+
 }
 
 void BasePortugolParser::printTip(const string& msg, int line, int cd) {
-  ErrorHandler::self()->addTip(msg, line, cd);
+  Display::self()->addTip(msg, line, cd);
 }

@@ -4,14 +4,14 @@ SUBDIRS = parser c_translator interpreter
 
 if INSTALL_DEVEL
 lib_LTLIBRARIES = libgportugol.la
-pkginclude_HEADERS = ErrorHandler.hpp PortugolAST.hpp Symbol.hpp SymbolTable.hpp
+pkginclude_HEADERS = Display.hpp PortugolAST.hpp Symbol.hpp SymbolTable.hpp
 else
 noinst_LTLIBRARIES = libgportugol.la
-noinst_HEADERS = ErrorHandler.hpp PortugolAST.hpp Symbol.hpp SymbolTable.hpp
+noinst_HEADERS = Display.hpp PortugolAST.hpp Symbol.hpp SymbolTable.hpp
 endif
 
 
-libgportugol_la_SOURCES = ErrorHandler.cpp PortugolAST.cpp Symbol.cpp SymbolTable.cpp
+libgportugol_la_SOURCES = Display.cpp PortugolAST.cpp Symbol.cpp SymbolTable.cpp
 
 libgportugol_la_LIBADD = $(top_builddir)/src/modules/parser/libparser.la \
                          $(top_builddir)/src/modules/interpreter/libinterpreter.la \
