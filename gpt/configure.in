@@ -7,6 +7,16 @@ AC_LANG_CPLUSPLUS
 AC_PROG_CXX
 AM_PROG_LIBTOOL
 
+
+dnl Check SO
+if test $version_type = "windows"; then
+   SO_WINDOWS="yes"
+else
+   SO_WINDOWS="no"
+fi
+
+AM_CONDITIONAL(SO_WINDOWS, test x$SO_WINDOWS = xyes)
+
 dnl
 dnl Checks for ANTLR
 dnl
@@ -16,17 +26,18 @@ AC_ARG_WITH(antlr,
 [
   AC_PATH_PROG(ANTLR, "${antlr}bin/antlr", no, $withval)
   ANTLR_BIN="${ANTLR}"
-  ANTLR_LIB=`${ANTLR}-config --libs`
 ],
 [
   AC_PATH_PROG(ANTLR, antlr)
   ANTLR_BIN="antlr"
-  ANTLR_LIB=`antlr-config --libs`
 ])
 
-AC_SUBST(ANTLR_LIB)
+ANTLR_LIB=`${ANTLR_BIN}-config --libs`
+ANTLR_INC=`${ANTLR_BIN}-config --cflags`
 
 AC_SUBST(ANTLR_BIN)
+AC_SUBST(ANTLR_INC)
+AC_SUBST(ANTLR_LIB)
 
 if test "x${ANTLR}" = "x"; then
   AC_MSG_ERROR(
@@ -36,6 +47,31 @@ if test "x${ANTLR}" = "x"; then
     Baixe em: http://www.antlr.org
   ])
 fi
+
+
+dnl
+dnl checks for PCRE
+dnl
+
+# AC_MSG_CHECKING(for pcre)
+
+AC_CHECK_PROG(has_pcre, pcre-config, yes)
+
+if test "x$has_pcre" = "xyes"; then
+  PCRE_CONFIG="pcre-config"
+else
+  AC_MSG_ERROR(
+  [
+    GPT precisa da biblioteca PCRE instalada
+    Baixe em: http://www.pcre.org/
+  ])
+fi
+
+PCRE_INC=`${PCRE_CONFIG} --cglags`
+PCRE_LIB="-L`${PCRE_CONFIG} --prefix`/lib -lpcrecpp"
+AC_SUBST(PCRE_INC)
+AC_SUBST(PCRE_LIB)
+
 
 dnl
 dnl checks if we want to install the libs and headers
@@ -50,23 +86,6 @@ AC_ARG_ENABLE([install-devel],
 
 AM_CONDITIONAL(INSTALL_DEVEL, test x$INSTALL_DEVEL = xyes)
 
-
-dnl checks for PCRE
-
-# AC_MSG_CHECKING(for pcre)
-
-AC_CHECK_PROG(has_pcre, pcre-config, yes)
-
-if test "x$has_pcre" = "xyes"; then
-  PCRE_LIB="-lpcre"
-else
-  AC_MSG_ERROR(
-  [
-    GPT precisa da biblioteca PCRE instalada
-    Baixe em: http://www.pcre.org/
-  ])
-fi
-AC_SUBST(PCRE_LIB)
 
 dnl
 dnl the end
@@ -83,3 +102,15 @@ AC_OUTPUT(Makefile
         src/modules/c_translator/Makefile
         src/modules/x86/Makefile
       )
+
+AC_MSG_NOTICE([
+Sumario:
+	antlr           : $ANTLR_BIN
+	antlr includes  : $ANTLR_INC
+	antr lib        : $ANTLR_LIB
+	
+	pcre includes   : $PCRE_INC
+	pcre lib        : $PCRE_LIB
+
+	running windows : $SO_WINDOWS
+])

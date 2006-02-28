@@ -25,6 +25,10 @@
 #include <sstream>
 #include <map>
 
+#ifdef WIN32
+  #include <winsock.h>
+#endif
+
 using namespace std;
 
 class Variables;
@@ -54,7 +58,7 @@ private:
   void sendVariables(map<string, Variable> globals, list<pair<string, int> >& stk, bool globalScope);
   int receiveCmd();
 
-	string receiveIncomingData();
+  string receiveIncomingData();
 
   void processBreakpointCMD(string& cmd);
   void addBreakpoint(string& cmd);
@@ -62,13 +66,17 @@ private:
   void sendData(stringstream& s);
   void removeBreakpoint(string& cmd);
 
-  string matrixValuesNodes(uint level, int dimsize, 
+  string matrixValuesNodes(unsigned int level, int dimsize,
     map<string, string>& values, list<int>& dims, int type, string vindex = "");
 
+#ifndef WIN32
   int clientsock;
+#else
+  SOCKET clientsock;
+#endif
 
   list<int> breakpoints;
-	string currentCmd;
+  string currentCmd;
 };
 
 #endif

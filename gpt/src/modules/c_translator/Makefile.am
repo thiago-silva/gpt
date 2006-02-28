@@ -1,5 +1,5 @@
-INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/src/compiler \
-	-I$(top_srcdir)/src/compiler/c_translator $(all_includes)
+INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/src/modules \
+	-I$(top_srcdir)/src/modules/c_translator $(ANTLR_INC) $(all_includes)
 METASOURCES = AUTO
 
 gensources = Portugol2CWalker.cpp Portugol2CWalker.hpp

@@ -48,7 +48,7 @@ bool show_tips = false;
 string ifilepath; //pt source
 string ofilepath; //binary output
 string trpath;    //translated C source
-char cfilepath[] = "/tmp/c__XXXXXX"; //tmp translated C source
+char* cfilepath = "/tmp/c__XXXXXX"; //tmp translated C source
 
 //conexao com debugger
 string host;
@@ -85,9 +85,9 @@ bool init(int argc, char** argv) {
   }
 
   int c;
-  opterr = 0;  
+  opterr = 0;
 
-	ofilepath = "a.out";
+  ofilepath = "a.out";
   port = DEFAULT_PORT;
 
 #ifdef DEBUG
@@ -135,7 +135,7 @@ bool init(int argc, char** argv) {
       case 'o':
         if(optarg) {
           ofilepath = optarg;
-        } 
+        }
         break;
         case '?':
            if((optopt == 'o') || (optopt == 't')) {
@@ -160,12 +160,12 @@ bool init(int argc, char** argv) {
   }
 
   if(interpret_only) {
-    if((port != DEFAULT_PORT) && (atoi(port.c_str()) == 0)) {      
+    if((port != DEFAULT_PORT) && (atoi(port.c_str()) == 0)) {
       cerr << PACKAGE << ": porta de conexão inválida: \"" << port << "\"" << endl;
       return false;
     }
   }
-  
+
   return true;
 }
 
@@ -177,7 +177,7 @@ bool do_parse(istream& in, ostream& out) {
   {
     PortugolLexer lexer(in);
     PortugolParser parser(lexer);
-    
+
     ASTFactory ast_factory(PortugolAST::TYPE_NAME,&PortugolAST::factory);
     parser.initializeASTFactory(ast_factory);
     parser.setASTFactory(&ast_factory);
@@ -189,11 +189,11 @@ bool do_parse(istream& in, ostream& out) {
       ErrorHandler::self()->showErrors(show_tips);
       return false;
     }
-    
+
     RefPortugolAST tree = parser.getPortugolAST();
     if(tree)
     {
-      if(debug_flag) {cerr << tree->toStringList() << endl << endl;} 
+      if(debug_flag) {cerr << tree->toStringList() << endl << endl;}
 
       SymbolTable stable;
       SemanticWalker semantic(stable);
@@ -202,7 +202,7 @@ bool do_parse(istream& in, ostream& out) {
       if(ErrorHandler::self()->hasError()) {
         ErrorHandler::self()->showErrors(show_tips);
         return false;
-      }      
+      }
 
       //parsing complete!
 
@@ -210,7 +210,7 @@ bool do_parse(istream& in, ostream& out) {
         InterpreterWalker interpreter(stable, host, atoi(port.c_str()));
         interpreter.algoritmo(tree);
       } else {
-        Portugol2CWalker pt2c(stable);        
+        Portugol2CWalker pt2c(stable);
         string c_src = pt2c.algoritmo(tree);
 
         out << c_src << endl;
@@ -218,8 +218,8 @@ bool do_parse(istream& in, ostream& out) {
         if(debug_flag) {
           cerr << "BEGIN SOURCE >>>> \n";
           cerr << c_src << endl;
-          cerr << "<<<<<< END SOURCE\n";          
-        }        
+          cerr << "<<<<<< END SOURCE\n";
+        }
       }
       return true;
     }
@@ -247,18 +247,26 @@ bool parse(void) {
   bool success = false;
   ofstream fout;
 
-  int fd = mkstemp(cfilepath);
-  close(fd);
-  
-  fout.open(cfilepath, ios_base::out);
-  
+  #ifndef WIN32
+    int fd = mkstemp(cfilepath);
+    close(fd);
+    fout.open(cfilepath, ios_base::out);
+  #else
+    string cf = getenv("TEMP");
+    cf += "gpt_tmp";
+    fout.open(cf.c_str(), ios_base::out);
+  #endif
+
+
+
+
   if(!fout) {
     cerr << PACKAGE << ": não foi possível abrir o arquivo: \"" << cfilepath << "\"" << std::endl;
     goto end;
   }
 
   if(frompipe) {
-    if(cin.rdbuf()->in_avail() == 0) { 
+    if(cin.rdbuf()->in_avail() == 0) {
       cerr << PACKAGE << ": não existem dados na entrada padrão" << std::endl;
       goto end;
     } else {
@@ -278,14 +286,14 @@ bool parse(void) {
   }
 
   end:
-    fout.close();     
+    fout.close();
     return success;
 }
 
 bool compile(void) {
   stringstream cmd;
   cmd << "gcc -ansi -x c -o " << ofilepath << " " << cfilepath;
-    
+
   if(debug_flag) {cerr << "cmd: " << cmd.str() << endl;}
 
   if(system(cmd.str().c_str()) == -1) {
@@ -299,7 +307,7 @@ bool copy_source() {
   ofstream out(trpath.c_str());
   ifstream in(cfilepath);
 
-//   out.open(, ios_base::out);  
+//   out.open(, ios_base::out);
 //   in.open(cfilepath, ios_base::in);
 
   if(!out || !in) {
@@ -318,12 +326,12 @@ bool copy_source() {
   }
 
   in.close();
-  out.close();  
+  out.close();
   return true;
 }
 
 int main(int argc, char** argv)
-{ 
+{
   int success = EXIT_SUCCESS;
 
   if(!init(argc, argv)) {

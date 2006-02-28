@@ -1,5 +1,6 @@
 INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/src/parser \
-	-I$(top_srcdir)/src/compiler -I$(top_srcdir)/src/compiler/parser $(all_includes)
+	-I$(top_srcdir)/src/modules -I$(top_srcdir)/src/modules/parser \
+	$(ANTLR_INC) $(all_includes)
 
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libparser.la
