@@ -231,9 +231,9 @@ stm_enquanto
 stm_para
 {ExpressionValue lv, de, ate;}
   : #(p:T_KW_PARA 
-        lv=lvalue {evaluator.evaluateNumericExpr(lv, p->getLine());} 
-        de=expr   {evaluator.evaluateNumericExpr(de, p->getLine());} 
-        ate=expr  {evaluator.evaluateNumericExpr(ate, p->getLine());} 
+        lv=lvalue {evaluator.evaluateNumericExpr(lv, p->getLine(), true);} 
+        de=expr   {evaluator.evaluateNumericExpr(de, p->getLine(), true);} 
+        ate=expr  {evaluator.evaluateNumericExpr(ate, p->getLine(), true);} 
         (passo)? (stm)* 
     )
   ;
