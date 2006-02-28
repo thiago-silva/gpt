@@ -52,6 +52,8 @@ public:
 
   void set(SymbolType&);
 
+//   void setOwner(const string&);
+//   string owner();
   
 protected:
   bool matchesType(bool other_isprimitive) const;
@@ -61,6 +63,7 @@ protected:
   bool _isPrimitive;
   int _primitiveType;
   list<int> _dimensions; //conjunto/matriz
+//   string _owner;
 };
 
 
@@ -114,7 +117,7 @@ public:
   ExpressionValue  evaluateLValue(RefPortugolAST id, list<ExpressionValue>& dim);
 
   void evaluateBooleanExpr(ExpressionValue& ev, int line);
-  void evaluateNumericExpr(ExpressionValue& ev, int line);  
+  void evaluateNumericExpr(ExpressionValue& ev, int line, bool checkInt = false);  
   ExpressionValue evaluateExpr(ExpressionValue& left, ExpressionValue& right, RefPortugolAST op);
   ExpressionValue evaluateExpr(ExpressionValue& ev, RefPortugolAST unary_op);  
 

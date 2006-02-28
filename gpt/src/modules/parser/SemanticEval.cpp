@@ -189,6 +189,14 @@ string ExpressionValue::toString() const {
   return str;
 }
 
+// void setOwner(const string& o) {
+//   _owner = o;
+// }
+// 
+// string ExpressionValue::owner() {
+//   return _owner;
+// }
+
 //******************************************************************************************//
 
 
@@ -343,11 +351,21 @@ void SemanticEval::evaluateBooleanExpr(ExpressionValue& /*v*/, int /*line*/) {
   //qualquer coisa pode ser avaliado como expressão booleana
 }
 
-void SemanticEval::evaluateNumericExpr(ExpressionValue& ev, int line) {
-  if(!ev.isPrimitive() || !ev.isNumeric()) {
-    stringstream err;
-    err << "Esperando uma expressão numérica. Encontrado expressão \"" << ev.toString() << "\"";
+void SemanticEval::evaluateNumericExpr(ExpressionValue& ev, int line, bool checkInt) {
+  stringstream err;
+  if(!ev.isPrimitive()) {    
+    err << "Faltando subscritos da matriz/conjunto do tipo \"" << ev.toString() << "\"";
     Display::self()->add(err.str(), line);
+  } else if(checkInt) {
+    if(ev.primitiveType() != TIPO_INTEIRO) {      
+      err << "Esperando uma expressão de tipo inteiro";
+      Display::self()->add(err.str(), line);
+    }
+  } else if(!ev.isNumeric()) {
+      stringstream err;
+      err << "Esperando uma expressão numérica. Encontrado expressão \"" << ev.toString() << "\""; 
+      Display::self()->add(err.str(), line);
+    }
   }
 }
 
