@@ -302,7 +302,10 @@ func_proto
       )*
 
       ret_type[f]
-      {evaluator.declareFunction(f);}
+      {
+        evaluator.setCurrentScope(id->getText());
+        evaluator.declareFunction(f);
+      }
     )
   ;
 
