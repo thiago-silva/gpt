@@ -5,7 +5,8 @@ METASOURCES = AUTO
 gensources = X86Walker.cpp X86Walker.hpp
 
 noinst_LTLIBRARIES = libx86.la
-libx86_la_SOURCES = $(gensources)
+libx86_la_SOURCES = $(gensources) X86.cpp
+noinst_HEADERS = X86.hpp
 
 x86_g = $(srcdir)/x86.g
 
@@ -19,3 +20,4 @@ distclean: clean
 
 clean:
 	rm -f *.cpp *.hpp *.a *.o *.txt
+
