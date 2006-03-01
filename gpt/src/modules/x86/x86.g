@@ -19,11 +19,10 @@
                                                                            */
 header {
   #include "PortugolAST.hpp"
-  #include "SymbolTable.hpp"
+  #include "X86.hpp"
   #include <string>
   #include <sstream>
-//   #include <map>
-//   #include <list>
+
   using namespace std;
 }
 
@@ -41,185 +40,42 @@ options {
 
 {
   public:
-  X86Walker(SymbolTable& st) 
-    : stable(st), _currentScope("@global"), indent("        ") { }
+  X86Walker(SymbolTable& st)
+    : stable(st), x86(st) {}
 
   private:
+    SymbolTable& stable;
+    X86 x86;
 
-  void init(string name) {
-    head << "; algoritmo: " << name << "\n\n";
-
-    #include <asm_tmpl.h>
-
-    bss << "section .bss\n"
-           "    __mem    resb  __MEMORY_SIZE\n\n";
-
-    data << "section .data\n"
-            "    __mem_ptr   dd 0\n"
-            "    __aux       dd 0\n"
-            "    __str_true  db 'verdadeiro',0\n"
-            "    __str_false db 'falso',0\n"
-            "    __str_no_mem_left db 'Não foi possível alocar memória.',0\n\n";
-
-
-    txt << "section .text" << endl;    
-  }
-
-  void declarePrimitive(bool isGlobal, int type, string name) {
-    if(isGlobal) {
-      switch(type) {
-        case TIPO_INTEIRO:
-          data << name << " dd 0" << endl;
-          break;
-        case TIPO_REAL:
-          data << name << " dd 0" << endl;
-          break;
-        case TIPO_CARACTERE:
-          data << name << " dd 0" << endl;
-          break;
-        case TIPO_LITERAL:
-          data << name << " dd 0" << endl;
-          break;
-        case TIPO_LOGICO:
-          data << name << " dd 0" << endl;
-          break;
-        default:
-          cerr << "Erro interno: tipo nao suportado (x86::declarePrimitive)." << endl;
-          exit(1);
-      }    
-    } else {
-      //TODO
+    int calcMatrixOffset(int c, list<int>& dims) {
+      int res = 1;
+      list<int>::reverse_iterator it = dims.rbegin();
+      while(--c) {
+        res *= (*it);
+        it++;
+      }
+      return res;
     }
-  }
-
-  void declareMatrix(bool isGlobal, int type, string name, list<string> dims) {
-    int size = 1;
-    for(list<string>::iterator it = dims.begin(); it != dims.end(); it++) {
-      size *= atoi((*it).c_str());
-    }
-
-    if(isGlobal) {
-      switch(type) {
-        case TIPO_INTEIRO:
-          data << name << " times " << size << " dd 0" << endl;
-          break;
-        case TIPO_REAL:
-          data << name << " times " << size << " dd 0" << endl;
-          break;
-        case TIPO_CARACTERE:
-          data << name << " times " << size << " dd 0" << endl;
-          break;
-        case TIPO_LITERAL:
-          data << name << " times " << size << " db 0" << endl;
-          break;
-        case TIPO_LOGICO:
-          data << name << " times " << size << " dd 0" << endl;
-          break;
-        default:
-          cerr << "Erro interno: tipo nao suportado (x86::declareMatrix)." << endl;
-          exit(1);
-      }    
-    } else {
-      //TODO
-    }
-  }
-
-  string createLabel(bool local, string tmpl) {
-    static int c = 0;
-    stringstream s;
-    if(local) {
-      s << ".___" << tmpl << "_" << c;
-    } else {
-      s << "___" << tmpl << "_" << c;
-    }
-    c++;
-    return s.str();
-  }
-
-  string insertString(string str) {
-    string lb = createLabel(false, "str");
-    data << lb << " db '" << str << "',0" << endl;
-    return lb;
-  }
-
-  string translateFuncLeia(const string& id, int type) {
-    switch(type) {
-      case TIPO_REAL:
-        return "__leia_real";
-      case TIPO_LITERAL:
-        return "__leia_literal";
-      case TIPO_CARACTERE:
-        return "__leia_caractere";
-      case TIPO_LOGICO:
-        return "__leia_logico";
-      case TIPO_INTEIRO:
-      default:
-        return "__leia_inteiro";
-    }
-  }
-
-  string translateFuncImprima(const string& id, int type) {
-    switch(type) {
-      case TIPO_REAL:
-        return "__imprima_real";
-      case TIPO_LITERAL:
-        return "__imprima_literal";
-      case TIPO_CARACTERE:
-        return "__imprima_caractere";
-      case TIPO_LOGICO:
-        return "__imprima_logico";
-      case TIPO_INTEIRO:
-        return "__imprima_inteiro";
-      default:
-        cerr << "Erro interno: tipo nao suportado (x86::translateFuncImprima)." << endl;
-        exit(1);
-    }
-  }
-  
-  void writeln(string str) {    
-    txt << indent << str << endl;
-  }
-
-  void writeFooter() {
-    txt << "exit 0\n";    
-  }
-
-  SymbolTable& stable;
-  string _currentScope;
-
-  string indent;
-  stringstream head;
-  stringstream bss;
-  stringstream data;  
-  stringstream txt;
-  stringstream lib;
-
-  
-  
 }
 
 /********************************* Producoes **************************************/
 
 algoritmo returns [string str]
-  : #(T_KW_ALGORITMO id:T_IDENTIFICADOR) {init(id->getText());}
-    (variaveis[true])? 
+  : #(T_KW_ALGORITMO id:T_IDENTIFICADOR) {x86.init(id->getText());}
+    (variaveis[X86::VAR_GLOBAL])? 
      principal
 //     (func_decls)*
 
   {
-    str =  head.str();
-    str += bss.str();
-    str += data.str();     
-    str += txt.str();
-    str += lib.str();
+    str = x86.source();
   }
   ;
 
-variaveis[bool isGlobal]
-  : #(T_KW_VARIAVEIS (primitivo[isGlobal] | matriz[isGlobal])+ )
+variaveis[int decl_type]
+  : #(T_KW_VARIAVEIS (primitivo[decl_type] | matriz[decl_type])+ )
   ;
 
-primitivo[bool isGlobal]
+primitivo[int decl_type]
 {
   int type;
   stringstream str;
@@ -227,7 +83,7 @@ primitivo[bool isGlobal]
   : #(TI_VAR_PRIMITIVE type=tipo_prim
       (
         id:T_IDENTIFICADOR
-        {declarePrimitive(isGlobal, type, id->getText());}
+        {x86.declarePrimitive(decl_type, id->getText(), type);}
       )+
     )
   ;
@@ -240,14 +96,14 @@ tipo_prim returns [int t]
   | T_KW_LOGICO    {t = TIPO_LOGICO;}
   ;
 
-matriz[bool isGlobal]
+matriz[int decl_type]
 {
   pair<int, list<string> > tp;
 }
   : #(TI_VAR_MATRIX tp=tipo_matriz 
       (
         id:T_IDENTIFICADOR
-        {declareMatrix(isGlobal, tp.first, id->getText(), tp.second);}
+        {x86.declareMatrix(decl_type, tp.first, id->getText(), tp.second);}
       )+
     )
   ;
@@ -292,12 +148,8 @@ tipo_matriz returns [pair<int, list<string> > p] //pair<type, list<dimsize> >
   ;
 
 principal
-{
-  writeln("_start:");
-  writeln("_start_no equ $");
-}
   : stm_block
-{writeFooter();}
+    {x86.writeExit();}
   ;
 
 stm_block
@@ -305,107 +157,91 @@ stm_block
   ;
 
 stm
-{int t;}
   : stm_attr
-  | t=fcall[TIPO_ALL]
+  | fcall[TIPO_ALL]
 //   | stm_ret
-  | stm_se
-  | stm_enquanto
-  | stm_para
+//   | stm_se
+//   | stm_enquanto
+//   | stm_para
   ;
 
 stm_attr
 {
-  pair<int, string> lv;
+  stringstream s;
+  pair<pair<int, bool>, string> lv;
   int expecting_type;
   int etype;
-  stringstream s;
-
-  writeln("; atribuicao");
+  Symbol symb;
 }
   : #(T_ATTR lv=lvalue
       {
-        expecting_type = stable.getSymbol(_currentScope, lv.second, true).type.primitiveType();
+        symb = stable.getSymbol(x86.currentScope(), lv.second, true);        
+        expecting_type = symb.type.primitiveType();
+        x86.writeTEXT("push ecx");
       }
 
       etype=expr[expecting_type]
 		)
 
     {
-      //casts
-      if((etype != TIPO_REAL) && (expecting_type == TIPO_REAL)) {
-        //int to float
-        writeln("mov dword [__aux], eax");
-        writeln("fild dword [__aux]");
-        writeln("fstp dword [__aux]");
-        writeln("mov eax, dword [__aux]");
-      } else if((etype == TIPO_REAL) && (expecting_type != TIPO_REAL)) {
-        writeln("mov dword [__aux], eax");
-        writeln("fld dword [__aux]");
-        writeln("fistp dword [__aux]");
-        writeln("mov eax, dword [__aux]");
-      }
-      s << "mov [" << lv.second << "], eax";
-      writeln(s.str());
+      x86.writeAttribution(etype, expecting_type, lv);
     }
   ;
 
-lvalue returns [pair<int, string> p]
+lvalue returns [pair< pair<int, bool>, string> p]
 {
-  list<int> dims;
-  list<int>::iterator it = dims.begin();
-
-  unsigned int c = 1;
   stringstream s;
-
+  list<int> dims;
   Symbol symb;
+  int multiplier;
+  int c;
 }
   : #(id:T_IDENTIFICADOR
       {
-        symb = stable.getSymbol(_currentScope, id->getText(), true);
-        p.first = symb.type.primitiveType();
+        symb = stable.getSymbol(x86.currentScope(), id->getText(), true);
+        p.first.first = symb.type.primitiveType();
+        p.first.second = symb.type.isPrimitive();
         p.second = id->getText();
-        
-        dims = symb.type.dimensions();
 
-        if(dims.size() > 0) {
-          writeln("push eax");
-          writeln("mov edx, 1");
-          writeln("push edx");
-        } else {
-//           writeln("mov edx, 0");
+        dims = symb.type.dimensions();
+        c = dims.size();
+
+        if(!symb.type.isPrimitive()) {
+          x86.writeTEXT("push 0");
         }
       }
 
       (
         expr[TIPO_INTEIRO]
-        {
-          writeln("pop edx");
 
-          if(c == dims.size()) {
-            if(dims.size() == 1) {
-              writeln("mov edx, eax");
-            } else {
-              writeln("add edx, eax");
-            }
-          } else {
-            s << "mul edx, " << *it;
-            writeln(s.str());
-          }
+        {          
+          multiplier = calcMatrixOffset(c, dims);
+          x86.writeTEXT("pop eax");
 
-          writeln("push edx");
-          c++;
-          it++;
+          //trick for zero index [0]. Make sure [multiplier * 0] doesn't happen
+//           x86.writeTEXT("cmp eax, 0");
+//           x86.writeTEXT("setz bl");
+//           x86.writeTEXT("add al, bl");
+
+          s << "mov ebx, " << multiplier;
+          x86.writeTEXT(s.str());
+          x86.writeTEXT("imul ebx");
+          x86.writeTEXT("pop ebx");
+          x86.writeTEXT("add eax, ebx");
+          x86.writeTEXT("push eax");
+          s.str("");
+          c--;
         }
       )*
-
-      {
-/*        if(dims.size() > 0) {
-          writeln("pop edx");
-          writeln("pop eax");
-        }*/
-      }
     )
+
+    {
+      if(symb.type.isPrimitive()) {        
+        x86.writeTEXT("mov ecx, 0");
+      } else {
+        x86.writeTEXT("pop ecx");
+      }
+    }
   ;
 
 fcall[int expct_type] returns [int type]
@@ -424,7 +260,7 @@ fcall[int expct_type] returns [int type]
         f = stable.getSymbol(SymbolTable::GlobalScope, id->getText()); //so we get the params        
         type = f.type.primitiveType();
         if(f.lexeme == "leia") {
-          fname = translateFuncLeia(id->getText(), expct_type);
+          fname = x86.translateFuncLeia(id->getText(), expct_type);
         } else {
           fname = f.lexeme;
         }
@@ -434,13 +270,13 @@ fcall[int expct_type] returns [int type]
         etype=expr[ptype]
         {
           if(fname == "imprima") {
-            fimp = translateFuncImprima(id->getText(), etype);
-
-            writeln("addarg eax");
-            writeln(string("call ") + fimp);
-            writeln("clargs 1");
+            fimp = x86.translateFuncImprima(id->getText(), etype);
+            x86.writeTEXT("pop eax");
+            x86.writeTEXT("addarg eax");
+            x86.writeTEXT(string("call ") + fimp);
+            x86.writeTEXT("clargs 1");
           } else {
-            writeln("addarg eax");
+            x86.writeTEXT("addarg eax");
             ptype = f.param.paramType(count++);
           }
           args++;
@@ -449,47 +285,57 @@ fcall[int expct_type] returns [int type]
     )
     {
       if(fname == "imprima") {
-        writeln("print_lf"); //\n
+        x86.writeTEXT("print_lf"); //\n
       } else {
-        writeln(string("call ") + fname);
+        x86.writeTEXT(string("call ") + fname);
         s << "clargs " << args;
-        writeln(s.str());
+        x86.writeTEXT(s.str());
       }
     }
   ;
 
-/*
-stm_ret
-{
-  int expecting_type = stable.getSymbol(SymbolTable::GlobalScope, _currentScope, true).type.primitiveType();
-  production e;
-  stringstream str;
-}
-  : #(T_KW_RETORNE (TI_NULL|e=expr[expecting_type]))
-  ;
-*/
+
+// stm_ret
+// {
+//   int expecting_type = stable.getSymbol(SymbolTable::GlobalScope, _currentScope, true).type.primitiveType();
+//   production e;
+//   stringstream str;
+// }
+//   : #(T_KW_RETORNE (TI_NULL|e=expr[expecting_type]))
+// //     {
+// //       str << "return ";
+// //       if(_currentScopeType == TIPO_LITERAL) {
+// //         str << "return_literal(" << e.expr.second << ")";
+// //       } else {
+// //         str << e.expr.second;
+// //       }
+// //       str << ";";
+// //       x86.writeTEXT(str);
+// //     }
+//   ;
+
 stm_se
 {
   stringstream s;
   string lbnext, lbfim;
 
-  lbnext = createLabel(true, "next_se");
-  lbfim = createLabel(true, "fim_se");
+  lbnext = x86.createLabel(true, "next_se");
+  lbfim  = x86.createLabel(true, "fim_se");
 
   bool hasElse = false;
 
-  writeln("; se: expressao");
+  x86.writeTEXT("; se: expressao");
 }
   : #(T_KW_SE expr[TIPO_LOGICO]
 
     {
-      writeln("; se: resultado");
+      x86.writeTEXT("; se: resultado");
 
-      writeln("cmp eax, 0");
+      x86.writeTEXT("cmp eax, 0");
       s << "je " << lbnext;
-      writeln(s.str());
+      x86.writeTEXT(s.str());
 
-      writeln("; se: verdadeiro:");
+      x86.writeTEXT("; se: verdadeiro:");
     }
 
       (stm)*
@@ -501,20 +347,20 @@ stm_se
 
         s.str("");
         s << "jmp " << lbfim;
-        writeln(s.str());
+        x86.writeTEXT(s.str());
 
-        writeln("; se: falso:");
+        x86.writeTEXT("; se: falso:");
 
         s.str("");
         s << lbnext << ":";
-        writeln(s.str());
+        x86.writeTEXT(s.str());
       }
         (stm)*
       )?
     )
 
     {
-      writeln("; se: fim:");
+      x86.writeTEXT("; se: fim:");
 
       s.str("");
       if(hasElse) {
@@ -522,39 +368,39 @@ stm_se
       } else {
         s << lbnext << ":";
       }
-      writeln(s.str());
+      x86.writeTEXT(s.str());
     }
   ;
 
 stm_enquanto
 {
   stringstream s;
-  string lbenq = createLabel(true, "enquanto");;
-  string lbfim = createLabel(true, "fim_enquanto");;
+  string lbenq = x86.createLabel(true, "enquanto");;
+  string lbfim = x86.createLabel(true, "fim_enquanto");;
 
   s << lbenq << ":";
-  writeln(lbenq);
+  x86.writeTEXT(lbenq);
   s.str("");
 
-  writeln("; while: expressao");
+  x86.writeTEXT("; while: expressao");
 }
   : #(T_KW_ENQUANTO expr[TIPO_LOGICO]
       {
-        writeln("; while: resultado");
-        writeln("cmp eax, 0");
+        x86.writeTEXT("; while: resultado");
+        x86.writeTEXT("cmp eax, 0");
         s << "je " << lbfim;
-        writeln(s.str());
+        x86.writeTEXT(s.str());
       }
       (stm)*
 
       {
         s.str("");
         s << "jmp " << lbenq;
-        writeln(s.str());
+        x86.writeTEXT(s.str());
 
         s.str("");
         s << lbfim << ":";
-        writeln(s.str());
+        x86.writeTEXT(s.str());
       }
     )
   ;
@@ -562,15 +408,15 @@ stm_enquanto
 stm_para
 {
   stringstream s;
-  pair<int, string> lv;
+  pair< pair<int, bool>, string> lv;
   pair<int, string> ps;
   int de_type, ate_type;
   bool hasPasso = false;
 
-  string lbpara = createLabel(true, "para");
-  string lbfim = createLabel(true, "fim_para");
+  string lbpara = x86.createLabel(true, "para");
+  string lbfim  = x86.createLabel(true, "fim_para");
 
-  writeln("; para:");
+  x86.writeTEXT("; para:");
 }
   : #(T_KW_PARA 
 
@@ -580,41 +426,41 @@ stm_para
         {
           //atribuindo "de" para "lv"
           //casts (warning: replicacao de codigo da producao attribution)
-          if((de_type != TIPO_REAL) && (lv.first == TIPO_REAL)) {
+          if((de_type != TIPO_REAL) && (lv.first.first == TIPO_REAL)) {
             //int to float
-            writeln("mov dword [__aux], eax");
-            writeln("fild dword [__aux]");
-            writeln("fstp dword [__aux]");
-            writeln("mov eax, dword [__aux]");
-          } else if((de_type == TIPO_REAL) && (lv.first != TIPO_REAL)) {
-            writeln("mov dword [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("fistp dword [__aux]");
-            writeln("mov eax, dword [__aux]");
+            x86.writeTEXT("mov dword [__aux], eax");
+            x86.writeTEXT("fild dword [__aux]");
+            x86.writeTEXT("fstp dword [__aux]");
+            x86.writeTEXT("mov eax, dword [__aux]");
+          } else if((de_type == TIPO_REAL) && (lv.first.first != TIPO_REAL)) {
+            x86.writeTEXT("mov dword [__aux], eax");
+            x86.writeTEXT("fld dword [__aux]");
+            x86.writeTEXT("fistp dword [__aux]");
+            x86.writeTEXT("mov eax, dword [__aux]");
           }
-          writeln("; para de:");
+          x86.writeTEXT("; para de:");
           s << "mov [" << lv.second << "], eax";
-          writeln(s.str());
+          x86.writeTEXT(s.str());
         }
 
       ate_type=expr[TIPO_INTEIRO]
 
         {          
           //casts (warning: replicacao de codigo da producao attribution)
-          if((ate_type != TIPO_REAL) && (lv.first == TIPO_REAL)) {
+          if((ate_type != TIPO_REAL) && (lv.first.first == TIPO_REAL)) {
             //int to float
-            writeln("mov dword [__aux], eax");
-            writeln("fild dword [__aux]");
-            writeln("fstp dword [__aux]");
-            writeln("mov eax, dword [__aux]");
-          } else if((ate_type == TIPO_REAL) && (lv.first != TIPO_REAL)) {
-            writeln("mov dword [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("fistp dword [__aux]");
-            writeln("mov eax, dword [__aux]");
+            x86.writeTEXT("mov dword [__aux], eax");
+            x86.writeTEXT("fild dword [__aux]");
+            x86.writeTEXT("fstp dword [__aux]");
+            x86.writeTEXT("mov eax, dword [__aux]");
+          } else if((ate_type == TIPO_REAL) && (lv.first.first != TIPO_REAL)) {
+            x86.writeTEXT("mov dword [__aux], eax");
+            x86.writeTEXT("fld dword [__aux]");
+            x86.writeTEXT("fistp dword [__aux]");
+            x86.writeTEXT("mov eax, dword [__aux]");
           }
-          writeln("; para ate:");
-          writeln("push eax");//top stack tem "ate"
+          x86.writeTEXT("; para ate:");
+          x86.writeTEXT("push eax");//top stack tem "ate"
         }
 
       (
@@ -624,7 +470,7 @@ stm_para
         {
           s.str("");
           s << lbpara << ":";
-          writeln(s.str());
+          x86.writeTEXT(s.str());
         }
 
       (stm)*
@@ -633,11 +479,11 @@ stm_para
           //calcular passo [eax]
           s.str("");
           s << "mov eax, dword [" << lv.second << "]";
-          writeln(s.str());
+          x86.writeTEXT(s.str());
 
           s.str("");
           if(!hasPasso) {
-            writeln("inc eax");
+            x86.writeTEXT("inc eax");
           } else {
             if(ps.first) { //dec
               s << "sub eax, " << ps.second;
@@ -645,11 +491,11 @@ stm_para
               s << "add eax, " << ps.second;
             }
           }
-          writeln(s.str());
+          x86.writeTEXT(s.str());
           
           //desviar constrole          
-          writeln("mov ebx, dword [esp]");
-          writeln("cmp eax, ebx");
+          x86.writeTEXT("mov ebx, dword [esp]");
+          x86.writeTEXT("cmp eax, ebx");
 
           s.str("");
           if(hasPasso && ps.first) {
@@ -657,21 +503,21 @@ stm_para
           } else {
             s << "jg " << lbfim;
           }
-          writeln(s.str());
+          x86.writeTEXT(s.str());
 
           s.str("");
           s << "mov dword [" << lv.second << "], eax";
-          writeln(s.str());
+          x86.writeTEXT(s.str());
 
           s.str("");
           s << "jmp " << lbpara;
-          writeln(s.str());
+          x86.writeTEXT(s.str());
 
           s.str("");
           s << lbfim << ":";
-          writeln(s.str());
-          writeln("pop eax");
-          writeln("; fimpara");
+          x86.writeTEXT(s.str());
+          x86.writeTEXT("pop eax");
+          x86.writeTEXT("; fimpara");
         }
     )
   ;
@@ -685,370 +531,114 @@ passo returns [pair<int, string> p]
     )
   ;
 
-expr[int expecting_type, string reg = "eax"] returns [int etype]
+expr[int expecting_type] returns [int etype]
 {
   int e1, e2;
   stringstream s;
   etype = #expr->getEvalType();
 }
-  : #(T_KW_OU     e1=expr[expecting_type] e2=expr[expecting_type, "ebx"]) 
+  : #(T_KW_OU     e1=expr[expecting_type] e2=expr[expecting_type]) 
       {
-        writeln("cmp eax, 0");
-        writeln("setne al");
-        writeln("and eax, 0xff");
-        writeln("cmp ebx, 0");
-        writeln("setne bl");
-        writeln("and ebx, 0xff");
-        writeln("or al, bl");
+        x86.writeOuExpr();
       }
-  | #(T_KW_E      e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+  | #(T_KW_E      e1=expr[expecting_type] e2=expr[expecting_type])
       {
-        writeln("cmp eax, 0");        
-        writeln("setne al");
-        writeln("and eax, 0xff");
-        writeln("cmp ebx, 0");
-        writeln("setne bl");
-        writeln("and ebx, 0xff");
-        writeln("and al, bl");        
+        x86.writeEExpr();
       }
-  | #(T_BIT_OU    e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+  | #(T_BIT_OU    e1=expr[expecting_type] e2=expr[expecting_type])
       {
-        writeln("or eax, ebx");
+        x86.writeBitOuExpr();
       }
-  | #(T_BIT_XOU   e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+  | #(T_BIT_XOU   e1=expr[expecting_type] e2=expr[expecting_type])
       {
-        writeln("xor eax, ebx");
+        x86.writeBitXouExpr();
       }
-  | #(T_BIT_E     e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+  | #(T_BIT_E     e1=expr[expecting_type] e2=expr[expecting_type])
       {
-        writeln("and eax, ebx");
+        x86.writeBitEExpr();
       }
-  | #(T_IGUAL     e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+  | #(T_IGUAL     e1=expr[expecting_type] e2=expr[expecting_type])
       {
-        writeln("cmp eax, ebx");
-        writeln("sete al");
-        writeln("and eax, 0xff");
+        x86.writeIgualExpr();
       }
-  | #(T_DIFERENTE e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+  | #(T_DIFERENTE e1=expr[expecting_type] e2=expr[expecting_type])
       {
-        writeln("cmp eax, ebx");
-        writeln("setne al");
-        writeln("and eax, 0xff");
+        x86.writeDiferenteExpr();
       }
-  | #(T_MAIOR     e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+  | #(T_MAIOR     e1=expr[expecting_type] e2=expr[expecting_type])
       {
-        //fcomp assumes ST0 is left-hand operand aways
-        //flags after comp:
-        //5.0 @ 4 : ax -> 0
-        //5.0 @ 5 : ax -> 0x4000
-        //4.0 @ 6 : ax -> 0x100
-        if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
-          writeln("fninit");
-          if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
-            writeln("mov [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], ebx");
-            writeln("ficomp dword [__aux]");
-            writeln("fstsw ax");
-            writeln("cmp ax, 0");
-          } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
-            writeln("mov [__aux], ebx");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], eax");
-            writeln("ficomp dword [__aux]");
-            writeln("fstsw ax");
-            writeln("cmp ax, 0x100");
-          } else { //float/float
-            writeln("mov [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], ebx");
-            writeln("fcomp dword [__aux]");
-            writeln("fstsw ax");
-            writeln("cmp ax, 0");
-          }
-          writeln("sete al");
-          writeln("and eax, 0xff");
-        } else {
-          writeln("cmp eax, ebx");
-          writeln("setg al");
-          writeln("and eax, 0xff");
-        }
+        x86.writeMaiorExpr(e1, e2);
       }
-  | #(T_MENOR     e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+  | #(T_MENOR     e1=expr[expecting_type] e2=expr[expecting_type])
       {
-        if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
-          writeln("fninit");
-          if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
-            writeln("mov [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], ebx");
-            writeln("ficomp dword [__aux]");
-            writeln("fstsw ax");
-            writeln("cmp ax, 0x100");
-          } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
-            writeln("mov [__aux], ebx");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], eax");
-            writeln("ficomp dword [__aux]");
-            writeln("fstsw ax");
-            writeln("cmp ax, 0");
-          } else { //float/float
-            writeln("mov [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], ebx");
-            writeln("fcomp dword [__aux]");
-            writeln("fstsw ax");
-            writeln("cmp ax, 0x100");
-          }
-          writeln("sete al");
-          writeln("and eax, 0xff");
-        } else {
-          writeln("cmp eax, ebx");
-          writeln("setl al");
-          writeln("and eax, 0xff");
-        }
+        x86.writeMenorExpr(e1, e2);
       }
-  | #(T_MAIOR_EQ  e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+  | #(T_MAIOR_EQ  e1=expr[expecting_type] e2=expr[expecting_type])
       {
-        if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
-          writeln("fninit");
-          if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
-            writeln("mov [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], ebx");
-            writeln("ficomp dword [__aux]");
-            writeln("fstsw ax");
-            writeln("cmp ax, 0");
-          } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
-            writeln("mov [__aux], ebx");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], eax");
-            writeln("ficomp dword [__aux]");
-            writeln("fstsw ax");
-            writeln("cmp ax, 0x100");
-          } else { //float/float
-            writeln("mov [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], ebx");
-            writeln("fcomp dword [__aux]");
-            writeln("fstsw ax");
-            writeln("cmp ax, 0");
-          }
-          writeln("sete bl");
-          writeln("and ebx, 0xff");
-          
-          writeln("cmp ax, 0x4000");
-          writeln("sete al");
-          writeln("and eax, 0xff");
-          writeln("or eax, ebx");
-        } else {
-          writeln("cmp eax, ebx");
-          writeln("setge al");
-          writeln("and eax, 0xff");
-        }
+        x86.writeMaiorEqExpr(e1, e2);
       }
-  | #(T_MENOR_EQ  e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+  | #(T_MENOR_EQ  e1=expr[expecting_type] e2=expr[expecting_type])
       {
-        if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
-          writeln("fninit");
-          if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
-            writeln("mov [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], ebx");
-            writeln("ficomp dword [__aux]");
-            writeln("fstsw ax");
-            writeln("cmp ax, 0x100");
-          } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
-            writeln("mov [__aux], ebx");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], eax");
-            writeln("ficomp dword [__aux]");
-            writeln("fstsw ax");
-            writeln("cmp ax, 0");
-          } else { //float/float
-            writeln("mov [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], ebx");
-            writeln("fcomp dword [__aux]");
-            writeln("fstsw ax");
-            writeln("cmp ax, 0x100");
-          }
-          writeln("sete bl");
-          writeln("and ebx, 0xff");
-          
-          writeln("cmp ax, 0x4000");
-          writeln("sete al");
-          writeln("and eax, 0xff");
-          writeln("or eax, ebx");
-        } else {
-          writeln("cmp eax, ebx");
-          writeln("setle al");
-          writeln("and eax, 0xff");
-        }
+        x86.writeMenorEqExpr(e1, e2);
       }
-  | #(T_MAIS      e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+
+  | #(T_MAIS  e1=expr[expecting_type] e2=expr[expecting_type]) 
       {
-        if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
-          string addpop;
-          writeln("fninit");
-          if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
-            writeln("mov [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], ebx");
-            addpop = "fiadd dword [__aux]";
-          } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
-            writeln("mov [__aux], ebx");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], eax");
-            addpop = "fiadd dword [__aux]";
-          } else { //float/float
-            writeln("mov [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], ebx");
-            addpop = "fadd dword [__aux]";
-          }
-            writeln(addpop);
-            writeln("fstp dword [__aux]");
-            writeln("mov eax, dword [__aux]");
-        } else {
-          writeln("add eax, ebx");
-        }
+        x86.writeMaisExpr(e1,e2);
       }
-  | #(T_MENOS     e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+  | #(T_MENOS     e1=expr[expecting_type] e2=expr[expecting_type])
       {
-        if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
-          string subop;
-          writeln("fninit");
-          if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
-            writeln("mov [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], ebx");
-            subop = "fisub dword [__aux]";
-          } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
-            writeln("mov [__aux], ebx");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], eax");
-            subop = "fisub dword [__aux]";
-          } else { //float/float
-            writeln("mov [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], ebx");
-            subop = "fsub dword [__aux]";
-          }
-            writeln(subop);
-            writeln("fstp dword [__aux]");
-            writeln("mov eax, dword [__aux]");
-        } else {
-          writeln("sub eax, ebx");
-        }
+        x86.writeMenosExpr(e1, e2);
       }
-  | #(T_DIV       e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+  | #(T_DIV       e1=expr[expecting_type] e2=expr[expecting_type])
       {
-        if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
-          string divpop;
-          writeln("fninit");
-          if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
-            writeln("mov [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], ebx");
-            divpop = "fidiv dword [__aux]";
-          } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
-            writeln("mov [__aux], ebx");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], eax");
-            divpop = "fidivr dword [__aux]";
-          } else { //float/float
-            writeln("mov [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], ebx");
-            divpop = "fdiv dword [__aux]";
-          }
-            writeln(divpop);
-            writeln("fstp dword [__aux]");
-            writeln("mov eax, dword [__aux]");
-        } else {
-          writeln("xor edx, edx");
-          writeln("idiv ebx");
-        }
+        x86.writeDivExpr(e1, e2);
       }
-  | #(T_MULTIP    e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+  | #(T_MULTIP    e1=expr[expecting_type] e2=expr[expecting_type])
       {
-        if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
-          string mulpop;
-          writeln("fninit");
-          if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
-            writeln("mov [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], ebx");
-            mulpop = "fimul dword [__aux]";
-          } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
-            writeln("mov [__aux], ebx");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], eax");
-            mulpop = "fimul dword [__aux]";
-          } else { //float/float
-            writeln("mov [__aux], eax");
-            writeln("fld dword [__aux]");
-            writeln("mov [__aux], ebx");
-            mulpop = "fmul dword [__aux]";
-          }
-            writeln(mulpop);
-            writeln("fstp dword [__aux]");
-            writeln("mov eax, dword [__aux]");
-        } else {
-          writeln("imul eax, ebx");
-        }
+        x86.writeMultipExpr(e1, e2);
       }
-  | #(T_MOD       e1=expr[expecting_type] e2=expr[expecting_type, "ebx"])
+  | #(T_MOD       e1=expr[expecting_type] e2=expr[expecting_type])
       {
-        writeln("xor edx, edx");
-        writeln("idiv ebx");        
-        writeln("mov eax, edx");
+        x86.writeModExpr();
       }
-  | #(TI_UN_NEG   etype=element[expecting_type, reg])
+  | #(TI_UN_NEG   etype=element[expecting_type])
       {
-        if(etype == TIPO_REAL) {
-          s << "or " << reg << ",0x80000000";
-        } else {
-          s << "neg " << reg;          
-        }
-        writeln(s.str());
+        x86.writeUnaryNeg(etype);
       }
-  | #(TI_UN_POS   etype=element[expecting_type, reg])
+  | #(TI_UN_POS   etype=element[expecting_type])
       {
         //nothing
       }
-  | #(TI_UN_NOT   etype=element[expecting_type, reg])
+  | #(TI_UN_NOT   etype=element[expecting_type])
       {
-        writeln("mov ebx, eax");
-        writeln("xor eax, eax");
-        writeln("cmp ebx, 0");
-        writeln("sete al");        
+        x86.writeUnaryNot();
       }
-  | #(TI_UN_BNOT  etype=element[expecting_type, reg])
+  | #(TI_UN_BNOT  etype=element[expecting_type])
       {
-        writeln("not eax");
+        x86.writeUnaryBitNotExpr();
       }
-  | etype=element[expecting_type, reg]
+  | etype=element[expecting_type]
   ;
 
-element[int expecting_type, string reg] returns [int etype]
+element[int expecting_type] returns [int etype]
 {
   stringstream s;
   string str;
-  pair<int, string> p;
+  pair<int, string> lit;
+  pair< pair<int, bool>, string> lv;
 }
-  : p=literal {s << "mov " << reg << ", " << p.second; writeln(s.str());etype = p.first;}
+  : lit=literal {x86.writeLiteralExpr(lit.second);etype = lit.first;}
   | etype=fcall[expecting_type]
-  | p=lvalue  {s << "mov " << reg << ", [" << p.second << "]"; writeln(s.str());etype = p.first;}
-  | #(TI_PARENTHESIS etype=expr[expecting_type, reg])
+  | lv=lvalue  {x86.writeLValueExpr(lv);etype = lv.first.first;}
+  | #(TI_PARENTHESIS etype=expr[expecting_type])
   ;
 
 literal returns [pair<int, string> p]
 {
   stringstream ss;
 }
-  : s:T_STRING_LIT        {p.second = insertString(s->getText());p.first = TIPO_LITERAL;}
+  : s:T_STRING_LIT        {p.second = x86.addGlobalLiteral(s->getText());p.first = TIPO_LITERAL;}
   | i:T_INT_LIT           {p.second = i->getText();p.first = TIPO_INTEIRO;}
   | c:T_CARAC_LIT         {ss << (int) c->getText().c_str()[0]; p.second = ss.str();p.first = TIPO_CARACTERE;}
   | v:T_KW_VERDADEIRO     {p.second = "1";p.first = TIPO_LOGICO;}
@@ -1057,16 +647,13 @@ literal returns [pair<int, string> p]
                             //get the content of a float variable to integer.
                             float fvalue; //sizeof(float) should be 4
                             long  *fvaluep; //sizeof(long) should be 4
-                            void *pt;
                             fvalue = atof(r->getText().c_str()); 
-                            pt = &fvalue; 
-                            fvaluep = (long*) pt;
+                            fvaluep = (long*) &fvalue; 
                             ss << *fvaluep; 
                             p.second = ss.str();
                             p.first = TIPO_REAL;
                           }
   ;
-
 
 /*
 func_decls
@@ -1080,64 +667,12 @@ func_decls
 }
   : #(id:T_IDENTIFICADOR   
       {
-        setScope(id->getText());
-        //nota: nao estamos usando a producao "ret_type" para saber o tipo de retorno.
-        //      Procuramos diretamente na tabela de simbolos. (conveniencia)
-        _currentScopeType = stable.getSymbol(SymbolTable::GlobalScope, id->getText(), true).type.primitiveType();
-        str << translateType(_currentScopeType);
-        str << " " << id->getText() << "(";
+        x86.createScope(id->getText());
+        str << id->getText() << ":";
+        x86.writeTEXT(str);
       }
 
-      (
-          prim=primitivo
-            {              
-              for(list<string>::iterator it = prim.primvars.second.begin(); it != prim.primvars.second.end(); ++it) {
-                str << comma << translateType(prim.primvars.first) << " " << (*it);
-                comma = ", ";
-              }
-            }
-        | mat=matriz
-            {
-              stringstream s;
-              for(list<string>::iterator itid = mat.matrizvars.second.first.begin(); itid !=  mat.matrizvars.second.first.end(); ++itid) {
-                s << comma << translateType(mat.matrizvars.first) << " " << *itid << "__";
-                decl << translateType(mat.matrizvars.first) << " " << *itid;
-        
-                comma = ",";
-                for(list<string>::iterator itdim = mat.matrizvars.second.second.begin(); itdim != mat.matrizvars.second.second.end(); ++itdim) {
-                  s << "[" << *itdim << "]";
-                  decl << "[" << *itdim << "]";
-                }                
-        
-                decl << ";";
-                addInitStm(decl);
-                decl.str("");
-
-                cpy << "matrix_cpy__(" << *itid << "__, " << *itid << ", ";
-                switch(mat.matrizvars.first) {
-                  case TIPO_INTEIRO:
-                    cpy << "'i', ";break;
-                  case TIPO_REAL:
-                    cpy << "'f', ";break;
-                  case TIPO_CARACTERE:
-                  case TIPO_LITERAL:
-                    cpy << "'c', ";break;      
-                  case TIPO_LOGICO:
-                    cpy << "'b', ";break;
-                }
-      
-                int tsize = 1;
-                for(list<string>::iterator itdim = mat.matrizvars.second.second.begin(); itdim != mat.matrizvars.second.second.end(); ++itdim) {
-                  tsize = tsize * atoi((*itdim).c_str());
-                }
-                cpy << tsize << ");";
-                addInitStm(cpy);        
-                cpy.str("");
-                str << s.str();
-                s.str("");
-              }
-            }
-      )*
+      (primitivo[VAR_PARAM] | matriz[VAR_PARAM])*
 
       //(ret_type)?
 
@@ -1152,23 +687,24 @@ func_decls
         addPrototype(prototype);
 
         str << " {";
-        writeln(str);
+        x86.writeTEXT(str);
         indent();
       }
 
-      (variaveis[false])?
+      (variaveis[VAR_LOCAL])?
       stm_block
       {
         //força retorno, se o usuario esqueceu:
 //         if(fret != TIPO_NULO) {
-//           writeln("return -1;");
+//           x86.writeTEXT("return -1;");
 //         }
 
         unindent();
-        writeln("}");
+        x86.writeTEXT("}");
         setScope(SymbolTable::GlobalScope);
         _currentScopeType = -1;
       }
     )
-  ;*/
+  ;
+*/
   
