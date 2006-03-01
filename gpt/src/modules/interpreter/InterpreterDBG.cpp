@@ -45,7 +45,7 @@ InterpreterDBG* InterpreterDBG::singleton = NULL;
 
 InterpreterDBG::InterpreterDBG() {
 #ifndef WIN32
-  clientsock = -1
+  clientsock = -1;
 #else
   clientsock = INVALID_SOCKET;
 #endif
@@ -82,7 +82,7 @@ void InterpreterDBG::init(string host, int port) {
   if(clientsock < 0) {
     stringstream s;
     s << PACKAGE << ": não foi possível criar socket\n";
-    Display::showError(s);
+    Display::self()->showError(s);
     return;
   }
 
@@ -94,7 +94,7 @@ void InterpreterDBG::init(string host, int port) {
     if(SIG_ERR == signal(SIGPIPE, sigPipeHandler)) {
       stringstream s;
       s << PACKAGE << ": erro interno em InterpreterDBG::init" << endl;
-      Display::showError(s);
+      Display::self()->showError(s);
     }
   }
 #else
