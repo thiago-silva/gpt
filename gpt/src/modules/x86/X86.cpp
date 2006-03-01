@@ -188,7 +188,7 @@ void X86::declareMatrix(int decl_type, int type, string name, list<string> dims)
   if(decl_type == VAR_GLOBAL) {
     declarePrimitive(VAR_GLOBAL, name, TIPO_INTEIRO);//*TIPO_INTEIRO (pointer)
     stringstream s;
-    s << "addarg " << size << " * 4";
+    s << "addarg " << size << " * SIZEOF_DWORD";
     writeTEXT(s.str()); 
     s.str("");
     writeTEXT("call __malloc"); 
@@ -199,7 +199,7 @@ void X86::declareMatrix(int decl_type, int type, string name, list<string> dims)
     s << "addarg dword [" << name << "]";
     writeTEXT(s.str());
     s.str("");
-    s << "addarg " << size << "*4";
+    s << "addarg " << size << " * SIZEOF_DWORD";
     writeTEXT(s.str());
     writeTEXT("call matrix_init__");
     writeTEXT("clargs 2");
@@ -213,10 +213,35 @@ void X86::declareMatrix(int decl_type, int type, string name, list<string> dims)
 }
 
 
+string X86::toNasmString(string str) {
+  string ret;
+  for(unsigned int i = 0; i < str.length(); i++) {
+    if(str[i] == '\\') {
+      i++;
+      switch(str[i]) {
+        case '0':
+          ret += "',0,'";
+          break;
+        case 'n':
+          ret += "',10,'";
+          break;
+        case 'r':
+          ret += "',13,'";
+          break;
+        default:
+          ret += str[i];
+      }
+    } else {
+      ret += str[i];
+    }
+  }
+  return ret;
+}
+
 string X86::addGlobalLiteral(string str) {
   stringstream s;
   string lb = createLabel(false, "str");
-  s << lb << " db '" << str << "',0" << endl;
+  s << lb << " db '" << toNasmString(str) << "',0" << endl;
   writeDATA(s.str());
   return lb;
 }
@@ -293,24 +318,28 @@ string X86::source() {
   return str.str();
 }
 
-
-void X86::writeAttribution(int etype, int expecting_type, pair<pair<int, bool>, string>& lv) {
-  writeTEXT("pop eax");
-  writeTEXT("pop ecx");
-
+void X86::writeCast(int e1, int e2) {
   //casts
-  if((etype != TIPO_REAL) && (expecting_type == TIPO_REAL)) {
+  if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) {
     //int to float
     writeTEXT("mov dword [__aux], eax");
     writeTEXT("fild dword [__aux]");
     writeTEXT("fstp dword [__aux]");
     writeTEXT("mov eax, dword [__aux]");
-  } else if((etype == TIPO_REAL) && (expecting_type != TIPO_REAL)) {
+  } else if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) {
     writeTEXT("mov dword [__aux], eax");
     writeTEXT("fld dword [__aux]");
     writeTEXT("fistp dword [__aux]");
     writeTEXT("mov eax, dword [__aux]");
   }
+}
+
+void X86::writeAttribution(int e1, int e2, pair<pair<int, bool>, string>& lv) {
+  writeTEXT("pop eax");
+  writeTEXT("pop ecx");
+
+  writeCast(e1, e2);
+
   stringstream s;
   if(lv.first.second) { //if is primitive
     s << "mov edx, dword " << lv.second;
@@ -319,7 +348,7 @@ void X86::writeAttribution(int etype, int expecting_type, pair<pair<int, bool>, 
   }
   writeTEXT(s.str());
   s.str("");
-  s << "lea edx, [edx+ecx*4]";
+  s << "lea edx, [edx + ecx * SIZEOF_DWORD]";
   writeTEXT(s.str());
   s.str("");
   s << "mov [edx], eax";
@@ -769,7 +798,7 @@ void X86::writeLValueExpr(pair< pair<int, bool>, string>& lv) {
   }
   writeTEXT(s.str());
   s.str("");
-  s << "lea edx, [edx+ecx*4]";
+  s << "lea edx, [edx + ecx * SIZEOF_DWORD]";
   writeTEXT(s.str());
   s.str("");
   s << "push dword [edx]";  
@@ -778,5 +807,36 @@ void X86::writeLValueExpr(pair< pair<int, bool>, string>& lv) {
   //writeTEXT(s.str());
 }
 
+string X86::toChar(const string& str) {
+  if(str[0] != '\\') {
+    return str;
+  } else {
+    string ret;
+    switch(str[1]) {
+      case '0':        
+        ret = "0";
+        break;
+      case 'n':
+        ret = "10";
+        break;
+      case 'r':
+        ret += "13";
+        break;
+      default:
+        ret = str[1];
+    }
+    return ret;
+  }
+}
 
+string X86::toReal(const string& str) {
+  stringstream s;
+  //get the content of a float variable to integer.
+  float fvalue; //sizeof(float) should be 4
+  long  *fvaluep; //sizeof(long) should be 4
+  fvalue = atof(str.c_str()); 
+  fvaluep = (long*) &fvalue; 
+  s << *fvaluep; 
+  return s.str();
+} 
 

@@ -160,9 +160,9 @@ stm
   : stm_attr
   | fcall[TIPO_ALL]
 //   | stm_ret
-//   | stm_se
-//   | stm_enquanto
-//   | stm_para
+  | stm_se
+  | stm_enquanto
+  | stm_para
   ;
 
 stm_attr
@@ -217,11 +217,6 @@ lvalue returns [pair< pair<int, bool>, string> p]
         {          
           multiplier = calcMatrixOffset(c, dims);
           x86.writeTEXT("pop eax");
-
-          //trick for zero index [0]. Make sure [multiplier * 0] doesn't happen
-//           x86.writeTEXT("cmp eax, 0");
-//           x86.writeTEXT("setz bl");
-//           x86.writeTEXT("add al, bl");
 
           s << "mov ebx, " << multiplier;
           x86.writeTEXT(s.str());
@@ -323,14 +318,14 @@ stm_se
   lbfim  = x86.createLabel(true, "fim_se");
 
   bool hasElse = false;
-
+  
   x86.writeTEXT("; se: expressao");
 }
   : #(T_KW_SE expr[TIPO_LOGICO]
 
-    {
+    {      
       x86.writeTEXT("; se: resultado");
-
+      x86.writeTEXT("pop eax");
       x86.writeTEXT("cmp eax, 0");
       s << "je " << lbnext;
       x86.writeTEXT(s.str());
@@ -387,6 +382,7 @@ stm_enquanto
   : #(T_KW_ENQUANTO expr[TIPO_LOGICO]
       {
         x86.writeTEXT("; while: resultado");
+        x86.writeTEXT("pop eax");
         x86.writeTEXT("cmp eax, 0");
         s << "je " << lbfim;
         x86.writeTEXT(s.str());
@@ -420,46 +416,27 @@ stm_para
 }
   : #(T_KW_PARA 
 
-        lv=lvalue  
+        lv=lvalue
+        {
+          Symbol symb = stable.getSymbol(x86.currentScope(), lv.second, true);
+          int expecting_type = symb.type.primitiveType();
+          x86.writeTEXT("push ecx");
+          x86.writeTEXT("; para: de:");
+        }  
+
         de_type=expr[TIPO_INTEIRO] 
 
         {
-          //atribuindo "de" para "lv"
-          //casts (warning: replicacao de codigo da producao attribution)
-          if((de_type != TIPO_REAL) && (lv.first.first == TIPO_REAL)) {
-            //int to float
-            x86.writeTEXT("mov dword [__aux], eax");
-            x86.writeTEXT("fild dword [__aux]");
-            x86.writeTEXT("fstp dword [__aux]");
-            x86.writeTEXT("mov eax, dword [__aux]");
-          } else if((de_type == TIPO_REAL) && (lv.first.first != TIPO_REAL)) {
-            x86.writeTEXT("mov dword [__aux], eax");
-            x86.writeTEXT("fld dword [__aux]");
-            x86.writeTEXT("fistp dword [__aux]");
-            x86.writeTEXT("mov eax, dword [__aux]");
-          }
-          x86.writeTEXT("; para de:");
-          s << "mov [" << lv.second << "], eax";
-          x86.writeTEXT(s.str());
+          x86.writeTEXT("; para: de attr:");
+          x86.writeAttribution(de_type, expecting_type, lv);
+          x86.writeTEXT("; para: ate:");
         }
 
       ate_type=expr[TIPO_INTEIRO]
 
-        {          
-          //casts (warning: replicacao de codigo da producao attribution)
-          if((ate_type != TIPO_REAL) && (lv.first.first == TIPO_REAL)) {
-            //int to float
-            x86.writeTEXT("mov dword [__aux], eax");
-            x86.writeTEXT("fild dword [__aux]");
-            x86.writeTEXT("fstp dword [__aux]");
-            x86.writeTEXT("mov eax, dword [__aux]");
-          } else if((ate_type == TIPO_REAL) && (lv.first.first != TIPO_REAL)) {
-            x86.writeTEXT("mov dword [__aux], eax");
-            x86.writeTEXT("fld dword [__aux]");
-            x86.writeTEXT("fistp dword [__aux]");
-            x86.writeTEXT("mov eax, dword [__aux]");
-          }
-          x86.writeTEXT("; para ate:");
+        {
+          x86.writeTEXT("pop eax");
+          x86.writeCast(ate_type, lv.first.first);          
           x86.writeTEXT("push eax");//top stack tem "ate"
         }
 
@@ -635,24 +612,12 @@ element[int expecting_type] returns [int etype]
   ;
 
 literal returns [pair<int, string> p]
-{
-  stringstream ss;
-}
   : s:T_STRING_LIT        {p.second = x86.addGlobalLiteral(s->getText());p.first = TIPO_LITERAL;}
   | i:T_INT_LIT           {p.second = i->getText();p.first = TIPO_INTEIRO;}
-  | c:T_CARAC_LIT         {ss << (int) c->getText().c_str()[0]; p.second = ss.str();p.first = TIPO_CARACTERE;}
+  | c:T_CARAC_LIT         {p.second = x86.toChar(c->getText());p.first = TIPO_CARACTERE;}
   | v:T_KW_VERDADEIRO     {p.second = "1";p.first = TIPO_LOGICO;}
   | f:T_KW_FALSO          {p.second = "0";p.first = TIPO_LOGICO;}
-  | r:T_REAL_LIT          {
-                            //get the content of a float variable to integer.
-                            float fvalue; //sizeof(float) should be 4
-                            long  *fvaluep; //sizeof(long) should be 4
-                            fvalue = atof(r->getText().c_str()); 
-                            fvaluep = (long*) &fvalue; 
-                            ss << *fvaluep; 
-                            p.second = ss.str();
-                            p.first = TIPO_REAL;
-                          }
+  | r:T_REAL_LIT          {p.second = x86.toReal(r->getText());p.first = TIPO_REAL;}
   ;
 
 /*

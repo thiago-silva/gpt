@@ -80,6 +80,7 @@ _head <<
 "  clargs 1\n"
 "%endmacro\n"
 "\n"
+"%define SIZEOF_DWORD 4\n"
 "%define __MEMORY_SIZE  1048576\n"
 "%define __BUFFER_SIZE  1024\n"
 "\n";

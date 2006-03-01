@@ -88,7 +88,7 @@ public:
 
   void writeExit();
 
-  void writeAttribution(int etype, int expecting_type, pair<pair<int, bool>, string>&);
+  void writeAttribution(int e1, int e2, pair<pair<int, bool>, string>&);
   void writeOuExpr();
   void writeEExpr();
   void writeBitOuExpr();
@@ -111,7 +111,13 @@ public:
   void writeLiteralExpr(const string& src);
   void writeLValueExpr(pair< pair<int, bool>, string>&);
 
+  void writeCast(int e1, int e2);
+
+  string toChar(const string&);
+  string toReal(const string&);
 private:
+  string toNasmString(string str);
+
   SymbolTable& _stable;
 
   string       _currentScope;  
