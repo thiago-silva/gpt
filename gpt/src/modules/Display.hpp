@@ -63,6 +63,7 @@ public:
 
 
   void showError(stringstream& s);
+  void showError(const string&);
   void showMessage(stringstream& s);
 
   void stopOnError(bool);

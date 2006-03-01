@@ -54,6 +54,10 @@ void Display::showError(stringstream& s) {
   cerr << toOEM(s.str());
 }
 
+void Display::showError(const string& str) {
+  cerr << toOEM(str);
+}
+
 void Display::showMessage(stringstream& s) {
   cout << toOEM(s.str());
   cout.flush();
