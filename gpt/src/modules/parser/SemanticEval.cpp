@@ -363,7 +363,7 @@ void SemanticEval::evaluateNumericExpr(ExpressionValue& ev, int line, bool check
     }
   } else if(!ev.isNumeric()) {
     stringstream err;
-    err << "Esperando uma expressão numérica. Encontrado expressão \"" << ev.toString() << "\""; 
+    err << "Esperando uma expressão numérica. Encontrado expressão \"" << ev.toString() << "\"";
     Display::self()->add(err.str(), line);
   }
 }
