@@ -188,26 +188,30 @@ stm_attr
     }
   ;
 
-lvalue returns [pair< pair<int, bool>, string> p]
+lvalue returns [pair< pair<int, bool>, string> p] //pair< pair<type, using_addr>, name>
 {
   stringstream s;
   list<int> dims;
   Symbol symb;
+  bool isprim;
   int multiplier;
-  int c;
+  int c;  
 }
   : #(id:T_IDENTIFICADOR
       {
         symb = stable.getSymbol(x86.currentScope(), id->getText(), true);
         p.first.first = symb.type.primitiveType();
-        p.first.second = symb.type.isPrimitive();
+        isprim = symb.type.isPrimitive();
         p.second = id->getText();
 
         dims = symb.type.dimensions();
         c = dims.size();
 
-        if(!symb.type.isPrimitive()) {
+       if(!isprim) {
+          p.first.second = true;
           x86.writeTEXT("push 0");
+        } else {
+          p.first.second = false;
         }
       }
 
@@ -215,6 +219,7 @@ lvalue returns [pair< pair<int, bool>, string> p]
         expr[TIPO_INTEIRO]
 
         {
+          p.first.second = false;
           multiplier = calcMatrixOffset(c, dims);
           x86.writeTEXT("pop eax");
 
@@ -460,13 +465,9 @@ stm_para
 
         {
           //calcular passo [eax]          
-          s.str("");
-          if(symb.type.isPrimitive()) {
-            s << "lea edx, [" << lv.second << "]";
-          } else {
-            s << "mov edx, dword [" << lv.second << "]";
-          }
           x86.writeTEXT("mov ecx, dword [esp+4]");
+          s.str("");
+          s << "lea edx, [" << lv.second << "]";
           x86.writeTEXT(s.str());
           x86.writeTEXT("mov eax, dword [edx + ecx * SIZEOF_DWORD]");
 
@@ -495,11 +496,7 @@ stm_para
           x86.writeTEXT(s.str());
 
           s.str("");          
-          if(symb.type.isPrimitive()) {
-            s << "lea edx, [" << lv.second << "]";
-          } else {
-            s << "mov edx, dword [" << lv.second << "]";
-          }
+          s << "lea edx, [" << lv.second << "]";
           x86.writeTEXT(s.str());
           x86.writeTEXT("mov ecx, dword [esp+4]");          
           x86.writeTEXT("lea edx, [edx + ecx * SIZEOF_DWORD]");

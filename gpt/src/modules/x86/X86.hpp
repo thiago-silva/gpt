@@ -35,21 +35,21 @@ public:
   X86SubProgram(const X86SubProgram&);
   ~X86SubProgram();
 
-  void declareLocal(const string&, int);
-  void declareParam(const string&, int);
-
-  void writeMatrixInitCode(int decl_type, const string& varname, int type, int size);
+  void declareLocal(const string&, int = 0, bool minit = true);
+  void declareParam(const string&, int type, int = 0);
 
   void writeTEXT(const string&);
 
-  void init(const string&, int = 0, int = 0);
+  void init(const string&);
   string name();
 
   string source();
 
 private:
+  void writeMatrixInitCode(const string& varname, int size);
+  void writeMatrixCopyCode(const string& param, int type, int msize);
+
   const  int   SizeofDWord;
-  int          _total_locals;
   int          _param_offset;
   int          _local_offset;
   string       _name;
