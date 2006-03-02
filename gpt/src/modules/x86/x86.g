@@ -214,7 +214,7 @@ lvalue returns [pair< pair<int, bool>, string> p]
       (
         expr[TIPO_INTEIRO]
 
-        {          
+        {
           multiplier = calcMatrixOffset(c, dims);
           x86.writeTEXT("pop eax");
 
@@ -417,7 +417,7 @@ stm_para
   string lbpara = x86.createLabel(true, "para");
   string lbfim  = x86.createLabel(true, "fim_para");
 
-  x86.writeTEXT("; para:");
+  x86.writeTEXT("; para: lvalue:");
 }
   : #(T_KW_PARA 
 
@@ -434,6 +434,7 @@ stm_para
         {
           x86.writeTEXT("; para: de attr:");
           x86.writeAttribution(de_type, expecting_type, lv);
+          x86.writeTEXT("push ecx");
           x86.writeTEXT("; para: ate:");
         }
 
@@ -458,10 +459,16 @@ stm_para
       (stm)*
 
         {
-          //calcular passo [eax]
+          //calcular passo [eax]          
           s.str("");
-          s << "mov eax, dword [" << lv.second << "]";
+          if(symb.type.isPrimitive()) {
+            s << "lea edx, [" << lv.second << "]";
+          } else {
+            s << "mov edx, dword [" << lv.second << "]";
+          }
+          x86.writeTEXT("mov ecx, dword [esp+4]");
           x86.writeTEXT(s.str());
+          x86.writeTEXT("mov eax, dword [edx + ecx * SIZEOF_DWORD]");
 
           s.str("");
           if(!hasPasso) {
@@ -487,9 +494,16 @@ stm_para
           }
           x86.writeTEXT(s.str());
 
-          s.str("");
-          s << "mov dword [" << lv.second << "], eax";
+          s.str("");          
+          if(symb.type.isPrimitive()) {
+            s << "lea edx, [" << lv.second << "]";
+          } else {
+            s << "mov edx, dword [" << lv.second << "]";
+          }
           x86.writeTEXT(s.str());
+          x86.writeTEXT("mov ecx, dword [esp+4]");          
+          x86.writeTEXT("lea edx, [edx + ecx * SIZEOF_DWORD]");
+          x86.writeTEXT("mov dword [edx], eax");
 
           s.str("");
           s << "jmp " << lbpara;
@@ -499,6 +513,7 @@ stm_para
           s << lbfim << ":";
           x86.writeTEXT(s.str());
           x86.writeTEXT("pop eax");
+          x86.writeTEXT("pop ecx");
           x86.writeTEXT("; fimpara");
         }
     )

@@ -69,47 +69,50 @@ string X86SubProgram::name() {
 }
 
 void X86SubProgram::declareLocal(const string& local_var, int type) {
-  _head << "%define " << local_var << " [ebp-" << _local_offset << "]" << endl;
+  _head << "%define " << local_var << " ebp-" << _local_offset << endl;
 
-  _init << "mov dword " << local_var << ", 0" << endl;
+  _init << "mov dword [" << local_var << "], 0" << endl;
 
   _local_offset += SizeofDWord;
 }
 
 void X86SubProgram::declareParam(const string& param, int type) {
 
-  _head << "%define " << param << " [ebp+" << _param_offset << "]" << endl;
+  _head << "%define " << param << " ebp+" << _param_offset << endl;
 
   _param_offset -= SizeofDWord;
 }
 
 void X86SubProgram::writeMatrixInitCode(int decl_type, const string& varname, int type, int size) {
-  if(decl_type == X86::VAR_GLOBAL) {
+//   if(decl_type == X86::VAR_GLOBAL) {
     _init << "addarg " << size << " * SIZEOF_DWORD" << endl;
     _init << "call __malloc" << endl;
     _init << "clargs 1" << endl;
-    _init << "mov [" << varname << "], eax" << endl;
-    _init << "addarg dword [" << varname << "]" << endl;
+    _init << "lea ebx, [" << varname << "]" << endl;
+    _init << "mov dword [ebx], eax" << endl;
+    _init << "addarg dword [ebx]" << endl;
     _init << "addarg " << size << " * SIZEOF_DWORD" << endl;
     _init << "call matrix_init__" << endl;
     _init << "clargs 2" << endl;
-  } else if(decl_type == X86::VAR_LOCAL) {
-    _init << "addarg " << size << " * SIZEOF_DWORD" << endl;
-    _init << "call __malloc" << endl;
-    _init << "clargs 1" << endl;
-    _init << "mov dword " << varname << ", eax" << endl;
-    _init << "addarg dword " << varname << endl;
-    _init << "addarg " << size << " * SIZEOF_DWORD" << endl;
-    _init << "call matrix_init__" << endl;
-    _init << "clargs 2" << endl;  
-  } else {
-    _init << "addarg " << varname << endl;
-    _init << "addarg " << size << endl;
-    _init << "addarg " << (type == TIPO_LITERAL) << endl;
-    _init << "call __clone_matrix" << endl;
-    _init << "clargs 3" << endl;
-    _init << "mov [" << varname << "], eax" << endl;
-  }
+//   } else if(decl_type == X86::VAR_LOCAL) {
+//     _init << "addarg " << size << " * SIZEOF_DWORD" << endl;
+//     _init << "call __malloc" << endl;
+//     _init << "clargs 1" << endl;
+//     _init << "lea ebx, " << varname << endl;
+//     _init << "mov [ebx], eax" << endl;
+//     _init << "addarg dword [ebx]" << endl;
+//     _init << "addarg " << size << " * SIZEOF_DWORD" << endl;
+//     _init << "call matrix_init__" << endl;
+//     _init << "clargs 2" << endl;  
+//   } else {
+//     _init << "lea eax, " << varname << endl;
+//     _init << "addarg dword [" << varname << "]" << endl;
+//     _init << "addarg " << size << endl;
+//     _init << "addarg " << (type == TIPO_LITERAL) << endl;
+//     _init << "call __clone_matrix" << endl;
+//     _init << "clargs 3" << endl;
+//     _init << "mov dword [" << varname << "], eax" << endl;
+//   }
 }
 
 string X86SubProgram::source() {
@@ -378,21 +381,17 @@ void X86::writeAttribution(int e1, int e2, pair<pair<int, bool>, string>& lv) {
 
   writeCast(e1, e2);
 
-  stringstream s;  
-  if(_stable.getSymbol(currentScope(), lv.second, true).scope != SymbolTable::GlobalScope) {
-    if(lv.first.second) { //if is primitive
-      s << "lea edx, " << lv.second;
-    } else {
-      s << "mov edx, dword [" << lv.second << "]";
-    }
+  stringstream s;
+
+  Symbol symb = _stable.getSymbol(currentScope(), lv.second, true);
+  if(symb.type.isPrimitive()) {
+    s << "lea edx, [" << lv.second << "]";
   } else {
-    if(lv.first.second) { //if is primitive
-      s << "mov edx, dword " << lv.second;
-    } else {
-      s << "mov edx, dword [" << lv.second << "]";
-    }
+    s << "mov edx, dword [" << lv.second << "]";
   }
   writeTEXT(s.str());
+
+  
   s.str("");
   s << "lea edx, [edx + ecx * SIZEOF_DWORD]";
   writeTEXT(s.str());
@@ -838,6 +837,19 @@ void X86::writeLiteralExpr(const string& src) {
 void X86::writeLValueExpr(pair< pair<int, bool>, string>& lv) {
   stringstream s;
 
+  Symbol symb = _stable.getSymbol(currentScope(), lv.second, true);
+  if(symb.type.isPrimitive()) {
+    s << "lea edx, [" << lv.second << "]";
+  } else {
+    s << "mov edx, dword [" << lv.second << "]";//matrix addr
+    writeTEXT(s.str());
+    s.str("");
+    s << "lea edx, [edx + ecx * SIZEOF_DWORD]";
+  }
+  writeTEXT(s.str());
+  writeTEXT("push dword [edx]");
+
+/*
   if(_stable.getSymbol(currentScope(), lv.second, true).scope != SymbolTable::GlobalScope) {
     if(lv.first.second) { //if is primitive
       s << "lea edx, " << lv.second;
@@ -858,7 +870,7 @@ void X86::writeLValueExpr(pair< pair<int, bool>, string>& lv) {
   writeTEXT(s.str());
   s.str("");
   s << "push dword [edx]";  
-  writeTEXT(s.str());
+  writeTEXT(s.str());*/
   //s << "push dword [" << src << " + ecx*4]"; 
   //writeTEXT(s.str());
 }
