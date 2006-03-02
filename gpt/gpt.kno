@@ -1,22 +1,17 @@
 \NewEntry 0 devel
 
-\NewEntry 1 NOW
+\CurrentEntry 1 NOW
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
-<ul type="disc"><li>X86/x86.g</li>
-<ul type="disc"><li>acesso a variaveis (globais, locais/paramatros) devem ser feitos de forma uniforme.</li>
-<ul type="disc"><li>problema: </li>
-<ul type="disc"><li>mov eax, var (var eh global, ok)</li>
-<li>mov var, eax (var eh [ebp-4]. parse error!)<br /></li></ul>
-<li>solucao: macro que carrega o endereco da variavel<br />%macro load_var 2<br />lea %1, %2<br />%endmacro<br /><br />global: load_var eax, x ; eax tem o endereco de x<br />local:   load_var eax, x ; eax tem o endereco de [ebp-4]<br /></li></ul>
-<li>testar passagem de parametros de strings e matrizes</li>
-<li>usar valgrind para detectar acesso de memoria invalido<br /><br /></li></ul>
+<ul type="disc"><li>X86/x86.g<br /></li>
 <li>gpt.cpp -&gt; main.cpp</li>
 <li>criar classe GPT</li>
 <ul type="disc"><li>limpar codigo do programa<br /><br /></li></ul>
 <li>uniformizar c_translator/interpreter/x86 behavior </li>
 <ul type="disc"><li>impressao de floats (2 casas decimais, arredondando!!)</li>
 <li>testar overflow de inteiros, floats, caracteres, etc, nos 3 modulos</li>
-<li>leitura de dados (inteiro, float, literal, etc) (ver manual para detalhes) deve ser o mesmo nos 3 modulos<br /><br /></li></ul>
+<li>leitura de dados (inteiro, float, literal, etc) (ver manual para detalhes) deve ser o mesmo nos 3 modulos</li>
+<li>para behavior (para x de 0 ate 10 passo 3. Qual o valor final de x nos diferentes modulos?)<br /><br /></li></ul>
+<li>Semantic: permitir X := leia() + 2;<br />x := leia() = &quot;inteiro&quot;<br />x := leia() + (&quot;inteiro&quot; = lit)<br /></li>
 <li>Publicar como snapshot por enquanto, para entao:</li>
 <ul type="disc"><li>0.9: feature complete (manual, etc ok)</li>
 <li>1.0: depois de vários bugfixes<br /></li></ul>
@@ -24,7 +19,7 @@
 </body></html>
 
 
-\CurrentEntry 1 TODO
+\NewEntry 1 TODO
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><div></div>
 <li>GPT:</li>
@@ -83,7 +78,6 @@
 <li>static link com a pcre.a (nao mandar pcre*.dll junto..)</li>
 <li>strip gpt.exe</li></ul></ul>
 </body></html>
-
 
 \NewEntry 1 Notas ideias etc
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
