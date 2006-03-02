@@ -418,7 +418,6 @@ stm_para
   pair<int, string> ps;
   int de_type, ate_type;
   bool hasPasso = false;
-
   string lbpara = x86.createLabel(true, "para");
   string lbfim  = x86.createLabel(true, "fim_para");
 
@@ -430,9 +429,9 @@ stm_para
         {
           Symbol symb = stable.getSymbol(x86.currentScope(), lv.second, true);
           int expecting_type = symb.type.primitiveType();
-          x86.writeTEXT("push ecx");
+          x86.writeTEXT("push ecx"); //lvalue's offset to be used later
           x86.writeTEXT("; para: de:");
-        }  
+        }
 
         de_type=expr[TIPO_INTEIRO] 
 
@@ -449,6 +448,7 @@ stm_para
           x86.writeTEXT("pop eax");
           x86.writeCast(ate_type, lv.first.first);          
           x86.writeTEXT("push eax");//top stack tem "ate"
+
         }
 
       (
@@ -456,9 +456,27 @@ stm_para
       )?
 
         {
+          //nao entrar se condicao falsa
+          x86.writeTEXT("mov ecx, dword [esp+4]");
+          s.str("");
+          s << "lea edx, [" << lv.second << "]";
+          x86.writeTEXT(s.str());
+          x86.writeTEXT("mov eax, dword [edx + ecx * SIZEOF_DWORD]");
+
+          x86.writeTEXT("mov ebx, dword [esp]");
+          x86.writeTEXT("cmp eax, ebx");
+
+          s.str("");
+          if(hasPasso && ps.first) {
+            s << "jl " << lbfim;
+          } else {
+            s << "jg " << lbfim;
+          }
+          x86.writeTEXT(s.str());
+
           s.str("");
           s << lbpara << ":";
-          x86.writeTEXT(s.str());
+          x86.writeTEXT(s.str());          
         }
 
       (stm)*
