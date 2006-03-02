@@ -1,5 +1,5 @@
 bin_PROGRAMS = gpt
-gpt_SOURCES  = main.cpp
+gpt_SOURCES = main.cpp GPT.cpp
 
 INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/src -I$(top_srcdir)/src/modules \
 	-I$(top_srcdir)/src/modules/c_translator -I$(top_srcdir)/src/modules/interpreter \
@@ -17,3 +17,4 @@ gpt_LDADD = $(top_builddir)/src/modules/libgportugol.la $(ANTLR_LIB) $(PCRE_LIB)
 endif
 
 AM_LDFLAGS = -static
+noinst_HEADERS = GPT.hpp

@@ -19,129 +19,105 @@
  ***************************************************************************/
 
 #include "config.h"
-#include <unistd.h>
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-
-#include "antlr/AST.hpp"
-#include "PortugolLexer.hpp"
-#include "PortugolParser.hpp"
-#include "Portugol2CWalker.hpp"
-#include "SemanticWalker.hpp"
-#include "SymbolTable.hpp"
-#include "PortugolAST.hpp"
 #include "Display.hpp"
-#include "InterpreterWalker.hpp"
+#include "GPT.hpp"
+
+#include <sstream>
+#include <unistd.h>
 
 #define DEFAULT_PORT "7680"
 
 using namespace std;
-using namespace antlr;
 
-bool debug_flag = false;
+enum {
+  FLAG_PIPE  = 0x1,
+  FLAG_DICA  = 0x2
+};
 
-bool translate_only = false;
-bool interpret_only = false;
-bool show_tips = false;
-string ifilepath; //pt source
-string ofilepath; //binary output
-string trpath;    //translated C source
-char* cfilepath = "/tmp/c__XXXXXX"; //tmp translated C source
+enum {
+  CMD_SHOW_VERSION,
+  CMD_SHOW_HELP,
+  CMD_COMPILE,
+  CMD_GPT_2_C,
+  CMD_GPT_2_ASM,
+  CMD_INTERPRET,
+  CMD_INVALID
+};
 
-//conexao com debugger
-string host;
-string port;
+//----- globals ------
 
-bool frompipe = false;
+int    _flags = 0;
+string _ifilename;
+string _ofilename = "a.out";
+string _host;
+string _port = DEFAULT_PORT;
 
-void showhelp(void) {
-  stringstream s;
-  s << PACKAGE << " [opções] arquivo\n"
-          "Opções:\n"
-          "   -v            mostra versão do programa\n"
-          "   -h            mostra esse texto\n"
-          "   -d            exibe dicas no relatório de erros\n"
-          "   -o <arquivo>  compila e salva executável como <arquivo>\n"
-          "   -t <arquivo>  traduz para C e salva como <arquivo>\n"
-          "   -i            não compila, apenas interpreta\n"
-          "   -H <host>     host do client debugger (deve ser usado com -i)\n"
-          "   -P <porta>    porta do client debugger (deve ser usado com -i)\n"
-          "\n";
-  Display::self()->showMessage(s);
-}
 
-void showversion(void) {
-  stringstream s;
-  s << "GPT - Compilador G-Portucol\n"
-          "versão  : " << VERSION << "\n"
-          "Website : http://gpt.berlios.de\n"
-          "Copyright (C) 2003-2006 Thiago Silva <thiago.silva@kdemail.net>\n\n";
-  Display::self()->showMessage(s);
-}
+//----- Options -----
 
-bool init(int argc, char** argv) {
+int init(int argc, char** argv) {
 
-  if(argc == 1) {
-    showhelp();
-    return false;
+  if(argc == 1) {    
+    return CMD_SHOW_HELP;
   }
+
   stringstream s;
-
-  int c;
+  int cmd = CMD_COMPILE;
   opterr = 0;
+  int c;
+  int count_cmds = 0;
 
-  ofilepath = "a.out";
-  port = DEFAULT_PORT;
+/*
+  Opcoes:  o: <output>,  t: <output>,  s: <output>, H: <host>,  P: <port>,  h[help]
+           v[ersion],  i[nterpret],  p[ipe],  d[ica]
+*/
 
-#ifdef DEBUG
-    while((c = getopt(argc, argv, "o:t:H:P:hvipdD")) != -1) {
-#else
-    while((c = getopt(argc, argv, "o:t:H:P:hvid")) != -1) {
-#endif
+  while((c = getopt(argc, argv, "o:t:s:H:P:idvh")) != -1) {
     switch(c) {
-#ifdef DEBUG
-      case 'D':
-        debug_flag = true;
-        break;
-#endif
-       case 'd':
-        show_tips = true;
-        break;
-       case 't':
-        translate_only = true;
+      case 'o':
         if(optarg) {
-          trpath = optarg;
+          _ofilename = optarg;
         }
         break;
-      case 'i':
-        interpret_only = true;
+      case 't':
+        count_cmds++;
+        cmd = CMD_GPT_2_C;
+        if(optarg) {
+          _ofilename = optarg;
+        }
         break;
+      case 's':
+        count_cmds++;
+        cmd = CMD_GPT_2_ASM;
+        if(optarg) {
+          _ofilename = optarg;
+        }
       case 'H':
         if(optarg) {
-          host = optarg;
+          _host = optarg;
         }
         break;
       case 'P':
         if(optarg) {
-          port = optarg;
+          _port = optarg;
         }
+        break;
+      case 'i':
+        count_cmds++;
+        cmd = CMD_INTERPRET;
+        break;
+      case 'd':
+        _flags |= FLAG_DICA;
         break;
       case 'p':
-        frompipe = true;
+        _flags |= FLAG_PIPE;
         break;
       case 'v':
-        showversion();
-        exit(EXIT_SUCCESS);
-      case 'h':
-        showhelp();
-        exit(EXIT_SUCCESS);
-      case 'o':
-        if(optarg) {
-          ofilepath = optarg;
-        }
+        return CMD_SHOW_VERSION;        
         break;
+      case 'h':
+        return CMD_SHOW_HELP;
         case '?':
            if((optopt == 'o') || (optopt == 't')) {
             s << PACKAGE << ": faltando argumento para opção -" << (char)optopt << endl;
@@ -149,229 +125,79 @@ bool init(int argc, char** argv) {
             s << PACKAGE << ": opção inválida: -" <<  char(optopt) << endl;
            }
            Display::self()->showError(s);
-           return false;
+           goto bail;
      default:
-         s << PACKAGE << ": erro interno." << endl;
-         Display::self()->showError(s);
-        return false;
+        s << PACKAGE << ": erro interno." << endl;
+        Display::self()->showError(s);
+        goto bail;
     }
   }
 
-  if(!frompipe) {
+  if(count_cmds > 1) {
+    s << PACKAGE << ": mais de um comando selecionado." << endl;
+    Display::self()->showError(s);
+    goto bail;
+  }
+
+  if(!(_flags & FLAG_PIPE)) { //no pipe
     if(optind < argc) {
-      ifilepath = argv[optind];
+      _ifilename = argv[optind];
     } else {
       s << PACKAGE << ": nenhum arquivo especificado." << endl;
       Display::self()->showError(s);
-      return false;
+      goto bail;
     }
   }
 
-  if(interpret_only) {
-    if((port != DEFAULT_PORT) && (atoi(port.c_str()) == 0)) {
-      s << PACKAGE << ": porta de conexão inválida: \"" << port << "\"" << endl;
+  if(CMD_INTERPRET == cmd) {
+    if((_port != DEFAULT_PORT) && (atoi(_port.c_str()) == 0)) {
+      s << PACKAGE << ": porta de conexão inválida: \"" << _port << "\"" << endl;
       Display::self()->showError(s);
-      return false;
+      goto bail;
     }
   }
 
-  return true;
+  return cmd;
+
+  bail:
+    return CMD_INVALID;
 }
 
-bool do_parse(istream& in, ostream& out) {
-  stringstream s;
-  DEBUG_PARSER = false;
 
-  try
-  {
-    PortugolLexer lexer(in);
-    PortugolParser parser(lexer);
 
-    ASTFactory ast_factory(PortugolAST::TYPE_NAME,&PortugolAST::factory);
-    parser.initializeASTFactory(ast_factory);
-    parser.setASTFactory(&ast_factory);
-
-    parser.algoritmo();
-//     ofilepath = parser.getAlgName();
-
-    if(Display::self()->hasError()) {
-      Display::self()->showErrors(show_tips);
-      return false;
-    }
-
-    RefPortugolAST tree = parser.getPortugolAST();
-    if(tree)
-    {
-      if(debug_flag) {cerr << tree->toStringList() << endl << endl;}
-
-      SymbolTable stable;
-      SemanticWalker semantic(stable);
-      semantic.algoritmo(tree);
-
-      if(Display::self()->hasError()) {
-        Display::self()->showErrors(show_tips);
-        return false;
-      }
-
-      //parsing complete!
-
-      if(interpret_only) {
-        InterpreterWalker interpreter(stable, host, atoi(port.c_str()));
-        interpreter.algoritmo(tree);
-      } else {
-        Portugol2CWalker pt2c(stable);
-        string c_src = pt2c.algoritmo(tree);
-
-        out << c_src << endl;
-
-        if(debug_flag) {
-          cerr << "BEGIN SOURCE >>>> \n";
-          cerr << c_src << endl;
-          cerr << "<<<<<< END SOURCE\n";
-        }
-      }
-      return true;
-    }
-    else {
-      s << PACKAGE << ": erro interno: No tree produced" << endl;
-      Display::self()->showError(s);
-      return false;
-    }
-  }
-  catch(ANTLRException& e)
-  {
-    s << PACKAGE << ": erro interno: " << e.toString() << endl;
-    Display::self()->showError(s);
-    return false;
-  }
-  catch(exception& e)
-  {
-    s << PACKAGE << ": erro interno: " << e.what() << endl;
-    Display::self()->showError(s);
-    return false;
-  }
-
-  s << "main::do_parse: bug, nao deveria executar essa linha!" << endl;
-  Display::self()->showError(s);
-  return true;
-}
-
-bool parse(void) {
-  stringstream s;
+int main(int argc, char** argv) {
+  int cmd = init(argc, argv);
   bool success = false;
-  ofstream fout;
-
-  #ifndef WIN32
-    int fd = mkstemp(cfilepath);
-    close(fd);
-    fout.open(cfilepath, ios_base::out);
-  #else
-    string cf = getenv("TEMP");
-    cf += "gpt_tmp";
-    fout.open(cf.c_str(), ios_base::out);
-  #endif
-
-
-
-
-  if(!fout) {
-    s << PACKAGE << ": não foi possível abrir o arquivo: \"" << cfilepath << "\"" << std::endl;
-    Display::self()->showError(s);
-    goto end;
-  }
-
-  if(frompipe) {
-    if(cin.rdbuf()->in_avail() == 0) {
-      s << PACKAGE << ": não existem dados na entrada padrão" << std::endl;
-      Display::self()->showError(s);
-      goto end;
-    } else {
-      success = do_parse(cin, fout);
-      goto end;
-    }
-  } else {
-    ifstream fin;
-    fin.open(ifilepath.c_str(), ios_base::in);
-    if(!fin) {
-      s << PACKAGE << ": não foi possível abrir o arquivo: \"" << ifilepath << "\"" << std::endl;
-      Display::self()->showError(s);
-      goto end;
-    } else {
-      success = do_parse(fin, fout);
-      goto end;
-    }
-  }
-
-  end:
-    fout.close();
-    return success;
-}
-
-bool compile(void) {
-  stringstream cmd;
-  cmd << "gcc -ansi -x c -o " << ofilepath << " " << cfilepath;
-
-  if(debug_flag) {cerr << "cmd: " << cmd.str() << endl;}
-
-  if(system(cmd.str().c_str()) == -1) {
-    stringstream s;
-    s << PACKAGE << ": não foi possível invocar gcc." << endl;
-    Display::self()->showError(s);
-    return false;
-  }
-  return true;
-}
-
-bool copy_source() {
   stringstream s;
-  ofstream out(trpath.c_str());
-  ifstream in(cfilepath);
 
-//   out.open(, ios_base::out);
-//   in.open(cfilepath, ios_base::in);
-
-  if(!out || !in) {
-    s << PACKAGE << ": não foi possível criar arquivo fonte." << endl;
-    Display::self()->showError(s);
-    return  false;
-  }
-
-  char c;
-  while(in.get(c)) {
-    out.put(c);
-  }
-
-  if(!in.eof() || !out) {
-    s << PACKAGE << ": ocorreu um erro ao criar arquivo fonte." << endl;
-    Display::self()->showError(s);
-    return false;
-  }
-
-  in.close();
-  out.close();
-  return true;
-}
-
-int main(int argc, char** argv)
-{
-  int success = EXIT_SUCCESS;
-
-  if(!init(argc, argv)) {
-    success = EXIT_FAILURE;
-    goto the_end;
-  }
-
-  if(parse()) {
-    if(translate_only) {
-      success = copy_source()?EXIT_SUCCESS:EXIT_FAILURE;
-    } else if(!interpret_only) {
-      success = compile()?EXIT_SUCCESS:EXIT_FAILURE;
-    }
+  if(_flags & FLAG_DICA) {
+    GPT::self()->reportDicas(true);
   } else {
-    success = EXIT_FAILURE;
+    GPT::self()->reportDicas(false);
   }
 
-  the_end:
-    unlink(cfilepath);
-    return success;
+  switch(cmd) {
+    case CMD_SHOW_VERSION:
+      GPT::self()->showVersion();
+      break;
+    case CMD_SHOW_HELP:
+      GPT::self()->showHelp();
+      break;
+    case CMD_COMPILE:
+      success = GPT::self()->compile(_ifilename, _ofilename);
+      break;
+    case CMD_GPT_2_C:
+      success = GPT::self()->translate2C(_ifilename, _ofilename);
+      break;
+    case CMD_GPT_2_ASM:
+      success = GPT::self()->compile(_ifilename, _ofilename, false);
+      break;
+    case CMD_INTERPRET:
+      success = GPT::self()->interpret(_ifilename, _host, atoi(_port.c_str()));
+      break;
+    case CMD_INVALID:
+      break;
+  }
+
+  exit(success?EXIT_SUCCESS:EXIT_FAILURE);
 }
