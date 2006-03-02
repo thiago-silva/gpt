@@ -1,5 +1,5 @@
 bin_PROGRAMS = gpt
-gpt_SOURCES  = gpt.cpp 
+gpt_SOURCES  = main.cpp
 
 INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/src -I$(top_srcdir)/src/modules \
 	-I$(top_srcdir)/src/modules/c_translator -I$(top_srcdir)/src/modules/interpreter \
