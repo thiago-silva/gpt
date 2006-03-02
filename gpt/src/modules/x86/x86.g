@@ -513,7 +513,7 @@ stm_para
           }
           x86.writeTEXT(s.str());
 
-          s.str("");          
+          s.str("");
           s << "lea edx, [" << lv.second << "]";
           x86.writeTEXT(s.str());
           x86.writeTEXT("mov ecx, dword [esp+4]");          
@@ -527,6 +527,17 @@ stm_para
           s.str("");
           s << lbfim << ":";
           x86.writeTEXT(s.str());
+
+          //lvalue = ate value
+          x86.writeTEXT("mov ebx, dword [esp]");
+          s.str("");
+          s << "lea edx, [" << lv.second << "]";
+          x86.writeTEXT(s.str());
+          x86.writeTEXT("mov ecx, dword [esp+4]");          
+          x86.writeTEXT("lea edx, [edx + ecx * SIZEOF_DWORD]");
+          x86.writeTEXT("mov dword [edx], ebx");
+
+          //pop ate, pop lvalue offset
           x86.writeTEXT("pop eax");
           x86.writeTEXT("pop ecx");
           x86.writeTEXT("; fimpara");
