@@ -1,40 +1,87 @@
 \NewEntry 0 devel
 
+\NewEntry 1 NOW
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><li>X86/x86.g</li>
+<ul type="disc"><li>acesso a variaveis (globais, locais/paramatros) devem ser feitos de forma uniforme.</li>
+<ul type="disc"><li>problema: </li>
+<ul type="disc"><li>mov eax, var (var eh global, ok)</li>
+<li>mov var, eax (var eh [ebp-4]. parse error!)<br /></li></ul>
+<li>solucao: macro que carrega o endereco da variavel<br />%macro load_var 2<br />lea %1, %2<br />%endmacro<br /><br />global: load_var eax, x ; eax tem o endereco de x<br />local:   load_var eax, x ; eax tem o endereco de [ebp-4]<br /></li></ul>
+<li>testar passagem de parametros de strings e matrizes</li>
+<li>usar valgrind para detectar acesso de memoria invalido<br /><br /></li></ul>
+<li>gpt.cpp -&gt; main.cpp</li>
+<li>criar classe GPT</li>
+<ul type="disc"><li>limpar codigo do programa<br /><br /></li></ul>
+<li>uniformizar c_translator/interpreter/x86 behavior </li>
+<ul type="disc"><li>impressao de floats (2 casas decimais, arredondando!!)</li>
+<li>testar overflow de inteiros, floats, caracteres, etc, nos 3 modulos</li>
+<li>leitura de dados (inteiro, float, literal, etc) (ver manual para detalhes) deve ser o mesmo nos 3 modulos<br /><br /></li></ul>
+<li>Publicar como snapshot por enquanto, para entao:</li>
+<ul type="disc"><li>0.9: feature complete (manual, etc ok)</li>
+<li>1.0: depois de vários bugfixes<br /></li></ul>
+<li>Implementar win32 PE</li></ul>
+</body></html>
+
+
 \CurrentEntry 1 TODO
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><div></div>
 <li>GPT:</li>
-<ul type="disc"><li>resolver os Makefile.am e o &quot;make dist&quot; issue</li>
+<ul type="disc"><li>x86: implementar win32 PE<br /></li></ul>
+<li>GPT</li>
+<ul type="disc"><li>depende da plataforma (unix/win32)</li>
+<li>x86:</li>
+<ul type="disc"><li>testar strings com &quot;\n&quot; e &quot;\r&quot; no windows</li>
+<li>adicionar -S (like gcc) para criar .asm<br /></li></ul>
+<li>pt2c: para (passo) não faz rollback no ultimo valor (para x de 0 até 10, tem x ao final com 11),.</li>
+<li>Semantic: checar se subscritos são &quot;0&quot; na declaracao de vetores</li>
+<li>Semantic: Verbose de erros esta ruim</li>
+<ul type="disc"><li>ExpressionValue deve ter um attributo (varname) para melhorar as mensagens de erros</li>
+<li>Ruim: &quot;Faltando subscritos na matriz/conjunto de tipo &quot;inteiro[][]&quot;</li>
+<li>Bom: &quot;Faltando subscritos na matriz/conjunto m[][]&quot;</li></ul>
+<li>Uniformizar ponto flutuante (uso de double! (usar float gera warnings na traducao de C)</li>
+<ul type="disc"><li>Mas em todos os outros modulos, float eh usado....</li></ul>
+<li>interpreter: atoif -&gt; &quot;a2double&quot;, (ou o que quer que seja str2double)</li>
+<ul type="disc"><li>se for usar double</li></ul>
+<li>Mensagens de erro: checar ponto final &quot;.&quot;</li>
+<li>resolver os Makefile.am e o &quot;make dist&quot; issue</li>
 <ul type="disc"><li>Sources que devem ser gerados estão sendo incluidos no pacote</li>
 <li>gramaticas nao estao sendo incluidas</li></ul>
 <li>configure.in</li>
 <ul type="disc"><li>quando antlr nao eh encontrado, checar o resultado de AC_PATH_PROG(ANTLR, antlr)</li>
-<ul type="disc"><li>esta dando erro de shell pq esta executando ANTLR_LIB=`antlr-config --libs` sendo que o antlr-config pode nao existir no sistema<br /></li></ul></ul></ul>
-<li>Win32</li>
-<ul type="disc"><li>Usar biblioteca portavel para sockets / pcre (ver CommonC++)</li>
-<li>Criar pacote binario (win32) para o GPT</li>
-<li>Verificar instalação do kdelibs/kate (para o GPTEditor)<br /><br /></li></ul>
-<li>Publish:</li>
-<ul type="disc"><li>Colocar no site uma lista de links de aplicativos relacionados<br /></li></ul>
-<li>GPT</li>
-<ul type="disc"><li>Checar implementacao de operadores &quot;e&quot;, &quot;ou&quot;, &quot;xou&quot;</li>
-<li>Semantic: checar se subscritos são &quot;0&quot; na declaracao de vetores</li>
-<li>Uniformizar ponto flutuante (uso de double! (usar float gera warnings na traducao de C)</li>
-<li>impressao: compilacao e interpretacao deve imprimir no formato .XX (duas casas decimais)</li>
-<li>interpreter: atoif -&gt; &quot;a2double&quot;, (ou o que quer que seja str2double)<br /><br /></li></ul>
+<li>esta dando erro de shell pq esta executando ANTLR_LIB=`antlr-config --libs` sendo que o antlr-config pode nao existir no sistema<br /></li></ul>
+<li>Remover do help as opcoes &quot;-H&quot; e &quot;-P&quot; (documentar no manual, apenas)</li>
+<li>testar overflow aritmetico (inteiro/real) na compilacao (asm), traducao (C) e interpretacao.</li>
+<li>adicionar &quot;_&quot; aos ID de usuario. Nao usar &quot;_&quot; em ID's internas (x86/pt2c)</li>
+<ul type="disc"><li>Adicionar membro na ASTNode chamado getID() que retorna &quot;_x&quot; ao invez de &quot;x&quot;</li>
+<ul type="disc"><li>Os erros usam id-&gt;getText(), os geradores de codigo usam id-&gt;getID()</li></ul></ul>
+<li>limpar codigo</li>
+<ul type="disc"><li>uniformizar convencoes (underline para membros privates, etc)<br /><br /></li></ul></ul>
 <li>Documentacao</li>
-<ul type="disc"><li>Sobre compilacao (nasm/32)</li>
+<ul type="disc"><li>checar implementacao e documentacao sobre &quot;para&quot;</li>
+<ul type="disc"><li>para com passo implicito SEMPRE deve ser +1 (_nao_ deve verificar decresc/cresc comparando os operandos).<br /></li></ul></ul>
+<li>Atualizar &quot;INSTALL&quot;  e &quot;README&quot;</li>
+<ul type="disc"><li>Documentar passos para desenvolver no windows (mingw, pcre, antlr...)</li>
+<li>Sobre compilacao (nasm/32)</li>
 <ul type="disc"><li>tamanho dos tipos </li>
 <li>Overflow aritmetico</li>
 <li>Notas:</li>
-<ul type="disc"><li>real x := 2 / 5; /* res=2. Like &quot;C&quot;, não há promoção dos operandos. Resultado concatenado */</li></ul></ul>
+<ul type="disc"><li>real x := 2 / 5; /* res=2. Like &quot;C&quot;, não há promoção dos operandos. Resultado concatenado */</li>
+<li>para x de 0 até 10 passo 4</li>
+<ul type="disc"><li>ao fim, x deve ter 8 (8+4 acima de 10, pula fora) ou 10 (valor do &quot;ate&quot;)?</li>
+<li>Detalhar na documentacao</li></ul></ul></ul>
 <li>Sobre compilacao (implementacao)</li>
 <ul type="disc"><li>elf</li>
-<li>etc</li></ul>
-<li><br /></li></ul>
-<li>GPTEditor</li>
+<li>etc</li></ul></ul>
+<li><br />GPTEditor</li>
 <ul type="disc"><li>Settings:</li>
-<ul type="disc"><li>Remover &quot;argumentos&quot; e colocar &quot;Tratamento de erros: mostrar dicas [x]&quot;</li></ul></ul></ul>
+<ul type="disc"><li>Remover &quot;argumentos&quot; e colocar &quot;Tratamento de erros: mostrar dicas [x]&quot;</li></ul>
+<li>ErrorHandler foi renomeado para &quot;Display&quot;. Atualizar <br /><br /></li></ul>
+<li>Publish:</li>
+<ul type="disc"><li>Criar pacote binario (win32) para o GPT </li>
+<li>static link com a pcre.a (nao mandar pcre*.dll junto..)</li>
+<li>strip gpt.exe</li></ul></ul>
 </body></html>
 
 
@@ -78,7 +125,6 @@
 \NewEntry 1 latex2html
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>Remover o preambulo quase todo (deixar simples), inclusive o renewcommand{\maketitle}</li>
-<li>Remover os capitulos incompletos</li>
 <li>latex2html nao reconhece \capítulo. :/ tem que fazer um s/capitulo/chapter</li></ul>
 </body></html>
 
