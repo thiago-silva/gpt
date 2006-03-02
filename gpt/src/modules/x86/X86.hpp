@@ -35,22 +35,30 @@ public:
   X86SubProgram(const X86SubProgram&);
   ~X86SubProgram();
 
-  void declareLocal(const string& name, int type);
-  void declareParam(const string& name, int type);
+  void declareLocal(const string&, int);
+  void declareParam(const string&, int);
 
+  void writeMatrixInitCode(int decl_type, const string& varname, int type, int size);
 
   void writeTEXT(const string&);
 
-  void setName(const string&);
+  void init(const string&, int = 0, int = 0);
   string name();
 
   string source();
 
 private:
+  const  int   SizeofDWord;
+  int          _total_locals;
+  int          _param_offset;
+  int          _local_offset;
   string       _name;
   list<string> _params; 
   list<string> _locals;
-  stringstream _txt;
+
+  stringstream _head; //%definitions
+  stringstream _init; //init commands
+  stringstream _txt;  //body
 };
 
 
@@ -63,6 +71,8 @@ public:
     VAR_PARAM,
     VAR_LOCAL
   };
+
+  static string EntryPoint;
 
   X86(SymbolTable&);
   ~X86();

@@ -23,14 +23,26 @@
 
 #include <stdlib.h>
 
-X86SubProgram::X86SubProgram() {
+X86SubProgram::X86SubProgram() 
+  : SizeofDWord(sizeof(int)), //4
+    _total_locals(0),
+    _param_offset(0), 
+    _local_offset(0) {
+  
 }
 
-X86SubProgram::X86SubProgram(const X86SubProgram& other) {
-  _name = other._name;
-  _params = other._params;
-  _locals = other._locals;
-  _txt << other._txt.str();
+X86SubProgram::X86SubProgram(const X86SubProgram& other) 
+    : SizeofDWord(sizeof(int)), 
+    _total_locals(other._total_locals),
+    _param_offset(other._param_offset),
+    _local_offset(other._local_offset),
+    _name(other._name),
+    _params(other._params),
+    _locals(other._locals) {
+
+  _head << other._head.str();
+  _txt  << other._txt.str();
+  _init << other._init.str();
 }
 
 X86SubProgram::~X86SubProgram() {
@@ -40,59 +52,93 @@ void X86SubProgram::writeTEXT(const string& str) {
   _txt << str << endl;
 }
 
-void X86SubProgram::setName(const string& name) {
+void X86SubProgram::init(const string& name, int total_params, int total_locals) {
   _name = name;
+  if(total_params) {
+    _param_offset = SizeofDWord + (total_params * SizeofDWord);
+  }
+  if(total_locals) {    
+    _local_offset = total_locals * SizeofDWord;
+  }
+
+  _total_locals  = total_locals - total_params;
 }
 
 string X86SubProgram::name() {
   return _name;
 }
 
-void X86SubProgram::declareLocal(const string& name, int type) {
+void X86SubProgram::declareLocal(const string& local_var, int type) {
+  _head << "%define " << local_var << " [ebp-" << _local_offset << "]" << endl;
+
+  _init << "mov dword " << local_var << ", 0" << endl;
+
+  _local_offset += SizeofDWord;
 }
 
-void X86SubProgram::declareParam(const string& name, int type) {
-/*
-    stringstream s;
-    if(type == TIPO_LITERAL) {
-      s << "%define _p_" << name << "ebp+" << _param_ebp_offset;
-      writeln(s.str());
-      s.str("");
-      s << "%define " << name << "ebp-" << _local_ebp_offset;
-      writeln(s.str());
-      s.str("");
-      _local_ebp_offset+=4;
+void X86SubProgram::declareParam(const string& param, int type) {
 
-      s << "addarg dword [_p_" << name << "]";
-      writeln(s.str());
-      s.str("");
-      s << "addarg dword [" << name << "]";
-      writeln(s.str());
-      s.str("");
-      s << "call __strcpy";
-      writeln(s.str());
-      s.str("");
-      s << "clargs 2";
-      writeln(s.str());        
-    } else {
-      s << "%define " << name << "ebp+" << _param_ebp_offset;
-      writeln(s.str());        
-    }
-    _param_ebp_offset+= 4;
-*/
+  _head << "%define " << param << " [ebp+" << _param_offset << "]" << endl;
+
+  _param_offset -= SizeofDWord;
+}
+
+void X86SubProgram::writeMatrixInitCode(int decl_type, const string& varname, int type, int size) {
+  if(decl_type == X86::VAR_GLOBAL) {
+    _init << "addarg " << size << " * SIZEOF_DWORD" << endl;
+    _init << "call __malloc" << endl;
+    _init << "clargs 1" << endl;
+    _init << "mov [" << varname << "], eax" << endl;
+    _init << "addarg dword [" << varname << "]" << endl;
+    _init << "addarg " << size << " * SIZEOF_DWORD" << endl;
+    _init << "call matrix_init__" << endl;
+    _init << "clargs 2" << endl;
+  } else if(decl_type == X86::VAR_LOCAL) {
+    _init << "addarg " << size << " * SIZEOF_DWORD" << endl;
+    _init << "call __malloc" << endl;
+    _init << "clargs 1" << endl;
+    _init << "mov dword " << varname << ", eax" << endl;
+    _init << "addarg dword " << varname << endl;
+    _init << "addarg " << size << " * SIZEOF_DWORD" << endl;
+    _init << "call matrix_init__" << endl;
+    _init << "clargs 2" << endl;  
+  } else {
+    _init << "addarg " << varname << endl;
+    _init << "addarg " << size << endl;
+    _init << "addarg " << (type == TIPO_LITERAL) << endl;
+    _init << "call __clone_matrix" << endl;
+    _init << "clargs 3" << endl;
+    _init << "mov [" << varname << "], eax" << endl;
+  }
 }
 
 string X86SubProgram::source() {
   stringstream s;
   s << name() << ":" << endl;
+  s << _head.str();
+
+  if(name() != X86::EntryPoint) {
+    s << "begin " << (_total_locals *  SizeofDWord)<< endl;
+  }
+
+  s << _init.str();
+
   s << _txt.str();
  
   return s.str();
 }
 
 
+
+
+
+
 ////////--------------------------------------------------------
 
+
+
+
+string X86::EntryPoint = "_start";
 
 X86::X86(SymbolTable& st) 
  : _stable(st) {
@@ -139,9 +185,11 @@ void X86::writeTEXT(const string& str) {
 void X86::createScope(const string& scope) {
   _currentScope = scope;
   if(scope == SymbolTable::GlobalScope) {
-    _subprograms[scope].setName("_start");    
+    _subprograms[scope].init(X86::EntryPoint);
   } else {
-    _subprograms[scope].setName(scope);
+    Symbol symb = _stable.getSymbol(SymbolTable::GlobalScope, scope, true);
+    _subprograms[scope].init(scope, 
+      symb.param.symbolList().size(), _stable.getSymbols(scope).size());
   }
 }
 
@@ -167,15 +215,16 @@ void X86::declarePrimitive(int decl_type, const string& name, int type) {
         writeDATA(s.str());
         break;
       default:
-        Display::self()->showError("Erro interno: tipo nao suportado (x86::declarePrimitive).");
+        Display::self()->showError("Erro interno: tipo nao suportado (X86::declarePrimitive).");
         exit(1);
     }
   } else if(decl_type == VAR_PARAM) {
-    //TODO
+    _subprograms[currentScope()].declareParam(name, type);
   } else if(decl_type == VAR_LOCAL) {
-    //TODO
+    _subprograms[currentScope()].declareLocal(name, type);
   } else {
-    //error
+    Display::self()->showError("Erro interno: X86::declarePrimitive).");
+    exit(1);
   }
 }
 
@@ -186,30 +235,17 @@ void X86::declareMatrix(int decl_type, int type, string name, list<string> dims)
   }
 
   if(decl_type == VAR_GLOBAL) {
-    declarePrimitive(VAR_GLOBAL, name, TIPO_INTEIRO);//*TIPO_INTEIRO (pointer)
-    stringstream s;
-    s << "addarg " << size << " * SIZEOF_DWORD";
-    writeTEXT(s.str()); 
-    s.str("");
-    writeTEXT("call __malloc"); 
-    writeTEXT("clargs 1"); 
-    s << "mov [" << name << "], eax";
-    writeTEXT(s.str());
-    s.str("");
-    s << "addarg dword [" << name << "]";
-    writeTEXT(s.str());
-    s.str("");
-    s << "addarg " << size << " * SIZEOF_DWORD";
-    writeTEXT(s.str());
-    writeTEXT("call matrix_init__");
-    writeTEXT("clargs 2");
+    declarePrimitive(VAR_GLOBAL, name, TIPO_INTEIRO);//*TIPO_INTEIRO (pointer)        
   } else if(decl_type == VAR_PARAM) {
-    //TODO
+    _subprograms[currentScope()].declareParam(name, type);
   } else if(decl_type == VAR_LOCAL) {
-    //TODO
+    _subprograms[currentScope()].declareLocal(name, type);
   } else {
-    //error
+    Display::self()->showError("Erro interno: X86::declareMatrix).");
+    exit(1);
   }
+
+  _subprograms[currentScope()].writeMatrixInitCode(decl_type, name, type, size);
 }
 
 
@@ -241,7 +277,7 @@ string X86::toNasmString(string str) {
 string X86::addGlobalLiteral(string str) {
   stringstream s;
   string lb = createLabel(false, "str");
-  s << lb << " db '" << toNasmString(str) << "',0" << endl;
+  s << lb << " db '" << toNasmString(str) << "',0";
   writeDATA(s.str());
   return lb;
 }
@@ -309,12 +345,14 @@ string X86::source() {
   str << "section .text" << endl;
   str << "_start_no equ $" << endl;
 
+  string sss;
   for(map<string, X86SubProgram>::iterator it = _subprograms.begin(); it != _subprograms.end(); ++it) {
+    sss = it->second.source();
     str << it->second.source();
   }
 
   str  << _lib.str();
-
+  
   return str.str();
 }
 
@@ -340,11 +378,19 @@ void X86::writeAttribution(int e1, int e2, pair<pair<int, bool>, string>& lv) {
 
   writeCast(e1, e2);
 
-  stringstream s;
-  if(lv.first.second) { //if is primitive
-    s << "mov edx, dword " << lv.second;
+  stringstream s;  
+  if(_stable.getSymbol(currentScope(), lv.second, true).scope != SymbolTable::GlobalScope) {
+    if(lv.first.second) { //if is primitive
+      s << "lea edx, " << lv.second;
+    } else {
+      s << "mov edx, dword [" << lv.second << "]";
+    }
   } else {
-    s << "mov edx, dword [" << lv.second << "]";
+    if(lv.first.second) { //if is primitive
+      s << "mov edx, dword " << lv.second;
+    } else {
+      s << "mov edx, dword [" << lv.second << "]";
+    }
   }
   writeTEXT(s.str());
   s.str("");
@@ -791,11 +837,21 @@ void X86::writeLiteralExpr(const string& src) {
 
 void X86::writeLValueExpr(pair< pair<int, bool>, string>& lv) {
   stringstream s;
-  if(lv.first.second) { //if is primitive
-    s << "mov edx, " << lv.second;
+
+  if(_stable.getSymbol(currentScope(), lv.second, true).scope != SymbolTable::GlobalScope) {
+    if(lv.first.second) { //if is primitive
+      s << "lea edx, " << lv.second;
+    } else {
+      s << "mov edx, dword [" << lv.second << "]";
+    }
   } else {
-    s << "mov edx, dword [" << lv.second << "]";
+    if(lv.first.second) { //if is primitive
+      s << "mov edx, dword " << lv.second;
+    } else {
+      s << "mov edx, dword [" << lv.second << "]";
+    }
   }
+
   writeTEXT(s.str());
   s.str("");
   s << "lea edx, [edx + ecx * SIZEOF_DWORD]";

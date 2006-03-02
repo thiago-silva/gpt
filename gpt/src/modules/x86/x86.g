@@ -64,7 +64,7 @@ algoritmo returns [string str]
   : #(T_KW_ALGORITMO id:T_IDENTIFICADOR) {x86.init(id->getText());}
     (variaveis[X86::VAR_GLOBAL])? 
      principal
-//     (func_decls)*
+    (func_decls)*
 
   {
     str = x86.source();
@@ -158,8 +158,8 @@ stm_block
 
 stm
   : stm_attr
-  | fcall[TIPO_ALL]
-//   | stm_ret
+  | fcall[TIPO_ALL] {x86.writeTEXT("pop eax");}
+  | stm_ret
   | stm_se
   | stm_enquanto
   | stm_para
@@ -175,7 +175,7 @@ stm_attr
 }
   : #(T_ATTR lv=lvalue
       {
-        symb = stable.getSymbol(x86.currentScope(), lv.second, true);        
+        symb = stable.getSymbol(x86.currentScope(), lv.second, true);
         expecting_type = symb.type.primitiveType();
         x86.writeTEXT("push ecx");
       }
@@ -271,6 +271,7 @@ fcall[int expct_type] returns [int type]
             x86.writeTEXT(string("call ") + fimp);
             x86.writeTEXT("clargs 1");
           } else {
+            x86.writeTEXT("pop eax");
             x86.writeTEXT("addarg eax");
             ptype = f.param.paramType(count++);
           }
@@ -278,36 +279,40 @@ fcall[int expct_type] returns [int type]
         }
       )*
     )
-    {
+    {      
       if(fname == "imprima") {
         x86.writeTEXT("print_lf"); //\n
       } else {
         x86.writeTEXT(string("call ") + fname);
-        s << "clargs " << args;
-        x86.writeTEXT(s.str());
+        if(args) {
+          s << "clargs " << args;
+          x86.writeTEXT(s.str());
+        }
       }
+
+      x86.writeTEXT("push eax");
     }
   ;
 
 
-// stm_ret
-// {
-//   int expecting_type = stable.getSymbol(SymbolTable::GlobalScope, _currentScope, true).type.primitiveType();
-//   production e;
-//   stringstream str;
-// }
-//   : #(T_KW_RETORNE (TI_NULL|e=expr[expecting_type]))
-// //     {
-// //       str << "return ";
-// //       if(_currentScopeType == TIPO_LITERAL) {
-// //         str << "return_literal(" << e.expr.second << ")";
-// //       } else {
-// //         str << e.expr.second;
-// //       }
-// //       str << ";";
-// //       x86.writeTEXT(str);
-// //     }
-//   ;
+stm_ret
+{
+  int expecting_type = stable.getSymbol(SymbolTable::GlobalScope, x86.currentScope(), true).type.primitiveType();
+  int etype;
+}
+  : #(T_KW_RETORNE (TI_NULL|etype=expr[expecting_type]))
+    {
+      if(expecting_type != TIPO_NULO) {
+        x86.writeTEXT("pop eax");
+      }
+      if(expecting_type == TIPO_LITERAL) {
+        x86.writeTEXT("addarg eax");
+        x86.writeTEXT("call __clone_literal");
+        x86.writeTEXT("clargs 1");
+      }
+      x86.writeTEXT("return");
+    }
+  ;
 
 stm_se
 {
@@ -620,56 +625,28 @@ literal returns [pair<int, string> p]
   | r:T_REAL_LIT          {p.second = x86.toReal(r->getText());p.first = TIPO_REAL;}
   ;
 
-/*
 func_decls
-{
-  production prim;
-  production mat;
-  stringstream str;
-  stringstream cpy;
-  stringstream decl;
-  string comma;
-}
   : #(id:T_IDENTIFICADOR   
       {
         x86.createScope(id->getText());
-        str << id->getText() << ":";
-        x86.writeTEXT(str);
       }
 
-      (primitivo[VAR_PARAM] | matriz[VAR_PARAM])*
+      (primitivo[X86::VAR_PARAM] | matriz[X86::VAR_PARAM])*
 
       //(ret_type)?
 
       {
         if((_t != antlr::nullAST) && (_t->getType() == TI_FRETURN)) {
           _t = _t->getNextSibling();
-        }
-
-        str << ")";
-        stringstream prototype;
-        prototype << str.str() << ";";
-        addPrototype(prototype);
-
-        str << " {";
-        x86.writeTEXT(str);
-        indent();
+        }    
       }
 
-      (variaveis[VAR_LOCAL])?
+      (variaveis[X86::VAR_LOCAL])?
       stm_block
       {
-        //força retorno, se o usuario esqueceu:
-//         if(fret != TIPO_NULO) {
-//           x86.writeTEXT("return -1;");
-//         }
-
-        unindent();
-        x86.writeTEXT("}");
-        setScope(SymbolTable::GlobalScope);
-        _currentScopeType = -1;
+        x86.writeTEXT("return");
       }
     )
   ;
-*/
+
   
