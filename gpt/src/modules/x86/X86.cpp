@@ -23,15 +23,15 @@
 
 #include <stdlib.h>
 
-X86SubProgram::X86SubProgram() 
+X86SubProgram::X86SubProgram()
   : SizeofDWord(sizeof(int)), //4
     _param_offset(8),         //starts at +8
     _local_offset(4) {        //starts at -4
-  
+
 }
 
-X86SubProgram::X86SubProgram(const X86SubProgram& other) 
-    : SizeofDWord(sizeof(int)), 
+X86SubProgram::X86SubProgram(const X86SubProgram& other)
+    : SizeofDWord(sizeof(int)),
     _param_offset(other._param_offset),
     _local_offset(other._local_offset),
     _name(other._name),
@@ -63,23 +63,23 @@ void X86SubProgram::declareLocal(const string& local_var, int msize, bool minit)
     _head << "%define " << local_var << " ebp-" << _local_offset << endl;
 
     if(minit) {
-      _init << "mov dword [" << local_var << "], 0" << endl;  
+      _init << "mov dword [" << local_var << "], 0" << endl;
     }
 
     _local_offset += SizeofDWord;
   } else {
     _head << "%define " << local_var << " ebp-" << (_local_offset+(msize*SizeofDWord)-SizeofDWord) << endl;
     if(minit) {
-      writeMatrixInitCode(local_var, msize);    
+      writeMatrixInitCode(local_var, msize);
     }
     _local_offset += (msize*SizeofDWord);
   }
 }
 
 void X86SubProgram::declareParam(const string& param, int type, int msize) {
-  
+
   if(msize == 0) {
-    _head << "%define " << param << " ebp+" << _param_offset << endl;    
+    _head << "%define " << param << " ebp+" << _param_offset << endl;
   } else {
     _head << "%define _p_" << param << " ebp+" << _param_offset << endl;
     declareLocal(param, msize, false);
@@ -90,12 +90,12 @@ void X86SubProgram::declareParam(const string& param, int type, int msize) {
 
 void X86SubProgram::writeMatrixCopyCode(const string& param, int type, int msize) {
   _init << "lea eax, [" << param << "]" << endl;
-  _init << "addarg dword [_p_" << param << "]" << endl;  
+  _init << "addarg dword [_p_" << param << "]" << endl;
   _init << "addarg eax" << endl;
-  _init << "addarg " << (type == TIPO_LITERAL) << endl;  
-  _init << "addarg " << (msize*SizeofDWord) << endl;  
+  _init << "addarg " << (type == TIPO_LITERAL) << endl;
+  _init << "addarg " << (msize*SizeofDWord) << endl;
   _init << "call __matrix_cpy" << endl;
-  _init << "clargs 4" << endl;  
+  _init << "clargs 4" << endl;
 }
 
 void X86SubProgram::writeMatrixInitCode(const string& varname, int size) {
@@ -128,7 +128,7 @@ string X86SubProgram::source() {
   s << _init.str();
 
   s << _txt.str();
- 
+
   return s.str();
 }
 
@@ -144,7 +144,7 @@ string X86SubProgram::source() {
 
 string X86::EntryPoint = "_start";
 
-X86::X86(SymbolTable& st) 
+X86::X86(SymbolTable& st)
  : _stable(st) {
 
 }
@@ -156,7 +156,11 @@ void X86::init(const string& name) {
 
     _head << "; algoritmo: " << name << "\n\n";
 
-    #include <asm_tmpl.h>
+    #ifdef WIN32
+      #include <asm_win32.h>
+    #else
+      #include <asm_tmpl.h>
+    #endif
 
     _bss << "section .bss\n"
            "    __mem    resb  __MEMORY_SIZE\n\n";
@@ -238,17 +242,17 @@ void X86::declareMatrix(int decl_type, int type, string name, list<string> dims)
     size *= atoi((*it).c_str());
   }
 
-  
+
   if(decl_type == VAR_GLOBAL) {
     stringstream s;
     switch(type) {
       case TIPO_INTEIRO:
       case TIPO_REAL:
-      case TIPO_CARACTERE:      
+      case TIPO_CARACTERE:
       case TIPO_LOGICO:
       case TIPO_LITERAL:
-        s << name << " times " << size << " dd 0";        
-        break;      
+        s << name << " times " << size << " dd 0";
+        break;
       default:
         Display::self()->showError("Erro interno: tipo nao suportado (X86::declarePrimitive).");
         exit(1);
@@ -261,7 +265,7 @@ void X86::declareMatrix(int decl_type, int type, string name, list<string> dims)
   } else {
     Display::self()->showError("Erro interno: X86::declareMatrix).");
     exit(1);
-  }  
+  }
 }
 
 
@@ -366,7 +370,7 @@ string X86::source() {
   }
 
   str  << _lib.str();
-  
+
   return str.str();
 }
 
@@ -397,7 +401,7 @@ void X86::writeAttribution(int e1, int e2, pair<pair<int, bool>, string>& lv) {
   Symbol symb = _stable.getSymbol(currentScope(), lv.second, true);
   s << "lea edx, [" << lv.second << "]";
   writeTEXT(s.str());
-  
+
   s.str("");
   s << "lea edx, [edx + ecx * SIZEOF_DWORD]";
   writeTEXT(s.str());
@@ -426,7 +430,7 @@ void X86::writeEExpr() {
   writeTEXT("pop ebx");
   writeTEXT("pop eax");
 
-  writeTEXT("cmp eax, 0");        
+  writeTEXT("cmp eax, 0");
   writeTEXT("setne al");
   writeTEXT("and eax, 0xff");
   writeTEXT("cmp ebx, 0");
@@ -482,7 +486,7 @@ void X86::writeDiferenteExpr() {
   writeTEXT("cmp eax, ebx");
   writeTEXT("setne al");
   writeTEXT("and eax, 0xff");
-  
+
   writeTEXT("push eax");
 }
 
@@ -526,7 +530,7 @@ void X86::writeMaiorExpr(int e1, int e2) {
     writeTEXT("setg al");
     writeTEXT("and eax, 0xff");
   }
-  
+
   writeTEXT("push eax");
 }
 
@@ -599,7 +603,7 @@ void X86::writeMaiorEqExpr(int e1, int e2) {
     }
     writeTEXT("sete bl");
     writeTEXT("and ebx, 0xff");
-    
+
     writeTEXT("cmp ax, 0x4000");
     writeTEXT("sete al");
     writeTEXT("and eax, 0xff");
@@ -643,7 +647,7 @@ void X86::writeMenorEqExpr(int e1, int e2) {
     }
     writeTEXT("sete bl");
     writeTEXT("and ebx, 0xff");
-    
+
     writeTEXT("cmp ax, 0x4000");
     writeTEXT("sete al");
     writeTEXT("and eax, 0xff");
@@ -657,7 +661,7 @@ void X86::writeMenorEqExpr(int e1, int e2) {
   writeTEXT("push eax");
 }
 
-void X86::writeMaisExpr(int e1, int e2) { 
+void X86::writeMaisExpr(int e1, int e2) {
   writeTEXT("pop ebx");
   writeTEXT("pop eax");
 
@@ -684,7 +688,7 @@ void X86::writeMaisExpr(int e1, int e2) {
       writeTEXT("fstp dword [__aux]");
       writeTEXT("mov eax, dword [__aux]");
   } else {
-    writeTEXT("add eax, ebx");    
+    writeTEXT("add eax, ebx");
   }
 
   writeTEXT("push eax");
@@ -795,7 +799,7 @@ void X86::writeModExpr() {
   writeTEXT("pop eax");
 
   writeTEXT("xor edx, edx");
-  writeTEXT("idiv ebx");        
+  writeTEXT("idiv ebx");
   writeTEXT("mov eax, edx");
 
   writeTEXT("push eax");
@@ -808,7 +812,7 @@ void X86::writeUnaryNeg(int etype) {
   if(etype == TIPO_REAL) {
     s << "or eax ,0x80000000";
   } else {
-    s << "neg eax";          
+    s << "neg eax";
   }
   writeTEXT(s.str());
 
@@ -846,12 +850,12 @@ void X86::writeLValueExpr(pair< pair<int, bool>, string>& lv) {
   s << "lea edx, [" << lv.second << "]";
   writeTEXT(s.str());
   writeTEXT("lea edx, [edx + ecx * SIZEOF_DWORD]");
-  
-  if(lv.first.second) { //using matrix (ie mat), oush matrix address 
+
+  if(lv.first.second) { //using matrix (ie mat), oush matrix address
                         //(probably passing mat to a function f(mm[])
     writeTEXT("push edx");
   } else { //not using matrix (ie. mat[1] or x), push the value of var/index
-    writeTEXT("push dword [edx]");  
+    writeTEXT("push dword [edx]");
   }
 }
 
@@ -861,7 +865,7 @@ string X86::toChar(const string& str) {
   } else {
     string ret;
     switch(str[1]) {
-      case '0':        
+      case '0':
         ret = "0";
         break;
       case 'n':
@@ -882,9 +886,9 @@ string X86::toReal(const string& str) {
   //get the content of a float variable to integer.
   float fvalue; //sizeof(float) should be 4
   long  *fvaluep; //sizeof(long) should be 4
-  fvalue = atof(str.c_str()); 
-  fvaluep = (long*) &fvalue; 
-  s << *fvaluep; 
+  fvalue = atof(str.c_str());
+  fvaluep = (long*) &fvalue;
+  s << *fvaluep;
   return s.str();
-} 
+}
 
