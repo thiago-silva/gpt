@@ -24,13 +24,13 @@
 #include "InterpreterEval.hpp"
 #include "Display.hpp"
 
-#ifndef WIN32
+#ifdef WIN32
+  #include <winsock.h>
+#else
   #include <sys/socket.h>
   #include <netinet/in.h>
   #include <signal.h>
   #include <netdb.h>
-#else
-  #include <winsock.h>
 #endif
 
 #include <pcrecpp.h>
