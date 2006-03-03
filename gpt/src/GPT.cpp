@@ -21,6 +21,7 @@
 #include "config.h"
 #include "GPT.hpp"
 
+#include <io.h>
 #include <antlr/AST.hpp>
 #include "PortugolLexer.hpp"
 #include "PortugolParser.hpp"
@@ -54,7 +55,7 @@ void GPT::reportDicas(bool value) {
   _reportDicas = value;
 }
 
-string GPT::createTmpFile() {  
+string GPT::createTmpFile() {
   #ifdef WIN32
     string cf = getenv("TEMP");
     cf += "gpt_tmp"; //TODO! criar real tmp file
@@ -101,12 +102,12 @@ bool GPT::prolog(const string& ifname) {
   if(ifname.length() > 0) {
     ifstream fi;
     fi.open(ifname.c_str(), ios_base::in);
-    if(!fi) {    
+    if(!fi) {
       s << PACKAGE << ": não foi possível abrir o arquivo: \"" << ifname << "\"" << endl;
       Display::self()->showError(s);
       goto bail;
     }
-  
+
     if(!parse(fi)) {
       goto bail;
     }
@@ -116,7 +117,7 @@ bool GPT::prolog(const string& ifname) {
       Display::self()->showError(s);
       goto bail;
     }
-  
+
     if(!parse(cin)) {
       goto bail;
     }
@@ -161,10 +162,10 @@ bool GPT::compile(const string& ifname, const string& ofname, bool genBinary) {
     fo << asmsrc;
     fo.close();
 
-    stringstream cmd;  
+    stringstream cmd;
     cmd << "nasm -O1 -fbin -o " << ofname << " " << ftmpname;
 
-    if(system(cmd.str().c_str()) == -1) {      
+    if(system(cmd.str().c_str()) == -1) {
       s << PACKAGE << ": não foi possível invocar gcc." << endl;
       Display::self()->showError(s);
       goto bail;
@@ -176,9 +177,9 @@ bool GPT::compile(const string& ifname, const string& ofname, bool genBinary) {
       system(cmd.str().c_str());
     #endif
   }
-  
+
   success = true;
-  
+
   bail:
     if(ftmpname.length()>0) {
        unlink(ftmpname.c_str());
@@ -195,7 +196,7 @@ bool GPT::translate2C(const string& ifname, const string& ofname) {
   }
 
   Portugol2CWalker pt2c(_stable);
-  string c_src = pt2c.algoritmo(_astree);  
+  string c_src = pt2c.algoritmo(_astree);
 
   ofstream fo;
   fo.open(ofname.c_str(), ios_base::out);
@@ -206,12 +207,12 @@ bool GPT::translate2C(const string& ifname, const string& ofname) {
   }
   fo << c_src;
   fo.close();
- 
+
   success = true;
-  
+
   bail:
-    return success;  
-}  
+    return success;
+}
 
 bool GPT::interpret(const string& ifname, const string& host, int port) {
   if(!prolog(ifname)) {

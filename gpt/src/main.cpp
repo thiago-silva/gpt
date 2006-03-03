@@ -49,16 +49,20 @@ enum {
 
 int    _flags = 0;
 string _ifilename;
-string _ofilename = "a.out";
 string _host;
 string _port = DEFAULT_PORT;
 
+#ifdef WIN32
+  string _ofilename = "a.exe";
+#else
+  string _ofilename = "a.out";
+#endif
 
 //----- Options -----
 
 int init(int argc, char** argv) {
 
-  if(argc == 1) {    
+  if(argc == 1) {
     return CMD_SHOW_HELP;
   }
 
@@ -114,7 +118,7 @@ int init(int argc, char** argv) {
         _flags |= FLAG_PIPE;
         break;
       case 'v':
-        return CMD_SHOW_VERSION;        
+        return CMD_SHOW_VERSION;
         break;
       case 'h':
         return CMD_SHOW_HELP;
