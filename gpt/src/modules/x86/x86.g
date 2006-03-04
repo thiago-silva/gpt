@@ -310,7 +310,7 @@ fcall[int expct_type] returns [int type]
       if(fname == "imprima") {
         s << "addarg " << args;
         x86.writeTEXT(s.str());
-        x86.writeTEXT("call __imprima");
+        x86.writeTEXT("call imprima");
         s.str("");
         s << "clargs " << ((args*2)+1);
         x86.writeTEXT(s.str());      
@@ -340,7 +340,7 @@ stm_ret
       }
       if(expecting_type == TIPO_LITERAL) {
         x86.writeTEXT("addarg eax");
-        x86.writeTEXT("call __clone_literal");
+        x86.writeTEXT("call clone_literal");
         x86.writeTEXT("clargs 1");
       }
       x86.writeTEXT("return");
@@ -487,7 +487,7 @@ stm_para
           //nao entrar se condicao falsa
           x86.writeTEXT("mov ecx, dword [esp+4]");
           s.str("");
-          s << "lea edx, [" << lv.second << "]";
+          s << "lea edx, [" << X86::makeID(lv.second) << "]";
           x86.writeTEXT(s.str());
           x86.writeTEXT("mov eax, dword [edx + ecx * SIZEOF_DWORD]");
 
@@ -513,7 +513,7 @@ stm_para
           //calcular passo [eax]          
           x86.writeTEXT("mov ecx, dword [esp+4]");
           s.str("");
-          s << "lea edx, [" << lv.second << "]";
+          s << "lea edx, [" << X86::makeID(lv.second) << "]";
           x86.writeTEXT(s.str());
           x86.writeTEXT("mov eax, dword [edx + ecx * SIZEOF_DWORD]");
 
@@ -542,7 +542,7 @@ stm_para
           x86.writeTEXT(s.str());
 
           s.str("");
-          s << "lea edx, [" << lv.second << "]";
+          s << "lea edx, [" << X86::makeID(lv.second) << "]";
           x86.writeTEXT(s.str());
           x86.writeTEXT("mov ecx, dword [esp+4]");          
           x86.writeTEXT("lea edx, [edx + ecx * SIZEOF_DWORD]");
@@ -559,7 +559,7 @@ stm_para
           //lvalue = ate value
           x86.writeTEXT("mov ebx, dword [esp]");
           s.str("");
-          s << "lea edx, [" << lv.second << "]";
+          s << "lea edx, [" << X86::makeID(lv.second) << "]";
           x86.writeTEXT(s.str());
           x86.writeTEXT("mov ecx, dword [esp+4]");          
           x86.writeTEXT("lea edx, [edx + ecx * SIZEOF_DWORD]");

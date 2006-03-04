@@ -60,15 +60,15 @@ string X86SubProgram::name() {
 
 void X86SubProgram::declareLocal(const string& local_var, int msize, bool minit) {
   if(msize == 0) {
-    _head << "%define " << local_var << " ebp-" << _local_offset << endl;
+    _head << "%define " << X86::makeID(local_var) << " ebp-" << _local_offset << endl;
 
     if(minit) {
-      _init << "mov dword [" << local_var << "], 0" << endl;
+      _init << "mov dword [" << X86::makeID(local_var) << "], 0" << endl;
     }
 
     _local_offset += SizeofDWord;
   } else {
-    _head << "%define " << local_var << " ebp-" << (_local_offset+(msize*SizeofDWord)-SizeofDWord) << endl;
+    _head << "%define " << X86::makeID(local_var) << " ebp-" << (_local_offset+(msize*SizeofDWord)-SizeofDWord) << endl;
     if(minit) {
       writeMatrixInitCode(local_var, msize);
     }
@@ -79,9 +79,9 @@ void X86SubProgram::declareLocal(const string& local_var, int msize, bool minit)
 void X86SubProgram::declareParam(const string& param, int type, int msize) {
 
   if(msize == 0) {
-    _head << "%define " << param << " ebp+" << _param_offset << endl;
+    _head << "%define " << X86::makeID(param) << " ebp+" << _param_offset << endl;
   } else {
-    _head << "%define _p_" << param << " ebp+" << _param_offset << endl;
+    _head << "%define _p_" << X86::makeID(param) << " ebp+" << _param_offset << endl;
     declareLocal(param, msize, false);
     writeMatrixCopyCode(param, type, msize);
   }
@@ -89,20 +89,20 @@ void X86SubProgram::declareParam(const string& param, int type, int msize) {
 }
 
 void X86SubProgram::writeMatrixCopyCode(const string& param, int type, int msize) {
-  _init << "lea eax, [" << param << "]" << endl;
-  _init << "addarg dword [_p_" << param << "]" << endl;
+  _init << "lea eax, [" << X86::makeID(param) << "]" << endl;
+  _init << "addarg dword [_p_" << X86::makeID(param) << "]" << endl;
   _init << "addarg eax" << endl;
   _init << "addarg " << (type == TIPO_LITERAL) << endl;
   _init << "addarg " << (msize*SizeofDWord) << endl;
-  _init << "call __matrix_cpy" << endl;
+  _init << "call matrix_cpy" << endl;
   _init << "clargs 4" << endl;
 }
 
 void X86SubProgram::writeMatrixInitCode(const string& varname, int size) {
-  _init << "lea ebx, [" << varname << "]" << endl;
+  _init << "lea ebx, [" << X86::makeID(varname) << "]" << endl;
   _init << "addarg ebx" << endl;
   _init << "addarg " << size << " * SIZEOF_DWORD" << endl;
-  _init << "call matrix_init__" << endl;
+  _init << "call matrix_init" << endl;
   _init << "clargs 2" << endl;
 
 //     _init << "addarg " << size << " * SIZEOF_DWORD" << endl;
@@ -142,7 +142,11 @@ string X86SubProgram::source() {
 
 
 
-string X86::EntryPoint = "_start";
+string X86::EntryPoint = "start";
+
+string X86::makeID(const string& str) {
+  return string("_") + str;
+}
 
 X86::X86(SymbolTable& st)
  : _stable(st) {
@@ -163,15 +167,15 @@ void X86::init(const string& name) {
     #endif
 
     _bss << "section .bss\n"
-           "    __mem    resb  __MEMORY_SIZE\n\n";
+           "    mem    resb  MEMORY_SIZE\n\n";
 
     _data << "section .data\n"
-            "              _data_no equ $\n"
-            "    __mem_ptr         dd 0\n"
-            "    __aux             dd 0\n"
-            "    __str_true        db 'verdadeiro',0\n"
-            "    __str_false       db 'falso',0\n"
-            "    __str_no_mem_left db 'Não foi possível alocar memória.',0\n\n";
+            "              data_no equ $\n"
+            "    mem_ptr         dd 0\n"
+            "    aux             dd 0\n"
+            "    str_true        db 'verdadeiro',0\n"
+            "    str_false       db 'falso',0\n"
+            "    str_no_mem_left db 'Não foi possível alocar memória.',0\n\n";
 
 
   createScope(SymbolTable::GlobalScope);
@@ -219,7 +223,7 @@ void X86::declarePrimitive(int decl_type, const string& name, int type) {
       case TIPO_CARACTERE:
       case TIPO_LITERAL:
       case TIPO_LOGICO:
-        s << name << " dd 0";
+        s << X86::makeID(name) << " dd 0";
         writeDATA(s.str());
         break;
       default:
@@ -251,7 +255,7 @@ void X86::declareMatrix(int decl_type, int type, string name, list<string> dims)
       case TIPO_CARACTERE:
       case TIPO_LOGICO:
       case TIPO_LITERAL:
-        s << name << " times " << size << " dd 0";
+        s << X86::makeID(name) << " times " << size << " dd 0";
         break;
       default:
         Display::self()->showError("Erro interno: tipo nao suportado (X86::declarePrimitive).");
@@ -305,31 +309,33 @@ string X86::addGlobalLiteral(string str) {
 string X86::translateFuncLeia(const string& id, int type) {
   switch(type) {
     case TIPO_REAL:
-      return "__leia_real";
+      return "leia_real";
     case TIPO_LITERAL:
-      return "__leia_literal";
+      return "leia_literal";
     case TIPO_CARACTERE:
-      return "__leia_caractere";
+      return "leia_caractere";
     case TIPO_LOGICO:
-      return "__leia_logico";
+      return "leia_logico";
     case TIPO_INTEIRO:
+      return "leia_inteiro";
     default:
-      return "__leia_inteiro";
+      Display::self()->showError("Erro interno: tipo nao suportado (x86::translateFuncLeia).");
+      exit(1);
   }
 }
 
 string X86::translateFuncImprima(const string& id, int type) {
   switch(type) {
     case TIPO_REAL:
-      return "__imprima_real";
+      return "imprima_real";
     case TIPO_LITERAL:
-      return "__imprima_literal";
+      return "imprima_literal";
     case TIPO_CARACTERE:
-      return "__imprima_caractere";
+      return "imprima_caractere";
     case TIPO_LOGICO:
-      return "__imprima_logico";
+      return "imprima_logico";
     case TIPO_INTEIRO:
-      return "__imprima_inteiro";
+      return "imprima_inteiro";
     default:
       Display::self()->showError("Erro interno: tipo nao suportado (x86::translateFuncImprima).");
       exit(1);
@@ -340,9 +346,9 @@ string X86::createLabel(bool local, string tmpl) {
   static int c = 0;
   stringstream s;
   if(local) {
-    s << ".___" << tmpl << "_" << c;
+    s << ".__" << tmpl << "_" << c;
   } else {
-    s << "___" << tmpl << "_" << c;
+    s << "__" << tmpl << "_" << c;
   }
   c++;
   return s.str();
@@ -353,7 +359,7 @@ string X86::source() {
   stringstream str;
 
   //.data footer
-  writeDATA("datasize   equ     $ - _data_no");
+  writeDATA("datasize   equ     $ - data_no");
 
   str << _head.str()
       << _bss.str()
@@ -361,7 +367,7 @@ string X86::source() {
 
   //.text header
   str << "section .text" << endl;
-  str << "_start_no equ $" << endl;
+  str << "start_no equ $" << endl;
 
   string sss;
   for(map<string, X86SubProgram>::iterator it = _subprograms.begin(); it != _subprograms.end(); ++it) {
@@ -378,15 +384,15 @@ void X86::writeCast(int e1, int e2) {
   //casts
   if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) {
     //int to float
-    writeTEXT("mov dword [__aux], eax");
-    writeTEXT("fild dword [__aux]");
-    writeTEXT("fstp dword [__aux]");
-    writeTEXT("mov eax, dword [__aux]");
+    writeTEXT("mov dword [aux], eax");
+    writeTEXT("fild dword [aux]");
+    writeTEXT("fstp dword [aux]");
+    writeTEXT("mov eax, dword [aux]");
   } else if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) {
-    writeTEXT("mov dword [__aux], eax");
-    writeTEXT("fld dword [__aux]");
-    writeTEXT("fistp dword [__aux]");
-    writeTEXT("mov eax, dword [__aux]");
+    writeTEXT("mov dword [aux], eax");
+    writeTEXT("fld dword [aux]");
+    writeTEXT("fistp dword [aux]");
+    writeTEXT("mov eax, dword [aux]");
   }
 }
 
@@ -399,7 +405,7 @@ void X86::writeAttribution(int e1, int e2, pair<pair<int, bool>, string>& lv) {
   stringstream s;
 
   Symbol symb = _stable.getSymbol(currentScope(), lv.second, true);
-  s << "lea edx, [" << lv.second << "]";
+  s << "lea edx, [" << X86::makeID(lv.second) << "]";
   writeTEXT(s.str());
 
   s.str("");
@@ -502,24 +508,24 @@ void X86::writeMaiorExpr(int e1, int e2) {
   if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
     writeTEXT("fninit");
     if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], ebx");
-      writeTEXT("ficomp dword [__aux]");
+      writeTEXT("mov [aux], eax");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], ebx");
+      writeTEXT("ficomp dword [aux]");
       writeTEXT("fstsw ax");
       writeTEXT("cmp ax, 0");
     } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
-      writeTEXT("mov [__aux], ebx");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("ficomp dword [__aux]");
+      writeTEXT("mov [aux], ebx");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], eax");
+      writeTEXT("ficomp dword [aux]");
       writeTEXT("fstsw ax");
       writeTEXT("cmp ax, 0x100");
     } else { //float/float
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], ebx");
-      writeTEXT("fcomp dword [__aux]");
+      writeTEXT("mov [aux], eax");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], ebx");
+      writeTEXT("fcomp dword [aux]");
       writeTEXT("fstsw ax");
       writeTEXT("cmp ax, 0");
     }
@@ -541,24 +547,24 @@ void X86::writeMenorExpr(int e1, int e2) {
   if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
     writeTEXT("fninit");
     if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], ebx");
-      writeTEXT("ficomp dword [__aux]");
+      writeTEXT("mov [aux], eax");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], ebx");
+      writeTEXT("ficomp dword [aux]");
       writeTEXT("fstsw ax");
       writeTEXT("cmp ax, 0x100");
     } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
-      writeTEXT("mov [__aux], ebx");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("ficomp dword [__aux]");
+      writeTEXT("mov [aux], ebx");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], eax");
+      writeTEXT("ficomp dword [aux]");
       writeTEXT("fstsw ax");
       writeTEXT("cmp ax, 0");
     } else { //float/float
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], ebx");
-      writeTEXT("fcomp dword [__aux]");
+      writeTEXT("mov [aux], eax");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], ebx");
+      writeTEXT("fcomp dword [aux]");
       writeTEXT("fstsw ax");
       writeTEXT("cmp ax, 0x100");
     }
@@ -580,24 +586,24 @@ void X86::writeMaiorEqExpr(int e1, int e2) {
   if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
     writeTEXT("fninit");
     if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], ebx");
-      writeTEXT("ficomp dword [__aux]");
+      writeTEXT("mov [aux], eax");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], ebx");
+      writeTEXT("ficomp dword [aux]");
       writeTEXT("fstsw ax");
       writeTEXT("cmp ax, 0");
     } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
-      writeTEXT("mov [__aux], ebx");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("ficomp dword [__aux]");
+      writeTEXT("mov [aux], ebx");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], eax");
+      writeTEXT("ficomp dword [aux]");
       writeTEXT("fstsw ax");
       writeTEXT("cmp ax, 0x100");
     } else { //float/float
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], ebx");
-      writeTEXT("fcomp dword [__aux]");
+      writeTEXT("mov [aux], eax");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], ebx");
+      writeTEXT("fcomp dword [aux]");
       writeTEXT("fstsw ax");
       writeTEXT("cmp ax, 0");
     }
@@ -624,24 +630,24 @@ void X86::writeMenorEqExpr(int e1, int e2) {
   if((e1 == TIPO_REAL) || (e2 == TIPO_REAL)) {
     writeTEXT("fninit");
     if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], ebx");
-      writeTEXT("ficomp dword [__aux]");
+      writeTEXT("mov [aux], eax");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], ebx");
+      writeTEXT("ficomp dword [aux]");
       writeTEXT("fstsw ax");
       writeTEXT("cmp ax, 0x100");
     } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
-      writeTEXT("mov [__aux], ebx");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("ficomp dword [__aux]");
+      writeTEXT("mov [aux], ebx");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], eax");
+      writeTEXT("ficomp dword [aux]");
       writeTEXT("fstsw ax");
       writeTEXT("cmp ax, 0");
     } else { //float/float
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], ebx");
-      writeTEXT("fcomp dword [__aux]");
+      writeTEXT("mov [aux], eax");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], ebx");
+      writeTEXT("fcomp dword [aux]");
       writeTEXT("fstsw ax");
       writeTEXT("cmp ax, 0x100");
     }
@@ -669,24 +675,24 @@ void X86::writeMaisExpr(int e1, int e2) {
     string addpop;
     writeTEXT("fninit");
     if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], ebx");
-      addpop = "fiadd dword [__aux]";
+      writeTEXT("mov [aux], eax");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], ebx");
+      addpop = "fiadd dword [aux]";
     } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
-      writeTEXT("mov [__aux], ebx");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], eax");
-      addpop = "fiadd dword [__aux]";
+      writeTEXT("mov [aux], ebx");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], eax");
+      addpop = "fiadd dword [aux]";
     } else { //float/float
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], ebx");
-      addpop = "fadd dword [__aux]";
+      writeTEXT("mov [aux], eax");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], ebx");
+      addpop = "fadd dword [aux]";
     }
       writeTEXT(addpop);
-      writeTEXT("fstp dword [__aux]");
-      writeTEXT("mov eax, dword [__aux]");
+      writeTEXT("fstp dword [aux]");
+      writeTEXT("mov eax, dword [aux]");
   } else {
     writeTEXT("add eax, ebx");
   }
@@ -702,24 +708,24 @@ void X86::writeMenosExpr(int e1, int e2) {
     string subop;
     writeTEXT("fninit");
     if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], ebx");
-      subop = "fisub dword [__aux]";
+      writeTEXT("mov [aux], eax");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], ebx");
+      subop = "fisub dword [aux]";
     } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
-      writeTEXT("mov [__aux], ebx");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], eax");
-      subop = "fisub dword [__aux]";
+      writeTEXT("mov [aux], ebx");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], eax");
+      subop = "fisub dword [aux]";
     } else { //float/float
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], ebx");
-      subop = "fsub dword [__aux]";
+      writeTEXT("mov [aux], eax");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], ebx");
+      subop = "fsub dword [aux]";
     }
       writeTEXT(subop);
-      writeTEXT("fstp dword [__aux]");
-      writeTEXT("mov eax, dword [__aux]");
+      writeTEXT("fstp dword [aux]");
+      writeTEXT("mov eax, dword [aux]");
   } else {
     writeTEXT("sub eax, ebx");
   }
@@ -735,24 +741,24 @@ void X86::writeDivExpr(int e1, int e2) {
     string divpop;
     writeTEXT("fninit");
     if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], ebx");
-      divpop = "fidiv dword [__aux]";
+      writeTEXT("mov [aux], eax");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], ebx");
+      divpop = "fidiv dword [aux]";
     } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
-      writeTEXT("mov [__aux], ebx");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], eax");
-      divpop = "fidivr dword [__aux]";
+      writeTEXT("mov [aux], ebx");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], eax");
+      divpop = "fidivr dword [aux]";
     } else { //float/float
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], ebx");
-      divpop = "fdiv dword [__aux]";
+      writeTEXT("mov [aux], eax");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], ebx");
+      divpop = "fdiv dword [aux]";
     }
       writeTEXT(divpop);
-      writeTEXT("fstp dword [__aux]");
-      writeTEXT("mov eax, dword [__aux]");
+      writeTEXT("fstp dword [aux]");
+      writeTEXT("mov eax, dword [aux]");
   } else {
     writeTEXT("xor edx, edx");
     writeTEXT("idiv ebx");
@@ -769,24 +775,24 @@ void X86::writeMultipExpr(int e1, int e2) {
     string mulpop;
     writeTEXT("fninit");
     if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) { //float/integer
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], ebx");
-      mulpop = "fimul dword [__aux]";
+      writeTEXT("mov [aux], eax");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], ebx");
+      mulpop = "fimul dword [aux]";
     } else if((e1 != TIPO_REAL) && (e2 == TIPO_REAL)) { //integer/float
-      writeTEXT("mov [__aux], ebx");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], eax");
-      mulpop = "fimul dword [__aux]";
+      writeTEXT("mov [aux], ebx");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], eax");
+      mulpop = "fimul dword [aux]";
     } else { //float/float
-      writeTEXT("mov [__aux], eax");
-      writeTEXT("fld dword [__aux]");
-      writeTEXT("mov [__aux], ebx");
-      mulpop = "fmul dword [__aux]";
+      writeTEXT("mov [aux], eax");
+      writeTEXT("fld dword [aux]");
+      writeTEXT("mov [aux], ebx");
+      mulpop = "fmul dword [aux]";
     }
       writeTEXT(mulpop);
-      writeTEXT("fstp dword [__aux]");
-      writeTEXT("mov eax, dword [__aux]");
+      writeTEXT("fstp dword [aux]");
+      writeTEXT("mov eax, dword [aux]");
   } else {
     writeTEXT("imul eax, ebx");
   }
@@ -847,7 +853,7 @@ void X86::writeLiteralExpr(const string& src) {
 void X86::writeLValueExpr(pair< pair<int, bool>, string>& lv) {
   stringstream s;
 
-  s << "lea edx, [" << lv.second << "]";
+  s << "lea edx, [" << X86::makeID(lv.second) << "]";
   writeTEXT(s.str());
   writeTEXT("lea edx, [edx + ecx * SIZEOF_DWORD]");
 

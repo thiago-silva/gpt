@@ -73,6 +73,7 @@ public:
   };
 
   static string EntryPoint;
+  static string makeID(const string&);  
 
   X86(SymbolTable&);
   ~X86();
