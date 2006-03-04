@@ -54,7 +54,7 @@ private:
   
   bool parse(istream& in);
 
-  bool prolog(const string& ifname);
+  bool prologue(const string& ifname);
 
   bool _reportDicas;
   RefPortugolAST _astree;

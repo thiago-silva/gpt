@@ -98,7 +98,7 @@ void GPT::showVersion() {
   Display::self()->showMessage(s);
 }
 
-bool GPT::prolog(const string& ifname) {
+bool GPT::prologue(const string& ifname) {
   stringstream s;
   bool success = false;
 
@@ -136,7 +136,7 @@ bool GPT::compile(const string& ifname, const string& ofname, bool genBinary) {
   bool success = false;
   stringstream s;
 
-  if(!prolog(ifname)) {
+  if(!prologue(ifname)) {
     return false;
   }
 
@@ -194,7 +194,7 @@ bool GPT::translate2C(const string& ifname, const string& ofname) {
   bool success = false;
   stringstream s;
 
-  if(!prolog(ifname)) {
+  if(!prologue(ifname)) {
     return false;
   }
 
@@ -218,7 +218,7 @@ bool GPT::translate2C(const string& ifname, const string& ofname) {
 }
 
 bool GPT::interpret(const string& ifname, const string& host, int port) {
-  if(!prolog(ifname)) {
+  if(!prologue(ifname)) {
     return false;
   }
 
