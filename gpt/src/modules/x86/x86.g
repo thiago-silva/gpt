@@ -253,7 +253,9 @@ fcall[int expct_type] returns [int type]
   string fname, fimp;
   int args = 0;
   int etype;
-  int ptype;
+  int ptype = 0;
+
+  list<int> imp_ptypes;
 }
   : #(TI_FCALL id:T_IDENTIFICADOR 
       {
@@ -261,6 +263,7 @@ fcall[int expct_type] returns [int type]
         if(f.lexeme == "leia") {
           fname = x86.translateFuncLeia(id->getText(), expct_type);
           type = expct_type;
+          //ptype doesn't matter: (expr)* is not used
         } else {
           fname = f.lexeme;
           type = f.type.primitiveType();
@@ -271,11 +274,29 @@ fcall[int expct_type] returns [int type]
         etype=expr[ptype]
         {
           if(fname == "imprima") {
-            fimp = x86.translateFuncImprima(id->getText(), etype);
+            //imp_ptypes.push_back(etype);
+            switch(etype) {
+              case TIPO_INTEIRO:
+                x86.writeTEXT("push 'i'");
+                break;
+              case TIPO_REAL:
+                x86.writeTEXT("push 'r'");
+                break;
+              case TIPO_CARACTERE:
+                x86.writeTEXT("push 'c'");
+                break;
+              case TIPO_LITERAL:
+                x86.writeTEXT("push 's'");
+                break;
+              case TIPO_LOGICO:
+                x86.writeTEXT("push 'l'");
+                break;
+            }
+/*          fimp = x86.translateFuncImprima(id->getText(), etype);
             x86.writeTEXT("pop eax");
             x86.writeTEXT("addarg eax");
             x86.writeTEXT(string("call ") + fimp);
-            x86.writeTEXT("clargs 1");
+            x86.writeTEXT("clargs 1");*/
           } else {
             x86.writeTEXT("pop eax");
             x86.writeTEXT("addarg eax");
@@ -287,6 +308,12 @@ fcall[int expct_type] returns [int type]
     )
     {      
       if(fname == "imprima") {
+        s << "addarg " << args;
+        x86.writeTEXT(s.str());
+        x86.writeTEXT("call __imprima");
+        s.str("");
+        s << "clargs " << ((args*2)+1);
+        x86.writeTEXT(s.str());      
         x86.writeTEXT("print_lf"); //\n
       } else {
         x86.writeTEXT(string("call ") + fname);
