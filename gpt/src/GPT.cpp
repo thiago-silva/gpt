@@ -21,7 +21,10 @@
 #include "config.h"
 #include "GPT.hpp"
 
-#include <io.h>
+#ifdef WIN32
+  #include <io.h> //unlink()
+#endif
+
 #include <antlr/AST.hpp>
 #include "PortugolLexer.hpp"
 #include "PortugolParser.hpp"
@@ -88,7 +91,7 @@ void GPT::showHelp() {
 
 void GPT::showVersion() {
   stringstream s;
-  s << "GPT - Compilador G-Portucol\n"
+  s << "GPT - Compilador G-Portugol\n"
           "Versão  : " << VERSION << "\n"
           "Website : http://gpt.berlios.de\n"
           "Copyright (C) 2003-2006 Thiago Silva <thiago.silva@kdemail.net>\n\n";
