@@ -216,7 +216,7 @@ lvalue returns [pair< pair<int, bool>, string> p] //pair< pair<type, using_addr>
       }
 
       (
-        expr[TIPO_INTEIRO]
+        expr[TIPO_INTEIRO] //index expr type
 
         {
           p.first.second = false;
@@ -257,12 +257,13 @@ fcall[int expct_type] returns [int type]
 }
   : #(TI_FCALL id:T_IDENTIFICADOR 
       {
-        f = stable.getSymbol(SymbolTable::GlobalScope, id->getText()); //so we get the params        
-        type = f.type.primitiveType();
+        f = stable.getSymbol(SymbolTable::GlobalScope, id->getText()); //so we get the params                
         if(f.lexeme == "leia") {
           fname = x86.translateFuncLeia(id->getText(), expct_type);
+          type = expct_type;
         } else {
           fname = f.lexeme;
+          type = f.type.primitiveType();
         }
         ptype = f.param.paramType(count++);
       }
