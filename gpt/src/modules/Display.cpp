@@ -55,7 +55,7 @@ void Display::showError(stringstream& s) {
 }
 
 void Display::showError(const string& str) {
-  cerr << toOEM(str);
+  cerr << toOEM(str) << endl;
 }
 
 void Display::showMessage(stringstream& s) {
