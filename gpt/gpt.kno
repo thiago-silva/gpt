@@ -1,10 +1,8 @@
 \NewEntry 0 devel
 
-\NewEntry 1 NOW
+\CurrentEntry 1 NOW
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
-<ul type="disc"><li>Bugs:</li>
-<ul type="disc"><li>resolver prob do imprima()</li>
-<ul type="disc"><li>imprima(&quot;res: &quot;, res());<br /><br /></li></ul></ul>
+<ul type="disc"><li>Bugs:<br /></li>
 <li>testar interpreter</li>
 <li>testar pt2c<br /></li>
 <li>uniformizar c_translator/interpreter/x86 behavior </li>
@@ -20,7 +18,7 @@
 </body></html>
 
 
-\CurrentEntry 1 TODO
+\NewEntry 1 TODO
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><div></div>
 <li>GPT</li>
@@ -42,10 +40,7 @@
 <ul type="disc"><li>quando antlr nao eh encontrado, checar o resultado de AC_PATH_PROG(ANTLR, antlr)</li>
 <li>esta dando erro de shell pq esta executando ANTLR_LIB=`antlr-config --libs` sendo que o antlr-config pode nao existir no sistema<br /></li></ul>
 <li>opcoes &quot;-H&quot; e &quot;-P&quot; documentadas no manual</li>
-<li>testar overflow aritmetico (inteiro/real) na compilacao (asm), traducao (C) e interpretacao.</li>
-<li>adicionar &quot;_&quot; aos ID de usuario. Nao usar &quot;_&quot; em ID's internas (x86/pt2c)</li>
-<ul type="disc"><li>Adicionar membro na ASTNode chamado getID() que retorna &quot;_x&quot; ao invez de &quot;x&quot;</li>
-<ul type="disc"><li>Os erros usam id-&gt;getText(), os geradores de codigo usam id-&gt;getID()<br /></li></ul></ul>
+<li>testar overflow aritmetico (inteiro/real) na compilacao (asm), traducao (C) e interpretacao.<br /></li>
 <li>limpar codigo</li>
 <ul type="disc"><li>uniformizar convencoes (underline para membros privates, etc)<br /><br /></li></ul>
 <li>Error codes: (switch -e)</li>
@@ -76,7 +71,6 @@
 <li>static link com a pcre.a (nao mandar pcre*.dll junto..)</li>
 <li>strip gpt.exe</li></ul></ul>
 </body></html>
-
 
 \NewEntry 1 Notas ideias etc
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
