@@ -1,6 +1,6 @@
 \NewEntry 0 devel
 
-\CurrentEntry 1 NOW
+\NewEntry 1 NOW
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>Bugs:<br /></li>
 <li>testar interpreter</li>
@@ -17,8 +17,7 @@
 <li>1.0: depois de vários bugfixes e refactorings</li></ul></ul>
 </body></html>
 
-
-\NewEntry 1 TODO
+\CurrentEntry 1 TODO
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><div></div>
 <li>GPT</li>
@@ -42,7 +41,8 @@
 <li>opcoes &quot;-H&quot; e &quot;-P&quot; documentadas no manual</li>
 <li>testar overflow aritmetico (inteiro/real) na compilacao (asm), traducao (C) e interpretacao.<br /></li>
 <li>limpar codigo</li>
-<ul type="disc"><li>uniformizar convencoes (underline para membros privates, etc)<br /><br /></li></ul>
+<ul type="disc"><li>uniformizar convencoes (underline para membros privates, etc)<br /></li></ul>
+<li>gpt: mover o exemplos/highlight.gpt para gpteditor<br /></li>
 <li>Error codes: (switch -e)</li>
 <ul type="disc"><li>Se usar com front-end, pode linkar a uma pagina# explicando a natureza do erro.<br /></li></ul></ul>
 <li>Documentacao</li>
@@ -71,6 +71,7 @@
 <li>static link com a pcre.a (nao mandar pcre*.dll junto..)</li>
 <li>strip gpt.exe</li></ul></ul>
 </body></html>
+
 
 \NewEntry 1 Notas ideias etc
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
@@ -106,7 +107,10 @@
 \NewEntry 1 Bugs
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>manua.tex:</li>
-<ul type="disc"><li>extensao dos arquivos &quot;.pt&quot; -&gt; &quot;.gpt&quot;</li></ul></ul>
+<ul type="disc"><li>extensao dos arquivos &quot;.pt&quot; -&gt; &quot;.gpt&quot;<br /><br /><br /></li></ul>
+<li>Segfault interpretando:</li></ul>
+<p>algoritmo teste;<br />variáveis<br />  mat : matriz[2] de inteiros;<br />fim-variáveis<br />início<br />  f(mat);<br />fim<br />função f(mm: matriz[2] de inteiros) : inteiro<br />início<br />fim</p>
+<p></p>
 </body></html>
 
 \NewEntry 1 latex2html
