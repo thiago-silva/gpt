@@ -163,7 +163,7 @@ void X86::init(const string& name) {
     #ifdef WIN32
       #include <asm_win32.h>
     #else
-      #include <asm_tmpl.h>
+      #include <asm_elf.h>
     #endif
 
     _bss << "section .bss\n"
