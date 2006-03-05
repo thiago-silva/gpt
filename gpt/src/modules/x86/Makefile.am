@@ -2,22 +2,20 @@ INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/src/modules \
 	-I$(top_srcdir)/src/modules/x86 $(ANTLR_INC) $(all_includes)
 METASOURCES = AUTO
 
-gensources = X86Walker.cpp X86Walker.hpp
-
 noinst_LTLIBRARIES = libx86.la
-libx86_la_SOURCES = $(gensources) X86.cpp
-noinst_HEADERS = X86.hpp
 
-x86_g = $(srcdir)/x86.g
+BUILT_SOURCES = X86Walker.cpp
 
-$(gensources): x86
+libx86_la_SOURCES = X86.cpp
+nodist_libx86_la_SOURCES = $(BUILT_SOURCES)
+noinst_HEADERS = X86.hpp asm_elf.h asm_lib.h asm_prologue.h asm_win32.h
 
-x86: $(x86_g)
-	$(ANTLR_BIN) $(x86_g)
+x86_g = x86.g
+EXTRA_DIST = $(x86_g)
 
-distclean: clean
-	rm -rf .deps
+CLEANFILES = X86Walker.hpp X86Walker.cpp X86WalkerTokenTypes.hpp X86WalkerTokenTypes.txt \
+             PortugolTokenTypes.txt
 
-clean:
-	rm -f *.cpp *.hpp *.a *.o *.txt
+X86Walker.cpp: $(srcdir)/$(x86_g)
+	$(ANTLR_BIN) $(srcdir)/$(x86_g)
 
