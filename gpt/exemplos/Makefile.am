@@ -1,1 +1,1 @@
-EXTRA_DIST = highlight.gpt olamundo.gpt
+EXTRA_DIST = olamundo.gpt
