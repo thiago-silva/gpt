@@ -194,9 +194,9 @@ a favorecer estudantes que dão os primeiros passos no aprendizado de
 desenvolvimento de softwares, bem como professores que ensinam disciplinas
 relacionadas a computação. Portanto, seu foco é primariamente didático.
 
-Se encontram disponíveis atualmente um tradutor/interpretador para a
-linguagem (GPT) e um ambiente visual simples (GPTEditor) que permite execução
-e depuração de programas escritos em G-Portugol.
+Se encontram disponíveis atualmente um compilador, tradutor e interpretador para
+a linguagem (GPT) e um ambiente visual simples (GPTEditor) que permite a
+edição, execução e depuração de programas escritos em G-Portugol.
 
 A seguir é apresentado os assuntos abordados nos capítulos seguintes:
 
@@ -213,7 +213,7 @@ A seguir é apresentado os assuntos abordados nos capítulos seguintes:
   Capítulo 4: trata da implementação da linguagem. Discute as decisões de design e recursos oferecidos por G-Portugol.
 
   \item
-  Capítulo 5: descreve o programa GPT, o tradutor/interpretador e depurador para a linguagem G-Portugol.
+  Capítulo 5: descreve o programa GPT.
 
 \end{itemize}
 
@@ -234,9 +234,9 @@ controle de fluxo, manipulação de dados e recursos de entrada e saída básicos.
 
 \section{Tipos de dados}
 
-Tipos primitivos como inteiro e literal são suportados. Além das estruturas de
-controle, subprogramas são suportados no modelo de funções parametrizadas com
-retorno de dados primitivos. Entre os tipos primitivos, se encontram:
+Tipos primitivos como inteiro e literal são suportados. Literais são tipos
+integrais, e não, tipos construídos pelo usuário. A tabela
+\ref{tb_tipos_primitivos} apresenta os tipos com respectivos exemplos de dados:
 
 \begin{table}[ht]
 \begin{center}
@@ -260,9 +260,7 @@ retorno de dados primitivos. Entre os tipos primitivos, se encontram:
 
 Com esses tipos, pode-se criar conjuntos como vetores ou matrizes ``n''
 dimensionais. Tipos mais complexos não são suportados.
-\newline
-\newline
-\newline
+
 
 \section{Estruturas de controle}
 
@@ -295,9 +293,9 @@ de livros e muitos professores os discutem.
 \section{Subprogramas (funções)}
 
 Subprogramas são como funções em C. Podem receber qualquer número de parâmetros, sejam tipos primitivos
-ou vetores, e podem retornar valores primitivos. Entretanto, não é permitido declarar funções aninhadas ou
-funções com parâmetros variáveis. Vale ressaltar que passagem de parâmetros é sempre feita por 
-\textit{valor}.
+ou vetores/matrizes, e podem retornar apenas valores primitivos. Entretanto, não
+é permitido declarar funções aninhadas ou funções com parâmetros variáveis. Vale
+ressaltar que passagem de parâmetros é sempre feita por \textit{valor}.
 
 
 
@@ -335,19 +333,21 @@ fim
 
 \noindent 
 Após salvar o arquivo, digite o seguinte na linha de comando:
+\newline
 
+No linux:
 \begin{verbatim}
 $ gpt -o olamundo olamundo.gpt
 \end{verbatim}
 
-Esse comando compila o algoritmo e salva o arquivo binário resultante como
-``olamundo'' no diretório atual. Pode-se, agora, executar o programa da seguinte
-forma:
-
+No Windows:
 \begin{verbatim}
-$ ./olamundo
-Olá mundo! 
+\> gpt -o olamundo.exe olamundo.gpt
 \end{verbatim}
+
+Esse comando compila o algoritmo e salva o arquivo binário resultante como
+``olamundo'' (ou ``olamundo.exe'') no diretório atual. Após executar o
+programa criado, é exibido o texto ``Ola mundo!'' na tela.
 
 Como já deve ter assumido, comentários ao estilo C (/**/) e C++ (//) são
 permitidos e o que estiver entre aspas duplas (") é tratado como uma string ou
@@ -396,9 +396,13 @@ Variáveis primitivas são declaradas seguindo o seguinte modelo:
 <identificador> [, identificador]* : <tipo>; 
 \end{verbatim}
 
-Como pode-se notar, é parecido com Pascal. Assim que um programa é executado, todas as variáveis declaradas são 
-iniciadas com um valor nulo ou ``0'' automaticamente. Vale ressaltar que constantes (const, final, etc) não são 
-suportados. Os tipos primitivos suportados encontram-se na tabela \ref{tb_tipos_primitivos}
+Isso é, um ou mais identificadores separados por virgula, seguido de um
+``:'', seguido de um tipo, seguido, finalmente, de ``;''. Como pode-se notar, é
+parecido com Pascal. Assim que um programa é executado, todas as variáveis,
+primitivas ou vetores/matrizes, declaradas são iniciadas com um valor nulo ou
+``0'' automaticamente. Vale ressaltar que constantes (const, final, etc) não são
+suportados. Os tipos primitivos suportados encontram-se na tabela
+\ref{tb_tipos_primitivos}
 
 A fim explorar melhor os aspectos da declaração, seguem-se alguns comentários a
 respeito do último exemplo (programa \ref{programa_inutil})
@@ -414,11 +418,12 @@ exibido:
   Portanto, identificadores (nomes de variáveis, funções e do algoritmo) não
   podem ter acentos ou caracteres especiais. A definição de um identificador em
   G-Portugol é equivalente ao das linguagens populares: uma letra (a-z ou
-  A-Z) seguido de qualquer número de letras ou  números (e underscores).
+  A-Z) seguido de qualquer número de letras ou  números (e underlines).
   Cedilhas, portanto, também não formam identificadores válidos. 
 
  \item 
-  O segundo ponto, é a palavra-chave ``variáveis'': ela tem acento, e isso é permitido e de propósito. 
+  O segundo ponto, é a palavra-chave ``variáveis'': ela tem acento, e isso é
+permitido e obrigatório. 
 
   \item
   O terceiro, é a definição do bloco e sua (falta de) semelhança com o Pascal. Todas os blocos em G-Portugol 
@@ -427,7 +432,7 @@ exibido:
 
   \item 
   E, finalmente, o quarto ponto é a ausência de código entre ``início'' e ``fim''. 
-  O programa não é obrigado a ter enunciados ou comandos. Meros detalhes... 
+  O programa não é obrigado a ter enunciados ou comandos.
 \end{itemize}
 
   Para maiores detalhes, veja o capítulo \ref{ch:impl}, sobre a implementação
@@ -454,17 +459,46 @@ e sua dimensão é informada pelo numero de subscritos. Portanto, ``bitset'' é um 
 enquanto ``quadr'' é uma matriz bidimensional, onde as duas dimensões tem tamanho 4.
 
 É importante observar que matrizes são ``0 based'', isso é, iniciam no
-índice 0. Logo, a matriz ``bitset'' pode ser usada do indice 0 até o indice 9
-(inclusive). Seu indice 10 não é válido e seu uso poderá acarretar em erros de
-execução (\textit{runtime errors}). Matrizes, assim como variáveis de tipos
-primitivos, são inicializadas com o valor ``0'' ou ``nulo'' em todas as suas
-posições. Quando usadas como argumentos de funções, matrizes são passadas
-\textit{por valor}.
+índice 0 e seus indices são sempre inteiros positivos. Logo, a matriz ``bitset''
+pode ser usada do indice 0 até o indice 9 (inclusive). Seu índice 10 não é
+válido e seu uso poderá acarretar em erros de execução (\textit{runtime
+errors}). Matrizes, assim como variáveis de tipos primitivos, são inicializadas
+com o valor ``0'' ou ``nulo'' em todas as suas posições. Quando usadas como
+argumentos de funções, matrizes são passadas \textit{por valor}.
+
+\begin{quotation}
+  \textit{``O mundo é divido em dois grupos: aqueles que começam a
+contar a partir do ''0``, e aqueles que não.''}
+   \begin{flushright}
+  -- Anônimo
+  \end{flushright}
+\end{quotation}
 
 \section{Estruturas condicionais}
 
-Por enquanto, apenas a estrutura se/então/senão é suportada. 
-Eis um algoritmo simples que verifica se o usuário é maior de idade:
+Por enquanto, apenas a estrutura se/então/senão é suportada. Essa e as
+demais estruturas utilizam expressões, que são avaliadas para que uma
+decisão seja tomada (repetir execução, selecionar bloco de instruções,
+etc). Qualquer expressão pode ser avaliada como expressão lógica.
+Expressões numéricas de valor ``0'' são avaliadas como falso. Demais valores
+numéricos são avaliados como verdadeiro. Valores literais nulos, da mesma forma,
+são avaliados como falso, e demais textos, como verdadeiro. Para maiores
+detalhes sobre expressões, veja a seção \ref{sec:expr}.
+
+ \begin{verbatim}
+enquanto x faça                   //depende do valor de x
+enquanto "nome" = "nome" faça     //avalia como verdadeiro
+enquanto verdadeiro faça          //avalia como verdadeiro
+enquanto 3+5 faça                 //avalia 8 como verdadeiro
+enquanto "nome" faça              //avalia como verdadeiro
+enquanto 0 faça                   //avalia 0 como falso
+enquanto "" faça                  //avalia como falso
+enquanto '' faça                  //avalia como falso
+ \end{verbatim}
+
+O programa \ref{programa_exemplo_condicional} ilustra um algoritmo simples
+que verifica se o usuário é maior de idade.
+\newline
 
 \begin{program}
  \begin{verbatim}
@@ -492,9 +526,9 @@ início
     imprima("menor", "!");
   fim-se
 fim
-  \end{verbatim}
-  %\label{programa_exemplo_condicional}
-  \caption{Exemplo de programa que utiliza estrutura condicional.}
+  \end{verbatim}  
+  \caption{Exemplo de programa que utiliza estrutura condicional.
+\label{programa_exemplo_condicional}}
 \end{program}
 
 Alguns pontos a serem considerados:
@@ -506,22 +540,23 @@ Alguns pontos a serem considerados:
 conflitos.
 
   \item
-  O operador de atribuição é o pascal-like ``:=''.4
+  O operador de atribuição é o \textit{pascal-like} ``:=''.
 
   \item
-  A função interna ``leia'' pode ser usada por variáveis de qualquer
-tipo primitivo. 
+  A função interna ``leia'' pode ser usada por variáveis primitivas de qualquer
+tipo.
 
   \item
   A função ``imprima'' recebe um número de argumentos variáveis, que podem ser
-  constantes literais, variáveis primitivas ou indices de vetores/matrizes. Os
+  constantes literais (números, textos entre aspas, caracteres entre aspas
+simples,...), variáveis primitivas ou indices de vetores/matrizes. Os
   valores são concatenados e adicionados de um caractere EOL (end of line, ou
   fim de linha).
 
   \item
   Já vimos que strings/literais constantes são denotados por texto entre aspas duplas ("). Tal qual em C, 
-  um caractere entre aspas simples (') é um caractere constante que, da mesma forma, pode permitir escapes como 
-  '$\backslash$n'.
+  um caractere entre aspas simples (') é um caractere constante que,
+também, permite escapes para representar caracteres como EOL ('$\backslash$n').
 
   \item
   Assim como a palavra-chave ``variáveis'', ``então'' e ``senão'' devem ser acentuadas. 
@@ -532,8 +567,9 @@ tipo primitivo.
   \item
   Como em ``variáveis/fim-variáveis'', blocos ``se'' tem seus respectivos e obrigatórios ``fim-se''. 
   Não há a opção de ignorar a definição do bloco quando apenas um enunciado é
-  usado, como na linguagem C onde o uso de ``{}'' é opcional. Também, não há 
-  imposições  sobre a indentação.
+  usado, como na linguagem C onde o uso de ``\{\}'' é opcional. Também, não há 
+  imposições  sobre a indentação. O programa \ref{programa_se_incorreto}
+ilustra esse assunto.
 
 \end{itemize}
 
@@ -547,8 +583,9 @@ início
     imprima("ok");
   imprima("estou dentro ou fora do bloco \"se\"?");
 fim 
-  \end{verbatim}
-  \caption{Uso incorreto de estrutura condicional.}
+  \end{verbatim}  
+  \caption{Uso incorreto de estrutura condicional.
+\label{programa_se_incorreto}}
 \end{program}
 
 
@@ -558,7 +595,7 @@ fim
 
 A estrutura ``enquanto'' é a mais básica e comum das estruturas de repetição. Seu funcionamento é o mesmo que
 em outras linguagens populares, onde um conjunto de instruções é executado repetidamente enquanto o valor 
-lógico de uma dada expressão for avaliada como ``verdadeiro''.
+lógico de uma dada expressão for avaliado como ``verdadeiro''.
 
 \begin{program}
   \begin{verbatim}
@@ -590,23 +627,7 @@ fim
 
 
 Assim como na estrutura ``se/então'', parênteses em volta da expressão são
-opcionais. Qualquer expressão que possa ter seu valor avaliado como numérico é
-uma expressão lógica válida. As expressões que não podem ser avaliadas
-lógicamente são as que tem seu valor avaliado como literal. Portanto, são
-comandos válidos:
-
- \begin{verbatim}
-enquanto verdadeiro faça          //ok
-enquanto 3+5 faça                 //ok, avalia 8 como verdadeiro
-enquanto 0 faça                   //ok, avalia 0 como falso
-enquanto x faça                   //ok, sendo x uma variável numérica ou lógica
-enquanto ``nome'' = ``nome'' faça //ok, valor de expressão lógica (=) avaliada como verdadeiro
-enquanto ``nome'' faça            //erro: literal não pode ser avaliado como lógico
-
-  \end{verbatim}
-
-
-Para maiores detalhes sobre expressões, veja a seção \ref{sec:expr}.
+opcionais e as expressões seguem as mesmas regras.
 
 \subsection{A estrutura ``para''}
 
@@ -628,19 +649,19 @@ Onde:
  \item 
   ``variável'' deve ser uma variável numérica;
   \item
-  ``expressão'' deve ser uma expressão numérica
+  ``expressão'' deve ser uma expressão que tem seu valor avaliado como numérico;
   \item
   ``passo'', se existir, deve ser seguido por um inteiro constante.
 \end{itemize}
   
-As expressões de/até constrolam os valores que a variável numérica terá no
+As expressões de/até controlam os valores que a variável numérica terá no
 início e no fim do laço, respectivamente. Tanto o controle da frequência, quanto
 a decisão de incrementar ou decrementar a variável de controle é feita pelo
 termo opicional ``passo'', e seu valor padrão é 1. Por exemplo, para iterar o
-valor de uma variável numérica ``x'' de 0 até 10, de 2 em 2, escreve-se: 
+valor de uma variável numérica ``x'' de 0 até 10, escreve-se: 
 
   \begin{verbatim}
-para x de 0 até 10 passo 2 faça
+para x de 0 até 10 faça
   //comandos...
 fim-para
   \end{verbatim}
@@ -693,10 +714,8 @@ baixo nível.
 
 \begin{verbatim}  
 //código em C
-for(x = 0; x <= 10; x++) {  } 
-
+for(x = 0; x <= 10; x++);
 printf("%d", x); //imprime ``11''
-
 //--------------
 
 //código equivalente em G-Portugol
@@ -1370,7 +1389,8 @@ possível, por exemplo, declarar uma variável em G-Portugol com o nome de
 compilador pode emitir erros, visto que \textit{printf} é uma função da
 biblioteca padrão, usada no código C resultante. Da mesma forma,
 identificadores com \textit(underlines) antes ou depois em seus nomes
-(como ``__leia_texto'') devem ser evitados, pois muitos identificadores
+(como ``\underline{ }\underline{ }leia\underline{ }texto'') devem ser evitados,
+pois muitos identificadores
 internos utilizam essas convenções de nomeação, e seu uso pode acarretar em
 conflitos durante a tradução.
 
