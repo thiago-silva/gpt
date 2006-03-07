@@ -47,8 +47,6 @@ bool Variable::checkBounds(list<string>& d) {
   list<int>::iterator it = dimensions.begin();
   list<string>::iterator ot = d.begin();
 
-  //no need for dim.size() == d.size(). Semantic check wouldn't allow
-
   int num;
   for( ; it != dimensions.end(); ++it, ++ot) {
     num = atoi((*ot).c_str());
@@ -546,16 +544,20 @@ ExprValue InterpreterEval::getLValueValue(LValue& l) {
   if(var.isPrimitive) {
     value.value = var.primitiveValue;
   } else {
-    if(var.checkBounds(l.dims)) {
-      value.value = var.getValue(l.dims);
+    if(l.dims.size()) { //if mat[x][x][x]...
+      if(var.checkBounds(l.dims)) {
+        value.value = var.getValue(l.dims);
+//         value.values = var.values;
+      } else {
+        stringstream s;
+        s << PACKAGE << ": Erro de execução próximo a linha " << currentLine
+            << " - Overflow em \"" << l.name
+            << l.dimsToString() << "\". Abortando..." << endl;
+        Display::self()->showError(s);
+        exit(1);
+      }
+    } else { //if func(mat)
       value.values = var.values;
-    } else {
-      stringstream s;
-      s << PACKAGE << ": Erro de execução próximo a linha " << currentLine
-          << " - Overflow em \"" << l.name
-          << l.dimsToString() << "\". Abortando..." << endl;
-      Display::self()->showError(s);
-      exit(1);
     }
   }
   return value;
@@ -794,6 +796,9 @@ ExprValue InterpreterEval::executeLeia() {
 }
 
 void InterpreterEval::executeImprima(list<ExprValue>& args) {
+  ios_base::fmtflags old = cout.flags(ios_base::fixed);
+  int oldp = cout.precision(2);
+
   stringstream s;
   for(list<ExprValue>::iterator it = args.begin(); it != args.end(); ++it) {
     ExprValue ss = (*it);
@@ -801,7 +806,7 @@ void InterpreterEval::executeImprima(list<ExprValue>& args) {
       case TIPO_INTEIRO:
         cout << (int) atoi((*it).value.c_str());
         break;
-      case TIPO_REAL:
+      case TIPO_REAL:        
         cout << (float) atof((*it).value.c_str());
         break;
       case TIPO_CARACTERE:
@@ -823,6 +828,9 @@ void InterpreterEval::executeImprima(list<ExprValue>& args) {
   }
   cout << endl;
   cout.flush();
+
+  cout.flags(old);
+  cout.precision(oldp);
 }
 
 // void InterpreterEval::parseLiteral(string& lit) {
