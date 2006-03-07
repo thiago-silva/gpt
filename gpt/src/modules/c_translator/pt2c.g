@@ -844,10 +844,31 @@ element[int expecting_type] returns [production p]
   ;
 
 literal returns [production p]
-  : s:T_STRING_LIT        {p.expr.first=TIPO_LITERAL;   p.expr.second = "\""; p.expr.second += s->getText();p.expr.second += "\"";}
+  : s:T_STRING_LIT        
+    {
+      p.expr.first=TIPO_LITERAL;   
+      if(s->getText().length() == 0) {
+        p.expr.second = "0";
+      } else {
+        p.expr.second = "\""; 
+        p.expr.second += s->getText();
+        p.expr.second += "\"";
+      }
+    }
   | i:T_INT_LIT           {p.expr.first=TIPO_INTEIRO;   p.expr.second = i->getText();}
   | r:T_REAL_LIT          {p.expr.first=TIPO_REAL;      p.expr.second = r->getText();}
-  | c:T_CARAC_LIT         {p.expr.first=TIPO_CARACTERE; p.expr.second = "'"; p.expr.second += c->getText();p.expr.second += "'";}
+  | c:T_CARAC_LIT         
+    {
+      if(c->getText().length() > 0) {
+        p.expr.first=TIPO_CARACTERE; 
+        p.expr.second = "'"; 
+        p.expr.second += c->getText();
+        p.expr.second += "'";
+      } else {
+        p.expr.first=TIPO_CARACTERE; 
+        p.expr.second = "0";
+      }
+    }
   | v:T_KW_VERDADEIRO     {p.expr.first=TIPO_LOGICO;    p.expr.second = "TRUE";}
   | f:T_KW_FALSO          {p.expr.first=TIPO_LOGICO;    p.expr.second = "FALSE";}
   ;

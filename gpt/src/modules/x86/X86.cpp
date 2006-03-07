@@ -866,7 +866,9 @@ void X86::writeLValueExpr(pair< pair<int, bool>, string>& lv) {
 }
 
 string X86::toChar(const string& str) {
-  if(str[0] != '\\') {
+  if(str.length() == 0) {
+    return "0";
+  } else if(str[0] != '\\') {
     return str;
   } else {
     string ret;

@@ -686,7 +686,15 @@ element[int expecting_type] returns [int etype]
   ;
 
 literal returns [pair<int, string> p]
-  : s:T_STRING_LIT        {p.second = x86.addGlobalLiteral(s->getText());p.first = TIPO_LITERAL;}
+  : s:T_STRING_LIT        
+    {
+      if(s->getText().length() > 0) {
+        p.second = x86.addGlobalLiteral(s->getText());
+      } else {
+        p.second = "0";
+      }
+      p.first = TIPO_LITERAL;
+    }
   | i:T_INT_LIT           {p.second = i->getText();p.first = TIPO_INTEIRO;}
   | c:T_CARAC_LIT         {p.second = x86.toChar(c->getText());p.first = TIPO_CARACTERE;}
   | v:T_KW_VERDADEIRO     {p.second = "1";p.first = TIPO_LOGICO;}
