@@ -54,7 +54,7 @@ GPT* GPT::self() {
 }
 
 void GPT::reportDicas(bool value) {
-  Display::self()->showTips(value);
+  GPTDisplay::self()->showTips(value);
 }
 
 string GPT::createTmpFile() {
@@ -85,7 +85,7 @@ void GPT::showHelp() {
           "   -d            exibe dicas no relatório de erros\n\n"
           "   Maiores informações no manual.\n";
 
-  Display::self()->showMessage(s);
+  GPTDisplay::self()->showMessage(s);
 }
 
 void GPT::showVersion() {
@@ -94,7 +94,7 @@ void GPT::showVersion() {
           "Versão  : " << VERSION << "\n"
           "Website : http://gpt.berlios.de\n"
           "Copyright (C) 2003-2006 Thiago Silva <thiago.silva@kdemail.net>\n\n";
-  Display::self()->showMessage(s);
+  GPTDisplay::self()->showMessage(s);
 }
 
 bool GPT::prologue(const string& ifname) {
@@ -106,7 +106,7 @@ bool GPT::prologue(const string& ifname) {
     fi.open(ifname.c_str(), ios_base::in);
     if(!fi) {
       s << PACKAGE << ": não foi possível abrir o arquivo: \"" << ifname << "\"" << endl;
-      Display::self()->showError(s);
+      GPTDisplay::self()->showError(s);
       goto bail;
     }
 
@@ -116,7 +116,7 @@ bool GPT::prologue(const string& ifname) {
   } else { //shell pipe
     if(cin.rdbuf()->in_avail() == 0) {
       s << PACKAGE << ": não existem dados na entrada padrão" << endl;
-      Display::self()->showError(s);
+      GPTDisplay::self()->showError(s);
       goto bail;
     }
 
@@ -149,7 +149,7 @@ bool GPT::compile(const string& ifname, const string& ofname, bool genBinary) {
     fo.open(ofname.c_str(), ios_base::out);
     if(!fo) {
       s << PACKAGE << ": não foi possível abrir o arquivo: \"" << ofname << "\"" << endl;
-      Display::self()->showError(s);
+      GPTDisplay::self()->showError(s);
       goto bail;
     }
     fo << asmsrc;
@@ -158,7 +158,7 @@ bool GPT::compile(const string& ifname, const string& ofname, bool genBinary) {
     fo.open(ftmpname.c_str(), ios_base::out);
     if(!fo) {
       s << PACKAGE << ": erro ao processar arquivo temporário" << endl;
-      Display::self()->showError(s);
+      GPTDisplay::self()->showError(s);
       goto bail;
     }
     fo << asmsrc;
@@ -169,7 +169,7 @@ bool GPT::compile(const string& ifname, const string& ofname, bool genBinary) {
 
     if(system(cmd.str().c_str()) == -1) {
       s << PACKAGE << ": não foi possível invocar gcc." << endl;
-      Display::self()->showError(s);
+      GPTDisplay::self()->showError(s);
       goto bail;
     }
 
@@ -204,7 +204,7 @@ bool GPT::translate2C(const string& ifname, const string& ofname) {
   fo.open(ofname.c_str(), ios_base::out);
   if(!fo) {
     s << PACKAGE << ": não foi possível abrir o arquivo: \"" << ofname << "\"" << endl;
-    Display::self()->showError(s);
+    GPTDisplay::self()->showError(s);
     goto bail;
   }
   fo << c_src;
@@ -239,8 +239,8 @@ bool GPT::parse(istream& fi) {
 
     parser.algoritmo();
 
-    if(Display::self()->hasError()) {
-      Display::self()->showErrors();
+    if(GPTDisplay::self()->hasError()) {
+      GPTDisplay::self()->showErrors();
       return false;
     }
 
@@ -248,30 +248,30 @@ bool GPT::parse(istream& fi) {
 
     if(!_astree) {
       s << PACKAGE << ": erro interno: no parse tree" << endl;
-      Display::self()->showError(s);
+      GPTDisplay::self()->showError(s);
       return false;
     }
     SemanticWalker semantic(_stable);
     semantic.algoritmo(_astree);
 
-    if(Display::self()->hasError()) {
-      Display::self()->showErrors();
+    if(GPTDisplay::self()->hasError()) {
+      GPTDisplay::self()->showErrors();
       return false;
     }
     return true;
   }
   catch(ANTLRException& e) {
     s << PACKAGE << ": erro interno: " << e.toString() << endl;
-    Display::self()->showError(s);
+    GPTDisplay::self()->showError(s);
     return false;
   }
   catch(exception& e) {
     s << PACKAGE << ": erro interno: " << e.what() << endl;
-    Display::self()->showError(s);
+    GPTDisplay::self()->showError(s);
     return false;
   }
 
   s << "GPT::parse: bug, nao deveria executar essa linha!" << endl;
-  Display::self()->showError(s);
+  GPTDisplay::self()->showError(s);
   return false;
 }

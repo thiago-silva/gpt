@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "X86.hpp"
-#include "Display.hpp"
+#include "GPTDisplay.hpp"
 
 #include <stdlib.h>
 
@@ -227,7 +227,7 @@ void X86::declarePrimitive(int decl_type, const string& name, int type) {
         writeDATA(s.str());
         break;
       default:
-        Display::self()->showError("Erro interno: tipo nao suportado (X86::declarePrimitive).");
+        GPTDisplay::self()->showError("Erro interno: tipo nao suportado (X86::declarePrimitive).");
         exit(1);
     }
   } else if(decl_type == VAR_PARAM) {
@@ -235,7 +235,7 @@ void X86::declarePrimitive(int decl_type, const string& name, int type) {
   } else if(decl_type == VAR_LOCAL) {
     _subprograms[currentScope()].declareLocal(name);
   } else {
-    Display::self()->showError("Erro interno: X86::declarePrimitive).");
+    GPTDisplay::self()->showError("Erro interno: X86::declarePrimitive).");
     exit(1);
   }
 }
@@ -258,7 +258,7 @@ void X86::declareMatrix(int decl_type, int type, string name, list<string> dims)
         s << X86::makeID(name) << " times " << size << " dd 0";
         break;
       default:
-        Display::self()->showError("Erro interno: tipo nao suportado (X86::declarePrimitive).");
+        GPTDisplay::self()->showError("Erro interno: tipo nao suportado (X86::declarePrimitive).");
         exit(1);
     }
     writeDATA(s.str());
@@ -267,7 +267,7 @@ void X86::declareMatrix(int decl_type, int type, string name, list<string> dims)
   } else if(decl_type == VAR_LOCAL) {
     _subprograms[currentScope()].declareLocal(name, size);
   } else {
-    Display::self()->showError("Erro interno: X86::declareMatrix).");
+    GPTDisplay::self()->showError("Erro interno: X86::declareMatrix).");
     exit(1);
   }
 }
@@ -319,7 +319,7 @@ string X86::translateFuncLeia(const string& id, int type) {
     case TIPO_INTEIRO:
       return "leia_inteiro";
     default:
-      Display::self()->showError("Erro interno: tipo nao suportado (x86::translateFuncLeia).");
+      GPTDisplay::self()->showError("Erro interno: tipo nao suportado (x86::translateFuncLeia).");
       exit(1);
   }
 }
@@ -337,7 +337,7 @@ string X86::translateFuncImprima(const string& id, int type) {
     case TIPO_INTEIRO:
       return "imprima_inteiro";
     default:
-      Display::self()->showError("Erro interno: tipo nao suportado (x86::translateFuncImprima).");
+      GPTDisplay::self()->showError("Erro interno: tipo nao suportado (x86::translateFuncImprima).");
       exit(1);
   }
 }

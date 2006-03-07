@@ -22,7 +22,7 @@
 header {
   #include "BasePortugolParser.hpp"
   #include "PortugolAST.hpp"
-  #include "Display.hpp"
+  #include "GPTDisplay.hpp"
 }
 
 options {

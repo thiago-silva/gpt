@@ -20,7 +20,7 @@
 
 #include "config.h"
 
-#include "Display.hpp"
+#include "GPTDisplay.hpp"
 #include "GPT.hpp"
 
 #include <sstream>
@@ -128,18 +128,18 @@ int init(int argc, char** argv) {
            } else {
             s << PACKAGE << ": opção inválida: -" <<  char(optopt) << endl;
            }
-           Display::self()->showError(s);
+           GPTDisplay::self()->showError(s);
            goto bail;
      default:
         s << PACKAGE << ": erro interno." << endl;
-        Display::self()->showError(s);
+        GPTDisplay::self()->showError(s);
         goto bail;
     }
   }
 
   if(count_cmds > 1) {
     s << PACKAGE << ": mais de um comando selecionado." << endl;
-    Display::self()->showError(s);
+    GPTDisplay::self()->showError(s);
     goto bail;
   }
 
@@ -148,7 +148,7 @@ int init(int argc, char** argv) {
       _ifilename = argv[optind];
     } else {
       s << PACKAGE << ": nenhum arquivo especificado." << endl;
-      Display::self()->showError(s);
+      GPTDisplay::self()->showError(s);
       goto bail;
     }
   }
@@ -156,7 +156,7 @@ int init(int argc, char** argv) {
   if(CMD_INTERPRET == cmd) {
     if((_port != DEFAULT_PORT) && (atoi(_port.c_str()) == 0)) {
       s << PACKAGE << ": porta de conexão inválida: \"" << _port << "\"" << endl;
-      Display::self()->showError(s);
+      GPTDisplay::self()->showError(s);
       goto bail;
     }
   }

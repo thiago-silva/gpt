@@ -20,7 +20,7 @@
 
 
 header {
-  #include "Display.hpp"
+  #include "GPTDisplay.hpp"
   #include <string>
   #include <sstream>
   #include <iostream>
@@ -268,14 +268,14 @@ T_OCTAL_LIT
            (str.find("9",0) != string::npos) ) {
           stringstream s;
           s << "\"" << $getText << "\" não é um valor octal válido";
-          Display::self()->add(s.str(), getLine());          
+          GPTDisplay::self()->add(s.str(), getLine());          
           haserror = true;
         } else {
           for(unsigned int i = 2; i < str.length(); ++i) {
             if(!isdigit(str[i])) {
               stringstream s;
               s << "\"" << str << "\" não é um valor hexadecimal válido";
-              Display::self()->add(s.str(), getLine());
+              GPTDisplay::self()->add(s.str(), getLine());
               haserror = true;
               break;
             }
@@ -305,7 +305,7 @@ T_HEX_LIT
         if(!isxdigit(str[i])) {
           stringstream s;
           s << "\"" << str << "\" não é um valor hexadecimal válido";
-          Display::self()->add(s.str(), getLine());
+          GPTDisplay::self()->add(s.str(), getLine());
           haserror = true;
           break;
         }
@@ -333,7 +333,7 @@ T_BIN_LIT
       if((str[i] != '0') && (str[i] != '1')) {
         stringstream s;
         s << "\"" << str << "\" não é um valor binário válido";
-        Display::self()->add(s.str(), getLine());
+        GPTDisplay::self()->add(s.str(), getLine());
         haserror = true;
         break;
       }
@@ -438,7 +438,7 @@ exception
 catch[antlr::RecognitionException] {  
   stringstream s;
   s << "AVISO: comentário iniciado na linha " << line << " não termina com \"*/\".";
-  Display::self()->add(s.str(), getLine());
+  GPTDisplay::self()->add(s.str(), getLine());
 
   _ttype = antlr::Token::SKIP;
 }
@@ -516,7 +516,7 @@ options {
     if(hasLatim && (testLiteralsTable(_ttype) == T_IDENTIFICADOR)) {
       stringstream s;
       s << "Identificador \"" << $getText << "\" não pode ter caracteres especiais.";
-      Display::self()->add(s.str(), getLine());
+      GPTDisplay::self()->add(s.str(), getLine());
     }
   }
   ;
@@ -543,6 +543,6 @@ T_INVALID
       } else {
         s << "Faltando fechar aspas";
       }
-      Display::self()->add(s.str(), getLine());
+      GPTDisplay::self()->add(s.str(), getLine());
     }
   ;

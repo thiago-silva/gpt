@@ -21,7 +21,7 @@
 
 #include "BasePortugolParser.hpp"
 #include "PortugolParserTokenTypes.hpp"
-#include "Display.hpp"
+#include "GPTDisplay.hpp"
 
 
 string BasePortugolParser::expecting_algorithm_name = "nome do algoritmo";
@@ -111,10 +111,10 @@ int BasePortugolParser::reportParserError(int line, string expecting, string fou
 
   stringstream s;
   s << "Esperando " << expecting << str;
-  return Display::self()->add(s.str(), line);
+  return GPTDisplay::self()->add(s.str(), line);
 
 }
 
 void BasePortugolParser::printTip(const string& msg, int line, int cd) {
-  Display::self()->addTip(msg, line, cd);
+  GPTDisplay::self()->addTip(msg, line, cd);
 }

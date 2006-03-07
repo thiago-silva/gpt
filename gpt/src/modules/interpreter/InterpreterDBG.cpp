@@ -22,7 +22,7 @@
 
 #include "InterpreterDBG.hpp"
 #include "InterpreterEval.hpp"
-#include "Display.hpp"
+#include "GPTDisplay.hpp"
 
 #ifdef WIN32
   #include <winsock.h>
@@ -82,7 +82,7 @@ void InterpreterDBG::init(string host, int port) {
   if(clientsock < 0) {
     stringstream s;
     s << PACKAGE << ": não foi possível criar socket\n";
-    Display::self()->showError(s);
+    GPTDisplay::self()->showError(s);
     return;
   }
 
@@ -94,7 +94,7 @@ void InterpreterDBG::init(string host, int port) {
     if(SIG_ERR == signal(SIGPIPE, sigPipeHandler)) {
       stringstream s;
       s << PACKAGE << ": erro interno em InterpreterDBG::init" << endl;
-      Display::self()->showError(s);
+      GPTDisplay::self()->showError(s);
     }
   }
 #else

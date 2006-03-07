@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef DISPLAY_HPP
-#define DISPLAY_HPP
+#ifndef GPTDISPLAY_HPP
+#define GPTDISPLAY_HPP
 
 #include <map>
 #include <list>
@@ -58,9 +58,9 @@ public:
     string tip;
   };
 
-  ~Display();
+  ~GPTDisplay();
 
-  static Display* self();
+  static GPTDisplay* self();
 
 
   void showError(stringstream& s);
@@ -86,9 +86,9 @@ public:
 
   void clear();
 private:
-  Display();
+  GPTDisplay();
 
-  static Display* _self;
+  static GPTDisplay* _self;
 
   string toOEM(const string& str);
 
@@ -96,7 +96,7 @@ private:
   void showTip(ErrorMsg&);
 
   void processAndAdd(const string&, int);
-  void Display::processTipAndAdd(const string& msg, int line, int cd);
+  void processTipAndAdd(const string& msg, int line, int cd);
 
   int _totalErrors;
   bool _stopOnError;

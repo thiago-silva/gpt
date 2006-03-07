@@ -22,7 +22,7 @@
 
 #include "InterpreterEval.hpp"
 #include "InterpreterDBG.hpp"
-#include "Display.hpp"
+#include "GPTDisplay.hpp"
 
 void ExprValue::setValue(string str) {
   value = str;
@@ -141,7 +141,7 @@ Variable& Variables::get(const string& name) {
     if(globalVars->find(name) == globalVars->end()) {
       stringstream s;
       s << "BUG: variável " << name << " não encontrada." << endl;
-      Display::self()->showError(s);
+      GPTDisplay::self()->showError(s);
       exit(1);
     } else {
       return (*globalVars)[name];
@@ -455,7 +455,7 @@ ExprValue InterpreterEval::evaluateDiv(ExprValue& left, ExprValue& right) {
     stringstream s;
     s << PACKAGE << ": Erro de execução próximo a linha " << currentLine
         << " - Divisão por 0 é ilegal. Abortando..." << endl;
-    Display::self()->showError(s);
+    GPTDisplay::self()->showError(s);
     exit(1);
   }
 
@@ -553,7 +553,7 @@ ExprValue InterpreterEval::getLValueValue(LValue& l) {
         s << PACKAGE << ": Erro de execução próximo a linha " << currentLine
             << " - Overflow em \"" << l.name
             << l.dimsToString() << "\". Abortando..." << endl;
-        Display::self()->showError(s);
+        GPTDisplay::self()->showError(s);
         exit(1);
       }
     } else { //if func(mat)
@@ -581,7 +581,7 @@ void InterpreterEval::execPasso(LValue& lvalue, int passo) {
       stringstream err;
       err << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lvalue.name
           << lvalue.dimsToString() << "\". Abortando..." << endl;
-      Display::self()->showError(err);
+      GPTDisplay::self()->showError(err);
       exit(1);
     }
   }
@@ -600,7 +600,7 @@ bool InterpreterEval::execLowerEq(LValue& lv, ExprValue& ate) {
       stringstream s;
       s << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lv.name
           << lv.dimsToString() << "\". Abortando..." << endl;
-      Display::self()->showError(s);
+      GPTDisplay::self()->showError(s);
       exit(1);
     }
   }
@@ -619,7 +619,7 @@ bool InterpreterEval::execBiggerEq(LValue& lv, ExprValue& ate) {
       stringstream s;
       s << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lv.name
           << lv.dimsToString() << "\". Abortando..." << endl;
-      Display::self()->showError(s);
+      GPTDisplay::self()->showError(s);
       exit(1);
     }
   }
@@ -637,7 +637,7 @@ void InterpreterEval::execAttribution(LValue& lvalue, ExprValue& v) {
       stringstream s;
       s << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lvalue.name
           << lvalue.dimsToString() << "\". Abortando..." << endl;
-      Display::self()->showError(s);
+      GPTDisplay::self()->showError(s);
       exit(1);
     }
   }
@@ -738,7 +738,7 @@ ExprValue InterpreterEval::execBuiltInFunction(const string& fname, list<ExprVal
   } else {
     stringstream s;
     s << PACKAGE << ":BUG: No built-in function called \"" << fname << "\"" << endl;
-    Display::self()->showError(s);
+    GPTDisplay::self()->showError(s);
     return v;
   }
 }
@@ -778,7 +778,7 @@ void InterpreterEval::nextCmd(int line) {
         break;
       default:
         s << PACKAGE << ": BUG: unknown cmd." << endl;
-        Display::self()->showError(s);
+        GPTDisplay::self()->showError(s);
         break;
     }
   }
