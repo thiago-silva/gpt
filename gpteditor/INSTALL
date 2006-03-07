@@ -36,7 +36,7 @@ Instalacao Basica
       Se voce deseja habilitar a opcao "analise em segundo plano",
 			precisarah ter compilado o GPT com a opcao "--enable-install-devel".
 			
-			Apos ter compilado o GPT, execute o "configure" com a opcao
+			Apos ter compilado o GPT, execute o "configure" do GPTEditor com a opcao
 			"--enable-bg-parser"
 		
 			$ ./configure --enable-bg-parser
