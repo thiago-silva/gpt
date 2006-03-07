@@ -25,32 +25,25 @@
 .\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 .\" SUCH DAMAGE.
 .\"
-.\"	$Id$
 .\"
 .TH GPT 1
 .SH NOME
-gpt \- tradutor/compilador para a linguagem G-Portugol
+gpt \- compilador, interpretador e tradutor da linguagem G-Portugol
 
 .SH SINOPSE
   gpt 
 [ 
-.BR \-vh
+.BR \-vhid
 ] [
-.BI \-o " arquivo" 
-]
+.BI \-ots  
+arq_saída
+] arq_entrada
 
 .SH DESCRIÇÃO
 .I gpt
-compila programas escritos na linguagem G-Portugol traduzindo estes para a linguagem C e, posteriormente, compilando o resultado com o 
-.BR gcc(1)
-
+é um compilador simples para a linguagem G-portugol. Além de criar executáveis,
+pode interpretar algoritmos e traduzí-los para a linguagem C.
 .SH OPTIONS
-.TP
-.BI \-o " arquivo" 
-Grava o arquivo executável com o nome 
-.I arquivo.
-.br
-.ns
 .TP
 .BI \-v
 Exibe informações de versão e termina execução.
@@ -59,10 +52,47 @@ Exibe informações de versão e termina execução.
 .TP
 .BI \-h
 Exibe sumário de opções termina execução.
-
-
+.br
+.ns
+.TP
+.TP
+.BI \-i
+Executa o algoritmo em modo 
+.I interpreter.
+.br
+.ns
+.TP
+.BI \-d
+Mostra dicas no relatório de erros.
+.br
+.ns
+.TP
+.BI \-o " arq_saída" 
+Compila
+.I arq_entrada
+e salva o arquivo executável com o nome
+.I arq_saída.
+.br
+.ns
+.TP
+.BI \-t " arq_saída"
+Traduz
+.I arq_entrada
+para a linguagem C e salva o arquivo com o código resultante
+como
+.I arq_saída.
+.br
+.ns
+.TP
+.BI \-s " arq_saída"
+Compila
+.I arq_entrada
+e salva o arquivo com código em assembly como
+.I arq_saída.
+.br
+.ns
 .SH VEJA TAMBÉM
-.BR gcc (1)
+.BR nasm (1)
 
 .SH INFORMAÇÕES ADICIONAIS
 
