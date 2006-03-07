@@ -307,7 +307,7 @@ stm_para
         //(ps=passo)?
 
         {
-          if(_t->getType() == T_KW_PASSO) {
+          if(_t && (_t->getType() == T_KW_PASSO)) {
             ps=passo(_t);
             _t = _retTree;
           } else {
