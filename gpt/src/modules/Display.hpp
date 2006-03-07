@@ -44,7 +44,7 @@ private:
 
 
 
-class Display {
+class GPTDisplay {
 public:
   const int MAX_ERRORS;
 

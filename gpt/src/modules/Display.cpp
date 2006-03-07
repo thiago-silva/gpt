@@ -17,7 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "Display.hpp"
+#include "GPTDisplay.hpp"
 
 #ifdef WIN32
   #include <windows.h>
@@ -27,22 +27,22 @@
 
 using namespace std;
 
-Display* Display::_self = 0L;
+GPTDisplay* GPTDisplay::_self = 0L;
 
-Display::Display()
+GPTDisplay::GPTDisplay()
   : MAX_ERRORS(10), _totalErrors(0), _stopOnError(false), _showTips(false)
 {
 }
 
-Display::~Display()
+GPTDisplay::~GPTDisplay()
 {
 }
 
-int Display::totalErrors() {
+int GPTDisplay::totalErrors() {
   return _totalErrors;
 }
 
-string Display::toOEM(const string& str) {
+string GPTDisplay::toOEM(const string& str) {
   #ifdef WIN32
     string ret;
     char buffer [str.length()];
@@ -54,29 +54,29 @@ string Display::toOEM(const string& str) {
   #endif
 }
 
-void Display::showError(stringstream& s) {
+void GPTDisplay::showError(stringstream& s) {
   cerr << toOEM(s.str());
 }
 
-void Display::showError(const string& str) {
+void GPTDisplay::showError(const string& str) {
   cerr << toOEM(str) << endl;
 }
 
-void Display::showMessage(stringstream& s) {
+void GPTDisplay::showMessage(stringstream& s) {
   cout << toOEM(s.str());
   cout.flush();
 }
 
 
-void Display::stopOnError(bool val) {
+void GPTDisplay::stopOnError(bool val) {
   _stopOnError = val;
 }
 
-bool Display::hasError() {
+bool GPTDisplay::hasError() {
   return _totalErrors > 0;
 }
 
-void Display::showErrors() {
+void GPTDisplay::showErrors() {
   errors_map_t::iterator it;
   for(it = _errors.begin(); it != _errors.end(); ++it) {
     for(list<ErrorMsg>::iterator lit = it->second.begin(); lit != it->second.end(); ++lit) {
@@ -88,14 +88,14 @@ void Display::showErrors() {
   }
 }
 
-Display* Display::self() {
-  if(!Display::_self) {
-    Display::_self = new Display();
+GPTDisplay* GPTDisplay::self() {
+  if(!GPTDisplay::_self) {
+    GPTDisplay::_self = new GPTDisplay();
   }
-  return Display::_self;
+  return GPTDisplay::_self;
 }
 
-int Display::add(const string& msg, int line) {
+int GPTDisplay::add(const string& msg, int line) {
   _totalErrors++;
   if(_stopOnError) throw UniqueErrorException(msg, line);
 
@@ -113,20 +113,20 @@ int Display::add(const string& msg, int line) {
   return _errors[line].size();
 }
 
-void Display::showError(ErrorMsg& err) {
+void GPTDisplay::showError(ErrorMsg& err) {
   stringstream s;
   s << "Linha: " << err.line << " - " << err.msg << "." << endl;
   showError(s);
 }
 
 
-void Display::showTip(ErrorMsg& err) {
+void GPTDisplay::showTip(ErrorMsg& err) {
   stringstream s;
   s << "\tDica: " << err.tip << "." << endl;
   showError(s);
 }
 
-void Display::addTip(const string& msg, int line, int cd) {
+void GPTDisplay::addTip(const string& msg, int line, int cd) {
   list<ErrorMsg>::iterator it = _errors[line].begin();
 
   for(int i = 0; i < cd-1; ++i,++it);
@@ -134,15 +134,15 @@ void Display::addTip(const string& msg, int line, int cd) {
   (*it).tip = msg;
 }
 
-Display::ErrorMsg Display::getFirstError() {
+GPTDisplay::ErrorMsg GPTDisplay::getFirstError() {
   return *(_errors.begin()->second.begin());
 }
 
-void Display::showTips(bool value) {
+void GPTDisplay::showTips(bool value) {
   _showTips = value;
 }
 
-void Display::clear() {
+void GPTDisplay::clear() {
   _errors.clear();
   _totalErrors = 0;
 }
