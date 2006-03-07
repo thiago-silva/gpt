@@ -36,7 +36,7 @@
 #include <gpt/SemanticWalker.hpp>
 // #include <gpt/SymbolTable.hpp>
 #include <gpt/PortugolAST.hpp>
-#include <gpt/ErrorHandler.hpp>
+#include <gpt/GPTDisplay.hpp>
 
 #include <qtimer.h>
 
@@ -86,21 +86,21 @@ void BackgroundParser::doParse(const QString& text)
     parser.initializeASTFactory(ast_factory);
     parser.setASTFactory(&ast_factory);
 
-//     ErrorHandler::self()->stopOnError(true);
+//     GPTDisplay::self()->stopOnError(true);
 
     parser.algoritmo();
 
     RefPortugolAST tree = parser.getPortugolAST();
-    if(!ErrorHandler::self()->hasError() && tree)
+    if(!GPTDisplay::self()->hasError() && tree)
     {
       SymbolTable stable;
       SemanticWalker semantic(stable);
       semantic.algoritmo(tree);
     }    
 
-    if(ErrorHandler::self()->hasError()) {
-      ErrorHandler::ErrorMsg err = 
-        ErrorHandler::self()->getFirstError();
+    if(GPTDisplay::self()->hasError()) {
+      GPTDisplay::ErrorMsg err = 
+        GPTDisplay::self()->getFirstError();
       kdDebug() << "parse error: " << err.line << ": " << err.msg.c_str() << endl;
       emit sigParseError(err.line, QString(err.msg.c_str()), m_ownerDoc->url());        
     } else {
@@ -124,7 +124,7 @@ void BackgroundParser::doParse(const QString& text)
     kdDebug() << "bgparser: erro interno: " << endl;
   }
 
-  ErrorHandler::self()->clear();
+  GPTDisplay::self()->clear();
 }
 
 #include "backgroundparser.moc"
