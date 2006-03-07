@@ -781,7 +781,10 @@ stm_para
     (stm)*
     {
       unindent();
-      writeln("}");      
+      writeln("}");
+      str.str("");
+      str << var.lvalue.second << " = " << ate.expr.second << ";";
+      writeln(str);
     }
     )
   ;
