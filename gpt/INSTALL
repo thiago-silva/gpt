@@ -3,13 +3,17 @@ Instalacao Basica
 
   o Pre-requisitos
 
-    - ANTLR: 
+    - ANTLR:
         Ferramenta para construcao de compiladores (testado com v2.7.5).
         http://www.antlr.org
 
     - Perl Compatible Regular Expressions: 
         Biblioteca de expressões regulares.
         http://www.pcre.org/
+
+    - NASM - The Netwide Assembler:
+        Assembler usado para compilacao.
+        http://sourceforge.net/projects/nasm
 
   o  Comandos para instalacao padrao:
     
@@ -41,10 +45,10 @@ Instalacao Basica
 
       $ ./configure --enable-install-devel
 
-      Essa opcao eh nescessaria se voce instalar o programa GPTEditor e 
-      deseja utilizar a opcao "analise em segundo plano".
+      Essa opcao eh nescessaria se voce deseja utilizar a opcao
+      "analise em segundo plano" do programa GPTEditor.
 
-      Nota: para desisntalar apenas os arquivos devel (header e libs) use:
+      Nota: para desinstalar apenas os arquivos devel (header e libs) use:
       
       # make uninstall-devel
 
