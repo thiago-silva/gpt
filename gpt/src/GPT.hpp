@@ -56,7 +56,6 @@ private:
 
   bool prologue(const string& ifname);
 
-  bool _reportDicas;
   RefPortugolAST _astree;
   SymbolTable    _stable;
 };

@@ -46,6 +46,7 @@ private:
 
 class Display {
 public:
+  const int MAX_ERRORS;
 
   class ErrorMsg {
     public:
@@ -76,8 +77,12 @@ public:
 
   ErrorMsg getFirstError();
 
-  void showErrors(bool);
+  void showErrors();
   bool hasError();
+
+  int totalErrors();
+
+  void showTips(bool);
 
   void clear();
 private:
@@ -93,8 +98,9 @@ private:
   void processAndAdd(const string&, int);
   void Display::processTipAndAdd(const string& msg, int line, int cd);
 
-  bool _hasError;
+  int _totalErrors;
   bool _stopOnError;
+  bool _showTips;
 
   typedef map<int, list<ErrorMsg> > errors_map_t;
   errors_map_t _errors;

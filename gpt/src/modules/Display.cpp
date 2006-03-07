@@ -30,12 +30,16 @@ using namespace std;
 Display* Display::_self = 0L;
 
 Display::Display()
-  : _hasError(false), _stopOnError(false)
+  : MAX_ERRORS(10), _totalErrors(0), _stopOnError(false), _showTips(false)
 {
 }
 
 Display::~Display()
 {
+}
+
+int Display::totalErrors() {
+  return _totalErrors;
 }
 
 string Display::toOEM(const string& str) {
@@ -69,15 +73,15 @@ void Display::stopOnError(bool val) {
 }
 
 bool Display::hasError() {
-  return _hasError;
+  return _totalErrors > 0;
 }
 
-void Display::showErrors(bool showTips) {
+void Display::showErrors() {
   errors_map_t::iterator it;
   for(it = _errors.begin(); it != _errors.end(); ++it) {
     for(list<ErrorMsg>::iterator lit = it->second.begin(); lit != it->second.end(); ++lit) {
       showError((*lit));
-      if(showTips && (*lit).hasTip) {
+      if(_showTips && (*lit).hasTip) {
         showTip((*lit));
       }
     }
@@ -92,9 +96,13 @@ Display* Display::self() {
 }
 
 int Display::add(const string& msg, int line) {
-  _hasError = true;
+  _totalErrors++;
   if(_stopOnError) throw UniqueErrorException(msg, line);
 
+  if(totalErrors() > MAX_ERRORS) {
+    showErrors();
+    exit(1);
+  }
 
   ErrorMsg err;
   err.line = line;
@@ -130,7 +138,11 @@ Display::ErrorMsg Display::getFirstError() {
   return *(_errors.begin()->second.begin());
 }
 
+void Display::showTips(bool value) {
+  _showTips = value;
+}
+
 void Display::clear() {
   _errors.clear();
-  _hasError = false;
+  _totalErrors = 0;
 }

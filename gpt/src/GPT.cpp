@@ -39,7 +39,6 @@
 GPT* GPT::_self = 0;
 
 GPT::GPT()
-  : _reportDicas(false)
 {
 }
 
@@ -55,7 +54,7 @@ GPT* GPT::self() {
 }
 
 void GPT::reportDicas(bool value) {
-  _reportDicas = value;
+  Display::self()->showTips(value);
 }
 
 string GPT::createTmpFile() {
@@ -241,7 +240,7 @@ bool GPT::parse(istream& fi) {
     parser.algoritmo();
 
     if(Display::self()->hasError()) {
-      Display::self()->showErrors(_reportDicas);
+      Display::self()->showErrors();
       return false;
     }
 
@@ -256,7 +255,7 @@ bool GPT::parse(istream& fi) {
     semantic.algoritmo(_astree);
 
     if(Display::self()->hasError()) {
-      Display::self()->showErrors(_reportDicas);
+      Display::self()->showErrors();
       return false;
     }
     return true;
