@@ -85,7 +85,7 @@ void X86SubProgram::declareParam(const string& param, int type, int msize) {
     declareLocal(param, msize, false);
     writeMatrixCopyCode(param, type, msize);
   }
-  _param_offset -= SizeofDWord;
+  _param_offset += SizeofDWord;
 }
 
 void X86SubProgram::writeMatrixCopyCode(const string& param, int type, int msize) {
@@ -118,7 +118,12 @@ void X86SubProgram::writeMatrixInitCode(const string& varname, int size) {
 
 string X86SubProgram::source() {
   stringstream s;
-  s << name() << ":" << endl;
+  
+  if(_name != X86::EntryPoint) {
+    s << X86::makeID(_name) << ":" << endl;
+  } else {
+    s << _name << ":" << endl;
+  }
   s << _head.str();
 
   if(name() != X86::EntryPoint) {
