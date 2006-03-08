@@ -316,7 +316,7 @@ fcall[int expct_type] returns [int type]
         x86.writeTEXT(s.str());      
         x86.writeTEXT("print_lf"); //\n
       } else {
-        x86.writeTEXT(string("call ") + fname);
+        x86.writeTEXT(string("call ") + X86::makeID(fname));
         if(args) {
           s << "clargs " << args;
           x86.writeTEXT(s.str());
