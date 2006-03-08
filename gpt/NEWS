@@ -1,1 +1,11 @@
-See ChangeLog
+08 de Março de 2006 - gpt 0.9b
+ -Implementação da geração de código executável (x86, PE/ELF. NASM como backend)
+ -GPT portado para MS Windows (testado com compilador MingW32)
+ -Vários bugfixes (ver ChangeLog)
+
+27 de Janeiro de 2006 - gpt 0.8b
+ -Primeira versão publicada.
+ -Recursos oferecidos:
+   +interpretar/depurar;
+   +traduzir algoritmos para C;
+   +compilar algoritmos (traduzindo e usando o GCC como backend).

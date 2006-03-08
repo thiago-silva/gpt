@@ -1,19 +1,19 @@
-G-Portugol - versao: 0.8b
+G-Portugol - versao: 0.9b
 =========================
 
 
 o Sobre a linguagem
 
- G-Portugol eh um dialeto da linguagem portugol 
- (ou portugues estruturado), muito usada para descrever 
- algoritmos de forma livre e espontanea, em portugues e, 
- em geral, livros dedicados ao ensino de algoritmos, logica 
+ G-Portugol é um dialeto da linguagem portugol 
+ (ou português estruturado), muito usada para descrever 
+ algoritmos de forma livre e espontânea, em português e, 
+ em geral, livros dedicados ao ensino de algoritmos, lógica 
  e estruturas de dados incorporam uma forma dessa linguagem. 
   
- A proposta de G-Portugol eh oferecer uma implementacao dessa 
- linguagem, fornecendo ferramentas que oferecam recursos 
- de edicao, compilacao e execução de programas escritos nessa 
- linguagem, de forma a favorecer estudantes que dao os 
+ A proposta de G-Portugol é oferecer uma implementacao dessa 
+ linguagem, fornecendo ferramentas que ofereçam recursos 
+ de edição, compilação e execução de programas escritos nessa 
+ linguagem, de forma a favorecer estudantes que dão os 
  primeiros passos no aprendizado de desenvolvimento de softwares, 
  bem como professores.
 
@@ -27,8 +27,7 @@ o O programa GPT
     -executar algoritmos de forma interpretada;
     -depurar algoritmos interativamente.
 
-
-o Maiores Informacoes
+o Maiores Informações
 
   Website: http://gpt.berlios.de
 

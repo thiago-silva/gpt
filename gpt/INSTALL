@@ -1,21 +1,21 @@
-Instalacao Basica
+Instalação Básica
 =================
 
-  o Pre-requisitos
+  o Pré-requisitos
 
     - ANTLR:
-        Ferramenta para construcao de compiladores (testado com v2.7.5).
+        Ferramenta para construção de compiladores (testado com v2.7.5).
         http://www.antlr.org
 
-    - Perl Compatible Regular Expressions: 
+    - Perl Compatible Regular Expressions (testado com v6.4):
         Biblioteca de expressões regulares.
         http://www.pcre.org/
 
-    - NASM - The Netwide Assembler:
-        Assembler usado para compilacao.
+    - NASM - The Netwide Assembler (testado com v0.89.39):
+        Assembler usado para compilação.
         http://sourceforge.net/projects/nasm
 
-  o  Comandos para instalacao padrao:
+  o  Comandos para instalação padrão:
     
     $ tar xvfz gpt-xxx.tar.gz
     $ cd gpt-xxx
@@ -25,12 +25,12 @@ Instalacao Basica
     # make install
 
 
-  o  Opcoes de configuracao
+  o  Opções de configuração
 
     ANTLR:
-      Se voce instalou o ANTLR em um diretorio nao-padrao ou se o 
-      binario "antlr" nao pode ser encontrado pela variavel de 
-      ambiente PATH, use o  argumento --with-antlr-path.
+      Se voce instalou o ANTLR em um diretório não-padrão ou se o 
+      binário "antlr" não pode ser encontrado pela variável de 
+      ambiente PATH, use o  argumento "--with-antlr-path".
   
       Exemplo:
         $ ./configure --with-antlr=/path/to/antlr
@@ -39,19 +39,19 @@ Instalacao Basica
 
 
     Devel:
-      Se voce deseja que a biblioteca dinamica (.so) e headers do 
+      Se você deseja que a biblioteca dinâmica (.so) e headers do 
       compilador sejam instalados no sistema, execute o script 
       "configure" da seguinte forma:
 
       $ ./configure --enable-install-devel
 
-      Essa opcao eh nescessaria se voce deseja utilizar a opcao
-      "analise em segundo plano" do programa GPTEditor.
+      Essa opcao é nescessária se você deseja utilizar a opção
+      "análise em segundo plano" do programa GPTEditor.
 
       Nota: para desinstalar apenas os arquivos devel (header e libs) use:
       
       # make uninstall-devel
 
-  o  Outras opcoes
+  o  Outras opções
 
     Para maiores detalhes, leia INSTALL.default
