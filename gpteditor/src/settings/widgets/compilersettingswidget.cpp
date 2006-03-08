@@ -53,6 +53,7 @@ CompilerSettingsWidget::CompilerSettingsWidget(QWidget *parent, const char *name
   label->setText(i18n("Arguments:"));
   grid->addWidget(label, 1, 0);
   m_edArgs = new KLineEdit(this);
+  m_edArgs->setEnabled(false);
   grid->addWidget(m_edArgs, 1, 1);
 
 
@@ -98,7 +99,8 @@ void CompilerSettingsWidget::updateSettings()
   GPTEditorSettings::self()->setExecutionMode(m_cpExecutionMode->currentItem());
   GPTEditorSettings::self()->setShell(m_edShell->url());
 //   GPTEditorSettings::self()->setIncludeFile(m_edIncludeFile->url());
-  GPTEditorSettings::self()->setGPTArgs(m_edArgs->text());
+  //GPTEditorSettings::self()->setGPTArgs(m_edArgs->text());
+  GPTEditorSettings::self()->setGPTArgs("");
 }
 
 #include "compilersettingswidget.moc"
