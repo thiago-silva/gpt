@@ -373,7 +373,7 @@ um bloco em escopo global deve ser declarado. Eis um exemplo para estudo:
 
 \begin{program}  
   \begin{verbatim}  
-algoritmo inutil;
+algoritmo teste_variaveis;
 
 variáveis
   x    : inteiro;
@@ -409,17 +409,19 @@ respeito do último exemplo (programa \ref{programa_inutil})
 
 \begin{itemize}
  \item 
-  Observe que o nome do algoritmo (``inutil'') não tem acento. Se declarar o
-algoritmo como ``inútil'' e tentar compilar o código, o seguinte erro será
-exibido:
+  Observe que o nome do algoritmo (``teste\underline{ }variaveis'') não tem
+acento. Se declarar o algoritmo como ``teste\underline{ }variáveis'' e tentar
+compilar o código, o seguinte erro será exibido:
 
-  \textbf{Linha: 1 - ``inútil'' não pode ter caracteres especiais.}
+  \textbf{Linha: 1 - ``teste\underline{ }variáveis'' não pode ter caracteres
+especiais.}
 
   Portanto, identificadores (nomes de variáveis, funções e do algoritmo) não
-  podem ter acentos ou caracteres especiais. A definição de um identificador em
-  G-Portugol é equivalente ao das linguagens populares: uma letra (a-z ou
-  A-Z) seguido de qualquer número de letras ou  números (e underlines).
-  Cedilhas, portanto, também não formam identificadores válidos. 
+  podem ter acentos ou caracteres especiais como \$, \#, \@, etc. A definição de
+um identificador em   G-Portugol é equivalente ao das linguagens populares: uma
+letra (a-z ou A-Z) seguido de qualquer número de letras ou números. Finalmente,
+underlines são permitidos.   Cedilhas, portanto, também não
+formam identificadores válidos. 
 
  \item 
   O segundo ponto, é a palavra-chave ``variáveis'': ela tem acento, e isso é
@@ -847,7 +849,7 @@ está em oferecer uma ferramenta que:
   evidencie os processos relacionados com o desenvolvimento de softwares;
   
   \item
-  estimule a abstração e raciocínio lógico do estudante;
+  estimule a abstração e raciocínio lógico do estudante.
 
 \end{itemize}
 
@@ -883,12 +885,11 @@ das formas léxicas e gramaticais da linguagem G-Portugol.
 Linguagens de programação, em geral, não se utilizam de caracteres especiais
 (ex. caracteres acentuados, cedilhas, e outros que não pertencem ao
 alfabeto inglês) para definição de seu dicionário, visto que são baseadas
-na língua inglesa. Portanto, letras acentuadas não são consideradas. Refletir
-esse aspecto em G-Portugol ignoraria seu objetivo principal.
+na língua inglesa. Portanto, letras acentuadas não são consideradas.
 
 A decisão de incorporar palavras que respeitam a língua portuguesa é
 importante, visto que modificar a linguagem de forma a se afastar de
-sua língua natural (o português) evidencia excessões as quais forçariam os
+sua língua natural (o português) pode evidenciar excessões as quais forçariam os
 usuários (estudantes e professores) a se ater mais com o estudo da linguagem do
 que com o estudo da disciplina em questão. Isso é, a ausência de acentos, por
 exemplo, obriga o usuário a aprender seus termos excepcionais. Além do mais,
@@ -930,7 +931,7 @@ uniforme. Naturalmente, a linguagem portugol já detém uma parcela relevante
 de características que se acomodam nessas diretrizes, no entanto, alguns
 detalhes ainda merecem atenção, como a representação de blocos estruturais.
 
-A simplicidade implica em evitar complexidades que desviam a atenção do
+A simplicidade implica em evitar construções e recursos que desviam a atenção do
 propósito original para detalhes da linguagem. Isso é, apenas recursos
 essenciais devem fazer parte de seu núcleo. Portanto, em um primeiro momento,
 não é interessante equipar a linguagem com recursos como alocação dinâmica de
@@ -944,7 +945,7 @@ Essa diretriz diz respeito a permitir que a linguagem mude em certos aspectos
 o gosto do professor, ou como modo de adapatar a forma de portugol de uma
 dada literatura. Dialetos e formas da linguagem portugol variam de
 literatura para literatura, e pode ser interessante permitir que a linguagem se
-adapte.
+adapte ou oferecer diferentes formas da linguagem.
 
 Entre os aspectos que podem ser adaptados com facilidade se encontram os
 termos léxicos (palavras-chave, operadores,etc), e algumas formas de expressar
@@ -959,6 +960,9 @@ Isso pode ser interessante quando se quer, por exemplo, ensinar uma linguagem
 específica como Pascal, fazendo com que G-Portugol possa usar estruturas
 e operadores semelhantes a esta linguagem, de forma a oferecer uma transição
 mais direta e que aproveita melhor os conhecimentos do estudante.
+
+Atualmente, o programa GPT não implementa mecanismos para esse tipo de
+mudança, sendo nescessario modificar seu código fonte e recompilá-lo. 
 
 \section{Formato Estrutural}
 
@@ -987,7 +991,7 @@ apenas uma sessão informativa no código que, embora não seja um comentário, tem
 o mesmo efeito prático. A adoção dessa declaração pode ser discutida, e
 foi escolhida por ser bastante utilizada em literaturas.
   
-\subsection{Declaração de variáveis}
+\subsection{Declaração de variáveis globais}
 
   Como visto no capítulo 2, essa declaração é opcional, e seu formato pode ser
 visto no exemplo a seguir:
@@ -1003,23 +1007,23 @@ delimitador final (como ``fim-variáveis'') e em C, não existe qualquer
 delimitador.
 
 Delimitar o bloco permite maior consistência com outras formas gramaticais
-como os blocos de comando e estruturas de controle.
+como os blocos de comando e estruturas de controle, e torna o código mais
+claro e explicito, embora adicione construções redundantes.
 
-Os tipos primitivos englibam os tipos mais básicos das linguagens populares.
+Os tipos primitivos englobam os tipos mais básicos das linguagens populares.
 No momento, agregados heterogêneos como, por exemplo, estruturas/registros
-(``struct'' em C) não são suportados.
+(``struct'' em C) não são suportados. Para uma lista dos tipos suportados, veja
+a tabela \ref{tb_tipos_primitivos}.
   
 \subsection{Bloco Principal}
 
 As linguagens de programação devem, de alguma forma, oferecer um ``entry point''
 (ponto de entrada), de onde se inicia a execução do programa. O ponto de entrada
 pode ser uma função ou um bloco anônimo. Na literatura, em geral, o bloco
-principal é delimitado pelos termos ``início''e ``fim''. Essa é uma abordagem
-interessante que, em relação a uma função como ponto de entrada. Sendo assim,
-G-Portugol se utiliza de ``início'' e ``fim'' como delimitadores do bloco
-principal. Essa decisão mantém um nível satisfatório de coerência com o bloco de
-variáveis globais e estruturas de controle, embora não sejam intimamente
-relacionados.
+principal é delimitado pelos termos ``início''e ``fim'' e G-Portugol segue
+essa convenção. Essa decisão mantém um nível satisfatório de coerência
+com o bloco de variáveis globais e estruturas de controle, embora não sejam
+intimamente relacionados.
 
 Vale ressaltar que não se faz imposição sobre a identação do código. Esse
 recurso pode ser vantajoso no ensino, promovendo a clareza de código,
@@ -1053,8 +1057,9 @@ ser representada.
 \begin{itemize}
  \item 
   Inteiros: Podem ser representados em base decimal, hexadecimal, octal e
-binária. Representações decimais são formadas por um ou mais algarismos (ex.
-``120''). Representações hexadecimais são representadas com o prefixo ``0x'' ou
+binária. Representações decimais são formadas, opcionalmente, por um sinal
+(``+'' ou ``-'') seguido de um mais algarismos(ex.``120'', ``+5'', e ``-2'').
+Representações hexadecimais são representadas com o prefixo ``0x'' ou
 `` 0X'', seguido de algarismos entre ``0'' e ``9'' e letras entre ``a'' e ``f''
 ou ``A'' e ``F'' (ex. ``0xF1A5''). Representações octais são representadas com o
 prefixo ``0c'' ou ``0C'', seguido de algarismos entre ``0'' e ``7'' (ex.
@@ -1062,7 +1067,8 @@ prefixo ``0c'' ou ``0C'', seguido de algarismos entre ``0'' e ``7'' (ex.
 ou ``0B'', seguido de algarismos ``0'' e ``1'' (ex. ``0b101'').
 
   \item
-  Reais: são representados por algarismos separados por um ``.'' como ``2.5''.
+  Reais: são representados por, opcionalmente, um sinal (``+ ou
+''-``), seguido de algarismos separados por um ``.'' como ``-1.2345''.
 
   \item
   Caracteres: são representados por um único simbolo entre aspas simples.
@@ -1075,14 +1081,15 @@ sua compatibilidade numérica.
 
   \item
   Literais: são representados por um conjunto de caracteres entre aspas duplas.
-Eles podem conter caracteres especiais (como CR) e devem ser definidos em
-apenas uma linha de código. Valores literais são os únicos que não tem uma
-representação numérica, o que permitira sua participação em expressões com
+Eles podem conter caracteres especiais como ``$\backslash$n'' e devem ser
+definidos em apenas uma linha de código. Valores literais são os únicos que não
+tem uma representação numérica, impedindo sua participação em expressões com
 operadores aritméticos (soma, divisão, AND, etc).
 
-  \Lógicos: são representados por ``verdadeiro'' e ``falso''. Numericamente,
-qualquer valor diferente de ``0'' representa o valor verdadeiro e ``0''
-representa o valor falso.
+  \item
+  Lógicos: são representados pelas palavras ``verdadeiro'' e ``falso''.
+Numericamente, qualquer valor diferente de ``0'' representa o valor verdadeiro e
+``0'' representa o valor falso.
 
 \end{itemize}
 
@@ -1104,8 +1111,9 @@ de parêntesis.
     |               & OR binário \\
     \^{}            &  XOR binário \\
     \&              & AND binário \\
-    =, <>           & operadores de igualdade \\
-    >, >=, <, <=    & operadores relacionais \\
+    =, <>           & operadores igual e diferente \\
+    >, >=, <, <=    & operadores relacionais maior, maior ou igual, menor,
+menor ou igual\\
     +, -            & operadores aritméticos soma e subtração \\
     \symbol{42}, /, \%     & operadores aritméticos multiplicação,
 divisão, módulo \\
@@ -1136,8 +1144,8 @@ seção \ref{subsec:atribuicoes}.
   \label{subsec:atribuicoes}
 Atribuições permitem a manipulação de valores na memória. Em G-Portugol,
 como já foi visto, é usado o operador ``:='', onde o termo a esquerda ou
-``\textit{lvalue}'' deve ser uma variável primitiva ou indice de uma
-matriz/vetor, e o termo a esquerda, uma expressão que, quando avaliada, tem seu
+``\textit{lvalue}'' deve ser uma variável primitiva ou índice de uma
+matriz/vetor, e o termo a direita, uma expressão que, quando avaliada, tem seu
 tipo compatível com o \textit{lvalue}.
 
 Pode haver coerção de tipos durante a atribuição, quando o resultado da
@@ -1151,7 +1159,7 @@ Matrizes não são aceitas como \textit{lvalue}, como pode ser visto no programa
 
 \begin{program}
   \begin{verbatim}
-algoritmo bad_matrix;
+algoritmo atribuicao_de_matrizes;
 
 variáveis
   m1 : matriz[2] de inteiros;
@@ -1193,9 +1201,28 @@ uniforme em relação a declaração global, onde se usa as palavras-chave
 ``variáveis'' e ``fim-variáveis''. 
 
 A declaração dos parâmetros da função também não segue estritamente o formato
-de declaração de variáveis. Sua definição pode ser vista no capítulo *todo*.
-%capitulo da gramatica
+de declaração de variáveis. O programa \ref{exemplo_funcao} ilustra a
+declaração de uma função.
 
+
+\begin{program}
+ \begin{verbatim}
+algoritmo exemplo_funcao;
+
+início  
+  imprima(soma(2,2));
+fim
+
+função soma(x: inteiro, y: inteiro) : inteiro
+  res : inteiro;
+início
+  res := x + y;
+  retorne res;
+fim
+  \end{verbatim}
+
+  \caption{Exemplo de usos de funções. \label{exemplo_funcao}}
+\end{program}
 
 \section {Funções internas}
 
@@ -1215,7 +1242,6 @@ possível declarar funções em G-Portugol que recebem um número variável de
 argumentos.
 
 
-
   \subsection{A função ``leia''}
 
 A função ``leia'' espera por uma entrada do teclado seguida do caractere LF (em
@@ -1223,6 +1249,11 @@ geral, associado a tecla ``Enter'') e retorna o valor lido. Esse valor é
 convertido implicitamente para o tipo do \textit{lvalue}. A tabela
 \ref{tb_leia_casts} apresenta conversões implícitas processadas pela
 função ``leia'' para o enunciado de exemplo ``x := leia()''.
+
+Nota: números reais são arredondados, se nescessário, e exibidos no formato
+.xx (com duas casas decimais). Portanto, o número ``250.0'' ou ``250'' seria
+impresso como ``250.00'' e ``1.449'' seria impresso como ``1.45''. Se o
+parâmetro for uma variável, seu valor não será modificado.
 
 \begin{table}[ht]
 \begin{center}
@@ -1237,7 +1268,7 @@ função ``leia'' para o enunciado de exemplo ``x := leia()''.
       inteiro & abc & 0 \\
       inteiro & 123s & 123 \\
       lógico  & falso & falso \\
-      lógico & 0'' & falso \\
+      lógico & ``0'' & falso \\
       lógico & falso 12wtc & verdadeiro \\
       lógico & 0 umdois3 & verdadeiro\\
     \hline
@@ -1248,11 +1279,11 @@ função ``leia'' para o enunciado de exemplo ``x := leia()''.
 
 
 Essa função se comporta de forma excepcional visto que seu tipo de retorno não
-é absoluto (\textit{overloaded}, depende do tipo de \textit{lvalue}) e, no mome
-nto, é restrita expressões isentas de operadores. Isso é, não é permitido
-aplicá-la como um termo em uma expressão com multiplos termos (ex. ``x :=  y +
-leia()``), embora seja possível utilizá-la em subscritos de vetores e matrizes,
-assim como em expressões de estruturas de controle. 
+é absoluto (\textit{overloaded}, depende do tipo de \textit{lvalue}) e, no
+momento, é restrita expressões isentas de operadores. Isso é, não é permitido
+aplicá-la como um termo em uma expressão com multiplos operandos (ex. ``x :=  y
++ leia()``), embora seja possível utilizá-la em subscritos de vetores e
+matrizes, assim como em expressões de estruturas de controle. 
 
 Em princípio, pode-se levar em conta duas formas de implementar uma função de
 leitura em alto nível. A primeira, e mais simples é o uso de funções
@@ -1273,43 +1304,47 @@ GPT é a ferramenta principal da linguagem G-Portugol. Entre suas funções
 principais estão:
 
 \begin{itemize}
- \item 
-  Traduzir algortimos para outras linguagens;
   \item
   Compilar algoritmos;
+ \item 
+  Traduzir algortimos para outras linguagens;
   \item
   Executar algoritmos.
 \end{itemize}
 
-Na versão atual é possível traduzir algoritmos para a linguagem C. O resultado
-é um código em C 100\% equivalente ao algoritmo.
+Na versão atual é possível compilar algoritmos para sistemas Windows e
+Unixes que suportam o formato ELF e o assembler NASM. Também, há suporte apenas
+para a tradução de algoritmos para a linguagem C. O resultado é um código em C
+100\% equivalente ao algoritmo.
 
-Atualmente, a compilação é possível apenas usando o compilador GCC (uma vez que
-GPT o usa como \textit{backend}) mas, futuramente, a compilação será feita sem
-dependências externas.
-
-A execução de algorítmos é feita de forma interpretada, isso é, sem gerar
-arquivos binários. Por meio da interpretação, é possível depurar passo a passo
-o algorítmo com o uso de uma ferramenta auxiliar (um cliente de depuração).
+É possível, também, executar algoritmos sem gerar código ou arquivos extra, de
+forma interpretada. Também, com a interpretação, é possível depurar passo a
+passo o algorítmo com o uso de uma ferramenta auxiliar (um cliente de
+depuração).
 
 Vale ressaltar que, qualquer que seja o modo de uso do algoritmo
-(compilado, interpretado ou traduzido), eles terão sempre comportamentos
-equivalentes. Isso é, o resultado de uma execução interpretada deve ser o mesmo
-se a execução fosse feita por meio de um binário compilado.
+(compilado, interpretado ou traduzido), se espera que eles tenham sempre
+comportamentos equivalentes. Isso é, o resultado de uma execução interpretada
+deve ser o mesmo se a execução fosse feita por meio de um binário compilado.
 
 \section{Opções gerais}
 
 Ao executar o programa ``gpt'' com o argumento ``-h'', é mostrado:
 
 \begin{verbatim}
+Modo de uso: gpt [opções] <arquivo>
+
+Opções:
    -v            mostra versão do programa
    -h            mostra esse texto
-   -d            exibe dicas no relatório de erros
    -o <arquivo>  compila e salva executável como <arquivo>
-   -t <arquivo>  traduz para C e salva como <arquivo>
-   -i            não compila, apenas interpreta
-   -H <host>     host do client debugger (deve ser usado com -i)
-   -P <porta>    porta do client debugger (deve ser usado com -i) 
+   -t <arquivo>  salva o código em linguagem C como <arquivo>
+   -s <arquivo>  salva o código em linguagem assembly como <arquivo>
+   -i            interpreta
+
+   -d            exibe dicas no relatório de erros
+
+   Maiores informações no manual.
 \end{verbatim}
 
 As opções são comentadas a seguir.
@@ -1322,33 +1357,25 @@ As opções são comentadas a seguir.
   h: exibe todas as opções suportadas pelo programa ``gpt'';
 
   \item
-  d: Exibe maiores informações para erros de compilação, quando disponível.
-Essas informações são dicas de como proceder para resolver o erro;
-  
-  \item
-  o <arquivo>: Ao compilar um algoritmo, salva o executável com o nome de
+  o <arquivo> EAo compilar um algoritmo, salva o executável com o nome de
 \textit{<arquivo>};
   
   \item
-  t: Ao traduzir um algoritmo para C, salva o arquivo fonte como
-\textit{<arquivo>.c};
+  t <arquivo>: Traduz o algoritmo para C, salva o código fonte com o nome de
+\textit{<arquivo>};
+  
+  \item
+  s <arquivo>: Compila o algoritmo mas não cria código executável. Salva o
+código em assembly com o nome de \textit{<arquivo>};
 
   \item 
-  i: Executa o algoritmo diretamente, sem compilar ou criar arquivos binários
-executáveis. Opção conhecida como ``interpretação'' ou ``scripting''.
+  i: Executa o algoritmo diretamente, sem compilar ou criar arquivos. Opção
+conhecida como ``interpretação'' ou ``scripting''.
 
   \item
-  H: Usado em conjunto com a opção ``-P'', para se conectar a um
-\textit{client debugger};
-
-  \item
-  P: Usado em conjunto com a opção ``-P'' para se conectar a um \textit{client
-debugger}.
+  d: Exibe mais informações no relatório de erros, como dicas de como proceder
+para solucionar errors de sintáxe.
 \end{itemize}
-
-
-%  *mudanca de linguagem (sub linguagens, variacoes de gramatica) 
-% (nao implementado ainda)
 
 
 \section{Tratamento de erros}
@@ -1371,7 +1398,21 @@ No momento, o analisador do GPT percorre o código fonte a procura de erros e,
 mesmo que encontre, continua a análise a procura de mais erros. Uma outra
 abordagem, seria interromper a análise assim que um erro fosse encontrado.
 
-\section{Geração e Execução de programas}
+\section{Execução de programas}
+
+\subsection{Compilação e geração de código executável}
+
+O programa GPT é capaz de gerar código executável para arquiteturas compatíveis
+com x86 e em dois formatos: ELF (\textit{Executable and linking format}) e PE
+(\textit{Portable Executable}). Sistemas Unix, em geral, suportam o formato
+ELF, e o formato PE é conhecido nos sistemas Microsoft Windows. Após o processo
+de análise, o compilador gera código em assembly para, então, usar o NASM
+(Netwide Assembler) como \textit{backend} para montar e criar um executável
+válido. Consequentemente, não existe etapa de linkagem. A fase de otimização de
+código também não foi implementada.
+
+Para usar esse recurso, é nescessário que o NASM esteja instalado no sistema.
+Ele pode ser encontrado em http://www.sf.net/projects/nasm.
 
 \subsection{Tradução para a linguagem C}
 
@@ -1386,19 +1427,18 @@ e outras abstrações.
 A tradução para C é limitada no que diz respeito a nomes e identificadores. É
 possível, por exemplo, declarar uma variável em G-Portugol com o nome de
 \textit{printf}. Ao traduzir para C e tentar compilar o código resultante, o
-compilador pode emitir erros, visto que \textit{printf} é uma função da
+compilador pode emitir avisos e erros, visto que \textit{printf} é uma função da
 biblioteca padrão, usada no código C resultante. Da mesma forma,
 identificadores com \textit(underlines) antes ou depois em seus nomes
 (como ``\underline{ }\underline{ }leia\underline{ }texto'') devem ser evitados,
-pois muitos identificadores
-internos utilizam essas convenções de nomeação, e seu uso pode acarretar em
-conflitos durante a tradução.
+pois muitos identificadores internos utilizam essas convenções de nomeação, e
+seu uso pode acarretar em conflitos durante a tradução.
 
 \subsection{Interpretação de código}
 
-GPT permite que o algoritmo seja executado sem gerar código binário. Esse modo
-é conhecido como ``interpretação'' e linguagens como Perl, PHP e Ruby utilizam
-esta técnica.
+O programa GPT permite que o algoritmo seja executado sem gerar código binário.
+Esse modo é conhecido como ``interpretação'' e linguagens como Perl, PHP e Ruby
+utilizam esta técnica.
 
 Esse modo permite depurar algoritmos passo a passo (por meio de um
 \textit{client debugger} como o GPTEditor) e inspecionar variáveis e a pilha de
@@ -1418,14 +1458,14 @@ debugger}. Atualmente, o programa GPTEditor suporta a depuração interativa.
 
 Entre os recursos disponíveis, pode-se citar a execução passo a passo em 3
 modos (comumente conhecidas como ``step into'', ``step over'' e ``step out''),
-inspeção de variáveis locais/globais e pontos de parada
-(``\textit{breakpoints}'').
+inspeção de variáveis locais/globais e pontos de
+parada (``\textit{breakpoints}'').
 
 A depuração ocorre tendo o programa GPT se comunicando via socket com o cliente
 (ex: GPTEditor), iniciando transmissão de dados entre esses dois pontos. As
-informações enviadas pelo GPT (variáveis, breakpoints, etc) usam o formato XML,
-enquanto o cliente envia comandos simples (o que evita que o programa GPT
-nescessite de um XML parser).
+informações enviadas pelo GPT (variáveis, breakpoints, etc) usam o formato
+baseado em XML, enquanto o cliente envia comandos simples (o que evita que o
+programa GPT nescessite de um XML parser).
 
 Por exemplo, a pilha de funções pode ser representada da seguinte forma:
 
