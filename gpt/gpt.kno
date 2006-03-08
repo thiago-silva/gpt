@@ -2,57 +2,48 @@
 
 \NewEntry 1 NOW
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
-<ul type="disc"><li>Bugs:<br /></li>
-<li>testar interpreter</li>
-<li>testar pt2c<br /></li>
-<li>uniformizar c_translator/interpreter/x86 behavior </li>
-<ul type="disc"><li>impressao de floats (2 casas decimais, arredondando!!)</li>
-<li>testar overflow de inteiros, floats, caracteres, etc, nos 3 modulos</li>
-<li>leitura de dados (inteiro, float, literal, etc) (ver manual para detalhes) deve ser o mesmo nos 3 modulos</li>
-<li>para behavior (para x de 0 ate 10 passo 3. Qual o valor final de x nos diferentes modulos?)<br /><br /></li></ul>
-<li>Testar GPTEditor com nova versao<br /></li>
+<ul type="disc"><li>x86:</li>
+<ul type="disc"><li>testar strings com &quot;\n&quot; e &quot;\r&quot; no windows</li>
+<li>pcre static link</li>
+<li>readme.win32.txt</li>
+<li>install.win32.txt<br /></li></ul>
 <li>Semantic: permitir X := leia() + 2;<br />x := leia() = &quot;inteiro&quot;<br />x := leia() + (&quot;inteiro&quot; = lit)<br /></li>
 <li>Publish:</li>
 <ul type="disc"><li>0.9: feature complete (manual, GPTEditor, etc ok)</li>
 <li>1.0: depois de vários bugfixes e refactorings</li></ul></ul>
 </body></html>
 
-\CurrentEntry 1 TODO
+
+\NewEntry 1 TODO
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><div></div>
 <li>GPT</li>
-<ul type="disc"><li>x86:</li>
-<ul type="disc"><li>testar strings com &quot;\n&quot; e &quot;\r&quot; no windows</li></ul>
-<li>Semantic: checar se subscritos são &quot;0&quot; na declaracao de vetores</li>
+<ul type="disc"><li>Semantic: </li>
+<ul type="disc"><li>checar se subscritos são &quot;0&quot; na declaracao de vetores</li>
 <li>Semantic: Verbose de erros esta ruim</li>
 <ul type="disc"><li>ExpressionValue deve ter um attributo (varname) para melhorar as mensagens de erros</li>
 <li>Ruim: &quot;Faltando subscritos na matriz/conjunto de tipo &quot;inteiro[][]&quot;</li>
-<li>Bom: &quot;Faltando subscritos na matriz/conjunto m[][]&quot;</li></ul>
-<li>Uniformizar ponto flutuante (uso de double! (usar float gera warnings na traducao de C)</li>
-<ul type="disc"><li>Mas em todos os outros modulos, float eh usado....</li></ul>
-<li>interpreter: (se for usar double)atof -&gt; &quot;a2double&quot;, (ou o que quer que seja str2double)</li>
-<li>Mensagens de erro: checar ponto final &quot;.&quot;<br /><br />Pacote:</li>
-<li>resolver os Makefile.am e o &quot;make dist&quot; issue</li>
-<ul type="disc"><li>Sources que devem ser gerados estão sendo incluidos no pacote</li>
-<li>gramaticas nao estao sendo incluidas</li></ul>
-<li>configure.in</li>
-<ul type="disc"><li>quando antlr nao eh encontrado, checar o resultado de AC_PATH_PROG(ANTLR, antlr)</li>
-<li>esta dando erro de shell pq esta executando ANTLR_LIB=`antlr-config --libs` sendo que o antlr-config pode nao existir no sistema<br /></li></ul>
-<li>opcoes &quot;-H&quot; e &quot;-P&quot; documentadas no manual</li>
-<li>testar overflow aritmetico (inteiro/real) na compilacao (asm), traducao (C) e interpretacao.<br /></li>
+<li>Bom: &quot;Faltando subscritos na matriz/conjunto m[][]&quot;</li></ul></ul>
+<li>pt2c:</li>
+<ul type="disc"><li>Uniformizar ponto flutuante (uso de double! (usar float gera warnings na traducao de C)</li>
+<ul type="disc"><li>Mas em x86, float eh usado....</li></ul></ul>
+<li>interpreter: </li>
+<li>(se for usar double)atof -&gt; &quot;a2double&quot;, (ou o que quer que seja str2double)</li>
+<li>Mensagens de erro: checar ponto final &quot;.&quot;<br /><br /></li>
+<li>opcoes &quot;-H&quot; e &quot;-P&quot; documentadas no manual<br /></li>
 <li>limpar codigo</li>
 <ul type="disc"><li>uniformizar convencoes (underline para membros privates, etc)<br /></li></ul>
-<li>gpt: mover o exemplos/highlight.gpt para gpteditor<br /></li>
-<li>Error codes: (switch -e)</li>
-<ul type="disc"><li>Se usar com front-end, pode linkar a uma pagina# explicando a natureza do erro.<br /></li></ul></ul>
-<li>Documentacao</li>
+<li>gpt: mover o exemplos/highlight.gpt para gpteditor<br /></li></ul>
+<li><br />Documentacao</li>
 <ul type="disc"><li>checar implementacao e documentacao sobre &quot;para&quot;</li>
 <ul type="disc"><li>para com passo implicito SEMPRE deve ser +1 (_nao_ deve verificar decresc/cresc comparando os operandos).</li>
 <li>ao fim, lvalue tem o valor de &quot;ate&quot; </li></ul>
 <li>escrever sobre implementacao da compilacao</li>
 <ul type="disc"><li>elf</li>
 <li>pe</li>
-<li>nasm, etc<br /><br /></li></ul></ul>
+<li>nasm, etc</li></ul>
+<li>overflow de floats, nos 3 modulos divergem (verificar,testar e documentar)<br /></li>
+<li>ao pressionar &quot;enter&quot; na funcao &quot;leia()&quot; x86 e interpreter assimilam o valor nulo. Em C, a funcao persiste<br />nas tentativas<br /><br /></li></ul>
 <li>Atualizar &quot;INSTALL&quot;  e &quot;README&quot;</li>
 <ul type="disc"><li>Documentar passos para desenvolver no windows (mingw, pcre, antlr...)</li>
 <li>Sobre compilacao (nasm/32)</li>
@@ -64,8 +55,7 @@
 <li>para x de 0 até 10 passo 4<br /></li></ul></ul></ul>
 <li>GPTEditor</li>
 <ul type="disc"><li>Settings:</li>
-<ul type="disc"><li>Remover &quot;argumentos&quot; e colocar &quot;Tratamento de erros: mostrar dicas [x]&quot;</li></ul>
-<li>ErrorHandler foi renomeado para &quot;Display&quot;. Atualizar <br /><br /></li></ul>
+<ul type="disc"><li>Remover &quot;argumentos&quot; e colocar &quot;Tratamento de erros: mostrar dicas [x]&quot;<br /><br /></li></ul></ul>
 <li>Publish:</li>
 <ul type="disc"><li>Criar pacote binario (win32) para o GPT </li>
 <li>static link com a pcre.a (nao mandar pcre*.dll junto..)</li>
@@ -100,18 +90,22 @@
 <ul type="disc"><li>Pascal-like: se utiliza de &quot;inicio&quot;,&quot;fim&quot;, &quot;:=&quot;, &quot;escreva&quot;</li>
 <li>C-Like: se utiliza de &quot;{ }&quot;, &quot;==&quot;, &quot;imprima&quot;, &quot;()&quot; entre as expr de estruturas, etc.</li>
 <li>Indenter: não utiliza marcadores de bloco, indentação faz parte das estruturas.</li></ul>
-<li>Talvez, criar um compiler para uma gramatica que pode ser escrita por professores (ver StringTemplates, talvez?)<br /><br /></li></ul></ul>
-<li></li></ul>
+<li>Talvez, criar um compiler para uma gramatica que pode ser escrita por professores (ver StringTemplates, talvez?)</li></ul></ul></ul>
+<li></li>
+<ul type="disc"><li>Error codes: (switch -e)</li>
+<li>Se usar com front-end, pode linkar a uma pagina# explicando a natureza do erro.<br /></li>
+<li>Manipulacao de matrizes (passagem param)</li>
+<ul type="disc"><li>matriz[2][3] de inteiros; </li>
+<li>f(mat[0]);</li>
+<li>função f(matriz[3] de inteiros);</li></ul></ul>
 </body></html>
 
-\NewEntry 1 Bugs
+\CurrentEntry 1 Bugs
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>manua.tex:</li>
-<ul type="disc"><li>extensao dos arquivos &quot;.pt&quot; -&gt; &quot;.gpt&quot;<br /><br /><br /></li></ul>
-<li>Segfault interpretando:</li></ul>
-<p>algoritmo teste;<br />variáveis<br />  mat : matriz[2] de inteiros;<br />fim-variáveis<br />início<br />  f(mat);<br />fim<br />função f(mm: matriz[2] de inteiros) : inteiro<br />início<br />fim</p>
-<p></p>
+<ul type="disc"><li>extensao dos arquivos &quot;.pt&quot; -&gt; &quot;.gpt&quot;</li></ul></ul>
 </body></html>
+
 
 \NewEntry 1 latex2html
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
