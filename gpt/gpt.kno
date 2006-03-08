@@ -1,9 +1,9 @@
 \NewEntry 0 devel
 
-\NewEntry 1 NOW
+\CurrentEntry 1 NOW
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>x86:</li>
-<ul type="disc"><li>testar strings com &quot;\n&quot; e &quot;\r&quot; no windows</li>
+<ul type="disc"><li>default output: nome do arquivo[.exe] (retirar os a.out, a.exe)</li>
 <li>pcre static link</li>
 <li>readme.win32.txt</li>
 <li>install.win32.txt<br /></li></ul>
@@ -62,7 +62,6 @@
 <li>strip gpt.exe</li></ul></ul>
 </body></html>
 
-
 \NewEntry 1 Notas ideias etc
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>GPTEditor</li>
@@ -100,12 +99,11 @@
 <li>função f(matriz[3] de inteiros);</li></ul></ul>
 </body></html>
 
-\CurrentEntry 1 Bugs
+\NewEntry 1 Bugs
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>manua.tex:</li>
 <ul type="disc"><li>extensao dos arquivos &quot;.pt&quot; -&gt; &quot;.gpt&quot;</li></ul></ul>
 </body></html>
-
 
 \NewEntry 1 latex2html
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
@@ -141,6 +139,7 @@
 <li>Change version on kdevelop file, configure.in/configure.in.in</li>
 <li>Create NEWS file</li>
 <li>Create ChangeLog file</li>
+<ul type="disc"><li>~/bin/svn2cl.sh --group-by-day -i</li></ul>
 <li>Update README version</li>
 <li>TAG current CVS version</li>
 <li>Update site</li></ul>
