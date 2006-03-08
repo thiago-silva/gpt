@@ -4,7 +4,7 @@ AUTOMAKE_OPTIONS = foreign 1.4
 
 SUBDIRS = src doc exemplos
 
-EXTRA_DIST = INSTALL.default
+EXTRA_DIST = INSTALL.default ChangeLog
 
 uninstall-devel:
 	rm -rf $(includedir)/${PACKAGE} 
