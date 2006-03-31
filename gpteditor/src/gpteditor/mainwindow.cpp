@@ -65,7 +65,6 @@
 MainWindow::MainWindow(QWidget* parent, const char* name, WFlags fl)
     : KParts::MainWindow(parent, name, fl)
 {
-  setXMLFile( "gpteditorui.rc" );
   if(!name) { setName("MainWindow"); }
 
   setupStatusBar();
@@ -463,10 +462,8 @@ void MainWindow::slotEditKeys()
   dlg.configure();
 }
 
-#include <kdebug.h>
 void MainWindow::actionStateChanged(const QString& str)
 {
-  kdDebug() << "state: " << str << endl;
   stateChanged(str);
 }
 

@@ -205,7 +205,7 @@ KURL EditorTabWidget::documentURL(int index)
   }
   else
   {
-    return QString::null;
+    return KURL();
   }
 }
 
