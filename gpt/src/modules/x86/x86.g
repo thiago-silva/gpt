@@ -315,6 +315,11 @@ fcall[int expct_type] returns [int type]
         s << "clargs " << ((args*2)+1);
         x86.writeTEXT(s.str());      
         x86.writeTEXT("print_lf"); //\n
+      } else if(f.lexeme == "leia"){
+        x86.writeTEXT(string("call ") + fname);
+/*        if(args) {
+          s << "clargs " << args;
+          x86.writeTEXT(s.str());*/
       } else {
         x86.writeTEXT(string("call ") + X86::makeID(fname));
         if(args) {
