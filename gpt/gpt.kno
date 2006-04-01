@@ -1,6 +1,6 @@
 \NewEntry 0 devel
 
-\CurrentEntry 1 NOW
+\NewEntry 1 NOW
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>x86:</li>
 <ul type="disc"><li>default output: nome do arquivo[.exe] (retirar os a.out, a.exe)</li>
@@ -13,7 +13,6 @@
 <li>1.0: depois de vários bugfixes e refactorings</li></ul></ul>
 </body></html>
 
-
 \NewEntry 1 TODO
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><div></div>
@@ -21,8 +20,8 @@
 <ul type="disc"><li>Semantic: </li>
 <ul type="disc"><li>checar se subscritos são &quot;0&quot; na declaracao de vetores</li>
 <li>Semantic: Verbose de erros esta ruim</li>
-<ul type="disc"><li>ExpressionValue deve ter um attributo (varname) para melhorar as mensagens de erros</li>
-<li>Ruim: &quot;Faltando subscritos na matriz/conjunto de tipo &quot;inteiro[][]&quot;</li>
+<li>ExpressionValue deve ter um attributo (varname) para melhorar as mensagens de erros</li>
+<ul type="disc"><li>Ruim: &quot;Faltando subscritos na matriz/conjunto de tipo &quot;inteiro[][]&quot;</li>
 <li>Bom: &quot;Faltando subscritos na matriz/conjunto m[][]&quot;</li></ul></ul>
 <li>pt2c:</li>
 <ul type="disc"><li>Uniformizar ponto flutuante (uso de double! (usar float gera warnings na traducao de C)</li>
@@ -99,11 +98,22 @@
 <li>função f(matriz[3] de inteiros);</li></ul></ul>
 </body></html>
 
-\NewEntry 1 Bugs
+\CurrentEntry 1 Bugs
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>manua.tex:</li>
-<ul type="disc"><li>extensao dos arquivos &quot;.pt&quot; -&gt; &quot;.gpt&quot;</li></ul></ul>
+<ul type="disc"><li>programa 2: teste_variáveis (cap 3). declaracao da variavel &quot;nome&quot; falta &quot;;&quot;</li>
+<li>Falta mencionar que g-portugol eh case-sensitive</li>
+<li>Algumas palavras &quot;indice&quot; estão sem acento.</li>
+<li>Remover instancias de &quot;opicionais&quot;</li>
+<li>Expressoes:</li>
+<ul type="disc"><li>Comparacao de strings eh feito caractere por caractere (case sensitive)</li></ul>
+<li>Pagina 13 (cap3), exemplo do &quot;para&quot; decrescente usando de 0 -&gt; 10 (deve ser de 10 -&gt; 0)</li>
+<li>Pagina 13 (cap3) programa fatorial: acho que esta errado. A impressao final supoe que X tenha o valor inicial do fatorial (mas terá  1).<br /><br /></li>
+<li>Verificar se há suporte para &quot;||&quot; e &quot;&amp;&amp;&quot;, &quot;|&quot; e &quot;&amp;&quot;<br /></li>
+<li>&quot;Pressione Enter para continuar&quot; =&gt; &quot;Pressione qualquer tecla para continuar&quot;<br /></li>
+<li>extensao dos arquivos &quot;.pt&quot; -&gt; &quot;.gpt&quot;</li></ul></ul>
 </body></html>
+
 
 \NewEntry 1 latex2html
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
@@ -130,7 +140,7 @@
 <ul type="disc"><li>Notas sobre permitir assembly em blocos parecido com C (asm {})<br /></li>
 <li>A proposta para permitir esses blocos consiste em permitir expandir a linguagem.<br />Entretanto, traria dificuldades para a interpretação de codigo, que exigiria um interpretador ASM, e isso não é viável.</li>
 <li>A próxima sugestão seria ter apenas uma função interna do g-portugol: _syscall(...)</li>
-<ul type="disc"><li>essa função permitiria acesso aos recursos do sistema, que é o objetivo dos blocos asm{}.<br /><br /></li></ul></ul>
+<ul type="disc"><li>essa função permitiria acesso aos recursos do sistema, que é o objetivo de permitir blocos asm{}.<br /><br /></li></ul></ul>
 </body></html>
 
 \NewEntry 0 release

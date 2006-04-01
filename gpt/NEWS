@@ -1,3 +1,6 @@
+31 de Março de 2006 - got 0.9.1b
+ -Correção de um bug relacionado a funlção interna "leia_inteiro"
+
 08 de Março de 2006 - gpt 0.9b
  -Implementação da geração de código executável (x86, PE/ELF. NASM como backend)
  -GPT portado para MS Windows (testado com compilador MingW32)
