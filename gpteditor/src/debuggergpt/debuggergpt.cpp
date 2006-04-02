@@ -97,7 +97,7 @@ void DebuggerGPT::compile(const KURL& srcURL)
   connect(m_exec, SIGNAL(receivedStderr(KProcess*,char*,int)),
     this, SLOT(slotCompileOutput(KProcess*,char*,int)));
 
-
+  m_currentURL = srcURL;
   m_execType = EnumCompile;
 
   m_exec->start(KProcess::NotifyOnExit, KProcess::Stderr);
@@ -334,6 +334,7 @@ void DebuggerGPT::processCompileOutput()
   QRegExp rx;
   int idx = 0;
   rx.setPattern("Linha: (\\d+) - (([^.]|\\.\\.\\.)+)\\.");
+  bool hasErrors = false;
   while(rx.search(m_compileOutput, idx) != -1) {
 
     idx += rx.matchedLength();
@@ -341,7 +342,13 @@ void DebuggerGPT::processCompileOutput()
     line =  rx.cap(1).toInt();
     errorMsg = rx.cap(2);
     
+    hasErrors = true;
     emit sigCompileError(line, errorMsg);
+  }
+
+  if(!hasErrors) 
+  {
+    manager()->debugMessage(DebuggerManager::InfoMsg, i18n("Algoritmo compilado com sucesso"), m_currentURL, 1);
   }
 
   m_compileOutput = "";
