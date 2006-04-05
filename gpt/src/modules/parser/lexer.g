@@ -37,6 +37,7 @@ class PortugolLexer extends Lexer;
 options {
   k=2;
   charVocabulary='\u0003'..'\u00FF'; // latin-1  
+//   charVocabulary='\u0003'..'\u0FFF'; // 
   exportVocab=Portugol;
   testLiterals = false;
   filter=T_INVALID;
@@ -537,12 +538,19 @@ protected
 T_INVALID
   : . 
     {
-      stringstream s;
-      if(($getText != "\"") && ($getText != "'")) {
-        s << "Caractere inválido: \"" << $getText << "\"";
+//       printf("%d == '%x' -> '%c'\n", $getText.c_str()[0], $getText.c_str()[0], $getText.c_str()[0]);
+
+      //caractere de espaco alem da tabela ascii ( [160] == [-96] == ' ' == [32] == 160-128)
+      if($getText.c_str()[0] == (int)0xffffffa0) {
+        $setType(antlr::Token::SKIP);
       } else {
-        s << "Faltando fechar aspas";
+        stringstream s;
+        if(($getText != "\"") && ($getText != "'")) {
+          s << "Caractere inválido: \"" << $getText << "\"";
+        } else {
+          s << "Faltando fechar aspas";
+        }
+        GPTDisplay::self()->add(s.str(), getLine());
       }
-      GPTDisplay::self()->add(s.str(), getLine());
     }
   ;
