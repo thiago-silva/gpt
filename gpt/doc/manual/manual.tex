@@ -131,7 +131,7 @@
 \def\version#1{\def\@version{#1}}
 
 \title{G-Portugol}
-\version{v1.0}
+\version{v0.9}
 \author{Thiago Silva}
 \email{\texttt{thiago.silva@kdemail.net}}
 
@@ -151,7 +151,7 @@
  pdfauthor = {\@author},
  pdftitle = {\@title},
  pdfsubject = {Linguagem de programação},
- pdfkeywords = {portugol, programação},
+ pdfkeywords = {pseudo-código, portugol, programação},
  pdfcreator = {LaTeX with hyperref package},
  pdfproducer = {dvips + ps2pdf}
 }
@@ -182,10 +182,11 @@ e desenvolvimento de software.
 \capitulo{Introdução}
 \label{ch:intro}
 
-G-Portugol é um dialeto da linguagem portugol (ou portugês estruturado), que
-é muito usada para descrever algoritmos em português, de forma livre
-e espontânea. Em geral, livros dedicados ao ensino de algoritmos, lógica
-e estruturas de dados utilizam alguma forma dessa linguagem. 
+G-Portugol é um dialeto da linguagem/pseudo-código portugol (ou
+portugês estruturado), que é muito usada para descrever algoritmos em
+português, de forma livre e espontânea. Em geral, livros dedicados ao ensino
+de algoritmos, lógica e estruturas de dados utilizam alguma forma
+dessa linguagem.
 
 A proposta de G-Portugol é disponibilizar uma implementação da
 linguagem portugol, fornecendo ferramentas que ofereçam recursos de edição,
@@ -293,14 +294,13 @@ de livros e muitos professores os discutem.
 \section{Subprogramas (funções)}
 
 Subprogramas são como funções em C. Podem receber qualquer número de parâmetros, sejam tipos primitivos
-ou vetores/matrizes, e podem retornar apenas valores primitivos. Entretanto, não
-é permitido declarar funções aninhadas ou funções com parâmetros variáveis. Vale
-ressaltar que passagem de parâmetros é sempre feita por \textit{valor}.
-
+ou vetores/matrizes, e podem retornar apenas valores primitivos. Entretanto,
+não é permitido declarar funções aninhadas ou funções com parâmetros
+variáveis. Vale ressaltar que passagem de parâmetros é sempre feita por
+\textit{valor}.
 
 
 %%%%%%%%%%%%%%%%% Programando em G-Portugol
-
 
 
 \capitulo{Programando em G-Portugol}
@@ -354,7 +354,7 @@ programa criado, é exibido o texto ``Ola mundo!'' na tela.
 ser apresentados com outros símbolos, dependendo do editor usado para escrever
 os algoritmos. Uma vez que, nesse sistema, o ambiente gráfico e o ambiente do
 console usam diferentes páginas de código (codificação de textos), esse
-comportamento é o mesmo para qualquer linguagem/programa.
+comportamento é o mesmo para qualquer linguagem ou programa.
 \newline
 
 Como já deve ter assumido, comentários ao estilo C (/**/) e C++ (//) são
@@ -417,19 +417,20 @@ respeito do último exemplo (programa \ref{programa_inutil})
 
 \begin{itemize}
  \item 
-  Observe que o nome do algoritmo (``teste\underline{ }variaveis'') não tem
-acento. Se declarar o algoritmo como ``teste\underline{ }variáveis'' e tentar
+  Observe que o nome do algoritmo (``teste\_variaveis'')
+não tem
+acento. Se declarar o algoritmo como ``teste\_variáveis'' e tentar
 compilar o código, o seguinte erro será exibido:
 
-  \textbf{Linha: 1 - ``teste\underline{ }variáveis'' não pode ter caracteres
+  \textbf{Linha: 1 - ``teste\_variáveis'' não pode ter caracteres
 especiais.}
 
   Portanto, identificadores (nomes de variáveis, funções e do algoritmo) não
-  podem ter acentos ou caracteres especiais como \$, \#, \@, etc. A definição de
-um identificador em   G-Portugol é equivalente ao das linguagens populares: uma
-letra (a-z ou A-Z) seguido de qualquer número de letras ou números. Finalmente,
-underlines são permitidos.   Cedilhas, portanto, também não
-formam identificadores válidos. 
+  podem ter acentos ou caracteres especiais como \$, \#, etc. A definição
+  de um identificador em   G-Portugol é equivalente ao das linguagens populares:
+  uma letra (a-z ou A-Z) seguido de qualquer número de letras ou números.
+  Finalmente, underlines são permitidos.   Cedilhas, portanto, também não
+  formam identificadores válidos. 
 
  \item 
   O segundo ponto, é a palavra-chave ``variáveis'': ela tem acento, e isso é
@@ -469,8 +470,8 @@ e sua dimensão é informada pelo numero de subscritos. Portanto, ``bitset'' é um 
 enquanto ``quadr'' é uma matriz bidimensional, onde as duas dimensões tem tamanho 4.
 
 É importante observar que matrizes são ``0 based'', isso é, iniciam no
-índice 0 e seus indices são sempre inteiros positivos. Logo, a matriz ``bitset''
-pode ser usada do indice 0 até o indice 9 (inclusive). Seu índice 10 não é
+índice 0 e seus índices são sempre inteiros positivos. Logo, a matriz ``bitset''
+pode ser usada do índice 0 até o índice 9 (inclusive). Seu índice 10 não é
 válido e seu uso poderá acarretar em erros de execução (\textit{runtime
 errors}). Matrizes, assim como variáveis de tipos primitivos, são inicializadas
 com o valor ``0'' ou ``nulo'' em todas as suas posições. Quando usadas como
@@ -559,7 +560,7 @@ tipo.
   \item
   A função ``imprima'' recebe um número de argumentos variáveis, que podem ser
   constantes literais (números, textos entre aspas, caracteres entre aspas
-simples,...), variáveis primitivas ou indices de vetores/matrizes. Os
+simples,...), variáveis primitivas ou índices de vetores/matrizes. Os
   valores são concatenados e adicionados de um caractere EOL (end of line, ou
   fim de linha).
 
@@ -572,7 +573,7 @@ também, permite escapes para representar caracteres como EOL ('$\backslash$n').
   Assim como a palavra-chave ``variáveis'', ``então'' e ``senão'' devem ser acentuadas. 
 
   \item 
-  Parêntesis ao redor da expressão da estrutura ``se/então'' são opicionais.
+  Parêntesis ao redor da expressão da estrutura ``se/então'' são opcionais.
 
   \item
   Como em ``variáveis/fim-variáveis'', blocos ``se'' tem seus respectivos e obrigatórios ``fim-se''. 
@@ -681,7 +682,7 @@ Da mesma forma, para uma iteração decrescente, de 2 em 2, escreve-se:
 
 
   \begin{verbatim}
-para x de 0 até 10 passo -2 faça
+para x de 10 até 0 passo -2 faça
   //comandos...
 fim-para
   \end{verbatim}
@@ -1321,7 +1322,7 @@ principais estão:
 \end{itemize}
 
 Na versão atual é possível compilar algoritmos para sistemas Windows e
-Unixes que suportam o formato ELF e o assembler NASM. Também, há suporte apenas
+Unices que suportam o formato ELF e o assembler NASM. Também, há suporte apenas
 para a tradução de algoritmos para a linguagem C. O resultado é um código em C
 100\% equivalente ao algoritmo.
 
@@ -1438,7 +1439,7 @@ possível, por exemplo, declarar uma variável em G-Portugol com o nome de
 compilador pode emitir avisos e erros, visto que \textit{printf} é uma função da
 biblioteca padrão, usada no código C resultante. Da mesma forma,
 identificadores com \textit{underlines} antes ou depois em seus nomes
-(como ``\underline{ }\underline{ }leia\underline{ }texto'') devem ser evitados,
+(como ``\_\_leia\_texto'') devem ser evitados,
 pois muitos identificadores internos utilizam essas convenções de nomeação, e
 seu uso pode acarretar em conflitos durante a tradução.
 
@@ -1500,37 +1501,38 @@ Por exemplo, a pilha de funções pode ser representada da seguinte forma:
 
 \section{Termos léxicos}
 
-A seguir é apresentado as convenções léxicas usadas em G-Portugol, usando
-notações de expressões regulares.
+A seguir é apresentado as convenções léxicas usadas em G-Portugol.
 
 \begin{verbatim} 
     Regras para identificar literais numéricos
 
-T_INT_LIT : T_OCTAL_LIT | T_HEX_LIT | T_BIN_LIT | [0-9]+
+T_INT_LIT : T_OCTAL_LIT | T_HEX_LIT | T_BIN_LIT | T_DEC_LIT
+
+T_DEC_LIT : [0-9]+
 
 T_OCTAL_LIT : '0' ('c'|'C') [0-8]+
 
 T_HEX_LIT : '0' ('x'|'X') [0-9a-fA-F]+
 
-T_BIN_LIT : '0' ('b'|'B') ('0'|'1')
+T_BIN_LIT : '0' ('b'|'B') [01]+
 
-T_REAL_LIT : [0-9]+ '.' [0-9]+
+T_REAL_LIT : T_DEC_LIT+ '.' T_DEC_LIT+
 
     Regras para identificar caracteres e cadeias de caracteres
 
-T_CARAC_LIT  : '\'' ( ~('\''|'\\') |'\\' . )? '\''
+T_CARAC_LIT  : ''' ( ~('''|'\') |'\' . )? '''
 
-T_STRING_LIT : '"' ( ~( '"' | '\\' | '\n' | '\r') | '\\' .)* '"'
+T_STRING_LIT : '"' ( ~( '"' | '\' | CR | LF ) | '\' . )* '"'
 
   Regras para identificar comentários
 
-SL_COMMENT  : "//" (~('\n'))* ('\n')?
+SL_COMMENT  : "//" [^LF]* ('\n')?
 
 ML_COMMENT  : "/*" ( ~('*') | '*' ~'/' )* "*/"
 
-  Regra para identificar nomes de variáveis, funções, etc
+  Regra para identificar nomes de variáveis, funções, etc.
 
-T_IDENTIFICADOR  : [a-zA-Z] [a-zA-Z0-9_]*
+T_IDENTIFICADOR  : [a-zA-Z_] [a-zA-Z0-9_]*
 \end{verbatim}
 
 A tabela \ref{tb_palavras_chave} contém as palavras-chave padrão da linguagem
@@ -1558,7 +1560,7 @@ G-Portugol.
 
 \section{Gramática}
 
-A seguir é apresentado a gramática da linguagem G-Portugol em notação EBNF.
+A seguir é apresentado a gramática da linguagem G-Portugol.
 
 \begin{verbatim}
 algoritmo 
@@ -1602,7 +1604,7 @@ stm_block
   ;
 
 stm_list
-  : stm_attr ";"
+  : stm_attr
   | fcall ";"
   | stm_ret
   | stm_se
@@ -1618,7 +1620,7 @@ lvalue
   ;
 
 stm_attr
-  : lvalue ":=" expr
+  : lvalue ":=" expr ";"
   ;
 
 stm_se

@@ -2,7 +2,7 @@
 img_extIsRegExp=false
 img_extensions=.eps .pdf .dvi .ps .fig .gif .jpg .jpeg .png
 lastDocument=manual.texmanual.tex
-masterDocument=manual.texmanual.tex
+masterDocument=manual.texmanual.texmanual.texmanual.texmanual.texmanual.texmanual.texmanual.texmanual.texmanual.texmanual.texmanual.texmanual.texmanual.texmanual.texmanual.tex
 name=gpt
 pkg_extIsRegExp=false
 pkg_extensions=.cls .sty .dtx
@@ -23,8 +23,8 @@ open=false
 
 [item:manual.tex]
 archive=true
-column=14
+column=9
 encoding=ISO 8859-1
 highlight=LaTeX
-line=133
+line=1423
 open=true
