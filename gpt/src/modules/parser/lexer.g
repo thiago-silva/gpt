@@ -25,7 +25,9 @@ header {
   #include <sstream>
   #include <iostream>
   #include <ctype.h>
+  #include <antlr/TokenStreamSelector.hpp>
 
+  using namespace antlr;
   using namespace std;
 }
 
@@ -43,6 +45,7 @@ options {
   filter=T_INVALID;
   genHashLines=false;//no #line
 }
+
 
 //we have to create the tokens here, because some of them have accents
 //and, if used inline in parser rules, antlr generates an entry like
@@ -100,6 +103,29 @@ tokens {
 }
 
 {
+public:  
+  PortugolLexer(ANTLR_USE_NAMESPACE(std)istream& in, TokenStreamSelector* s)
+	: ANTLR_USE_NAMESPACE(antlr)CharScanner(new ANTLR_USE_NAMESPACE(antlr)CharBuffer(in),true),
+    lexers(0), selector(s)
+  {
+    initLiterals();
+  }
+
+  void uponEOF()
+  {
+    if(lexers--) {
+      selector->pop();
+      selector->retry();
+    }
+  }
+
+  void setTotalLexers(int value) {
+    lexers = value;
+  }
+
+private:
+  int lexers;
+  TokenStreamSelector* selector;  
   bool hasLatim;
 }
 /*------------------------- Operators -----------------------*/
