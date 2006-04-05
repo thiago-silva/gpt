@@ -37,6 +37,7 @@ public:
   static GPT* self();
 
   void reportDicas(bool value);
+  void printParseTree(bool value);
 
   void showHelp();
   void showVersion();
@@ -56,8 +57,9 @@ private:
 
   bool prologue(const string& ifname);
 
+  bool _printParseTree;
   RefPortugolAST _astree;
-  SymbolTable    _stable;
+  SymbolTable    _stable;  
 };
 
 #endif

@@ -32,7 +32,8 @@ using namespace std;
 
 enum {
   FLAG_PIPE  = 0x1,
-  FLAG_DICA  = 0x2
+  FLAG_DICA  = 0x2,
+  FLAG_PRINT_AST = 0x4
 };
 
 enum {
@@ -77,8 +78,17 @@ int init(int argc, char** argv) {
            v[ersion],  i[nterpret],  p[ipe],  d[ica]
 */
 
+#ifndef DEBUG
   while((c = getopt(argc, argv, "o:t:s:H:P:idvh")) != -1) {
     switch(c) {
+#else
+  while((c = getopt(argc, argv, "o:t:s:H:P:idvhD")) != -1) {
+    switch(c) {
+      case 'D':
+        _flags |= FLAG_PRINT_AST;
+        break;
+#endif
+    
       case 'o':
         if(optarg) {
           _ofilename = optarg;
@@ -178,6 +188,10 @@ int main(int argc, char** argv) {
     GPT::self()->reportDicas(true);
   } else {
     GPT::self()->reportDicas(false);
+  }
+
+  if(_flags & FLAG_PRINT_AST) {
+    GPT::self()->printParseTree(true);
   }
 
   switch(cmd) {

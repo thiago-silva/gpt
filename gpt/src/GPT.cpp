@@ -35,10 +35,12 @@
 
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 GPT* GPT::_self = 0;
 
 GPT::GPT()
+  : _printParseTree(false)
 {
 }
 
@@ -55,6 +57,11 @@ GPT* GPT::self() {
 
 void GPT::reportDicas(bool value) {
   GPTDisplay::self()->showTips(value);
+}
+
+void GPT::printParseTree(bool value)
+{
+  _printParseTree = value;
 }
 
 string GPT::createTmpFile() {
@@ -251,6 +258,11 @@ bool GPT::parse(istream& fi) {
       GPTDisplay::self()->showError(s);
       return false;
     }
+
+    if(_printParseTree) {
+      std::cerr << _astree->toStringList() << std::endl << std::endl;
+    }
+
     SemanticWalker semantic(_stable);
     semantic.algoritmo(_astree);
 
