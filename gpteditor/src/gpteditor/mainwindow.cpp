@@ -394,7 +394,7 @@ bool MainWindow::saveCurrentFileAs()
   QString location = ":gpteditor";
   KURL url = KFileDialog::getSaveURL(location, QString::null, this);
 
-  if(!url.isEmpty())
+  if(!url.isEmpty() && checkOverwrite(url))
   {
     if(m_tabEditor->saveCurrentFileAs(url))
     {
@@ -404,6 +404,23 @@ bool MainWindow::saveCurrentFileAs()
   return false;
 }
 
+bool MainWindow::checkOverwrite(KURL u)
+{
+  if(!u.isLocalFile())
+    return true;
+
+  QFileInfo info( u.path() );
+  if( !info.exists() )
+    return true;
+
+  return KMessageBox::Continue
+         == KMessageBox::warningContinueCancel
+              ( this,
+                i18n( "A file named \"%1\" already exists. Are you sure you want to overwrite it?" ).arg( info.fileName() ),
+                i18n( "Overwrite File?" ),
+                KGuiItem( i18n( "&Overwrite" ), "filesave", i18n( "Overwrite the file" ) )
+              );
+}
 // bool MainWindow::close()
 // {
 //   m_tabEditor->closeAllDocuments();

@@ -129,6 +129,8 @@ private:
   void setupActions();
   void createWidgets();
 
+  bool checkOverwrite(KURL u);
+
   QLabel *m_lbLed;
   QLabel *m_lbDebugMsg;
   QLabel *m_lbDebugName;
