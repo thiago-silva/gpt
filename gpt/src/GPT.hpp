@@ -41,6 +41,7 @@ public:
   void reportDicas(bool value);
   void printParseTree(bool value);
 //   void usePipe(bool value);
+  void setOutputFile(string str);
 
   void showHelp();
   void showVersion();
@@ -48,7 +49,7 @@ public:
   bool compile(const list<string>& ifnames, bool genBinary = true);
   bool translate2C(const list<string>& ifnames);
   bool interpret(const list<string>& ifnames, const string& host, int port);
-
+  
 private:
   GPT();
 
@@ -62,9 +63,12 @@ private:
 
 //   bool _usePipe;
   bool _printParseTree;
+  bool _useOutputFile;
+  string _outputfile;
+
   RefPortugolAST _astree;
   SymbolTable    _stable;
-  string _nomeAlgorimto;
+  
 };
 
 #endif

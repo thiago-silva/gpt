@@ -41,7 +41,7 @@
 GPT* GPT::_self = 0;
 
 GPT::GPT()
-  :/* _usePipe(false),*/ _printParseTree(false)
+  :/* _usePipe(false),*/ _printParseTree(false), _useOutputFile(false)
 {
 }
 
@@ -70,6 +70,11 @@ void GPT::printParseTree(bool value)
 //   _usePipe = value;
 // }
 
+void GPT::setOutputFile(string str) {
+  _useOutputFile = true;
+  _outputfile = str;
+}
+
 string GPT::createTmpFile() {
   #ifdef WIN32
     string cf = getenv("TEMP");
@@ -88,13 +93,14 @@ void GPT::showHelp() {
   stringstream s;
   s << "Modo de uso: " << PACKAGE << " [opções] algoritmos...\n\n"
           "Opções:\n"
-          "   -v   mostra versão do programa\n"
-          "   -h   mostra esse texto\n"
-          "   -c   cria código em linguagem C\n"
-          "   -s   cria código em linguagem assembly\n"
-          "   -i   interpreta o algoritmo\n"
+          "   -v            mostra versão do programa\n"
+          "   -h            mostra esse texto\n"
+          "   -o <arquivo>  compila e salva programa como <arquivo>\n"
+          "   -c <arquivo>  salva o código em linguagem C como <arquivo>\n"
+          "   -s <arquivo>  salva o código em linguagem assembly como <arquivo>\n"
+          "   -i            interpreta o algoritmo\n"
           "\n"
-          "   -d   exibe dicas no relatório de erros\n\n"
+          "   -d            exibe dicas no relatório de erros\n\n"
           "   Maiores informações no manual.\n";
 
   GPTDisplay::self()->showMessage(s);
@@ -154,14 +160,16 @@ bool GPT::compile(const list<string>& ifnames, bool genBinary) {
     return false;
   }
 
-  string ofname;
-  if(!genBinary) {
-    ofname = _nomeAlgorimto + ".asm";
-  } else {
+  string ofname = _outputfile;
+  if(!_useOutputFile) {
+    if(!genBinary) {
+      ofname += ".asm";
+    } 
     #ifdef WIN32
-    ofname = _nomeAlgorimto + ".exe";
-    #else
-    ofname = _nomeAlgorimto;
+    else 
+    {      
+      ofname += ".exe";      
+    }
     #endif
   }
 
@@ -223,7 +231,10 @@ bool GPT::translate2C(const list<string>& ifnames) {
     return false;
   }
 
-  string ofname = _nomeAlgorimto + ".c";
+  string ofname = _outputfile;
+  if(!_useOutputFile) {
+     ofname += ".c";
+  }
 
   Portugol2CWalker pt2c(_stable);
   string c_src = pt2c.algoritmo(_astree);
@@ -287,7 +298,9 @@ bool GPT::parse(list<istream*>& istream_list) {
     parser.setASTFactory(&ast_factory);
 
     parser.algoritmo();
-    _nomeAlgorimto = parser.nomeAlgoritmo();
+    if(_outputfile.empty()) {
+      _outputfile = parser.nomeAlgoritmo();
+    }
 
     if(GPTDisplay::self()->hasError()) {
       GPTDisplay::self()->showErrors();

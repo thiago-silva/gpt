@@ -56,6 +56,9 @@ list<string> _ifilenames;
 string _host;
 string _port = DEFAULT_PORT;
 
+string _csource;
+string _asmsource;
+string _binprogram;
 
 //----- Options -----
 
@@ -77,22 +80,35 @@ static int init(int argc, char** argv) {
 */
 
 #ifndef DEBUG
-  while((c = getopt(argc, argv, "csH:P:idvh")) != -1) {
+  while((c = getopt(argc, argv, "o:c:s:H:P:idvh")) != -1) {
     switch(c) {
 #else
-  while((c = getopt(argc, argv, "csH:P:idvhD")) != -1) {
+  while((c = getopt(argc, argv, "o:c:s:H:P:idvhD")) != -1) {
     switch(c) {
       case 'D':
         _flags |= FLAG_PRINT_AST;
         break;
-#endif    
+#endif
+      case 'o':
+        count_cmds++;
+        cmd = CMD_COMPILE;
+        if(optarg) {
+          _binprogram = optarg;
+        }
+        break;        
       case 'c':
         count_cmds++;
         cmd = CMD_GPT_2_C;
+        if(optarg) {
+          _csource = optarg;
+        }
         break;
       case 's':
         count_cmds++;
         cmd = CMD_GPT_2_ASM;
+        if(optarg) {
+          _asmsource = optarg;
+        }
       case 'H':
         if(optarg) {
           _host = optarg;
@@ -223,12 +239,15 @@ int main(int argc, char** argv) {
       GPT::self()->showHelp();
       break;
     case CMD_COMPILE:
+      GPT::self()->setOutputFile(_binprogram);
       success = GPT::self()->compile(_ifilenames);
       break;
     case CMD_GPT_2_C:
+      GPT::self()->setOutputFile(_csource);
       success = GPT::self()->translate2C(_ifilenames);
       break;
     case CMD_GPT_2_ASM:
+      GPT::self()->setOutputFile(_asmsource);
       success = GPT::self()->compile(_ifilenames, false);
       break;
     case CMD_INTERPRET:
