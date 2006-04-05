@@ -47,7 +47,7 @@ public:
   virtual void matchNot(int t);
   virtual void match(const BitSet& b);
 
-  string getAlgName();
+  string nomeAlgoritmo();
 
 protected:
   static string expecting_algorithm_name;

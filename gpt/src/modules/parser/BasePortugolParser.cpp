@@ -58,7 +58,7 @@ BasePortugolParser::BasePortugolParser(TokenStream& lexer, int k_)
 {
 }
 
-string BasePortugolParser::getAlgName() {
+string BasePortugolParser::nomeAlgoritmo() {
   return _name;
 }
 
