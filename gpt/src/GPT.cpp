@@ -87,7 +87,7 @@ void GPT::showHelp() {
           "   -o <arquivo>  compila e salva executável como <arquivo>\n"
           "   -t <arquivo>  salva o código em linguagem C como <arquivo>\n"
           "   -s <arquivo>  salva o código em linguagem assembly como <arquivo>\n"
-          "   -i            interpreta\n"
+          "   -i            interpreta o algoritmo\n"
           "\n"
           "   -d            exibe dicas no relatório de erros\n\n"
           "   Maiores informações no manual.\n";
