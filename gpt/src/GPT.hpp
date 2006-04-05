@@ -21,6 +21,8 @@
 #ifndef GPT_HPP
 #define GPT_HPP
 
+#include <list>
+#include <string>
 
 #include "PortugolAST.hpp"
 #include "SymbolTable.hpp"
@@ -38,13 +40,14 @@ public:
 
   void reportDicas(bool value);
   void printParseTree(bool value);
+//   void usePipe(bool value);
 
   void showHelp();
   void showVersion();
 
-  bool compile(const string& ifname, const string& ofname, bool genBinary = true);
-  bool translate2C(const string& ifname, const string& ofname);
-  bool interpret(const string& ifname, const string& host, int port);
+  bool compile(const list<string>& ifnames, bool genBinary = true);
+  bool translate2C(const list<string>& ifnames);
+  bool interpret(const list<string>& ifnames, const string& host, int port);
 
 private:
   GPT();
@@ -53,13 +56,15 @@ private:
   
   string createTmpFile();
   
-  bool parse(istream& in);
+  bool parse(list<istream*>&);
 
-  bool prologue(const string& ifname);
+  bool prologue(const list<string>& ifname);
 
+//   bool _usePipe;
   bool _printParseTree;
   RefPortugolAST _astree;
-  SymbolTable    _stable;  
+  SymbolTable    _stable;
+  string _nomeAlgorimto;
 };
 
 #endif

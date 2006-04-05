@@ -24,16 +24,18 @@
 #include "GPT.hpp"
 
 #include <sstream>
+#include <string>
+#include <list>
 #include <unistd.h>
 
 #define DEFAULT_PORT "7680"
 
 using namespace std;
 
-enum {
-  FLAG_PIPE  = 0x1,
-  FLAG_DICA  = 0x2,
-  FLAG_PRINT_AST = 0x4
+enum {  
+  FLAG_DICA  = 0x1,
+  FLAG_PRINT_AST = 0x2
+  //FLAG_PIPE  = 0x1,
 };
 
 enum {
@@ -49,19 +51,15 @@ enum {
 //----- globals ------
 
 int    _flags = 0;
-string _ifilename;
+list<string> _ifilenames;
+
 string _host;
 string _port = DEFAULT_PORT;
 
-#ifdef WIN32
-  string _ofilename = "a.exe";
-#else
-  string _ofilename = "a.out";
-#endif
 
 //----- Options -----
 
-int init(int argc, char** argv) {
+static int init(int argc, char** argv) {
 
   if(argc == 1) {
     return CMD_SHOW_HELP;
@@ -79,34 +77,22 @@ int init(int argc, char** argv) {
 */
 
 #ifndef DEBUG
-  while((c = getopt(argc, argv, "o:t:s:H:P:idvh")) != -1) {
+  while((c = getopt(argc, argv, "csH:P:idvh")) != -1) {
     switch(c) {
 #else
-  while((c = getopt(argc, argv, "o:t:s:H:P:idvhD")) != -1) {
+  while((c = getopt(argc, argv, "csH:P:idvhD")) != -1) {
     switch(c) {
       case 'D':
         _flags |= FLAG_PRINT_AST;
         break;
-#endif
-    
-      case 'o':
-        if(optarg) {
-          _ofilename = optarg;
-        }
-        break;
-      case 't':
+#endif    
+      case 'c':
         count_cmds++;
         cmd = CMD_GPT_2_C;
-        if(optarg) {
-          _ofilename = optarg;
-        }
         break;
       case 's':
         count_cmds++;
         cmd = CMD_GPT_2_ASM;
-        if(optarg) {
-          _ofilename = optarg;
-        }
       case 'H':
         if(optarg) {
           _host = optarg;
@@ -124,9 +110,9 @@ int init(int argc, char** argv) {
       case 'd':
         _flags |= FLAG_DICA;
         break;
-      case 'p':
-        _flags |= FLAG_PIPE;
-        break;
+//       case 'p':
+//         _flags |= FLAG_PIPE;
+//         break;
       case 'v':
         return CMD_SHOW_VERSION;
         break;
@@ -153,15 +139,17 @@ int init(int argc, char** argv) {
     goto bail;
   }
 
-  if(!(_flags & FLAG_PIPE)) { //no pipe
-    if(optind < argc) {
-      _ifilename = argv[optind];
-    } else {
+//   if(!(_flags & FLAG_PIPE)) { //no pipe
+    while(optind < argc) {
+      _ifilenames.push_back(argv[optind++]);
+    }
+
+    if(_ifilenames.size() == 0) {
       s << PACKAGE << ": nenhum arquivo especificado." << endl;
       GPTDisplay::self()->showError(s);
       goto bail;
     }
-  }
+//   }
 
   if(CMD_INTERPRET == cmd) {
     if((_port != DEFAULT_PORT) && (atoi(_port.c_str()) == 0)) {
@@ -178,6 +166,32 @@ int init(int argc, char** argv) {
 }
 
 
+static void appendDefaultFiles() {
+  string inc;
+
+  char* env = getenv("GPT_INCLUDE");  
+
+  if(!env) {
+    return;
+  }
+
+  inc = env;
+
+  string filename;
+  string::size_type c = 0;
+  string::size_type b = 0;
+  while((c = inc.find(":", b)) != string::npos) {
+    filename = inc.substr(b, c);
+    if(filename.length()) {
+      _ifilenames.push_back(filename);
+    }
+    b = c+1;
+  }
+  filename = inc.substr(b);
+  if(filename.length()) {
+    _ifilenames.push_back(filename);
+  }
+}
 
 int main(int argc, char** argv) {
   int cmd = init(argc, argv);
@@ -194,6 +208,13 @@ int main(int argc, char** argv) {
     GPT::self()->printParseTree(true);
   }
 
+//   if(_flags & FLAG_PIPE) {
+//     GPT::self()->usePipe(true);
+//   }
+
+
+  appendDefaultFiles();
+
   switch(cmd) {
     case CMD_SHOW_VERSION:
       GPT::self()->showVersion();
@@ -202,16 +223,16 @@ int main(int argc, char** argv) {
       GPT::self()->showHelp();
       break;
     case CMD_COMPILE:
-      success = GPT::self()->compile(_ifilename, _ofilename);
+      success = GPT::self()->compile(_ifilenames);
       break;
     case CMD_GPT_2_C:
-      success = GPT::self()->translate2C(_ifilename, _ofilename);
+      success = GPT::self()->translate2C(_ifilenames);
       break;
     case CMD_GPT_2_ASM:
-      success = GPT::self()->compile(_ifilename, _ofilename, false);
+      success = GPT::self()->compile(_ifilenames, false);
       break;
     case CMD_INTERPRET:
-      success = GPT::self()->interpret(_ifilename, _host, atoi(_port.c_str()));
+      success = GPT::self()->interpret(_ifilenames, _host, atoi(_port.c_str()));
       break;
     case CMD_INVALID:
       break;
@@ -219,3 +240,49 @@ int main(int argc, char** argv) {
 
   exit(success?EXIT_SUCCESS:EXIT_FAILURE);
 }
+
+/*
+static void figureOutputFileName() {
+  if(!_ifilename.empty()) { //temos nome do arquivo de entrada
+    if(_ofilename.empty()) { //arquivo de saida nao foi setado
+      string fname;
+      string::size_type dirsep;
+      
+      #ifdef WIN32
+        if((dirsep = _ifilename.rfind('\\')) == string::npos) {
+          dirsep = _ifilename.rfind('/');
+        }
+      #else
+        dirsep = _ifilename.rfind('/');
+      #endif
+      
+      if(dirsep == string::npos) {
+        fname = _ifilename;
+      } else {
+        fname = _ifilename.substr(dirsep+1);
+      }
+          
+      string::size_type dotpos;
+      if((dotpos = fname.rfind('.')) != string::npos) {
+        #ifdef WIN32
+          _ofilename = fname.substr(0, dotpos) + ".exe";
+        #else
+          _ofilename = fname.substr(0, dotpos);
+        #endif
+      } else {
+        #ifdef WIN32
+          _ofilename = fname + ".exe";
+        #else
+          _ofilename = fname + ".out";
+        #endif
+      }
+    } //no else
+  } else if(_ofilename.empty()) { //nao temos nome de arquivo de entrada, nem de saida
+    //colocar defaults
+    #ifdef WIN32
+      string _ofilename = "a.exe";
+    #else
+      string _ofilename = "a.out";
+    #endif
+  }
+}*/

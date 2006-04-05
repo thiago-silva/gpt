@@ -26,6 +26,7 @@
 #endif
 
 #include <antlr/AST.hpp>
+#include <antlr/TokenStreamSelector.hpp>
 #include "PortugolLexer.hpp"
 #include "PortugolParser.hpp"
 #include "Portugol2CWalker.hpp"
@@ -40,7 +41,7 @@
 GPT* GPT::_self = 0;
 
 GPT::GPT()
-  : _printParseTree(false)
+  :/* _usePipe(false),*/ _printParseTree(false)
 {
 }
 
@@ -64,6 +65,11 @@ void GPT::printParseTree(bool value)
   _printParseTree = value;
 }
 
+// void GPT::usePipe(bool value) 
+// {
+//   _usePipe = value;
+// }
+
 string GPT::createTmpFile() {
   #ifdef WIN32
     string cf = getenv("TEMP");
@@ -80,16 +86,15 @@ string GPT::createTmpFile() {
 
 void GPT::showHelp() {
   stringstream s;
-  s << "Modo de uso: " << PACKAGE << " [opções] <arquivo>\n\n"
+  s << "Modo de uso: " << PACKAGE << " [opções] algoritmos...\n\n"
           "Opções:\n"
-          "   -v            mostra versão do programa\n"
-          "   -h            mostra esse texto\n"
-          "   -o <arquivo>  compila e salva executável como <arquivo>\n"
-          "   -t <arquivo>  salva o código em linguagem C como <arquivo>\n"
-          "   -s <arquivo>  salva o código em linguagem assembly como <arquivo>\n"
-          "   -i            interpreta o algoritmo\n"
+          "   -v   mostra versão do programa\n"
+          "   -h   mostra esse texto\n"
+          "   -c   cria código em linguagem C\n"
+          "   -s   cria código em linguagem assembly\n"
+          "   -i   interpreta o algoritmo\n"
           "\n"
-          "   -d            exibe dicas no relatório de erros\n\n"
+          "   -d   exibe dicas no relatório de erros\n\n"
           "   Maiores informações no manual.\n";
 
   GPTDisplay::self()->showMessage(s);
@@ -104,46 +109,60 @@ void GPT::showVersion() {
   GPTDisplay::self()->showMessage(s);
 }
 
-bool GPT::prologue(const string& ifname) {
+bool GPT::prologue(const list<string>& ifnames) {
   stringstream s;
   bool success = false;
 
-  if(ifname.length() > 0) {
-    ifstream fi;
-    fi.open(ifname.c_str(), ios_base::in);
-    if(!fi) {
-      s << PACKAGE << ": não foi possível abrir o arquivo: \"" << ifname << "\"" << endl;
+//   if(_usePipe) { //shell pipe (stdin)
+//     if(cin.rdbuf()->in_avail() == 0) {
+//       s << PACKAGE << ": não existem dados na entrada padrão" << endl;
+//       GPTDisplay::self()->showError(s);
+//       goto bail;
+//     }
+// 
+//     if(!parse(cin)) {
+//       goto bail;
+//     }
+//   } else {
+  list<istream*> istream_list;
+  for(list<string>::const_iterator it = ifnames.begin(); it != ifnames.end(); ++it) {
+    ifstream *fi = new ifstream((*it).c_str());
+    //fi.open((*it).c_str(), ios_base::in);
+    if(!*fi) {
+      s << PACKAGE << ": não foi possível abrir o arquivo: \"" << (*it) << "\"" << endl;
       GPTDisplay::self()->showError(s);
       goto bail;
     }
-
-    if(!parse(fi)) {
-      goto bail;
-    }
-  } else { //shell pipe
-    if(cin.rdbuf()->in_avail() == 0) {
-      s << PACKAGE << ": não existem dados na entrada padrão" << endl;
-      GPTDisplay::self()->showError(s);
-      goto bail;
-    }
-
-    if(!parse(cin)) {
-      goto bail;
-    }
+    istream_list.push_back(fi);
   }
 
+  if(!parse(istream_list)) {
+    goto bail;
+  }
+    
   success = true;
 
   bail:
     return success;
 }
 
-bool GPT::compile(const string& ifname, const string& ofname, bool genBinary) {
+bool GPT::compile(const list<string>& ifnames, bool genBinary) {  
   bool success = false;
   stringstream s;
 
-  if(!prologue(ifname)) {
+  if(!prologue(ifnames)) {
     return false;
+  }
+
+  string ofname;
+  if(!genBinary) {
+    ofname = _nomeAlgorimto + ".asm";
+  } else {
+    #ifdef WIN32
+    ofname = _nomeAlgorimto + ".exe";
+    #else
+    ofname = _nomeAlgorimto;
+    #endif
   }
 
   X86Walker x86(_stable);
@@ -196,13 +215,15 @@ bool GPT::compile(const string& ifname, const string& ofname, bool genBinary) {
     return success;
 }
 
-bool GPT::translate2C(const string& ifname, const string& ofname) {
+bool GPT::translate2C(const list<string>& ifnames) {
   bool success = false;
   stringstream s;
 
-  if(!prologue(ifname)) {
+  if(!prologue(ifnames)) {
     return false;
   }
+
+  string ofname = _nomeAlgorimto + ".c";
 
   Portugol2CWalker pt2c(_stable);
   string c_src = pt2c.algoritmo(_astree);
@@ -223,8 +244,8 @@ bool GPT::translate2C(const string& ifname, const string& ofname) {
     return success;
 }
 
-bool GPT::interpret(const string& ifname, const string& host, int port) {
-  if(!prologue(ifname)) {
+bool GPT::interpret(const list<string>& ifnames, const string& host, int port) {
+  if(!prologue(ifnames)) {
     return false;
   }
 
@@ -234,17 +255,39 @@ bool GPT::interpret(const string& ifname, const string& host, int port) {
   return true;
 }
 
-bool GPT::parse(istream& fi) {
+
+
+bool GPT::parse(list<istream*>& istream_list) {
   stringstream s;
+  
   try {
-    PortugolLexer lexer(fi);
-    PortugolParser parser(lexer);
+    TokenStreamSelector*  selector = new TokenStreamSelector;
+    
+    PortugolLexer* lexer;
+    PortugolLexer* first = 0;
+    int c = 0;
+    for(list<istream*>::iterator it = istream_list.begin(); it != istream_list.end(); ++it, c++) {
+      lexer = new PortugolLexer(*(*it), selector);
+      //setFileName
+
+      //messy but works!!
+      selector->addInputStream(lexer, "name");
+      selector->select(lexer);
+      selector->push("name");
+      if(!first) {
+        first = lexer;
+      }
+    }
+    first->setTotalLexers(c);
+    selector->select(first);
+    PortugolParser parser(*selector);
 
     ASTFactory ast_factory(PortugolAST::TYPE_NAME,&PortugolAST::factory);
     parser.initializeASTFactory(ast_factory);
     parser.setASTFactory(&ast_factory);
 
     parser.algoritmo();
+    _nomeAlgorimto = parser.nomeAlgoritmo();
 
     if(GPTDisplay::self()->hasError()) {
       GPTDisplay::self()->showErrors();
