@@ -130,7 +130,7 @@ bool GPT::prologue(const list<string>& ifnames) {
 //       goto bail;
 //     }
 //   } else {
-  list<istream*> istream_list;
+  list<pair<string, istream*> > istream_list;
   for(list<string>::const_iterator it = ifnames.begin(); it != ifnames.end(); ++it) {
     ifstream *fi = new ifstream((*it).c_str());
     //fi.open((*it).c_str(), ios_base::in);
@@ -139,7 +139,7 @@ bool GPT::prologue(const list<string>& ifnames) {
       GPTDisplay::self()->showError(s);
       goto bail;
     }
-    istream_list.push_back(fi);
+    istream_list.push_back(pair<string,istream*>(*it,fi));
   }
 
   if(!parse(istream_list)) {
@@ -268,31 +268,42 @@ bool GPT::interpret(const list<string>& ifnames, const string& host, int port) {
 
 
 
-bool GPT::parse(list<istream*>& istream_list) {
+bool GPT::parse(list<pair<string,istream*> >& istream_list) {
   stringstream s;
   
   try {
     TokenStreamSelector*  selector = new TokenStreamSelector;
     
-    PortugolLexer* lexer;
-    PortugolLexer* first = 0;
-    int c = 0;
-    for(list<istream*>::iterator it = istream_list.begin(); it != istream_list.end(); ++it, c++) {
-      lexer = new PortugolLexer(*(*it), selector);
-      //setFileName
+    //codigo desgracado, mas faz o que deve
+    //1: controle de multiplos tokenStreams
+    //2: utilizar o filename adequado para error reporting
 
-      //messy but works!!
-      selector->addInputStream(lexer, "name");
+    PortugolLexer* lexer;
+    pair<string, PortugolLexer*> first;
+    int c = 0;
+    for(list<pair<string,istream*> >::iterator it = istream_list.begin(); 
+           it != istream_list.end(); 
+           ++it, ++c) 
+    {
+      lexer = new PortugolLexer(*((*it).second), selector);
+      
+      selector->addInputStream(lexer, (*it).first);
       selector->select(lexer);
-      selector->push("name");
-      if(!first) {
-        first = lexer;
+      selector->push((*it).first);
+      if(!first.second) {
+        first.second = lexer;
+        first.first = (*it).first;
+      } else {
+        first.second->addFilename((*it).first);
       }
     }
-    first->setTotalLexers(c);
-    selector->select(first);
+    first.second->setTotalLexers(c);
+    selector->select(first.second);
+    
     PortugolParser parser(*selector);
 
+    GPTDisplay::self()->setCurrentFile(first.first);
+    
     ASTFactory ast_factory(PortugolAST::TYPE_NAME,&PortugolAST::factory);
     parser.initializeASTFactory(ast_factory);
     parser.setASTFactory(&ast_factory);

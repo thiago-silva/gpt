@@ -107,6 +107,7 @@ int GPTDisplay::add(const string& msg, int line) {
   ErrorMsg err;
   err.line = line;
   err.msg = msg;
+  err.file = _currentFile;
 
   _errors[line].push_back(err);
 
@@ -115,7 +116,7 @@ int GPTDisplay::add(const string& msg, int line) {
 
 void GPTDisplay::showError(ErrorMsg& err) {
   stringstream s;
-  s << "Linha: " << err.line << " - " << err.msg << "." << endl;
+  s << err.file << ":" << err.line << " - " << err.msg << "." << endl;
   showError(s);
 }
 
@@ -132,6 +133,11 @@ void GPTDisplay::addTip(const string& msg, int line, int cd) {
   for(int i = 0; i < cd-1; ++i,++it);
   (*it).hasTip = true;
   (*it).tip = msg;
+}
+
+void GPTDisplay::setCurrentFile(const string& file)
+{
+  _currentFile = file;
 }
 
 GPTDisplay::ErrorMsg GPTDisplay::getFirstError() {

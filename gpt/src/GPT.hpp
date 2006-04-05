@@ -57,7 +57,7 @@ private:
   
   string createTmpFile();
   
-  bool parse(list<istream*>&);
+  bool parse(list<pair<string,istream*> >&);
 
   bool prologue(const list<string>& ifname);
 

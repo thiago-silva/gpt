@@ -54,6 +54,7 @@ public:
     int line;
     bool hasTip;
     int cd;
+    string file;
     string msg;
     string tip;
   };
@@ -72,6 +73,7 @@ public:
   int add(const string& msg, int line);
   void addTip(const string& msg, int line, int cd);
 
+  void setCurrentFile(const string& file);
 //   void addInternalError(const string&);
 //   void addInternalError(const stringstream&);
 
@@ -104,6 +106,8 @@ private:
 
   typedef map<int, list<ErrorMsg> > errors_map_t;
   errors_map_t _errors;
+
+  string _currentFile;
 };
 
 #endif

@@ -113,8 +113,11 @@ public:
 
   void uponEOF()
   {
-    if(lexers--) {
-      selector->pop();
+    if(lexers--) {      
+      GPTDisplay::self()->setCurrentFile(filenames.back());
+      filenames.pop_back();
+
+      selector->pop();      
       selector->retry();
     }
   }
@@ -123,9 +126,14 @@ public:
     lexers = value;
   }
 
+  void addFilename(string str) {
+    filenames.push_back(str);
+  }
+
 private:
-  int lexers;
+  int lexers;  
   TokenStreamSelector* selector;  
+  list<string> filenames;
   bool hasLatim;
 }
 /*------------------------- Operators -----------------------*/
