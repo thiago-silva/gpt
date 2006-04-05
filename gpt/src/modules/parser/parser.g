@@ -636,7 +636,7 @@ passo
 
 
 expr
-  : expr_e (T_KW_OU^ expr)?
+  : expr_e (T_KW_OU^ expr_e)*
   ;
 
   exception //catch todas as excecoes nas expr_*
@@ -648,56 +648,56 @@ expr_e
 options {
   defaultErrorHandler=false; //noviable should be caught on expr
 }
-  : expr_bit_ou (T_KW_E^ expr_e)?
+  : expr_bit_ou (T_KW_E^ expr_bit_ou)*
   ;
 
 expr_bit_ou
 options {
   defaultErrorHandler=false; //noviable should be caught on expr
 }
-  : expr_bit_xou (T_BIT_OU^ expr_bit_ou)?
+  : expr_bit_xou (T_BIT_OU^ expr_bit_xou)*
   ;
 
 expr_bit_xou 
 options {
   defaultErrorHandler=false; //noviable should be caught on expr
 }
-  : expr_bit_e (T_BIT_XOU^ expr_bit_xou)?
+  : expr_bit_e (T_BIT_XOU^ expr_bit_e)*
   ;
 
 expr_bit_e
 options {
   defaultErrorHandler=false; //noviable should be caught on expr
 }
-  : expr_igual (T_BIT_E^ expr_bit_e)?
+  : expr_igual (T_BIT_E^ expr_igual)*
   ;
   
 expr_igual
 options {
   defaultErrorHandler=false; //noviable should be caught on expr
 }
-  : expr_relacional (T_IGUAL^ expr_igual|T_DIFERENTE^ expr_igual)?
+  : expr_relacional (T_IGUAL^ expr_relacional|T_DIFERENTE^ expr_relacional)*
   ;
         
 expr_relacional
 options {
   defaultErrorHandler=false; //noviable should be caught on expr
 }
-  : expr_ad ((T_MAIOR^| T_MAIOR_EQ^| T_MENOR^| T_MENOR_EQ^) expr_relacional)?
+  : expr_ad ((T_MAIOR^| T_MAIOR_EQ^| T_MENOR^| T_MENOR_EQ^) expr_ad)*
   ;
 
 expr_ad
 options {
   defaultErrorHandler=false; //noviable should be caught on expr
 }
-  : expr_multip (T_MAIS^ expr_ad| T_MENOS^ expr_ad)?
+  : expr_multip (T_MAIS^ expr_multip| T_MENOS^ expr_multip)*
   ;
 
 expr_multip 
 options {
   defaultErrorHandler=false; //noviable should be caught on expr
 }
-  : expr_unario (( T_DIV^ | T_MULTIP^ | T_MOD^ ) expr_multip)?
+  : expr_unario (( T_DIV^ | T_MULTIP^ | T_MOD^ ) expr_unario)*
   ;
 
 expr_unario!
