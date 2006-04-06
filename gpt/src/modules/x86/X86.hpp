@@ -105,8 +105,8 @@ public:
   void writeBitOuExpr();
   void writeBitXouExpr();
   void writeBitEExpr();
-  void writeIgualExpr();
-  void writeDiferenteExpr();
+  void writeIgualExpr(int e1, int e2);
+  void writeDiferenteExpr(int e1, int e2);
   void writeMaiorExpr(int e1, int e2);
   void writeMenorExpr(int e1, int e2);
   void writeMaiorEqExpr(int e1, int e2);

@@ -615,11 +615,11 @@ expr[int expecting_type] returns [int etype]
       }
   | #(T_IGUAL     e1=expr[expecting_type] e2=expr[expecting_type])
       {
-        x86.writeIgualExpr();
+        x86.writeIgualExpr(e1, e2);
       }
   | #(T_DIFERENTE e1=expr[expecting_type] e2=expr[expecting_type])
       {
-        x86.writeDiferenteExpr();
+        x86.writeDiferenteExpr(e1, e2);
       }
   | #(T_MAIOR     e1=expr[expecting_type] e2=expr[expecting_type])
       {

@@ -479,22 +479,40 @@ void X86::writeBitEExpr() {
   writeTEXT("push eax");
 }
 
-void X86::writeIgualExpr() {
+void X86::writeIgualExpr(int e1, int e2) {
   writeTEXT("pop ebx");
   writeTEXT("pop eax");
 
-  writeTEXT("cmp eax, ebx");
-  writeTEXT("sete al");
-  writeTEXT("and eax, 0xff");
+  if((e1 != TIPO_LITERAL) && (e2 != TIPO_LITERAL)) {
+		writeTEXT("cmp eax, ebx");
+		writeTEXT("sete al");
+		writeTEXT("and eax, 0xff");
+	} else {
+		writeTEXT("addarg eax");
+    writeTEXT("addarg ebx");
+    writeTEXT("call strcmp");
+    writeTEXT("clargs 2");
+	}
 
   writeTEXT("push eax");
 }
 
-void X86::writeDiferenteExpr() {
+void X86::writeDiferenteExpr(int e1, int e2) {
+
   writeTEXT("pop ebx");
   writeTEXT("pop eax");
 
-  writeTEXT("cmp eax, ebx");
+  if((e1 != TIPO_LITERAL) && (e2 != TIPO_LITERAL)) {
+    writeTEXT("cmp eax, ebx");
+	} else {
+		writeTEXT("addarg eax");
+    writeTEXT("addarg ebx");
+    writeTEXT("call strcmp");
+    writeTEXT("clargs 2");
+
+    writeTEXT("cmp eax, 1");
+	}
+
   writeTEXT("setne al");
   writeTEXT("and eax, 0xff");
 
@@ -536,6 +554,28 @@ void X86::writeMaiorExpr(int e1, int e2) {
     }
     writeTEXT("sete al");
     writeTEXT("and eax, 0xff");
+  } else if((e1 == TIPO_LITERAL) && (e2 == TIPO_LITERAL)) {
+    writeTEXT("push ebx");
+
+    writeTEXT("addarg eax");
+    writeTEXT("call strlen");
+    writeTEXT("clargs 1");
+
+    writeTEXT("pop ebx");
+    writeTEXT("push eax");
+
+    writeTEXT("addarg ebx");
+    writeTEXT("call strlen");
+    writeTEXT("clargs 1");
+    
+    writeTEXT("mov ebx, eax");
+    writeTEXT("pop eax");
+
+    //compare lengths
+    writeTEXT("cmp eax, ebx");
+    writeTEXT("setg al");
+    writeTEXT("and eax, 0xff");
+    
   } else {
     writeTEXT("cmp eax, ebx");
     writeTEXT("setg al");
@@ -574,6 +614,28 @@ void X86::writeMenorExpr(int e1, int e2) {
       writeTEXT("cmp ax, 0x100");
     }
     writeTEXT("sete al");
+    writeTEXT("and eax, 0xff");
+  } else if((e1 == TIPO_LITERAL) && (e2 == TIPO_LITERAL)) {
+    writeTEXT("push ebx");
+
+    writeTEXT("addarg eax");
+    writeTEXT("call strlen");
+    writeTEXT("clargs 1");
+
+    writeTEXT("pop ebx");
+    writeTEXT("push eax");
+
+    writeTEXT("addarg ebx");
+    writeTEXT("call strlen");
+    writeTEXT("clargs 1");
+    
+    writeTEXT("mov ebx, eax");
+    writeTEXT("pop eax");
+
+
+    //compare lengths
+    writeTEXT("cmp eax, ebx");
+    writeTEXT("setl al");
     writeTEXT("and eax, 0xff");
   } else {
     writeTEXT("cmp eax, ebx");
@@ -619,6 +681,28 @@ void X86::writeMaiorEqExpr(int e1, int e2) {
     writeTEXT("sete al");
     writeTEXT("and eax, 0xff");
     writeTEXT("or eax, ebx");
+  } else if((e1 == TIPO_LITERAL) && (e2 == TIPO_LITERAL)) {
+    writeTEXT("push ebx");
+
+    writeTEXT("addarg eax");
+    writeTEXT("call strlen");
+    writeTEXT("clargs 1");
+
+    writeTEXT("pop ebx");
+    writeTEXT("push eax");
+
+    writeTEXT("addarg ebx");
+    writeTEXT("call strlen");
+    writeTEXT("clargs 1");
+    
+    writeTEXT("mov ebx, eax");
+    writeTEXT("pop eax");
+
+
+    //compare lengths
+    writeTEXT("cmp eax, ebx");
+    writeTEXT("setge al");
+    writeTEXT("and eax, 0xff");
   } else {
     writeTEXT("cmp eax, ebx");
     writeTEXT("setge al");
@@ -663,6 +747,27 @@ void X86::writeMenorEqExpr(int e1, int e2) {
     writeTEXT("sete al");
     writeTEXT("and eax, 0xff");
     writeTEXT("or eax, ebx");
+  } else if((e1 == TIPO_LITERAL) && (e2 == TIPO_LITERAL)) {
+    writeTEXT("push ebx");
+
+    writeTEXT("addarg eax");
+    writeTEXT("call strlen");
+    writeTEXT("clargs 1");
+
+    writeTEXT("pop ebx");
+    writeTEXT("push eax");
+
+    writeTEXT("addarg ebx");
+    writeTEXT("call strlen");
+    writeTEXT("clargs 1");
+    
+    writeTEXT("mov ebx, eax");
+    writeTEXT("pop eax");
+
+    //compare lengths
+    writeTEXT("cmp eax, ebx");
+    writeTEXT("setle al");
+    writeTEXT("and eax, 0xff");
   } else {
     writeTEXT("cmp eax, ebx");
     writeTEXT("setle al");
