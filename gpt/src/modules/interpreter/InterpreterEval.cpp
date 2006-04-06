@@ -176,7 +176,7 @@ InterpreterEval::InterpreterEval(SymbolTable& st, string host, int port)
   skipStack.push(false);
 }
 
-void InterpreterEval::init() {
+void InterpreterEval::init(const string& file) {
   list<Symbol> globals = stable.getSymbols(SymbolTable::GlobalScope);
 
   map<string, Variable> vars;
@@ -197,7 +197,9 @@ void InterpreterEval::init() {
   }
 
   variables.init(vars);
-  program_stack.push_back(pair<string,int>(SymbolTable::GlobalScope, 0));
+  context_t ctx = context_t(SymbolTable::GlobalScope, 0);
+  stack_entry_t entry = stack_entry_t(file, ctx);
+  program_stack.push_back(entry);
 
   InterpreterDBG::self()->init(dbg_host, dbg_port);
 }
@@ -671,10 +673,10 @@ string InterpreterEval::castLeiaChar(Variable& var, ExprValue& v) {
   }
 }
 
-void InterpreterEval::beginFunctionCall(const string& fname, list<ExprValue>& args, int line) {
+void InterpreterEval::beginFunctionCall(const string& file, const string& funcname, list<ExprValue>& args, int line) {
   //setup local vars
 
-  list<Symbol> globals = stable.getSymbols(fname);
+  list<Symbol> globals = stable.getSymbols(funcname);
 
   map<string, Variable> vars;
   for(list<Symbol>::iterator it = globals.begin(); it != globals.end(); ++it) {
@@ -693,14 +695,14 @@ void InterpreterEval::beginFunctionCall(const string& fname, list<ExprValue>& ar
   variables.pushLocalContext(vars);
 
   //init params
-  Symbol func = stable.getSymbol(SymbolTable::GlobalScope,fname);
+  Symbol func = stable.getSymbol(SymbolTable::GlobalScope,funcname);
   list< pair<string,SymbolType> >& params = func.param.symbolList();
 
   list< pair<string,SymbolType> >::iterator pit = params.begin();
   list<ExprValue>::iterator ait = args.begin();
 
   while((ait != args.end()) && (pit != params.end())) {
-    Symbol pv = stable.getSymbol(fname, (*pit).first);
+    Symbol pv = stable.getSymbol(funcname, (*pit).first);
     Variable& var = variables.get(pv.lexeme);
     if(var.isPrimitive) {
       var.primitiveValue = (*ait).value;
@@ -711,8 +713,10 @@ void InterpreterEval::beginFunctionCall(const string& fname, list<ExprValue>& ar
     ++ait;
     ++pit;
   }
-
-  program_stack.push_back(pair<string, int>(fname, line));
+  
+  context_t ctx = context_t(funcname, line);
+  stack_entry_t entry = stack_entry_t(file, ctx);
+  program_stack.push_back(entry);
 
   skipStack.push(currentSkip);
 }
@@ -753,15 +757,26 @@ ExprValue InterpreterEval::getReturnExprValue() {
 
 //----------- Debugger -------------------------
 
-void InterpreterEval::nextCmd(int line) {
-  program_stack.back().second = line;
+void InterpreterEval::nextCmd(const string& file, int line) {
+  program_stack.back().second.second = line;
 
   currentLine = line;
 
-  if((!skipStack.top() && !globalSkip) || InterpreterDBG::self()->breakOnLine(line)) {
+  InterpreterDBG::self()->checkData();
+
+  if(InterpreterDBG::self()->breakOnLine(line)) {
+    //goto no-skip state
+    skipStack.pop();
+    skipStack.push(false);
+    globalSkip = false;
+  }
+
+  if((!skipStack.top() && !globalSkip)) {
     stringstream s;
     int cmd;
-    cmd = InterpreterDBG::self()->nextCmd(currentLine, variables, program_stack);
+
+    InterpreterDBG::self()->sendInfo(currentLine, variables, program_stack);
+    cmd = InterpreterDBG::self()->getCmd();
     switch(cmd) {
       case InterpreterDBG::CMDStepInto:
         currentSkip = false;

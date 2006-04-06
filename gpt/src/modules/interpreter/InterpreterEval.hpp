@@ -111,7 +111,7 @@ class InterpreterEval {
 
   InterpreterEval(SymbolTable& st, string host, int port);
   
-  void init();
+  void init(const string&);
  
   ExprValue evaluateOu(ExprValue& left, ExprValue& right);
   ExprValue evaluateE(ExprValue& left, ExprValue& right);
@@ -142,7 +142,7 @@ class InterpreterEval {
 
   void execAttribution(LValue& lvalue, ExprValue& v);  
 
-  void beginFunctionCall(const string& fname, list<ExprValue>& args, int line);
+  void beginFunctionCall(const string& file, const string& fname, list<ExprValue>& args, int line);
   void endFunctionCall();
 
   bool isBuiltInFunction(const string& fname);
@@ -152,7 +152,7 @@ class InterpreterEval {
   ExprValue getReturnExprValue();
 //----------- Debugger -------------------------
 
-  void nextCmd(int line);
+  void nextCmd(const string& file, int line);
   
 private:
   string castLeiaChar(Variable& var, ExprValue& v);
@@ -173,7 +173,9 @@ private:
   stack<bool> skipStack;
 
   Variables variables;  
-  list<pair<string, int> > program_stack;//pair<context, line>
+  typedef pair<string, int> context_t;
+  typedef pair<string, pair<string, int> > stack_entry_t;
+  list< stack_entry_t > program_stack;//pair< pair<file, pair<context, line> >
 
   ExprValue retExpr;
 };
