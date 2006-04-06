@@ -3,7 +3,7 @@
   <general>
     <author>Thiago Silva</author>
     <email>thiago.silva@kdemal.net</email>
-    <version>0.9b</version>
+    <version>$VERSION$</version>
     <projectmanagement>KDevAutoProject</projectmanagement>
     <primarylanguage>C++</primarylanguage>
     <keywords>
@@ -26,9 +26,11 @@
       <terminal>false</terminal>
       <directoryradio>executable</directoryradio>
       <customdirectory>/</customdirectory>
-      <programargs>-i ../../exemplos/teste.gpt</programargs>
+      <programargs>./teste.gpt</programargs>
       <autocompile>true</autocompile>
-      <envvars/>
+      <envvars>
+        <envvar value="inc.gpt" name="GPT_INCLUDE" />
+      </envvars>
       <runarguments>
         <gpt/>
       </runarguments>
@@ -47,10 +49,10 @@
         <ccompiler>kdevgccoptions</ccompiler>
         <cxxcompiler>kdevgppoptions</cxxcompiler>
         <f77compiler>kdevg77options</f77compiler>
-        <cxxflags>-O0 -g3 -Wall</cxxflags>
+        <cxxflags/>
         <envvars/>
         <topsourcedir/>
-        <cppflags>-DDEBUG</cppflags>
+        <cppflags/>
         <ldflags/>
         <ccompilerbinary/>
         <cxxcompilerbinary/>
@@ -192,7 +194,7 @@
   </cppsupportpart>
   <kdevdebugger>
     <general>
-      <programargs>-i ../../exemplos/teste.gpt </programargs>
+      <programargs>teste.gpt</programargs>
       <gdbpath></gdbpath>
       <dbgshell>libtool</dbgshell>
       <configGdbScript></configGdbScript>
