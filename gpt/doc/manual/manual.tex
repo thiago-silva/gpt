@@ -1353,11 +1353,12 @@ comportamentos equivalentes. Isso é, o resultado de uma execução interpretada
 deve ser o mesmo se a execução fosse feita por meio de um binário compilado.
 
 \section{Opções gerais}
+\label{sec:opcoes_gerais}
 
 Ao executar o programa ``gpt'' com o argumento ``-h'', é mostrado:
 
 \begin{verbatim}
-Modo de uso: gpt [opções] <arquivo>
+Modo de uso: gpt [opções] arquivos
 
 Opções:
    -v            mostra versão do programa
@@ -1382,8 +1383,9 @@ As opções são comentadas a seguir.
   h: exibe todas as opções suportadas pelo programa ``gpt'';
 
   \item
-  o <arquivo> EAo compilar um algoritmo, salva o executável com o nome de
-\textit{<arquivo>};
+  o <arquivo>: Ao compilar um algoritmo, salva o executável com o nome de
+\textit{<arquivo>}. Se essa opção for omitida na compilação, o nome do
+algoritmo será usado para criar o arquivo executável.
   
   \item
   t <arquivo>: Traduz o algoritmo para C, salva o código fonte com o nome de
@@ -1402,6 +1404,9 @@ conhecida como ``interpretação'' ou ``scripting''.
 para solucionar errors de sintáxe.
 \end{itemize}
 
+A última opção (``arquivos'') é uma lista de arquivos contendo o código fonte
+em G-Portugol, embora seja mais comum utilizar um arquivo apenas para cada
+algoritmo.
 
 \section{Tratamento de erros}
   
@@ -1415,9 +1420,8 @@ reportados em inglês.
 
 O tratamento de erros é um aspecto importante do programa GPT. A reportagem de
 erros deve ser o mais claro possível e ter um formato uniforme, informando o
-local exato onde o erro foi localizado (linha e coluna no código fonte).
-Deve, também, fornecer dicas de como proceder para corrigir o erro, em
-alguns casos.
+local exato onde o erro foi localizado. Deve, também, fornecer dicas de como
+proceder para corrigir o erro, em alguns casos.
 
 No momento, o analisador do GPT percorre o código fonte a procura de erros e,
 mesmo que encontre, continua a análise a procura de mais erros. Uma outra
@@ -1502,7 +1506,42 @@ Por exemplo, a pilha de funções pode ser representada da seguinte forma:
 \end{verbatim}
 
 
-  
+\subsection{Processando algoritmos divididos em multiplos arquivos}
+
+A partir da versão 0.9.3, o GPT suporta processar algoritmos divididos em
+multiplos arquivos. Esse recurso é possível utilizando duas formas: 
+
+
+\begin{itemize}
+
+ \item 
+  Passando os arquivos como opções na linha de comando;
+
+ \item 
+  Utilizando a variável de ambiente GPT\_INCLUDE.
+
+\end{itemize}
+
+A primeira forma é explicada na sessão \ref{sec:opcoes_gerais}. A segunda forma
+pretende facilitar a utilização de funções que devem estar disponíveis por
+padrão a cada execução/compilação dos algoritmos. Pode-se definir a variável de
+ambiente GPT\_INCLUDE contendo vários caminhos de arquivos separados por ``:''.
+Em sistemas Unix, por exemplo, pode-se criar a essa variável da seguinte forma
+(utilizando Bash):
+
+\begin{verbatim}
+$ export GPT_INCLUDE="/usr/local/lib/gpt/base.gpt:/usr/local/lib/gpt/util.gpt"
+\end{verbatim}
+
+Onde ``base.gpt'' e ``util.gpt'' são arquivos contendo funções escritas em
+G-Portugol.
+
+Os arquivos passados pela linha de comando e/ou que se encontram na variável
+GPT\_INCLUDE são concatenados e processados como se o algoritmo estivesse em
+apenas um arquivo. Portanto, arquivos extras não devem ter declaração de
+algoritmo, bloco de variáveis globais ou bloco principal.
+
+
 %      *estrutura do XML
 %      *command line debugger.
 
