@@ -113,7 +113,7 @@ public:
 
   void uponEOF()
   {
-    if(lexers--) {      
+    if(filenames.size()) {
       GPTDisplay::self()->setCurrentFile(filenames.back());
       filenames.pop_back();
 
