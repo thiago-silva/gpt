@@ -14,7 +14,7 @@
     <ignoreparts/>
     <projectdirectory>.</projectdirectory>
     <absoluteprojectpath>false</absoluteprojectpath>
-    <description></description>
+    <description/>
   </general>
   <kdevautoproject>
     <general>
@@ -28,9 +28,7 @@
       <customdirectory>/</customdirectory>
       <programargs>./teste.gpt</programargs>
       <autocompile>true</autocompile>
-      <envvars>
-        <envvar value="inc.gpt" name="GPT_INCLUDE" />
-      </envvars>
+      <envvars/>
       <runarguments>
         <gpt/>
       </runarguments>
@@ -178,7 +176,7 @@
       <root>/usr/lib/qt</root>
     </qt>
     <creategettersetter>
-      <prefixGet></prefixGet>
+      <prefixGet/>
       <prefixSet>set</prefixSet>
       <prefixVariable>m_,_</prefixVariable>
       <parameterName>theValue</parameterName>
@@ -195,11 +193,11 @@
   <kdevdebugger>
     <general>
       <programargs>teste.gpt</programargs>
-      <gdbpath></gdbpath>
+      <gdbpath/>
       <dbgshell>libtool</dbgshell>
-      <configGdbScript></configGdbScript>
-      <runShellScript></runShellScript>
-      <runGdbScript></runGdbScript>
+      <configGdbScript/>
+      <runShellScript/>
+      <runGdbScript/>
       <breakonloadinglibs>true</breakonloadinglibs>
       <separatetty>false</separatetty>
       <floatingtoolbar>false</floatingtoolbar>

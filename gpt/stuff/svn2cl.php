@@ -24,7 +24,7 @@ class ChangeLog {
   }
 
   function getLog() {    
-    $filec = `svn log --xml -v https://developername@svn.berlios.de/svnroot/repos/gpt/trunk/gpt`;
+    $filec = `svn log --xml -v https://thiago_silva@svn.berlios.de/svnroot/repos/gpt/trunk/gpt`;
   
   //   if($GLOBALS['argc'] != 2) {
   //     die("-missing arg\n");

@@ -232,6 +232,8 @@ No apêndice deste livro pode ser encontrado a gramática da linguagem G-Portugol.
 A linguagem em si não difere fundamentalmente ou apresenta novidades em relação ao uso popular de 
 portugol. Semelhante à linguagens como Pascal e C, é uma linguagem imperativa, com comandos de 
 controle de fluxo, manipulação de dados e recursos de entrada e saída básicos.
+A linguagem em \textit{case sensitive}, o que significa que, por exemplo, uma
+função chamada ``leia'' é diferente de uma função chamada ``Leia''.
 
 \section{Tipos de dados}
 
@@ -385,7 +387,7 @@ algoritmo teste_variaveis;
 
 variáveis
   x    : inteiro;
-  nome : literal
+  nome : literal;
 fim-variáveis
 
 início
@@ -668,7 +670,7 @@ Onde:
 As expressões de/até controlam os valores que a variável numérica terá no
 início e no fim do laço, respectivamente. Tanto o controle da frequência, quanto
 a decisão de incrementar ou decrementar a variável de controle é feita pelo
-termo opicional ``passo'', e seu valor padrão é 1. Por exemplo, para iterar o
+termo opcional ``passo'', e seu valor padrão é 1. Por exemplo, para iterar o
 valor de uma variável numérica ``x'' de 0 até 10, escreve-se: 
 
   \begin{verbatim}
@@ -695,19 +697,20 @@ algoritmo fatorial;
 
 variáveis
   res : inteiro;
-  x : inteiro;
+  fat : inteiro;
+  x   : inteiro;
 fim-variáveis
 
 início
   imprima("Digite um número:");
-  x := leia();
+  fat := leia();
 
   res := 1;
-  para x de x até 1 passo -1 faça
+  para x de fat até 1 passo -1 faça
     res := res * x;
   fim-para
 
-  imprima("fatorial de ",x," é igual a ",res);
+  imprima("fatorial de ",fat," é igual a ",res);
 fim
 
   \end{verbatim}
@@ -1093,7 +1096,12 @@ sua compatibilidade numérica.
 Eles podem conter caracteres especiais como ``$\backslash$n'' e devem ser
 definidos em apenas uma linha de código. Valores literais são os únicos que não
 tem uma representação numérica, impedindo sua participação em expressões com
-operadores aritméticos (soma, divisão, AND, etc).
+operadores aritméticos (soma, divisão, etc). Comparações de igualdade
+para valores literais são feitas caractere por caractere em \textit{case
+sensitive}. Portanto, a expressão ``portugol'' = ``Portugol'' é avaliada como
+falsa. Já comparações de grandeza são feitos calculando o número de caracteres
+que compõem os valores literais. Então, a expressão ``maria'' > ``josé'' é
+avaliada como verdadeira.
 
   \item
   Lógicos: são representados pelas palavras ``verdadeiro'' e ``falso''.
@@ -1115,8 +1123,8 @@ de parêntesis.
     \hline
       Operador & Nome \\
     \hline
-    ou, ||          & OR lógico  \\
-    e, \&\&         & AND lógico \\
+    ou              & OR lógico  \\
+    e               & AND lógico \\
     |               & OR binário \\
     \^{}            &  XOR binário \\
     \&              & AND binário \\
