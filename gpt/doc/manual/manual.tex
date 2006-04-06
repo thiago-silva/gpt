@@ -348,15 +348,16 @@ No Windows:
 \end{verbatim}
 
 Esse comando compila o algoritmo e salva o arquivo binário resultante como
-``olamundo'' (ou ``olamundo.exe'') no diretório atual. Após executar o
-programa criado, é exibido o texto ``Ola mundo!'' na tela.
+``olamundo'' (ou ``olamundo.exe'') no diretório atual. Se a opção ``-o
+<arquivo>'' não for informada, o GPT criará o executável usando o nome do
+algoritmo. Após executar o programa criado, é exibido o texto ``Ola mundo!'' na
+tela.
 \newline
 
 \textbf{Nota}: No MS Windows, textos com acento como o ``á'' poderão
 ser apresentados com outros símbolos, dependendo do editor usado para escrever
-os algoritmos. Uma vez que, nesse sistema, o ambiente gráfico e o ambiente do
-console usam diferentes páginas de código (codificação de textos), esse
-comportamento é o mesmo para qualquer linguagem ou programa.
+os algoritmos, uma vez que, nesse sistema, o ambiente gráfico e o
+ambiente do console usam diferentes páginas de código (codificação de textos).
 \newline
 
 Como já deve ter assumido, comentários ao estilo C (/**/) e C++ (//) são
@@ -1147,15 +1148,22 @@ Em G-Portugol, não há coerção ou \textit{casting} de tipos expliticamente.
 Todos os tipos numéricos (inteiro, real, lógico e caractere) são compativeis
 entre si.
 
-Existem dois casos em que ocorre uma coerção implicita. O primeiro caso ocorre
+Existem dois casos em que ocorre uma coerção implícita. O primeiro caso ocorre
 durante a avaliação de uma expressão que tem operandos de tipos diferentes (mas
 compatíveis entre si), onde não há perda de dados e um dos termos é promovido
-para o tipo do seu termo complementar. Por exemplo, na expressão ``2+1.5'', o
+para o tipo do seu termo complementar. Por exemplo, na expressão ``2 + 1.5'', o
 termo ``2'' é promovido para o tipo ``real'', tendo o valor ``2.0'' antes
- que  a soma seja processada. O segundo caso é discutido na
+ que  a soma seja processada. Da mesma forma, sendo ``x'' uma variável de tipo
+real, a expressão ``x := 5 / 2'' atribuirá a ``x'' o valor ``2.00''. Esse
+comportamento não muito óbvio é similar ao da linguagem C, onde ``5 / 2'' é
+avaliado como uma divisão de inteiros, onde apenas o valor inteiro final é
+relevante. Para obter o resultado real, a expressão deve ser ``5.0 / 2'', para
+informar ao compilador que a divisão usará valores reais, produzindo a promoção
+de tipos mencionada anteriormente.
+
+O segundo caso em que ocorre uma coerção implícita é
+discutido na
 seção \ref{subsec:atribuicoes}.
-
-
 
   \subsection{Atribuições}
   \label{subsec:atribuicoes}

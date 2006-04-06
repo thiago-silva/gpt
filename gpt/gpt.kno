@@ -4,10 +4,7 @@
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>Atualizar documentacao<br /><br /></li>
 <li>rever manual</li>
-<ul type="disc"><li>compilacao usa nome do algoritmo como arquivo de saida se &quot;-o&quot; nao for dado.</li>
-<li>ver aba &quot;TODO&quot; para documentacao</li>
-<li>verificar aba &quot;Bugs&quot; para o manual</li>
-<li>documentar multiple files compilation</li>
+<ul type="disc"><li>documentar multiple files compilation</li>
 <li>documentar GPT_INCLUDE<br /></li></ul>
 <li>-criar base.gpt e distribuir (funcoes como power, abs, sin, cos, sqrt, etc)</li>
 <li>-Lançar versão 9.3</li>
@@ -29,22 +26,14 @@
 <div></div>
 <li>Win x86:</li>
 <ul type="disc"><li>pcre static link<br /></li></ul>
-<li>Documentacao</li>
-<ul type="disc"><li>checar implementacao e documentacao sobre &quot;para&quot;</li>
-<ul type="disc"><li>para com passo implicito SEMPRE deve ser +1 (_nao_ deve verificar decresc/cresc comparando os operandos).</li>
-<li>ao fim, lvalue tem o valor de &quot;ate&quot; </li></ul>
-<li>overflow de floats, nos 3 modulos divergem (verificar,testar e documentar)<br /></li>
-<li>ao pressionar &quot;enter&quot; na funcao &quot;leia()&quot; x86 e interpreter assimilam o valor nulo. Em C, a funcao persiste<br />nas tentativas<br /><br /></li></ul>
+<li>overflow de floats, nos 3 modulos divergem (verificar,testar e documentar)</li>
+<li>ao pressionar &quot;enter&quot; na funcao &quot;leia()&quot; x86 e interpreter assimilam o valor nulo. Em C, a funcao persiste<br />nas tentativas<br /><br /></li>
 <li>Atualizar &quot;INSTALL&quot;  e &quot;README&quot;</li>
 <ul type="disc"><li>Documentar passos para desenvolver no windows (mingw, pcre, antlr...)</li>
 <li>Sobre compilacao (nasm/32)</li>
 <ul type="disc"><li>tamanho dos tipos (32 real,inteiro,logico, 8 literal)</li>
 <li>Overflow aritmetico</li>
-<li>Notas:</li>
-<ul type="disc"><li>real x := 2 / 5; /* res=2. Like &quot;C&quot;, não há promoção dos operandos. Resultado quebrado */</li>
-<ul type="disc"><li>documentar no manual</li></ul>
-<li>para x de 0 até 10 passo 4</li>
-<ul type="disc"><li>valor ao final: 10<br /></li></ul></ul></ul></ul>
+<li>Notas:<br /></li></ul></ul>
 <li>GPTEditor</li>
 <ul type="disc"><li>Settings:</li>
 <ul type="disc"><li>Remover &quot;argumentos&quot;</li></ul></ul></ul>
@@ -88,13 +77,6 @@
 
 
 \NewEntry 1 Bugs
-<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
-<ul type="disc"><li>manua.tex:</li>
-<ul type="disc"><li>Verificar se há suporte para &quot;||&quot; e &quot;&amp;&amp;&quot;, &quot;|&quot; e &quot;&amp;&quot;<br /></li>
-<li>&quot;Pressione Enter para continuar&quot; =&gt; &quot;Pressione qualquer tecla para continuar&quot;<br /></li>
-<li>extensao dos arquivos &quot;.pt&quot; -&gt; &quot;.gpt&quot;</li></ul></ul>
-</body></html>
-
 
 \NewEntry 1 latex2html
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">

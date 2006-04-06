@@ -5,7 +5,7 @@ Sumário de mudanças
  * Melhorias no modulo de depuração.
  * Revisão e correção de mensagens de erro de compilação.
  * Correção de bugs na compilação e tradução de expressões envolvendo literais.
- * Correção de bugs de análise semântica.
+ * Correção de bugs na análise semântica (avaliação de parâmetros de função).
  * Adicionado suporte a compilação de algoritmos usando mais de um arquivo.
  * Adicionado suporte a variável de ambiente GPT_INCLUDE para incluir algoritmos 
    automaticamente.
@@ -21,7 +21,8 @@ Sumário de mudanças
  * Correção de um bug de compilação relacionado a função "leia".
 
 08 de Março de 2006  * gpt 0.9b
- * Implementação da geração de código executável (x86, PE/ELF. NASM como backend)
+ * Implementação da geração de código executável (x86, PE/ELF,
+   NASM como backend)
  * GPT portado para MS Windows (testado com compilador MingW32)
  * Vários bugfixes (ver ChangeLog)
 
