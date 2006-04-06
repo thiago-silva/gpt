@@ -755,7 +755,11 @@ expr_elemento
 fcall!
 {RefToken tk;}
   : id:T_IDENTIFICADOR T_ABREP a:fargs {tk=lastToken;} T_FECHAP 
-      {#fcall = #([TI_FCALL,"fcall!"], id, a);#fcall->setLine(id->getLine());}
+      {
+        #fcall = #([TI_FCALL,"fcall!"], id, a);
+        #fcall->setLine(id->getLine());
+        #fcall->setFilename(GPTDisplay::self()->getCurrentFile());
+      }
   ; 
 
   exception //T_FECHAP
