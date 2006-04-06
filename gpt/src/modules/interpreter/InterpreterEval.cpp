@@ -764,7 +764,7 @@ void InterpreterEval::nextCmd(const string& file, int line) {
 
   InterpreterDBG::self()->checkData();
 
-  if(InterpreterDBG::self()->breakOnLine(line)) {
+  if(InterpreterDBG::self()->breakOn(file, line)) {
     //goto no-skip state
     skipStack.pop();
     skipStack.push(false);

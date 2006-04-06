@@ -51,7 +51,7 @@ public:
 
   void closeSock();
 
-  bool breakOnLine(int line);
+  bool breakOn(const string& file, int line);
   
 private:
   InterpreterDBG();
@@ -79,7 +79,7 @@ private:
   SOCKET clientsock;
 #endif
 
-  list<int> breakpoints;
+  map<string, list<int> > breakpoints;
   int currentCmd;
 };
 

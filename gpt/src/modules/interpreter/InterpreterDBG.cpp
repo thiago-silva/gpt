@@ -393,39 +393,42 @@ int InterpreterDBG::receiveCmd(bool nonBlocking) {
   return ret;
 }
 
-void InterpreterDBG::processBreakpointCMD(string& cmd) {
-//  cerr << "process breakpoint " << cmd << endl;
+void InterpreterDBG::processBreakpointCMD(string& bpcommand) {
+ //cerr << "process breakpoint " << bpcommand << endl;
 
-  string what;
+  string cmd;
+  string file;
   int line;
-  pcrecpp::RE re("breakpoint cmd=(add|remove).*line=(\\d+)");
-  if(!re.FullMatch(cmd, &what, &line)) {
+  pcrecpp::RE re("breakpoint cmd=(add|remove).*file=\"([^\"]*)\".*line=(\\d+)");
+  if(!re.FullMatch(bpcommand, &cmd, &file, &line)) {
     //cerr << PACKAGE << ": comando invalido (2): \"" << cmd << "\"" << endl;
     return;
   }
 
-  if(what == "add") {
-    breakpoints.push_back(line);
-    //cerr << PACKAGE << ": adding \"" << line << ":" << cmd << "\"" << endl;
-  } else if(what == "remove") {
-    breakpoints.remove(line);
-    //cerr << PACKAGE << ": removing  \"" << line << ":" << cmd << "\"" << endl;
+  //cerr << PACKAGE << ": capturado:" << cmd << ":" << file << ":" << line << endl;
+
+  if(cmd == "add") {
+    breakpoints[file].push_back(line);
+    //cerr << PACKAGE << ": adding \"" << file << ":" << line << " -- " << cmd << "\"" << endl;
+  } else if(cmd == "remove") {
+    breakpoints[file].remove(line);
+    //cerr << PACKAGE << ": removing \"" << file << ":" << line << " -- " << cmd << "\"" << endl;
   } else {
-    cerr << PACKAGE << ": breakpoint cmd invalido \"" << cmd << "\"" << endl;
+    cerr << PACKAGE << ": breakpoint cmd invalido \"" << bpcommand << "\"" << endl;
     return;
   }
 }
 
-bool InterpreterDBG::breakOnLine(int line) {
-  for(list<int>::iterator it = breakpoints.begin(); it != breakpoints.end(); ++it) {
-//    cerr << "breakon checkin for " << *it << " on " << line << endl;
-    if(*it == line) {
-//      cerr << "breakon BREAK on " << *it << endl;
+bool InterpreterDBG::breakOn(const string& file, int line) {
+  //cerr << "Breakon file:" << file << " * line:" << line << endl;
+  for(list<int>::iterator it = breakpoints[file].begin(); it != breakpoints[file].end(); ++it) {   
+    //cerr << "---breakon checkin on " << file << " * line:" << (*it) << endl;
+    if((*it) == line) {
+      //cerr << "found! breakon BREAK on " << *it << endl;
       return true;
     }
   }
 
-//  cerr << "breakon nops on " << line << endl;
   return false;
 }
 

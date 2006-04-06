@@ -164,7 +164,7 @@ inicio
 stm
 {
   ExprValue retToDevNull;
-  interpreter.nextCmd(_t->getFilename(), _t->getLine());
+  interpreter.nextCmd(static_cast<RefPortugolAST>(_t->getFirstChild())->getFilename(), _t->getLine());  
 }
   : stm_attr
   | retToDevNull=fcall
