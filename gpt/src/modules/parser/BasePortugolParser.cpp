@@ -27,7 +27,7 @@
 string BasePortugolParser::expecting_algorithm_name = "nome do algoritmo";
 string BasePortugolParser::expecting_variable = "uma variável";
 string BasePortugolParser::expecting_datatype = "um tipo (inteiro, literal,...)";
-string BasePortugolParser::expecting_datatype_pl = "um tipo de vetor/matriz (inteiros, literais,...)";
+string BasePortugolParser::expecting_datatype_pl = "um tipo de conjunto/matriz (inteiros, literais,...)";
 string BasePortugolParser::expecting_identifier = "identificador";
 string BasePortugolParser::expecting_expression = "expressão";
 string BasePortugolParser::expecting_valid_sentence = "sentença válida";
