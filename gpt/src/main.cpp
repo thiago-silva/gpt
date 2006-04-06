@@ -83,7 +83,7 @@ static int init(int argc, char** argv) {
   while((c = getopt(argc, argv, "o:c:s:H:P:idvh")) != -1) {
     switch(c) {
 #else
-  while((c = getopt(argc, argv, "o:c:s:H:P:idvhD")) != -1) {
+  while((c = getopt(argc, argv, "o:t:s:H:P:idvhD")) != -1) {
     switch(c) {
       case 'D':
         _flags |= FLAG_PRINT_AST;
@@ -96,7 +96,7 @@ static int init(int argc, char** argv) {
           _binprogram = optarg;
         }
         break;        
-      case 'c':
+      case 't':
         count_cmds++;
         cmd = CMD_GPT_2_C;
         if(optarg) {
