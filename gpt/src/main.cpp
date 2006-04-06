@@ -257,7 +257,7 @@ int main(int argc, char** argv) {
       break;
   }
 
-  exit(success?EXIT_SUCCESS:EXIT_FAILURE);
+  return success?EXIT_SUCCESS:EXIT_FAILURE;
 }
 
 /*
