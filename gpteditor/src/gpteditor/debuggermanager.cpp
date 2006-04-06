@@ -158,8 +158,8 @@ void DebuggerManager::connectDebugger(AbstractDebugger* debugger)
           this, SLOT(slotDebugBreak()));
 
 
-  connect(debugger, SIGNAL(sigCompileError(int, const QString&)),
-          this, SLOT(slotCompileError(int, const QString&)));
+  connect(debugger, SIGNAL(sigCompileError(const QString&, const KURL&, int)),
+          this, SLOT(slotCompileError(const QString&, const KURL&, int)));
 }
 
 
@@ -228,7 +228,13 @@ void DebuggerManager::slotDebugStart()
     return;
   }
 
-  m_activeDebugger->start(m_window->tabEditor()->currentDocumentURL());
+  if(m_activeDebugger->isDebugging()) {
+    clearStackMarks();
+    m_window->setDebugStatusMsg(i18n("Continuing..."));
+    m_activeDebugger->continueExecution();
+  } else {
+    m_activeDebugger->start(m_window->tabEditor()->currentDocumentURL());
+  }
 }
 
 void DebuggerManager::slotDebugStop()
@@ -418,7 +424,7 @@ void DebuggerManager::slotNewDocument()
 
 /******************************* Debugger interface ******************************************/
 
-void DebuggerManager::updateStack(DebuggerStack* stack)
+void DebuggerManager::clearStackMarks() 
 {
   //**** dealing with the current stackCombo (MARKS stuff)
   //-if stackCombo isn't empty, unmark the previously marked ExecutionMark
@@ -445,6 +451,15 @@ void DebuggerManager::updateStack(DebuggerStack* stack)
 
     ed->unmarkPreExecutionPoint(execPoint->url()/*, execPoint->line()*/);
   }
+}
+
+void DebuggerManager::updateStack(DebuggerStack* stack)
+{
+  clearStackMarks();
+
+  DebuggerExecutionPoint* execPoint;
+  EditorTabWidget* ed = m_window->tabEditor();
+
 
   //**** dealing with the new Stack (the argument)
   //-set the current document/line according to the top context of the stack
@@ -490,9 +505,9 @@ void DebuggerManager::debugMessage(int type, const QString& msg, const KURL& url
   m_window->messageListView()->add(type, msg, line, url);
 }
 
-void DebuggerManager::slotCompileError(int line, const QString& msg)
+void DebuggerManager::slotCompileError(const QString& msg, const KURL& file, int line)
 {
-  m_window->messageListView()->add(DebuggerManager::ErrorMsg, msg, line, m_window->tabEditor()->currentDocumentURL());
+  m_window->messageListView()->add(DebuggerManager::ErrorMsg, msg, line, file);
 }
 
 void DebuggerManager::error(const QString& msg)

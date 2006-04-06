@@ -104,10 +104,12 @@ private slots:
   //Debugger internal error (conection, listen port, etc)
   void slotInternalError(const QString&);
 
-  void slotCompileError(int, const QString&);
+  void slotCompileError(const QString& msg, const KURL& file, int line);
 private:
   bool sanityCurrentFile();
   void connectDebugger(AbstractDebugger*);
+
+  void clearStackMarks();
 
   AbstractDebugger* m_activeDebugger;
   MainWindow       *m_window;
