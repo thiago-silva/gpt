@@ -114,7 +114,7 @@ options {
          "  }\n"
          "  free(allocated);\n"
          "}\n\n";
-    s << "void matrix_cpy__(void *src, void* dest, int type, int size) {\n"
+    s << "void matrix_cpy(void *src, void* dest, int type, int size) {\n"
          "   int i;\n"
          "   int *ds,*dd;\n"
          "   double *fs,*fd;\n"
@@ -146,7 +146,7 @@ options {
          "       exit(1);\n"
          "   }\n"
          "}\n";
-    s << "void matrix_init__(void *matrix, int type, int size) {\n"
+    s << "void matrix_init(void *matrix, int type, int size) {\n"
          "   int i;\n"
          "   int *d;\n"
          "   double* f;\n"
@@ -221,22 +221,22 @@ options {
          "   va_end(args);\n"
          "   printf(\"\\n\");\n"
          "}\n\n";
-    s << "int leia_inteiro__() {\n"
+    s << "int leia_inteiro() {\n"
          "   int i = 0;\n"
          "   scanf(\"%d\", &i);\n"
          "   return i;\n"
          "}\n";
-    s << "char leia_caractere__() {\n"
+    s << "char leia_caractere() {\n"
          "   char c = 0;\n"
          "   scanf(\"%c\", &c);\n"
          "   return c;\n"
          "}\n";
-    s << "double leia_real__() {\n"
+    s << "double leia_real() {\n"
          "   double f = 0;\n"
          "   scanf(\"%lf\", &f);\n"
          "   return f;\n"
          "}\n";
-    s << "char* leia_literal__() {\n"
+    s << "char* leia_literal() {\n"
          "   char *lit = NULL;\n"
          "   size_t  len = 0;\n"
          "   int read;\n"
@@ -248,9 +248,9 @@ options {
          "   collect(lit);\n"
          "   return lit;\n"
          "}\n";
-    s << "boolean leia_logico__() {\n"
+    s << "boolean leia_logico() {\n"
          "   char* logico;\n"
-         "   logico = leia_literal__();\n"
+         "   logico = leia_literal();\n"
          "   if(strcmp(\"falso\",logico) == 0) {\n"
          "      return FALSE;\n"
          "   } else if(strcmp(\"0\",logico) == 0) {\n"
@@ -258,7 +258,7 @@ options {
          "   }\n"
          "   return TRUE;\n"
          "}\n";
-    s << "boolean str_comp__(char* left, char* right) {\n"
+    s << "boolean str_comp(char* left, char* right) {\n"
          "   if(left == 0) {\n"
          "     if(right == 0) {\n"
          "       return TRUE;\n"
@@ -268,15 +268,15 @@ options {
          "   }\n"
          "   return (strcmp(left, right)==0);\n"
          "}\n";
-    s << "int str_strlen__(char* str) {\n"
+    s << "int str_strlen(char* str) {\n"
          "   if(str == 0) {\n"
          "     return 0;\n"
          "   }\n"
          "   return strlen(str);\n"
          "}\n";
-    s << "char* return_literal__(char* str) {\n"
+    s << "char* return_literal(char* str) {\n"
          "  char* lit = NULL;\n"
-         "  lit = (char*) malloc(sizeof(char)*(str_strlen__(str)+1));\n"
+         "  lit = (char*) malloc(sizeof(char)*(str_strlen(str)+1));\n"
          "  strcpy(lit, str);\n"
          "  collect(lit);\n"
          "  return lit;\n"
@@ -333,22 +333,25 @@ options {
       if(s.lexeme == "leia") {
         switch(type) {
           case TIPO_REAL:
-            return "leia_real__";
+            return "leia_real";
           case TIPO_LITERAL:
-            return "leia_literal__";
+            return "leia_literal";
           case TIPO_CARACTERE:
-            return "leia_caractere__";
+            return "leia_caractere";
           case TIPO_LOGICO:
-            return "leia_logico__";
+            return "leia_logico";
           case TIPO_INTEIRO:
           default:
-            return "leia_inteiro__";
+            return "leia_inteiro";
         }
-      } /*else if(s.lexeme == "imprima") {
-        return "printf";
-      }*/
-    }
-    return id;
+      } else { //imprima
+        return id;
+      }
+    } else {
+      string ret = "_";
+      ret += id;
+      return ret; 
+    }    
   }
 
   
@@ -428,21 +431,21 @@ options {
 
     switch(optoken) {
       case T_IGUAL:
-        ret << "str_comp__(" << left.expr.second << "," << right.expr.second << ")";
+        ret << "str_comp(" << left.expr.second << "," << right.expr.second << ")";
         break;
       case T_DIFERENTE:
-        ret << "str_comp__(" << left.expr.second << "," << right.expr.second << ")";
+        ret << "str_comp(" << left.expr.second << "," << right.expr.second << ")";
       case T_MAIOR:
-        ret << "(str_strlen__(" << left.expr.second << ") > str_strlen__(" << right.expr.second << "))";
+        ret << "(str_strlen(" << left.expr.second << ") > str_strlen(" << right.expr.second << "))";
         break;
       case T_MENOR:
-        ret << "(str_strlen__(" << left.expr.second << ") < str_strlen__(" << right.expr.second << "))";
+        ret << "(str_strlen(" << left.expr.second << ") < str_strlen(" << right.expr.second << "))";
         break;
       case T_MAIOR_EQ:
-        ret << "(str_strlen__(" << left.expr.second << ") <= str_strlen__(" << right.expr.second << "))";
+        ret << "(str_strlen(" << left.expr.second << ") <= str_strlen(" << right.expr.second << "))";
         break;
       case T_MENOR_EQ:  
-        ret << "(str_strlen__(" << left.expr.second << ") >= str_strlen__(" << right.expr.second << "))";
+        ret << "(str_strlen(" << left.expr.second << ") >= str_strlen(" << right.expr.second << "))";
         break;
       default:
           cerr << "Erro interno: op nao suportado (pt2c::translateBinExpr)." << endl;
@@ -473,7 +476,7 @@ variaveis
           p=primitivo 
             {
               for(list<string>::iterator it = p.primvars.second.begin(); it != p.primvars.second.end(); ++it) {
-                str << translateType(p.primvars.first) << " " << (*it) << " = 0;";
+                str << translateType(p.primvars.first) << " _" << (*it) << " = 0;";
                 writeln(str);
                 str.str("");
               }
@@ -482,14 +485,14 @@ variaveis
           | p=matriz 
             {
               for(list<string>::iterator itid = p.matrizvars.second.first.begin(); itid !=  p.matrizvars.second.first.end(); ++itid) {
-                str << translateType(p.matrizvars.first) << " " << *itid;
+                str << translateType(p.matrizvars.first) << " _" << *itid;
                 for(list<string>::iterator itdim = p.matrizvars.second.second.begin(); itdim != p.matrizvars.second.second.end(); ++itdim) {
                   str << "[" << *itdim << "]";
                 }
                 str << ";";
                 writeln(str);
       
-                init << "matrix_init__(" << *itid << ", ";
+                init << "matrix_init(_" << *itid << ", ";
                 switch(p.matrizvars.first) {
                   case TIPO_INTEIRO:
                     init << "'i', ";break;
@@ -646,7 +649,7 @@ lvalue returns [production p]
   : #(id:T_IDENTIFICADOR
       {
         p.lvalue.first = stable.getSymbol(_currentScope, id->getText(), true).type.primitiveType();
-        s << id->getText();
+        s << "_" << id->getText();
       }
       (
         e=expr[TIPO_INTEIRO] {s << "[" << e.expr.second <<  "]";}
@@ -690,7 +693,7 @@ stm_ret
     {
       str << "return ";
       if(_currentScopeType == TIPO_LITERAL) {
-        str << "return_literal__(" << e.expr.second << ")";
+        str << "return_literal(" << e.expr.second << ")";
       } else {
         str << e.expr.second;
       }
@@ -889,14 +892,14 @@ func_decls
         //      Procuramos diretamente na tabela de simbolos. (conveniencia)
         _currentScopeType = stable.getSymbol(SymbolTable::GlobalScope, id->getText(), true).type.primitiveType();
         str << translateType(_currentScopeType);
-        str << " " << id->getText() << "(";
+        str << " _" << id->getText() << "(";
       }
 
       (
           prim=primitivo
             {              
               for(list<string>::iterator it = prim.primvars.second.begin(); it != prim.primvars.second.end(); ++it) {
-                str << comma << translateType(prim.primvars.first) << " " << (*it);
+                str << comma << translateType(prim.primvars.first) << " _" << (*it);
                 comma = ", ";
               }
             }
@@ -904,8 +907,8 @@ func_decls
             {
               stringstream s;
               for(list<string>::iterator itid = mat.matrizvars.second.first.begin(); itid !=  mat.matrizvars.second.first.end(); ++itid) {
-                s << comma << translateType(mat.matrizvars.first) << " " << *itid << "__";
-                decl << translateType(mat.matrizvars.first) << " " << *itid;
+                s << comma << translateType(mat.matrizvars.first) << " __" << *itid;
+                decl << translateType(mat.matrizvars.first) << " _" << *itid;
         
                 comma = ",";
                 for(list<string>::iterator itdim = mat.matrizvars.second.second.begin(); itdim != mat.matrizvars.second.second.end(); ++itdim) {
@@ -917,7 +920,7 @@ func_decls
                 addInitStm(decl);
                 decl.str("");
 
-                cpy << "matrix_cpy__(" << *itid << "__, " << *itid << ", ";
+                cpy << "matrix_cpy(__" << *itid << ", _" << *itid << ", ";
                 switch(mat.matrizvars.first) {
                   case TIPO_INTEIRO:
                     cpy << "'i', ";break;
