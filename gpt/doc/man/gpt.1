@@ -36,13 +36,14 @@ gpt \- compilador, interpretador e tradutor da linguagem G-Portugol
 .BR \-vhid
 ] [
 .BI \-ots  
-arq_saída
-] arq_entrada
+arq_saida 
+] arquivo1, arquivo2, ...
 
 .SH DESCRIÇÃO
 .I gpt
 é um compilador simples para a linguagem G-portugol. Além de criar executáveis,
 pode interpretar algoritmos e traduzí-los para a linguagem C.
+Um algoritmo pode ser formado por vários arquivos, cada um podendo conter, por exemplo, funções. Os arquivos são passados na linha de comando, sendo que o primeiro arquivo do algoritmo deve ser aquele que contém o bloco principal.
 .SH OPTIONS
 .TP
 .BI \-v
@@ -58,7 +59,7 @@ Exibe sumário de opções termina execução.
 .TP
 .BI \-i
 Executa o algoritmo em modo 
-.I interpreter.
+.I interpretação.
 .br
 .ns
 .TP
@@ -68,26 +69,20 @@ Mostra dicas no relatório de erros.
 .ns
 .TP
 .BI \-o " arq_saída" 
-Compila
-.I arq_entrada
-e salva o arquivo executável com o nome
+Compila o algoritmo e salva o arquivo executável com o nome
 .I arq_saída.
 .br
 .ns
 .TP
 .BI \-t " arq_saída"
-Traduz
-.I arq_entrada
-para a linguagem C e salva o arquivo com o código resultante
+Traduz o algoritmo para a linguagem C e salva o arquivo com o código resultante
 como
 .I arq_saída.
 .br
 .ns
 .TP
 .BI \-s " arq_saída"
-Compila
-.I arq_entrada
-mas não cria código executável. Salva o arquivo com código em assembly como
+Compila o algoritmo mas não cria código executável. Salva o arquivo com código em assembly como
 .I arq_saída.
 .br
 .ns
