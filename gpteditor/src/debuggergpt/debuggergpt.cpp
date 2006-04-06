@@ -331,7 +331,7 @@ void DebuggerGPT::processCompileOutput()
   kdDebug() << "received: >>>" << m_compileOutput << "<<<" << endl ;
 
   if(m_compileOutput.isEmpty()) {
-    manager()->debugMessage(DebuggerManager::InfoMsg, i18n("Algoritmo compilado com sucesso"), m_currentURL, 1);
+    manager()->debugMessage(DebuggerManager::InfoMsg, i18n("Compilation successful"), m_currentURL, 1);
     return;
   }
 
@@ -373,7 +373,7 @@ void DebuggerGPT::processCompileOutput()
 
   if(!hasErrors) 
   {
-    manager()->debugMessage(DebuggerManager::InfoMsg, i18n("Algoritmo compilado com sucesso"), m_currentURL, 1);
+    manager()->debugMessage(DebuggerManager::InfoMsg, i18n("Compilation successful"), m_currentURL, 1);
   }
 
   m_compileOutput = "";
