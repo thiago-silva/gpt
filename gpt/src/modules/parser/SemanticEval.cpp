@@ -215,6 +215,26 @@ void SemanticEval::setCurrentScope(const string& sc) {
   currentScope = sc;
 }
 
+void SemanticEval::declareVar(int type, RefPortugolAST prim) {
+	if(!evalVariableRedeclaration(currentScope, prim)) {
+		stable.declareVar(currentScope, prim->getText(), prim->getLine(), type);
+	}
+}
+
+void SemanticEval::declareVar(int type, list<int> dims, RefPortugolAST mt) {
+  stringstream msg;
+  for(list<int>::iterator itd = dims.begin(); itd != dims.end(); ++itd) {
+    if((*itd) == 0) {
+      msg << "Dimensões de matrizes/conjuntos não podem ter tamanho 0";
+      GPTDisplay::self()->add(msg.str(), mt->getLine());
+    }
+  }
+
+  if(!evalVariableRedeclaration(currentScope, mt)) {
+    stable.declareVar(currentScope, mt->getText(), mt->getLine(), type, dims);
+  }
+}
+
 //declaration of primitives
 void SemanticEval::declareVars(pair<int, list<RefPortugolAST> >& prims) {
   list<RefPortugolAST>::iterator it;
@@ -558,17 +578,16 @@ void SemanticEval::declareFunction(Funcao& f) {
 
   Symbol sfunc(SymbolTable::GlobalScope, f.id->getText(), f.id->getLine(), true, f.return_type.primitiveType(), f.return_type.dimensions());
 
-  list< pair<int, list<RefPortugolAST> > >::iterator it = f.prim_params.begin();
-  for(it = f.prim_params.begin(); it != f.prim_params.end(); ++it) {
-    sfunc.param.add((*(*it).second.begin())->getText(), (*it).first);
-    declareVars((*it));
-  }
-
-  list< pair< pair<int, list<int> >, list<RefPortugolAST> > >::iterator mit;
-  for(mit = f.mt_params.begin(); mit != f.mt_params.end(); ++mit) {
-    sfunc.param.add((*(*mit).second.begin())->getText(),(*mit).first);
-    declareVars((*mit));
-  }
+	list< pair<RefPortugolAST, SymbolType> >::iterator it = f.params.begin();
+	for( ; it != f.params.end(); ++it) {		
+		if((*it).second.isPrimitive()) {			
+			sfunc.param.add((*it).first->getText(), (*it).second.primitiveType());
+			declareVar((*it).second.primitiveType(), (*it).first);		
+		} else {
+			sfunc.param.add((*it).first->getText(),(*it).second);
+			declareVar((*it).second.primitiveType(), (*it).second.dimensions(), (*it).first);
+		}
+	}
 
   stable.insertSymbol(sfunc, SymbolTable::GlobalScope);
 }
@@ -661,80 +680,6 @@ ExpressionValue SemanticEval::evaluateFCall(RefPortugolAST f, list<ExpressionVal
   return v;
 }
 
-
-/*
-void SemanticEval::evaluateAllFCalls() {
-  list<pair<RefPortugolAST,list<ExpressionValue> > >::iterator it;
-  for(it = fcallsList.begin(); it != fcallsList.end(); ++it) {
-    RefPortugolAST f = (*it).first;
-    list<ExpressionValue>& args = (*it).second;
-
-
-    Symbol s;
-    try {
-      s = stable.getSymbol(SymbolTable::GlobalScope, f->getText());
-    } catch(SymbolTableException& e) {
-      cerr << "Internal error: SemanticEval::evaluateAllFCalls()\n";
-      exit(1);
-//       continue;
-    }
-
-    ParameterSig params = s.param;
-
-    if(params.isVariable()) {
-      //nao permitir 0 argumentos
-      if(args.size() == 0) {
-        stringstream msg;
-        msg << "Pelo menos um argumento deve ser passado para a função \"" << f->getText() << "\"";
-        GPTDisplay::self()->add(msg.str(), f->getLine());
-        return;
-      }
-      //nao permitir matrizes como argumentos de funcoes com parametros variaveis
-      int count = 1;
-      for(list<ExpressionValue>::iterator it = args.begin();
-          it != args.end(); ++it) {
-        if(!(*it).isPrimitive()) {
-          stringstream msg;
-          msg << "Argumento " << count;
-          msg << " da função \"" << f->getText() << "\" não pode ser matriz/conjunto";
-          GPTDisplay::self()->add(msg.str(), f->getLine());
-          return;
-        }
-        count++;
-      }
-      continue;
-    }
-
-    if(params.symbolList().size() != args.size()) {
-      stringstream msg;
-      msg << "Número de argumentos diferem do número de parâmetros da função \""
-        << f->getText() << "\"";
-      GPTDisplay::self()->add(msg.str(), f->getLine());
-      continue;
-    }
-
-    list< pair<string,SymbolType> >::iterator pit = params.symbolList().begin();
-    list< pair<string,SymbolType> >::iterator pend = params.symbolList().end();
-
-    list<ExpressionValue>::iterator ait = args.begin();
-    list<ExpressionValue>::iterator aend = args.end();
-
-    int count = 1;
-    while((pit != pend) && (ait != aend)) {
-      if(!(*ait).isCompatibleWidth((*pit).second)) {
-        stringstream msg;
-        msg << "Argumento " << count << " da função \"" << f->getText() << "\" deve ser do tipo \""
-          << (*pit).second.toString() << "\"";
-        GPTDisplay::self()->add(msg.str(), f->getLine());
-        return;
-      }
-      ++count;
-      ++pit;
-      ++ait;
-    }
-  }
-}
-*/
 
 void SemanticEval::evaluatePasso(int line, const string& str) {
   if(atoi(str.c_str()) == 0) {

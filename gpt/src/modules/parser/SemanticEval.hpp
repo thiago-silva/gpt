@@ -54,8 +54,6 @@ public:
 
   void setID(const string&);
   string id();
-//   void setOwner(const string&);
-//   string owner();
   
 protected:
   bool matchesType(bool other_isprimitive) const;
@@ -74,12 +72,20 @@ public:
   void setId(RefPortugolAST t) {
     id = t;
   }
-  void addParams(const pair<int, list<RefPortugolAST> >& p) {
-    prim_params.push_back(p);
+  void addParams(pair<int, list<RefPortugolAST> >& p) {		
+		for(list<RefPortugolAST>::iterator it = p.second.begin(); it != p.second.end(); ++it) {
+			SymbolType t(p.first);
+			params.push_back(pair<RefPortugolAST, SymbolType>(*it, t));
+		}
   }
 
-  void addParams(const pair< pair<int, list<int> >, list<RefPortugolAST> >& m) {
-    mt_params.push_back(m);
+  void addParams(pair< pair<int, list<int> >, list<RefPortugolAST> >& m) {
+		for(list<RefPortugolAST>::iterator it = m.second.begin(); it != m.second.end(); ++it) {
+			SymbolType t(m.first.first);
+			t.setPrimitive(false);
+			t.setDimensions(m.first.second);
+			params.push_back(pair<RefPortugolAST, SymbolType>(*it, t));
+		}
   }
 
 //   void setReturnType(pair<int, list<int> > type) {
@@ -96,8 +102,9 @@ public:
   RefPortugolAST id;
   SymbolType return_type;
 
-  list< pair<int, list<RefPortugolAST> > > prim_params;
-  list< pair< pair<int, list<int> >, list<RefPortugolAST> > > mt_params;
+	list<pair<RefPortugolAST, SymbolType> > params; //pair<lexeme, type>
+//   list< pair<int, list<RefPortugolAST> > > prim_params;
+//   list< pair< pair<int, list<int> >, list<RefPortugolAST> > > mt_params;
 
 };
 
@@ -111,9 +118,13 @@ public:
 
   void setCurrentScope(const string&);
 
+	void declareVar(int type, RefPortugolAST prim);
+	void declareVar(int type, list<int> dims, RefPortugolAST mt);
+
   void declareVars(pair<int, list<RefPortugolAST> >& prims);
   void declareVars(pair< pair<int, list<int> >, list<RefPortugolAST> >& ms);
  
+
   void evaluateAttribution(ExpressionValue&  lv, ExpressionValue& rv, int line);
 
   ExpressionValue  evaluateLValue(RefPortugolAST id, list<ExpressionValue>& dim);

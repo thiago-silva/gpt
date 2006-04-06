@@ -65,11 +65,11 @@ public:
     params.push_back(pair<string, SymbolType>(name,s));
   }
 
-  void add(const string& name, pair<int, list<int> >& p) {
-    SymbolType s(p.first);
+  void add(const string& name, SymbolType& t) {
+/*    SymbolType s(p.first);
     s.setPrimitive(false);
-    s.setDimensions(p.second);
-    params.push_back(pair<string, SymbolType>(name,s));
+    s.setDimensions(p.second);*/
+    params.push_back(pair<string, SymbolType>(name,t));
   }
 
   int paramType(int idx) {
