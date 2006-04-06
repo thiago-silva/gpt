@@ -51,6 +51,8 @@ public:
   /* if a debug session is active */
   virtual bool isRunning()       const = 0;
 
+  virtual bool isDebugging() const = 0;
+
   /* inits the client (listen to port, inits members, order a pizza....) */
   virtual void init() = 0;
 
@@ -110,7 +112,7 @@ signals:
   //Debugger client error (conection, listen port, etc)
   void sigInternalError(const QString&);
 
-  void sigCompileError(int, const QString&);
+  void sigCompileError(const QString&, const KURL&, int);
 };
 
 #endif
