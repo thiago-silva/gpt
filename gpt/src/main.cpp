@@ -187,7 +187,7 @@ static void appendDefaultFiles() {
 
   char* env = getenv("GPT_INCLUDE");  
 
-  if(!env) {
+  if(!env || strlen(env) == 0) {
     return;
   }
 
@@ -228,8 +228,8 @@ int main(int argc, char** argv) {
 //     GPT::self()->usePipe(true);
 //   }
 
-
   appendDefaultFiles();
+
 
   switch(cmd) {
     case CMD_SHOW_VERSION:
