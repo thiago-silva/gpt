@@ -147,7 +147,7 @@ options {
 algoritmo
 {
   topnode = _t;
-  interpreter.init();  
+  interpreter.init(_t->getFilename());  
   _t = _t->getNextSibling();
   if(_t->getType() == T_KW_VARIAVEIS) {
     _t = _t->getNextSibling(); //pula declaracao de algoritmo e variaveis
@@ -158,13 +158,13 @@ algoritmo
 
 inicio
   : #(t:T_KW_INICIO (stm)*)
-      {interpreter.nextCmd(t->getEndLine());}
+      {interpreter.nextCmd(t->getFilename(), t->getEndLine());}
   ;
 
 stm
 {
   ExprValue retToDevNull;
-  interpreter.nextCmd(_t->getLine());
+  interpreter.nextCmd(_t->getFilename(), _t->getLine());
 }
   : stm_attr
   | retToDevNull=fcall
@@ -391,7 +391,7 @@ literal returns [ExprValue v]
 func_decls[list<ExprValue>& args, int line]
   : #(id:T_IDENTIFICADOR
       {
-        interpreter.beginFunctionCall(id->getText(), args, line);
+        interpreter.beginFunctionCall(id->getFilename(), id->getText(), args, line);
 
         while(_t->getType() != T_KW_INICIO) {
           _t = _t->getNextSibling();
