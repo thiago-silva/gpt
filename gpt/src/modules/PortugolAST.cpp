@@ -20,6 +20,7 @@
 
 
 #include "PortugolAST.hpp"
+#include "GPTDisplay.hpp"
 #include <iostream>
 
 const char* const PortugolAST::TYPE_NAME = "PortugolAST";
@@ -63,6 +64,7 @@ const char* PortugolAST::typeName( void ) const
 
 void PortugolAST::initialize( RefToken t )
 {
+  setFilename(GPTDisplay::self()->getCurrentFile());
   CommonAST::initialize(t);
   setLine(t->getLine());
 }

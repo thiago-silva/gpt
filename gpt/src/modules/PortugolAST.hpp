@@ -22,7 +22,9 @@
 #define PORTUGOLAST_HPP
 
 #include <antlr/CommonAST.hpp>
+#include <string>
 
+using namespace std;
 using namespace antlr;
 
 class PortugolAST : public CommonAST {
@@ -47,6 +49,14 @@ public:
     return eval_type;
   }
 
+  void setFilename(const string& fname) {
+    filename = fname;
+  }
+
+  string getFilename() {
+    return filename;
+  }
+
   virtual RefAST clone( void ) const;
 
   virtual void initialize( RefToken t );
@@ -59,6 +69,7 @@ protected:
   int line;
   int endLine;
   int eval_type; //evaluated type of expression
+  string filename;
 };
 
 typedef ASTRefCount<PortugolAST> RefPortugolAST;
