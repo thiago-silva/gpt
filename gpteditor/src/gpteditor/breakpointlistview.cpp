@@ -53,7 +53,7 @@ BreakpointListView::BreakpointListView(QWidget *parent, const char *name)
   setColumnWidth(StatusTextCol, 100);
   setColumnWidth(FileNameCol,  170);
   setColumnWidth(FilePathCol,  220);
-  setColumnWidth(LineCol,      40);
+  setColumnWidth(LineCol,      60);
 //   setColumnWidth(ConditionCol, 90);
 //   setColumnWidth(SkipHitsCol,  80);
 //   setColumnWidth(HitCountCol,  80);
