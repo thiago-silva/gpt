@@ -785,6 +785,9 @@ void InterpreterEval::nextCmd(const string& file, int line) {
         currentSkip = true;
         break;
       case InterpreterDBG::CMDStepOut:
+        if(skipStack.size() == 1) {
+          globalSkip = true;
+        }
         skipStack.pop();
         skipStack.push(true);
         break;

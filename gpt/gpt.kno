@@ -3,26 +3,25 @@
 \NewEntry 1 NOW
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>Atualizar documentacao</li>
-<li>Atualizar gpteditor messages (i18n - kbabel)<br /><br /><br /></li></ul>
+<li>Atualizar gpteditor messages (i18n - kbabel)<br /><br /><br /><br />gpteditor:</li>
+<li>  refazer i18n</li>
+<li>-rever manual</li>
+<li>-rever man-pages</li>
+<li>-criar base.gpt e distribuir (funcoes como power, abs, sin, cos, sqrt, etc)</li>
+<li>-Lançar versão 9.3</li>
+<li>-fazer video apresentando GPT_INCLUDE e multiplefiles breakpoint</li></ul>
 </body></html>
 
 
-\CurrentEntry 1 TODO
+\NewEntry 1 TODO
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><div></div>
 <li>GPT</li>
-<ul type="disc"><li>Semantic: </li>
-<ul type="disc"><li>checar se subscritos são &quot;0&quot; na declaracao de vetores</li>
-<li>Semantic: Verbose de erros esta ruim</li>
-<li>ExpressionValue deve ter um attributo (varname) para melhorar as mensagens de erros</li>
-<ul type="disc"><li>Ruim: &quot;Faltando subscritos na matriz/conjunto de tipo &quot;inteiro[][]&quot;</li>
-<li>Bom: &quot;Faltando subscritos na matriz/conjunto m[][]&quot;</li></ul></ul>
-<li>pt2c:</li>
+<ul type="disc"><li>pt2c:</li>
 <ul type="disc"><li>Uniformizar ponto flutuante (uso de double! (usar float gera warnings na traducao de C)</li>
 <ul type="disc"><li>Mas em x86, float eh usado....</li></ul></ul>
 <li>interpreter: </li>
-<ul type="disc"><li>(se for usar double)atof -&gt; &quot;a2double&quot;, (ou o que quer que seja str2double)</li></ul>
-<li>Mensagens de erro: checar ponto final &quot;.&quot;<br /></li>
+<ul type="disc"><li>(se for usar double)atof -&gt; &quot;a2double&quot;, (ou o que quer que seja str2double)<br /></li></ul>
 <li>opcoes &quot;-H&quot; e &quot;-P&quot; documentadas no manual<br /></li>
 <li>gpt: mover o exemplos/highlight.gpt para gpteditor</li></ul>
 <div></div>
@@ -43,14 +42,14 @@
 <ul type="disc"><li>real x := 2 / 5; /* res=2. Like &quot;C&quot;, não há promoção dos operandos. Resultado quebrado */</li>
 <ul type="disc"><li>documentar no manual</li></ul>
 <li>para x de 0 até 10 passo 4</li>
-<ul type="disc"><li>que resultado x deve ter ao final?<br /></li></ul></ul></ul></ul>
+<ul type="disc"><li>valor ao final: 10<br /></li></ul></ul></ul></ul>
 <li>GPTEditor</li>
 <ul type="disc"><li>Settings:</li>
 <ul type="disc"><li>Remover &quot;argumentos&quot;</li></ul></ul></ul>
 </body></html>
 
 
-\NewEntry 1 Notas ideias etc
+\CurrentEntry 1 Notas ideias etc
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>GPTEditor</li>
 <ul type="disc"><li>watches</li>
@@ -60,17 +59,15 @@
 <li>leia()</li>
 <ul type="disc"><li>enquanto leia() : leia() deve ser avaliado como expressão numerica.</li>
 <li>permitir que leia() seja termo em expressões com N termos.</li></ul>
-<li>Adicionar &quot;coluna&quot; no error reporting</li>
-<ul type="disc"><li>&quot;para x de 1 até 10 faça&quot; (onde x eh literal:)</li>
-<li>Linha: 36 - Esperando uma expressão numérica. Encontrado expressão &quot;literal&quot;.<br />Esse erro eh muito vago. Para melhorar, teria que mudar bastante o esquema em semantic.g<br />para passar os termos como parametros para os metodos eval*.</li></ul>
+<li>Adicionar &quot;coluna&quot; no error reporting?</li>
 <li>Criar esquema de exibicao de erros baseado em Java</li>
-<ul type="disc"><li>Mostra trecho do codigo e aponta com uma seta onde esta o erro. (console)</li>
-<li>underline vermelho no termo incorreto (gpteditor)</li></ul>
+<li>Mostra trecho do codigo e aponta com uma seta onde esta o erro. (console)</li>
+<ul type="disc"><li>underline vermelho no termo incorreto (gpteditor)</li></ul>
 <li>Novos features:</li>
 <ul type="disc"><li>-faça/enquanto();</li>
 <li>-switch (escolha)</li>
 <li>-Fazer verificação de uso de variaveis?</li>
-<ul type="disc"><li>&quot;Aviso: variavel &quot;w&quot; nao esta sendo usada&quot;<br /><br /></li></ul>
+<ul type="disc"><li>&quot;Aviso: variavel &quot;w&quot; nao esta sendo usada&quot;<br /></li></ul>
 <li>Ter mecanismos de gramaticas dinamicas ou sublinguagens</li>
 <ul type="disc"><li>Remodelagem de estruturas, palavras-chaves, etc.</li>
 <li>Estilos gramaticais ou sublinguagens:</li>
