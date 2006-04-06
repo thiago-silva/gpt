@@ -311,7 +311,7 @@ stm_block!
       int cd = reportParserError(e.getLine(), expecting_stm_or_fim, getTokenDescription(e.token));
       if(e.token->getType() == T_IDENTIFICADOR) {
         printTip(string("Verifique o uso de \"[]\" (caso \"") + e.token->getText() + 
-                       "\" seja um vetor/matriz), do operador \":=\" (caso seja um comando de atribuição)"
+                       "\" seja um conjunto/matriz), do operador \":=\" (caso seja um comando de atribuição)"
                        " e do uso de parêntesis (caso \"" + e.token->getText() +
                        "\" seja uma chamada de função)", e.getLine(), cd);
 
