@@ -42,6 +42,7 @@ public:
 
   virtual QString name() const;
   virtual bool isRunning() const;
+  virtual bool isDebugging() const;
   virtual void init();
 
   virtual void compile(const KURL&);

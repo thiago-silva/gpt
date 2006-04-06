@@ -49,7 +49,9 @@ DebuggerGPT::DebuggerGPT(DebuggerManager* manager)
 }
 
 DebuggerGPT::~DebuggerGPT()
-{}
+{
+  cleanExec();
+}
 
 
 QString DebuggerGPT::name() const
@@ -132,7 +134,7 @@ void DebuggerGPT::runInterpreted(const KURL& srcURL, bool debugging)
     cmd += "-H " + GPTEditorSettings::self()->host()
         +  " -P " + QString::number(GPTEditorSettings::self()->listenPort()) + " ";
   }
-  cmd += i18n("%1 %2;echo \"Press Enter to continue...\";read").arg(
+  cmd += i18n("%1 %2;echo \"Press any key to continue...\";read").arg(
     GPTEditorSettings::self()->GPTArgs(), srcURL.path());
 
 //   cmd += GPTEditorSettings::self()->GPTArgs()
@@ -162,7 +164,7 @@ void DebuggerGPT::runBinary(const KURL& srcURL)
 
   if(!file.isReadable()) {    
     manager()->error(i18n
-      ("Unable to execute the file \"%1\". Check if it was compiled.").arg(srcURL.prettyURL()));
+      ("Unable to execute the algorithm. Check if it was compiled.").arg(srcURL.prettyURL()));
     return;
   }
 
@@ -172,7 +174,7 @@ void DebuggerGPT::runBinary(const KURL& srcURL)
   QString shell = GPTEditorSettings::self()->shell();
 
   *m_exec << "konsole" << "-e" << shell << "-c" 
-    << KProcess::quote(bin) + i18n(";echo \"Press Enter to continue...\";read");
+    << KProcess::quote(bin) + i18n(";echo \"Press any key to continue...\";read");
 
   connect(m_exec, SIGNAL(processExited(KProcess *)),
                 this, SLOT(slotExecFinished(KProcess*)));
@@ -184,15 +186,15 @@ void DebuggerGPT::runBinary(const KURL& srcURL)
   emit sigRunStarted(this);
 }
 
+bool DebuggerGPT::isDebugging() const {
+  return m_isRunning && (m_execType == EnumRunInterpreted);
+}
+
 void DebuggerGPT::start(const KURL& url)
 {
-  if(m_isRunning && (m_execType == EnumRunInterpreted)) {
-    m_net->requestContinue();
-  } else {
-    cleanExec();
-    runInterpreted(url, true);
-    m_currentURL = url;
-  }
+  cleanExec();
+  runInterpreted(url, true);
+  m_currentURL = url;
 }
 
 KURL DebuggerGPT::currentURL()
@@ -207,7 +209,7 @@ void DebuggerGPT::continueExecution()
 
 void DebuggerGPT::stop()
 {
-  doStop();
+  if(isRunning()) doStop();
 }
 
 void DebuggerGPT::stepInto()
@@ -249,7 +251,8 @@ void DebuggerGPT::addBreakpoint(DebuggerBreakpoint* bp)
 
 void DebuggerGPT::changeBreakpoint(DebuggerBreakpoint* bp)
 {
-  if(isRunning() && (bp->url() == currentURL()))
+  //if(isRunning() && (bp->url() == currentURL()))
+  if(isRunning())
   {
     if(bp->status() == DebuggerBreakpoint::DISABLED) {
       m_net->requestBreakpointRemoval(bp->line());
@@ -328,22 +331,45 @@ void DebuggerGPT::processCompileOutput()
 {
   kdDebug() << "received: >>>" << m_compileOutput << "<<<" << endl ;
 
+  if(m_compileOutput.isEmpty()) {
+    manager()->debugMessage(DebuggerManager::InfoMsg, i18n("Algoritmo compilado com sucesso"), m_currentURL, 1);
+    return;
+  }
+
   int line;
   QString errorMsg;
+  QString file;
+
+  // parser error!
 
   QRegExp rx;
   int idx = 0;
-  rx.setPattern("Linha: (\\d+) - (([^.]|\\.\\.\\.)+)\\.");
+  //rx.setPattern("([^:]*):(\\d+) - (([^.]|\\.\\.\\.)+)\\.");
+  rx.setPattern("([^:]*):(\\d+) - ([^\\n]+)\\n");
   bool hasErrors = false;
   while(rx.search(m_compileOutput, idx) != -1) {
 
     idx += rx.matchedLength();
 
-    line =  rx.cap(1).toInt();
-    errorMsg = rx.cap(2);
+    file = rx.cap(1);
+    line =  rx.cap(2).toInt();
+    errorMsg = rx.cap(3);
     
     hasErrors = true;
-    emit sigCompileError(line, errorMsg);
+    emit sigCompileError(errorMsg, KURL::fromPathOrURL(file), line);
+  }
+
+  //gpt error
+
+  idx = 0;
+  rx.setPattern("gpt: (.*)");
+  while(rx.search(m_compileOutput, idx) != -1) {
+
+    idx += rx.matchedLength();
+    errorMsg = rx.cap(1);
+    
+    hasErrors = true;
+    emit sigCompileError(errorMsg, KURL(), 0);
   }
 
   if(!hasErrors) 
