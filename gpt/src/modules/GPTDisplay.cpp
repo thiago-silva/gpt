@@ -72,6 +72,8 @@ void GPTDisplay::stopOnError(bool val) {
   _stopOnError = val;
 }
 
+
+
 bool GPTDisplay::hasError() {
   return _totalErrors > 0;
 }
@@ -79,10 +81,12 @@ bool GPTDisplay::hasError() {
 void GPTDisplay::showErrors() {
   errors_map_t::iterator it;
   for(it = _errors.begin(); it != _errors.end(); ++it) {
-    for(list<ErrorMsg>::iterator lit = it->second.begin(); lit != it->second.end(); ++lit) {
-      showError((*lit));
-      if(_showTips && (*lit).hasTip) {
-        showTip((*lit));
+    for(map<int, list<ErrorMsg> >::iterator ll = it->second.begin(); ll != it->second.end(); ++ll) {
+      for(list<ErrorMsg>::iterator lit = ll->second.begin(); lit != ll->second.end(); ++lit) {
+        showError((*lit));
+        if(_showTips && (*lit).hasTip) {
+          showTip((*lit));
+        }
       }
     }
   }
@@ -93,6 +97,12 @@ GPTDisplay* GPTDisplay::self() {
     GPTDisplay::_self = new GPTDisplay();
   }
   return GPTDisplay::_self;
+}
+
+void GPTDisplay::addFileName(const string& str)
+{
+  static int c = 0;
+  _file_map[str] = c++;
 }
 
 int GPTDisplay::add(const string& msg, int line) {
@@ -109,9 +119,11 @@ int GPTDisplay::add(const string& msg, int line) {
   err.msg = msg;
   err.file = _currentFile;
 
-  _errors[line].push_back(err);
+  //_errors[line].push_back(err);
+  _errors[_file_map[_currentFile]][line].push_back(err);
 
-  return _errors[line].size();
+  return _errors[_file_map[_currentFile]][line].size();
+  //return _errors[line].size();
 }
 
 void GPTDisplay::showError(ErrorMsg& err) {
@@ -128,7 +140,8 @@ void GPTDisplay::showTip(ErrorMsg& err) {
 }
 
 void GPTDisplay::addTip(const string& msg, int line, int cd) {
-  list<ErrorMsg>::iterator it = _errors[line].begin();
+  //list<ErrorMsg>::iterator it = _errors[line].begin();
+  list<ErrorMsg>::iterator it = _errors[_file_map[_currentFile]][line].begin();
 
   for(int i = 0; i < cd-1; ++i,++it);
   (*it).hasTip = true;
@@ -140,8 +153,13 @@ void GPTDisplay::setCurrentFile(const string& file)
   _currentFile = file;
 }
 
+string GPTDisplay::getCurrentFile()
+{
+  return _currentFile;
+}
+
 GPTDisplay::ErrorMsg GPTDisplay::getFirstError() {
-  return *(_errors.begin()->second.begin());
+  return *(_errors.begin()->second.begin()->second.begin());
 }
 
 void GPTDisplay::showTips(bool value) {

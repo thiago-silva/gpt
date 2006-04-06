@@ -296,6 +296,7 @@ bool GPT::parse(list<pair<string,istream*> >& istream_list) {
       } else {
         first.second->addFilename((*it).first);
       }
+      GPTDisplay::self()->addFileName((*it).first);
     }
     first.second->setTotalLexers(c);
     selector->select(first.second);

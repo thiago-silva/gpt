@@ -70,10 +70,13 @@ public:
 
   void stopOnError(bool);
 
+  void addFileName(const string&);
+
   int add(const string& msg, int line);
   void addTip(const string& msg, int line, int cd);
 
   void setCurrentFile(const string& file);
+  string getCurrentFile();
 //   void addInternalError(const string&);
 //   void addInternalError(const stringstream&);
 
@@ -100,11 +103,14 @@ private:
   void processAndAdd(const string&, int);
   void processTipAndAdd(const string& msg, int line, int cd);
 
-  int _totalErrors;
+  int  _totalErrors;
   bool _stopOnError;
   bool _showTips;
 
-  typedef map<int, list<ErrorMsg> > errors_map_t;
+  typedef map<string, int> file_map_t;
+  file_map_t _file_map;
+//  typedef map<int, list<ErrorMsg> > errors_map_t;
+  typedef map<int, map<int, list<ErrorMsg> > > errors_map_t;
   errors_map_t _errors;
 
   string _currentFile;
