@@ -442,10 +442,10 @@ options {
         ret << "(str_strlen(" << left.expr.second << ") < str_strlen(" << right.expr.second << "))";
         break;
       case T_MAIOR_EQ:
-        ret << "(str_strlen(" << left.expr.second << ") <= str_strlen(" << right.expr.second << "))";
+        ret << "(str_strlen(" << left.expr.second << ") >= str_strlen(" << right.expr.second << "))";
         break;
       case T_MENOR_EQ:  
-        ret << "(str_strlen(" << left.expr.second << ") >= str_strlen(" << right.expr.second << "))";
+        ret << "(str_strlen(" << left.expr.second << ") <= str_strlen(" << right.expr.second << "))";
         break;
       default:
           cerr << "Erro interno: op nao suportado (pt2c::translateBinExpr)." << endl;
