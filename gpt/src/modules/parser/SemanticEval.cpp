@@ -189,13 +189,15 @@ string ExpressionValue::toString() const {
   return str;
 }
 
-// void setOwner(const string& o) {
-//   _owner = o;
-// }
-// 
-// string ExpressionValue::owner() {
-//   return _owner;
-// }
+void ExpressionValue::setID(const string& id)
+{
+  _id = id;
+}
+
+string ExpressionValue::id()
+{
+  return _id;
+}
 
 //******************************************************************************************//
 
@@ -227,6 +229,14 @@ void SemanticEval::declareVars(pair<int, list<RefPortugolAST> >& prims) {
 //pair< pair<type,list<dimensions> >, list<ids> >
 void SemanticEval::declareVars(pair< pair<int, list<int> >, list<RefPortugolAST> >& ms) {
 
+  stringstream msg;
+  for(list<int>::iterator itd = ms.first.second.begin(); itd != ms.first.second.end(); ++itd) {
+    if((*itd) == 0) {
+      msg << "Dimensões de matrizes/conjuntos não podem ter tamanho 0";
+      GPTDisplay::self()->add(msg.str(), (*(ms.second.begin()))->getLine());
+    }
+  }
+
   list<RefPortugolAST>::iterator it;
   for(it = ms.second.begin(); it != ms.second.end(); ++it) {
     if(!evalVariableRedeclaration(currentScope, (*it))) {
@@ -242,7 +252,7 @@ void SemanticEval::evaluateAttribution(ExpressionValue&  lv, ExpressionValue& rv
   stringstream msg;
 
   if(!lv.isPrimitive()) {
-    msg << "Apenas variáveis de tipos primitivos podem receber valores";
+    msg << "Faltando indicar subscrito da matriz/conjunto \"" << lv.id() << "\"";
     GPTDisplay::self()->add(msg.str(), line);
     return;
   }
@@ -251,7 +261,7 @@ void SemanticEval::evaluateAttribution(ExpressionValue&  lv, ExpressionValue& rv
     msg << "Expressão não retorna resultado para variável";
     GPTDisplay::self()->add(msg.str(), line);
   } else  if(!lv.isCompatibleWidth(rv)) {
-    msg << "Variável não pode receber valores do tipo '"
+    msg << "Variável \"" << lv.id() << "\" não pode receber valores do tipo '"
         << rv.toString() << "'";
     GPTDisplay::self()->add(msg.str(), line);
   }
@@ -267,6 +277,7 @@ ExpressionValue SemanticEval::evaluateLValue(RefPortugolAST id, list<ExpressionV
   bool islocal;
   Symbol lvalue;
   ExpressionValue ret;
+  ret.setID(id->getText());
 
   try {
     lvalue = stable.getSymbol(currentScope, id->getText(), true);
@@ -286,7 +297,7 @@ ExpressionValue SemanticEval::evaluateLValue(RefPortugolAST id, list<ExpressionV
 
   if(lvalue.isFunction) {
     stringstream msg;
-    msg << "Função \"" << id->getText() << "\" não pode ser usada como variável";
+    msg << "Faltando abrir parêntesis após função \"" << id->getText() << "\"";
     GPTDisplay::self()->add(msg.str(), id->getLine());
     return ret;
   }
@@ -310,7 +321,10 @@ ExpressionValue SemanticEval::evaluateLValue(RefPortugolAST id, list<ExpressionV
     list<ExpressionValue>::iterator it;
     for(it = dim.begin(); it != dim.end();++it) {
       if(!(*it).isNumeric(true)) {
-        GPTDisplay::self()->add("Subscritos de conjuntos/matrizes devem ser valores numéricos inteiros ou equivalente", id->getLine());
+        stringstream msg;
+        msg << "Subscritos da matriz/conjunto \"" << id->getText() 
+            << "\" devem ser valores numéricos inteiros ou equivalente";
+        GPTDisplay::self()->add(msg.str(), id->getLine());
       }
     }
 
@@ -330,12 +344,12 @@ ExpressionValue SemanticEval::evaluateLValue(RefPortugolAST id, list<ExpressionV
         stringstream msg;
         msg << "Matriz/conjunto \"" << id->getText() << "\" possui " << lvalue.type.dimensions().size();
 
-        if(dim.size() == 1) {
+        if(lvalue.type.dimensions().size() == 1) {
           msg << " dimensão";
         } else {
           msg << " dimensões";
         }
-        msg << " Use " << lvalue.type.dimensions().size() << " subscrito(s)";
+        msg << ". Use " << lvalue.type.dimensions().size() << " subscrito(s)";
         GPTDisplay::self()->add(msg.str(), id->getLine());
       }
     } else {
@@ -351,21 +365,21 @@ void SemanticEval::evaluateBooleanExpr(ExpressionValue& /*v*/, int /*line*/) {
   //qualquer coisa pode ser avaliado como expressão booleana
 }
 
-void SemanticEval::evaluateNumericExpr(ExpressionValue& ev, int line, bool checkInt) {
+void SemanticEval::evaluateParaExpr(ExpressionValue& ev, int line, const string& term) {
   stringstream err;
   if(!ev.isPrimitive()) {    
-    err << "Faltando subscritos da matriz/conjunto do tipo \"" << ev.toString() << "\"";
+    err << "Faltando indicar subscritos da matriz/conjunto \"" << ev.id() << "\"";
     GPTDisplay::self()->add(err.str(), line);
-  } else if(checkInt) {
-    if(ev.primitiveType() != TIPO_INTEIRO) {      
-      err << "Esperando uma expressão de tipo inteiro";
+  } else {
+    if(ev.primitiveType() != TIPO_INTEIRO) {
+      err << "Expressão \"" << term << "\" deve ser do tipo inteiro";
       GPTDisplay::self()->add(err.str(), line);
     }
-  } else if(!ev.isNumeric()) {
+  } /*else if(!ev.isNumeric()) {
     stringstream err;
     err << "Esperando uma expressão numérica. Encontrado expressão \"" << ev.toString() << "\"";
     GPTDisplay::self()->add(err.str(), line);
-  }
+  }*/
 }
 
 ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValue& right, RefPortugolAST op) {
@@ -381,7 +395,7 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
   //não permitir TIPO_ALL em expressões binarias
   if((left.primitiveType() == TIPO_ALL) || (right.primitiveType() == TIPO_ALL)) {
     stringstream msg;
-    msg << "Função interna não pode participar de expressão";
+    msg << "Função interna \"leia\" não pode participar de expressão";
     GPTDisplay::self()->add(msg.str(), op->getLine());
     return nulo;
   }
@@ -470,7 +484,7 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& ev, RefPortugolAST u
   //não permitir TIPO_ALL em expressões binarias
   if(ev.primitiveType() == TIPO_ALL) {
     stringstream msg;
-    msg << "Função interna não pode participar de expressão";
+    msg << "Função interna \"leia\" não pode participar de expressão";
     GPTDisplay::self()->add(msg.str(), unary_op->getLine());
     return nulo;
   }
@@ -725,7 +739,7 @@ void SemanticEval::evaluateAllFCalls() {
 void SemanticEval::evaluatePasso(int line, const string& str) {
   if(atoi(str.c_str()) == 0) {
     stringstream msg;
-    msg << "Passo com valor \"0\" é inapropriado";
+    msg << "Passo com valor \"0\" não é permitido";
     GPTDisplay::self()->add(msg.str(), line);
   }
 }

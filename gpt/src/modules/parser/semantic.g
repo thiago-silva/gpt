@@ -259,9 +259,9 @@ stm_para
   GPTDisplay::self()->setCurrentFile(_t->getFilename());
 }
   : #(p:T_KW_PARA 
-        lv=lvalue {evaluator.evaluateNumericExpr(lv, p->getLine(), true);} 
-        de=expr   {evaluator.evaluateNumericExpr(de, p->getLine(), true);} 
-        ate=expr  {evaluator.evaluateNumericExpr(ate, p->getLine(), true);} 
+        lv=lvalue {evaluator.evaluateParaExpr(lv, p->getLine(), lv.id());} 
+        de=expr   {evaluator.evaluateParaExpr(de, p->getLine(), "de");} 
+        ate=expr  {evaluator.evaluateParaExpr(ate, p->getLine(), "até");} 
         (passo)? (stm)* 
     )
   ;
