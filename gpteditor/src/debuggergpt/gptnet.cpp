@@ -174,6 +174,7 @@ void GPTNet::processXML(const QString& xml)
 void GPTNet::processStack(QDomElement& node)
 {
   int id;
+  QString file;
   QString function;
   int line;
 
@@ -186,10 +187,11 @@ void GPTNet::processStack(QDomElement& node)
     st = list.item(i).toElement();
     
     id = st.attribute("id").toInt();
+    file = st.attribute("file");
     function = st.attribute("function");
     line = st.attribute("line").toInt();
 
-    stack->insert(id, m_debugger->currentURL(), line, function!="@global"?function:"(escopo global)");    
+    stack->insert(id, KURL::fromPathOrURL(file), line, function!="@global"?function:"(escopo global)");    
   }  
   m_debugger->updateStack(stack);
 }
