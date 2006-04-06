@@ -592,7 +592,7 @@ MessageListView* MainWindow::messageListView()
 
 void MainWindow::activateMessageTab()
 {
-#warning remover magic number
+#warning remover hardcoded number
   m_tabDebug->setCurrentPage(3);
 }
 
