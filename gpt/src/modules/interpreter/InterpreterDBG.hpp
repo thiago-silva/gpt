@@ -37,28 +37,32 @@ class Variable;
 class InterpreterDBG {
 public:
 
-  enum { CMDStepInto, CMDStepOver, CMDStepOut, CMDContinue };
+  enum { CMDStepInto, CMDStepOver, CMDStepOut, CMDContinue, CMDNull };
 
   void init(string host, int port);
 
-  int nextCmd(int line, Variables& v, list<pair<string, int> >& stk);
+  void checkData();
+
+  void sendInfo(int line, Variables& v, list<pair<string, pair<string, int> > >& stk);
+
+  int getCmd();
 
   static InterpreterDBG* self();
 
   void closeSock();
 
   bool breakOnLine(int line);
-
+  
 private:
   InterpreterDBG();
 
   static InterpreterDBG* singleton;
 
-  void sendStackInfo(list<pair<string, int> >& stk);
-  void sendVariables(map<string, Variable> globals, list<pair<string, int> >& stk, bool globalScope);
-  int receiveCmd();
+  void sendStackInfo(list<pair<string, pair<string, int> > >& stk);
+  void sendVariables(map<string, Variable> globals, list<pair<string, pair<string, int> > >& stk, bool globalScope);
+  int receiveCmd(bool nonBlocking = false);
 
-  string receiveIncomingData();
+  string receiveIncomingData(bool nonBlocking = false);
 
   void processBreakpointCMD(string& cmd);
   void addBreakpoint(string& cmd);
@@ -76,7 +80,7 @@ private:
 #endif
 
   list<int> breakpoints;
-  string currentCmd;
+  int currentCmd;
 };
 
 #endif

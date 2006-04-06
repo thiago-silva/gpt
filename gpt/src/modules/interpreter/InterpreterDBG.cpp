@@ -44,6 +44,7 @@
 InterpreterDBG* InterpreterDBG::singleton = NULL;
 
 InterpreterDBG::InterpreterDBG() {
+  currentCmd = CMDNull;
 #ifndef WIN32
   clientsock = -1;
 #else
@@ -154,38 +155,61 @@ void InterpreterDBG::init(string host, int port) {
 #endif
 }
 
-int InterpreterDBG::nextCmd(int line, Variables& v, list<pair<string, int> >& stk) {
+
+void InterpreterDBG::checkData()
+{
+  //processar comandos recebidos pelo cliente (ie. add/remove breakpoints)
+  //NO blocking mode!! read if data exists only
+  int cmd = receiveCmd(true);
+  if(cmd != CMDNull) {
+    currentCmd = cmd;
+  }
+}
+
+void InterpreterDBG::sendInfo(int line, Variables& v, list<pair<string, pair<string, int> > >& stk) {
 
   sendStackInfo(stk);
 
   sendVariables(v.getGlobals(), stk, true);
   sendVariables(v.getLocals(), stk, false);
-
-  return receiveCmd();
 }
 
-void InterpreterDBG::sendStackInfo(list<pair<string, int> >& stk) {
+int InterpreterDBG::getCmd()
+{
+  int ret;
+  if(currentCmd == CMDNull) {
+    ret = receiveCmd();
+  } else {
+    ret = currentCmd;
+  }
+
+  currentCmd = CMDNull;
+  return ret;
+}
+
+void InterpreterDBG::sendStackInfo(list<pair<string, pair<string, int> > >& stk) {
   if(clientsock < 0) return;
 
   stringstream s;
   s << "<stackinfo>";
   int id = 0;
-  for(list<pair<string, int> >::reverse_iterator it = stk.rbegin(); it != stk.rend(); ++it) {
+  for(list<pair<string, pair<string, int> > >::reverse_iterator it = stk.rbegin(); it != stk.rend(); ++it) {
     s << "<entry id=\"" << id++
-      << "\" function=\"" << (*it).first
-      << "\" line=\"" << (*it).second << "\"/>";
+      << "\" file=\"" << (*it).first
+      << "\" function=\"" << (*it).second.first
+      << "\" line=\"" << (*it).second.second << "\"/>";
   }
   s << "</stackinfo>";
 
   sendData(s);
 }
 
-void InterpreterDBG::sendVariables(map<string, Variable> globals, list<pair<string, int> >& stk, bool globalScope) {
+void InterpreterDBG::sendVariables(map<string, Variable> globals, list<pair<string, pair<string, int> > >& stk, bool globalScope) {
   if(clientsock < 0) return;
 
   stringstream s;
   s << "<vars for=\"" << (globalScope?"$global":"$local")
-    << "\" scope=\"" << (globalScope?stk.front().first:stk.back().first) << "\">";
+    << "\" scope=\"" << (globalScope?stk.front().second.first:stk.back().first) << "\">";
 
   bool primitive;
   for(map<string, Variable>::iterator it = globals.begin(); it != globals.end(); ++it) {
@@ -283,7 +307,8 @@ void InterpreterDBG::sendData(stringstream& s) {
   }
 }
 
-string InterpreterDBG::receiveIncomingData() {
+
+string InterpreterDBG::receiveIncomingData(bool nonBlocking) {
   char buffer[1024];
   int received = 0;
 
@@ -296,7 +321,16 @@ string InterpreterDBG::receiveIncomingData() {
   int idx = 0;
   int rec;
   while(true) {
-    rec = recv(clientsock, &buffer[idx], sizeof(char), 0);
+    if(nonBlocking) {
+      rec = recv(clientsock, &buffer[idx], sizeof(char), MSG_DONTWAIT);
+    } else {
+      rec = recv(clientsock, &buffer[idx], sizeof(char), 0);
+    }
+
+    if(nonBlocking && (rec==0)) {
+      return "";
+    }
+
     received += rec;
 
     if((rec == 0) || (rec < 1)) {
@@ -330,16 +364,17 @@ string InterpreterDBG::receiveIncomingData() {
   return cmd;
 }
 
-int InterpreterDBG::receiveCmd() {
+int InterpreterDBG::receiveCmd(bool nonBlocking) {
   if(clientsock < 0) {
     return CMDContinue;
   }
 
-  string cmd = receiveIncomingData();
+  string cmd = receiveIncomingData(nonBlocking);
 
   int ret;
-
-  if(cmd == "step_into") {
+  if(cmd.empty() && nonBlocking) {
+    ret = CMDNull;
+  } else if(cmd == "step_into") {
     ret = CMDStepInto;
   } else if(cmd == "step_over") {
     ret = CMDStepOver;
@@ -349,9 +384,9 @@ int InterpreterDBG::receiveCmd() {
     ret = CMDContinue;
   } else if(cmd.find("breakpoint") != string::npos) {
     processBreakpointCMD(cmd);
-    ret = receiveCmd();
+    ret = receiveCmd(nonBlocking);
   } else {
-    //cerr << PACKAGE << ": comando desconhecido: \"" << cmd << "\"" << endl;
+    cerr << PACKAGE << ": comando desconhecido: \"" << cmd << "\"" << endl;
     ret = CMDStepInto;
   }
 
@@ -371,10 +406,12 @@ void InterpreterDBG::processBreakpointCMD(string& cmd) {
 
   if(what == "add") {
     breakpoints.push_back(line);
+    //cerr << PACKAGE << ": adding \"" << line << ":" << cmd << "\"" << endl;
   } else if(what == "remove") {
     breakpoints.remove(line);
+    //cerr << PACKAGE << ": removing  \"" << line << ":" << cmd << "\"" << endl;
   } else {
-    //cerr << PACKAGE << ": comando invalido: (3) \"" << cmd << "\"" << endl;
+    cerr << PACKAGE << ": breakpoint cmd invalido \"" << cmd << "\"" << endl;
     return;
   }
 }
