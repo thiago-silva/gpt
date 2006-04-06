@@ -1,2 +1,2 @@
 POFILES = AUTO
-SUBDIRS = pt_br
+# SUBDIRS = pt_br

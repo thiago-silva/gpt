@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-23 13:20+0000\n"
+"POT-Creation-Date: 2006-04-06 14:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,40 +61,44 @@ msgstr ""
 msgid "No file opened."
 msgstr ""
 
-#: src/gpteditor/debuggermanager.cpp:238
+#: src/gpteditor/debuggermanager.cpp:233
+msgid "Continuing..."
+msgstr ""
+
+#: src/gpteditor/debuggermanager.cpp:244
 msgid "Stoping..."
 msgstr ""
 
-#: src/gpteditor/debuggermanager.cpp:246 src/gpteditor/debuggermanager.cpp:254
-#: src/gpteditor/debuggermanager.cpp:262
+#: src/gpteditor/debuggermanager.cpp:252 src/gpteditor/debuggermanager.cpp:260
+#: src/gpteditor/debuggermanager.cpp:268
 msgid "Steping..."
 msgstr ""
 
-#: src/gpteditor/debuggermanager.cpp:510
+#: src/gpteditor/debuggermanager.cpp:525
 msgid "Compiling..."
 msgstr ""
 
-#: src/gpteditor/debuggermanager.cpp:523 src/gpteditor/debuggermanager.cpp:549
+#: src/gpteditor/debuggermanager.cpp:538 src/gpteditor/debuggermanager.cpp:564
 msgid "Finished"
 msgstr ""
 
-#: src/gpteditor/debuggermanager.cpp:536
+#: src/gpteditor/debuggermanager.cpp:551
 msgid "Executable started"
 msgstr ""
 
-#: src/gpteditor/debuggermanager.cpp:576
+#: src/gpteditor/debuggermanager.cpp:591
 msgid "Debug started"
 msgstr ""
 
-#: src/gpteditor/debuggermanager.cpp:604 src/gpteditor/mainwindow.cpp:152
+#: src/gpteditor/debuggermanager.cpp:619 src/gpteditor/mainwindow.cpp:151
 msgid "Start Debug"
 msgstr ""
 
-#: src/gpteditor/debuggermanager.cpp:606
+#: src/gpteditor/debuggermanager.cpp:621
 msgid "Stopped"
 msgstr ""
 
-#: src/gpteditor/debuggermanager.cpp:641
+#: src/gpteditor/debuggermanager.cpp:656
 msgid "Done"
 msgstr ""
 
@@ -130,77 +134,94 @@ msgstr ""
 msgid "Close Other Tabs"
 msgstr ""
 
-#: src/gpteditor/editortabwidget.cpp:514 src/gpteditor/mainwindow.cpp:137
+#: src/gpteditor/editortabwidget.cpp:514 src/gpteditor/mainwindow.cpp:136
 msgid "Close All"
 msgstr ""
 
-#: src/gpteditor/mainwindow.cpp:146
+#: src/gpteditor/mainwindow.cpp:145
 msgid "Compile"
 msgstr ""
 
-#: src/gpteditor/mainwindow.cpp:149
+#: src/gpteditor/mainwindow.cpp:148
 msgid "Run"
 msgstr ""
 
-#: src/gpteditor/mainwindow.cpp:155
+#: src/gpteditor/mainwindow.cpp:154
 msgid "Stop Debug"
 msgstr ""
 
-#: src/gpteditor/mainwindow.cpp:158
+#: src/gpteditor/mainwindow.cpp:157
 msgid "Step Over"
 msgstr ""
 
-#: src/gpteditor/mainwindow.cpp:161
+#: src/gpteditor/mainwindow.cpp:160
 msgid "Step Into"
 msgstr ""
 
-#: src/gpteditor/mainwindow.cpp:164
+#: src/gpteditor/mainwindow.cpp:163
 msgid "Step Out"
 msgstr ""
 
-#: src/gpteditor/mainwindow.cpp:170
+#: src/gpteditor/mainwindow.cpp:169
 msgid "Toggle Breakpoint"
 msgstr ""
 
-#: src/gpteditor/mainwindow.cpp:231
+#: src/gpteditor/mainwindow.cpp:230
 msgid "Global"
 msgstr ""
 
-#: src/gpteditor/mainwindow.cpp:238
+#: src/gpteditor/mainwindow.cpp:237
 msgid "Stack:"
 msgstr ""
 
-#: src/gpteditor/mainwindow.cpp:248
+#: src/gpteditor/mainwindow.cpp:247
 msgid "Local"
 msgstr ""
 
-#: src/gpteditor/mainwindow.cpp:281
+#: src/gpteditor/mainwindow.cpp:280
 msgid "Breakpoints"
 msgstr ""
 
-#: src/gpteditor/mainwindow.cpp:288
+#: src/gpteditor/mainwindow.cpp:287
 msgid "Messages"
 msgstr ""
 
-#: src/gpteditor/mainwindow.cpp:330
+#: src/gpteditor/mainwindow.cpp:329
 msgid ""
 "*.gpt|G-Portugol Source\n"
 "*|All"
 msgstr ""
 
-#: src/gpteditor/mainwindow.cpp:354
+#: src/gpteditor/mainwindow.cpp:353
 msgid "\"%1\" is unreadable."
 msgstr ""
 
-#: src/settings/widgets/debuggersettingswidget.cpp:23
+#: src/gpteditor/mainwindow.cpp:419
+msgid ""
+"A file named \"%1\" already exists. Are you sure you want to overwrite it?"
+msgstr ""
+
+#: src/gpteditor/mainwindow.cpp:420
+msgid "Overwrite File?"
+msgstr ""
+
+#: src/gpteditor/mainwindow.cpp:421
+msgid "&Overwrite"
+msgstr ""
+
+#: src/gpteditor/mainwindow.cpp:421
+msgid "Overwrite the file"
+msgstr ""
+
+#: src/settings/widgets/debuggersettingswidget.cpp:43
 msgid "Host:"
 msgstr ""
 
-#: src/settings/widgets/debuggersettingswidget.cpp:27
+#: src/settings/widgets/debuggersettingswidget.cpp:47
 msgid "Port:"
 msgstr ""
 
-#: src/settings/widgets/parsersettingswidget.cpp:17
+#: src/settings/widgets/parsersettingswidget.cpp:37
 msgid "Enable background parsing"
 msgstr ""
 
@@ -216,27 +237,27 @@ msgstr ""
 msgid "Parser"
 msgstr ""
 
-#: src/settings/widgets/compilersettingswidget.cpp:23
+#: src/settings/widgets/compilersettingswidget.cpp:43
 msgid "Execution mode:"
 msgstr ""
 
-#: src/settings/widgets/compilersettingswidget.cpp:27
+#: src/settings/widgets/compilersettingswidget.cpp:47
 msgid "Compilation"
 msgstr ""
 
-#: src/settings/widgets/compilersettingswidget.cpp:28
+#: src/settings/widgets/compilersettingswidget.cpp:48
 msgid "Interpretation"
 msgstr ""
 
-#: src/settings/widgets/compilersettingswidget.cpp:33
+#: src/settings/widgets/compilersettingswidget.cpp:53
 msgid "Arguments:"
 msgstr ""
 
-#: src/settings/widgets/compilersettingswidget.cpp:40
+#: src/settings/widgets/compilersettingswidget.cpp:61
 msgid "Shell:"
 msgstr ""
 
-#: src/settings/widgets/compilersettingswidget.cpp:44
+#: src/settings/widgets/compilersettingswidget.cpp:65
 msgid "|All"
 msgstr ""
 
@@ -248,52 +269,60 @@ msgstr ""
 msgid "false"
 msgstr ""
 
-#: src/debuggergpt/gptvariable.cpp:39 src/debuggergpt/gptvariable.cpp:142
+#: src/debuggergpt/gptvariable.cpp:40 src/debuggergpt/gptvariable.cpp:143
 msgid "Vector"
 msgstr ""
 
-#: src/debuggergpt/gptvariable.cpp:67
+#: src/debuggergpt/gptvariable.cpp:68
 msgid "Integer"
 msgstr ""
 
-#: src/debuggergpt/gptvariable.cpp:69
+#: src/debuggergpt/gptvariable.cpp:70
 msgid "Float"
 msgstr ""
 
-#: src/debuggergpt/gptvariable.cpp:71
+#: src/debuggergpt/gptvariable.cpp:72
 msgid "Boolean"
 msgstr ""
 
-#: src/debuggergpt/gptvariable.cpp:73
+#: src/debuggergpt/gptvariable.cpp:74
 msgid "String"
 msgstr ""
 
-#: src/debuggergpt/gptvariable.cpp:75
+#: src/debuggergpt/gptvariable.cpp:76
 msgid "Character"
 msgstr ""
 
-#: src/debuggergpt/gptvariable.cpp:77
+#: src/debuggergpt/gptvariable.cpp:78
 msgid "Undefined"
 msgstr ""
 
-#: src/debuggergpt/debuggergpt.cpp:82
+#: src/debuggergpt/debuggergpt.cpp:84
 msgid "Unable to compile file \"%1\"."
 msgstr ""
 
-#: src/debuggergpt/debuggergpt.cpp:135
-msgid "%1 %2;echo \"Press Enter to continue...\";read"
+#: src/debuggergpt/debuggergpt.cpp:137
+msgid "%1 %2;echo \"Press any key to continue...\";read"
 msgstr ""
 
-#: src/debuggergpt/debuggergpt.cpp:165
-msgid "Unable to execute the file \"%1\". Check if it was compiled."
+#: src/debuggergpt/debuggergpt.cpp:167
+msgid "Unable to execute the algorithm. Check if it was compiled."
 msgstr ""
 
-#: src/debuggergpt/debuggergpt.cpp:175
-msgid ";echo \"Press Enter to continue...\";read"
+#: src/debuggergpt/debuggergpt.cpp:177
+msgid ";echo \"Press any key to continue...\";read"
 msgstr ""
 
-#: src/debuggergpt/debuggergpt.cpp:292
+#: src/debuggergpt/debuggergpt.cpp:294
 msgid "Unable to listen on port: %1"
+msgstr ""
+
+#: src/debuggergpt/debuggergpt.cpp:334
+msgid "Algoritmo compilado com sucesso"
+msgstr ""
+
+#: src/debuggergpt/debuggergpt.cpp:376
+msgid "Compilation successful"
 msgstr ""
 
 #: debug/src/debuggergpt/gptnet.moc.cpp:34
