@@ -234,8 +234,8 @@ void DebuggerGPT::addBreakpoints(const QValueList<DebuggerBreakpoint*>& bps)
     QValueList<DebuggerBreakpoint*>::const_iterator it;
     for(it = bps.begin(); it != bps.end(); ++it)
     {
-      if(((*it)->url() == currentURL()) && ((*it)->status() == DebuggerBreakpoint::ENABLED)) {
-        m_net->requestBreakpoint((*it)->line());
+      if((*it)->status() == DebuggerBreakpoint::ENABLED) {
+        m_net->requestBreakpoint((*it)->url().path(), (*it)->line());
       }
     }
   }
@@ -243,9 +243,9 @@ void DebuggerGPT::addBreakpoints(const QValueList<DebuggerBreakpoint*>& bps)
 
 void DebuggerGPT::addBreakpoint(DebuggerBreakpoint* bp)
 {
-  if(isRunning() && (bp->url() == currentURL()))
+  if(isRunning())
   {
-    m_net->requestBreakpoint(bp->line());
+    m_net->requestBreakpoint(bp->url().path(), bp->line());
   }
 }
 
@@ -255,19 +255,18 @@ void DebuggerGPT::changeBreakpoint(DebuggerBreakpoint* bp)
   if(isRunning())
   {
     if(bp->status() == DebuggerBreakpoint::DISABLED) {
-      m_net->requestBreakpointRemoval(bp->line());
+      m_net->requestBreakpointRemoval(bp->url().path(), bp->line());
     } else {
-      m_net->requestBreakpoint(bp->line());
+      m_net->requestBreakpoint(bp->url().path(), bp->line());
     }
   }
 }
 
 void DebuggerGPT::removeBreakpoint(DebuggerBreakpoint* bp)
 {
-  if(isRunning() && (bp->url() == currentURL()))
+  if(isRunning())
   {
-    //TODO: if bp->url() == m_currentURL
-    m_net->requestBreakpointRemoval(bp->line());
+    m_net->requestBreakpointRemoval(bp->url().path(), bp->line());
   }
 }
 

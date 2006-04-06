@@ -92,17 +92,17 @@ void GPTNet::requestStepOut()
   m_socket->writeBlock(cmd, cmd.length()+1);
 }
 
-void GPTNet::requestBreakpoint(int line)
+void GPTNet::requestBreakpoint(const QString& file, int line)
 {
-  QString cmd = "breakpoint cmd=add line=" + QString::number(line);
+  QString cmd = "breakpoint cmd=add file=\"" + file + "\" line=" + QString::number(line);
   QString size = QString::number(cmd.length()+1);
   m_socket->writeBlock(size, size.length()+1);
   m_socket->writeBlock(cmd, cmd.length()+1);
 }
 
-void GPTNet::requestBreakpointRemoval(int line)
+void GPTNet::requestBreakpointRemoval(const QString& file, int line)
 {
-  QString cmd = "breakpoint cmd=remove line=" + QString::number(line);
+  QString cmd = "breakpoint cmd=remove file=\"" + file + "\" line=" + QString::number(line);
   QString size = QString::number(cmd.length()+1);
   m_socket->writeBlock(size, size.length()+1);
   m_socket->writeBlock(cmd, cmd.length()+1);

@@ -39,7 +39,7 @@ public:
 
   bool startListener();
 
-  void setCurrentURL(const KURL& url);
+//   void setCurrentURL(const KURL& url);
 
   void requestContinue();
   void requestStop();
@@ -50,8 +50,8 @@ public:
   //   void requestWatch(const QString& expression, int ctx_id = 0);
   //   void requestVariables(int scope, int id);
   //
-    void requestBreakpoint(int line);
-    void requestBreakpointRemoval(int line);
+    void requestBreakpoint(const QString&, int line);
+    void requestBreakpointRemoval(const QString&, int line);
 
 signals:
   void sigGPTStarted();
