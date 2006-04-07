@@ -496,6 +496,8 @@ void X86::writeIgualExpr(int e1, int e2) {
   writeTEXT("pop ebx");
   writeTEXT("pop eax");
 
+  writeCast(e1, e2);
+
   if((e1 != TIPO_LITERAL) && (e2 != TIPO_LITERAL)) {
 		writeTEXT("cmp eax, ebx");
 		writeTEXT("sete al");
@@ -514,6 +516,8 @@ void X86::writeDiferenteExpr(int e1, int e2) {
 
   writeTEXT("pop ebx");
   writeTEXT("pop eax");
+
+  writeCast(e1, e2);
 
   if((e1 != TIPO_LITERAL) && (e2 != TIPO_LITERAL)) {
     writeTEXT("cmp eax, ebx");
