@@ -749,7 +749,17 @@ void InterpreterEval::setReturnExprValue(ExprValue& v) {
   retExpr = v;
 }
 
-ExprValue InterpreterEval::getReturnExprValue() {
+ExprValue InterpreterEval::getReturnExprValue(const string& fname) {
+  Symbol func = stable.getSymbol(SymbolTable::GlobalScope, fname);
+  
+  if((func.type.primitiveType() != TIPO_REAL) || (retExpr.type == TIPO_REAL)) {
+    //trunca o valor inteiro
+    stringstream s;
+    s << atoi(retExpr.value.c_str());
+    retExpr.setValue(s);
+  }
+
+  retExpr.type = func.type.primitiveType();
   return retExpr;
 }
 

@@ -227,7 +227,7 @@ fcall returns [ExprValue v]
 
         func_decls(fnode, args, id->getLine());                  //executes
         _returning = false;
-        v = interpreter.getReturnExprValue();
+        v = interpreter.getReturnExprValue(id->getText());
       }
     }
   ;
@@ -236,10 +236,10 @@ stm_ret
 options {
   defaultErrorHandler=false; //noviable should be caught on expr
 }
-{ExprValue etype;}
-  : #(r:T_KW_RETORNE (TI_NULL|etype=expr))
+{ExprValue eval;}
+  : #(r:T_KW_RETORNE (TI_NULL|eval=expr))
     {
-      interpreter.setReturnExprValue(etype);
+      interpreter.setReturnExprValue(eval);
       _returning = true;
     }
   ;

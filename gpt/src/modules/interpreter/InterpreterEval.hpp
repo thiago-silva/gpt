@@ -149,7 +149,7 @@ class InterpreterEval {
   ExprValue execBuiltInFunction(const string& fname, list<ExprValue>& args);
  
   void setReturnExprValue(ExprValue& v);
-  ExprValue getReturnExprValue();
+  ExprValue getReturnExprValue(const string&);
 //----------- Debugger -------------------------
 
   void nextCmd(const string& file, int line);
@@ -174,8 +174,8 @@ private:
 
   Variables variables;  
   typedef pair<string, int> context_t;
-  typedef pair<string, pair<string, int> > stack_entry_t;
-  list< stack_entry_t > program_stack;//pair< pair<file, pair<context, line> >
+  typedef pair<string, pair<string, int> > stack_entry_t; //pair<file, pair<context, line> >
+  list< stack_entry_t > program_stack;
 
   ExprValue retExpr;
 };
