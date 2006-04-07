@@ -805,35 +805,29 @@ passo returns [production p]
 expr[int expecting_type] returns [production p]
 {
   production left,right;
-}
-  : #(T_BIT_OU    left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="|";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}  
-  | #(T_BIT_XOU   left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="^";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_BIT_KW_E  left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="&";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_BIT_NOT   left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="~";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-//  | #(T_IGUAL     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="==";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_IGUAL    left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=translateBinExpr(left,right,T_IGUAL);p.expr.first=#expr->getEvalType();}
-  //| #(T_DIFERENTE left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="!=";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_DIFERENTE left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=translateBinExpr(left,right,T_DIFERENTE);p.expr.first=#expr->getEvalType();}
-  //| #(T_MAIOR     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+=">";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_MAIOR     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=p.expr.second=translateBinExpr(left,right,T_MAIOR);p.expr.first=#expr->getEvalType();}
-  //| #(T_MENOR     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="<";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_MENOR     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=p.expr.second=translateBinExpr(left,right,T_MENOR);p.expr.first=#expr->getEvalType();}
-  //| #(T_MAIOR_EQ  left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+=">=";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_MAIOR_EQ  left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=p.expr.second=translateBinExpr(left,right,T_MAIOR_EQ);p.expr.first=#expr->getEvalType();}
-  //| #(T_MENOR_EQ  left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="<=";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_MENOR_EQ  left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=p.expr.second=translateBinExpr(left,right,T_MENOR_EQ);p.expr.first=#expr->getEvalType();}
-  | #(T_MAIS      left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="+";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_MENOS     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="-";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_DIV       left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="/";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_MULTIP    left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="*";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(T_MOD       left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second=left.expr.second;p.expr.second+="%";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(TI_UN_NEG  right=element[expecting_type]) {p.expr.second="-";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(TI_UN_POS  right=element[expecting_type]) {p.expr.second="+";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(TI_UN_NOT  right=element[expecting_type]) {p.expr.second="!";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
-  | #(TI_UN_BNOT right=element[expecting_type]) {p.expr.second="~";p.expr.second+=right.expr.second;p.expr.first=#expr->getEvalType();}
+}  
+  : #(T_KW_OU     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second="("+left.expr.second;p.expr.second+="||";p.expr.second+=right.expr.second+")";p.expr.first=#expr->getEvalType();}
+  | #(T_KW_E      left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second="("+left.expr.second;p.expr.second+="&&";p.expr.second+=right.expr.second+")";p.expr.first=#expr->getEvalType();}
+  | #(T_BIT_OU    left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second="("+left.expr.second;p.expr.second+="|";p.expr.second+=right.expr.second+")";p.expr.first=#expr->getEvalType();}  
+  | #(T_BIT_XOU   left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second="("+left.expr.second;p.expr.second+="^";p.expr.second+=right.expr.second+")";p.expr.first=#expr->getEvalType();}
+  | #(T_BIT_E     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second="("+left.expr.second;p.expr.second+="&";p.expr.second+=right.expr.second+")";p.expr.first=#expr->getEvalType();}  
+  | #(T_IGUAL     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second="("+translateBinExpr(left,right,T_IGUAL);p.expr.second+=")";p.expr.first=#expr->getEvalType();}
+  | #(T_DIFERENTE left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second="("+translateBinExpr(left,right,T_DIFERENTE);p.expr.second+=")";p.expr.first=#expr->getEvalType();}
+  | #(T_MAIOR     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second="("+p.expr.second+=translateBinExpr(left,right,T_MAIOR);p.expr.second+=")";p.expr.first=#expr->getEvalType();}
+  | #(T_MENOR     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second="("+p.expr.second+=translateBinExpr(left,right,T_MENOR);p.expr.second+=")";p.expr.first=#expr->getEvalType();}
+  | #(T_MAIOR_EQ  left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second="("+p.expr.second+=translateBinExpr(left,right,T_MAIOR_EQ);p.expr.second+=")";p.expr.first=#expr->getEvalType();}
+  | #(T_MENOR_EQ  left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second="("+p.expr.second+=translateBinExpr(left,right,T_MENOR_EQ);p.expr.second+=")";p.expr.first=#expr->getEvalType();}
+  | #(T_MAIS      left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second="("+left.expr.second;p.expr.second+="+";p.expr.second+=right.expr.second+")";p.expr.first=#expr->getEvalType();}
+  | #(T_MENOS     left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second="("+left.expr.second;p.expr.second+="-";p.expr.second+=right.expr.second+")";p.expr.first=#expr->getEvalType();}
+  | #(T_DIV       left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second="("+left.expr.second;p.expr.second+="/";p.expr.second+=right.expr.second+")";p.expr.first=#expr->getEvalType();}
+  | #(T_MULTIP    left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second="("+left.expr.second;p.expr.second+="*";p.expr.second+=right.expr.second+")";p.expr.first=#expr->getEvalType();}
+  | #(T_MOD       left=expr[expecting_type] right=expr[expecting_type]) {p.expr.second="("+left.expr.second;p.expr.second+="%";p.expr.second+=right.expr.second+")";p.expr.first=#expr->getEvalType();}
+  | #(TI_UN_NEG  right=element[expecting_type]) {p.expr.second="(-";p.expr.second+=right.expr.second+")";p.expr.first=#expr->getEvalType();}
+  | #(TI_UN_POS  right=element[expecting_type]) {p.expr.second="(+";p.expr.second+=right.expr.second+")";p.expr.first=#expr->getEvalType();}
+  | #(TI_UN_NOT  right=element[expecting_type]) {p.expr.second="(!";p.expr.second+=right.expr.second+")";p.expr.first=#expr->getEvalType();}
+  | #(TI_UN_BNOT right=element[expecting_type]) {p.expr.second="(~";p.expr.second+=right.expr.second+")";p.expr.first=#expr->getEvalType();}
   | p=element[expecting_type]
   ;
-
 
 element[int expecting_type] returns [production p]
 {
