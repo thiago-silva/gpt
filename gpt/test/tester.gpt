@@ -1,0 +1,178 @@
+/* algoritmo para testar comportamento da linguagem */
+/* Nota: nao testar errors de compilacao aqui */
+
+algoritmo tester;
+
+variáveis
+  i : inteiro;
+  r : real;
+  l : lógico;
+  c : caractere;
+  str : literal;  
+  mat: matriz[2] de inteiros;
+fim-variáveis
+
+início
+  testar_inicializacao();
+  testar_expr_aritm();
+  testar_expr_log();
+fim
+
+função testar_inicializacao()
+  local : inteiro;
+início
+  se i <> 0 então
+    imprima("erro: i <> 0");
+  fim-se
+
+  se r <> 0 então
+    imprima("erro: r <> 0");
+  fim-se
+
+  se r <> 0.0 então
+    imprima("erro: r <> 0.0");
+  fim-se
+
+  se l <> 0 então 
+    imprima("erro: l <> 0");
+  fim-se
+
+  se l <> falso então
+    imprima("erro: l <> falso");
+  fim-se
+
+  se str <> "" então
+    imprima("erro: str <> \"\"");
+  fim-se
+
+  se local <> 0 então
+    imprima("erro: local <> 0");
+  fim-se
+
+  para local de 0 até 1 faça  
+    se mat[local] <> 0 então
+      imprima("erro: mat[",local,"] <> 0");
+    fim-se
+  fim-para
+
+  se local <> 1 então
+    imprima("erro: local <> 2");
+  fim-se  
+fim
+
+função testar_expr_aritm()
+início
+
+  se verdadeiro então
+    //
+  senão
+    imprima("erro: se verdadeiro");
+  fim-se
+
+  se falso então
+    imprima("erro: se falso");
+  fim-se
+
+  se não verdadeiro então
+    imprima("erro: se não verdadeiro");
+  fim-se
+    
+  se 2 + 2 então
+    //ok
+  senão  
+    imprima("erro: 2 + 2");
+  fim-se
+
+  se 2 - 2 então
+    imprima("erro: 2 - 2");
+  fim-se
+
+  se 2 + 2 <> 4 então
+    imprima("erro: 2 + 2 <> 4");
+  fim-se
+
+  se não (2 - 2) então
+    //
+  senão
+    imprima("erro: se não (2-2)");  
+  fim-se
+
+  se 10 + 2 * 3 <> 16 então
+    imprima("erro: 10 + 2 * 3 <> 16");
+  fim-se
+  
+  se 10 + 2 * 3 - 12 / 3 <> 12 então
+    imprima("erro: 10 + 2 * 3 - 12 / 3 <> 12");
+  fim-se
+
+  se (10 + 2) * (12 - 10) / 3 <> 8 então
+    imprima("erro: (10 + 2) * (12 - 10) / 3 <> 8");
+  fim-se
+  
+  se 0b101 <> 5 então
+    imprima("erro: 0b101 <> 5");
+  fim-se
+
+  se 0xA <> 10 então
+    imprima("erro: 0xA <> 10");
+  fim-se
+
+  se 0c10 <> 8 então
+    imprima("erro: 0c10 <> 8");
+  fim-se
+
+  se 10 * -1 <> -10 então
+    imprima("erro: 10 * -1 <> -10");
+  fim-se
+
+  se 10 - 5.5 <> 4.5 então
+    imprima("erro: 10 - 5.5 <> 4.5");
+  fim-se
+
+  se 5.5 - 1 <> 4.5 então
+    imprima("erro: 5.5 - 1 <> 4.5");
+  fim-se
+
+fim
+
+função testar_expr_log()
+início
+  se verdadeiro e verdadeiro então
+  senão
+    imprima("erro: verdadeiro e verdadeiro");
+  fim-se
+
+  se verdadeiro e falso então
+    imprima("erro: verdadeiro e falso");
+  fim-se
+
+  se falso e verdadeiro então
+    imprima("erro: falso e verdadeiro");
+  fim-se
+
+  se falso e falso então
+    imprima("erro: falso e falso");
+  fim-se
+
+  se verdadeiro ou verdadeiro então
+  senão
+    imprima("erro: verdadeiro ou verdadeiro");
+  fim-se
+
+  se verdadeiro ou falso então
+  senão
+    imprima("erro: verdadeiro ou falso");
+  fim-se
+
+  se falso ou verdadeiro então
+  senão
+    imprima("erro: falso ou verdadeiro");
+  fim-se
+
+  se falso ou falso então
+    imprima("erro: falso ou falso");
+  fim-se
+
+  //operadores binarios & | ^:
+  
+fim
