@@ -400,7 +400,7 @@ stm_ret!
 
 array_sub
 {RefToken tk;}
-  : (T_ABREC! expr {tk = lastToken;}T_FECHAC!)*
+  : (abre:T_ABREC! {tk=abre;} expr {tk = lastToken;}T_FECHAC!)*
   ;
 
   exception //apenas para rvalue. se array_sub pertence a um lvalue, ele ja foi validado porcausa
@@ -455,12 +455,18 @@ stm_attr
   : lvalue T_ATTR^ expr
   ;
 
-//nao precisa de catch[]. tokens ja foram validados no predicado em stm_list
+//catches são feitos em stm_list (stm_list usa predicate antes de chamar stm_attr)
+
+//   //catch para exceptions herdadas em expr
+//   exception
+//   catch[antlr::MismatchedTokenException e] {
+//     reportParserError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+//   }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 stm_se
 {RefToken tk;}
-  : T_KW_SE^ expr {tk=lastToken;} T_KW_ENTAO! {tk=lastToken;} stm_list (T_KW_SENAO stm_list)? {tk=lastToken;} T_KW_FIM_SE!
+  : se:T_KW_SE^ {tk=se;} expr {tk=lastToken;} T_KW_ENTAO! {tk=lastToken;} stm_list (T_KW_SENAO stm_list)? {tk=lastToken;} T_KW_FIM_SE!
   ;
 
   exception
@@ -518,7 +524,7 @@ stm_se
 
 stm_enquanto
 {RefToken tk;}
-  : T_KW_ENQUANTO^ expr {tk=lastToken;} T_KW_FACA! {tk=lastToken;} stm_list {tk=lastToken;} T_KW_FIM_ENQUANTO!
+  : enq:T_KW_ENQUANTO^ {tk=enq;} expr {tk=lastToken;} T_KW_FACA! {tk=lastToken;} stm_list {tk=lastToken;} T_KW_FIM_ENQUANTO!
   ;
 
   exception
@@ -748,6 +754,10 @@ expr_elemento
   exception //ja foi tratado em op_unario
   catch[ANTLR_USE_NAMESPACE(antlr)NoViableAltException e] {
     //nothing
+  }
+  //catch para exceptions herdadas em expr
+  catch[antlr::MismatchedTokenException e] {
+    reportParserError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
   }
 
 /*************************************************************************************/
