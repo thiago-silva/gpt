@@ -50,14 +50,13 @@ options {
     class ReturnException {};
 
     InterpreterWalker(SymbolTable& st, string host, int port)
-      : interpreter(st, host, port) {    }
+      : interpreter(st, host, port), _returning(false) {    }
 
   private:
-
+    bool _returning;
     InterpreterEval interpreter;
 
-    RefPortugolAST topnode;
-
+    RefPortugolAST topnode;    
 
     string parseLiteral(string str) {
       string::size_type idx = 0;
@@ -157,8 +156,18 @@ algoritmo
   ;
 
 inicio
-  : #(t:T_KW_INICIO (stm)*)
-      {interpreter.nextCmd(t->getFilename(), t->getEndLine());}
+  : #(t:T_KW_INICIO //(stm)*)
+      {
+        while((_t != antlr::nullAST)) {
+          if(!_returning) {            
+            stm(_t);
+          }
+          _t = _t->getNextSibling();
+        }
+      }
+    )
+
+    {interpreter.nextCmd(t->getFilename(), t->getEndLine());}
   ;
 
 stm
@@ -216,21 +225,22 @@ fcall returns [ExprValue v]
 
         RefPortugolAST fnode   = getFunctionNode(id->getText()); //gets the function node
 
-        try {
-          func_decls(fnode, args, id->getLine());                  //executes
-        } catch(ReturnException& e) {   }
-
+        func_decls(fnode, args, id->getLine());                  //executes
+        _returning = false;
         v = interpreter.getReturnExprValue();
       }
     }
   ;
 
 stm_ret
+options {
+  defaultErrorHandler=false; //noviable should be caught on expr
+}
 {ExprValue etype;}
   : #(r:T_KW_RETORNE (TI_NULL|etype=expr))
     {
       interpreter.setReturnExprValue(etype);
-      throw ReturnException();
+      _returning = true;
     }
   ;
 
