@@ -259,12 +259,11 @@ options {
          "   return TRUE;\n"
          "}\n";
     s << "boolean str_comp(char* left, char* right) {\n"
-         "   if(left == 0) {\n"
-         "     if(right == 0) {\n"
-         "       return TRUE;\n"
-         "     } else {\n"
-         "       return FALSE;\n"
-         "     }\n"
+         "   if(str_strlen(left) != str_strlen(right)) {\n"
+         "     return FALSE;\n"
+         "   }\n"
+         "   if((str_strlen(left)==0) && (str_strlen(right)==0)) {\n"
+         "     return TRUE;\n"
          "   }\n"
          "   return (strcmp(left, right)==0);\n"
          "}\n";
@@ -434,7 +433,7 @@ options {
         ret << "str_comp(" << left.expr.second << "," << right.expr.second << ")";
         break;
       case T_DIFERENTE:
-        ret << "str_comp(" << left.expr.second << "," << right.expr.second << ")";
+        ret << "!str_comp(" << left.expr.second << "," << right.expr.second << ")";
         break;
       case T_MAIOR:
         ret << "(str_strlen(" << left.expr.second << ") > str_strlen(" << right.expr.second << "))";
