@@ -826,7 +826,7 @@ void X86::writeMenosExpr(int e1, int e2) {
       writeTEXT("mov [aux], ebx");
       writeTEXT("fld dword [aux]");
       writeTEXT("mov [aux], eax");
-      subop = "fisub dword [aux]";
+      subop = "fisubr dword [aux]";
     } else { //float/float
       writeTEXT("mov [aux], eax");
       writeTEXT("fld dword [aux]");
