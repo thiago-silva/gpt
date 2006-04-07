@@ -241,9 +241,9 @@ ExprValue InterpreterEval::evaluateE(ExprValue& left, ExprValue& right) {
   }
 
   if(right.type == TIPO_LITERAL) {
-    l = (right.value.length() != 0)?true:false;
+    r = (right.value.length() != 0)?true:false;
   } else {
-    l = atof(right.value.c_str())?true:false;
+    r = atof(right.value.c_str())?true:false;
   }
 
 
