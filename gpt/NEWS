@@ -1,11 +1,24 @@
 Sumário de mudanças
 -------------------
 
-06 de Abril de 2006  * gpt 0.9.3
+      XXXXXX de Abril de 2006  * gpt 0.9.3
+
+ * Adição de arquivo com funções básicas (base.gpt).
  * Melhorias no modulo de depuração.
  * Revisão e correção de mensagens de erro de compilação.
  * Correção de bugs na compilação e tradução de expressões envolvendo literais.
  * Correção de bugs na análise semântica (avaliação de parâmetros de função).
+ * Correção de bugs na análise sintática (expressões sem parêntesis causando
+   segmentation fault).
+ * Correção de bugs na tradução para C (expressões faltando e/ou com 
+   precedência incorreta).
+ * Correção de bugs na interpretação (expressões envolvendo valores reais
+   calculadas incorretamente).
+ * Correção de bugs na interpretação (avaliação de diversas operações)   
+ * Correção de bugs na interpretação (retorno de dados em funções).
+ * Correção de bugs na compilação (estrutura "para" não funciona)
+ * Correção de bugs na compilação (casting de parâmetro inteiro para
+   real).
  * Adicionado suporte a compilação de algoritmos usando mais de um arquivo.
  * Adicionado suporte a variável de ambiente GPT_INCLUDE para incluir algoritmos 
    automaticamente.
