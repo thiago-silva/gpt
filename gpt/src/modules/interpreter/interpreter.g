@@ -256,6 +256,7 @@ stm_se
       {
         if(!exec) {
           while((_t != antlr::nullAST) && (_t->getType() != T_KW_SENAO)) {
+            if(_t->getType() == NULL_TREE_LOOKAHEAD) break;
             _t = _t->getNextSibling();
           }
         }
