@@ -178,6 +178,7 @@ void X86::init(const string& name) {
             "              data_no equ $\n"
             "    mem_ptr         dd 0\n"
             "    aux             dd 0\n"
+            "    aux2            dd 0\n"
             "    str_true        db 'verdadeiro',0\n"
             "    str_false       db 'falso',0\n"
             "    str_no_mem_left db 'Não foi possível alocar memória.',0\n\n";
@@ -394,10 +395,22 @@ void X86::writeCast(int e1, int e2) {
     writeTEXT("fstp dword [aux]");
     writeTEXT("mov eax, dword [aux]");
   } else if((e1 == TIPO_REAL) && (e2 != TIPO_REAL)) {
+    //float to int (truncate!)
+
+    //backup float flags and set round mode
+    writeTEXT("fnstcw word [aux2]");
+    writeTEXT("mov dx, word [aux2]");
+    writeTEXT("mov dh, 0xc");
+    writeTEXT("mov word [aux], dx");
+    writeTEXT("fldcw word [aux]");
+
     writeTEXT("mov dword [aux], eax");
     writeTEXT("fld dword [aux]");
     writeTEXT("fistp dword [aux]");
     writeTEXT("mov eax, dword [aux]");
+
+    //restore backup
+    writeTEXT("fldcw word [aux2]");
   }
 }
 
@@ -926,7 +939,7 @@ void X86::writeUnaryNeg(int etype) {
 
   stringstream s;
   if(etype == TIPO_REAL) {
-    s << "or eax ,0x80000000";
+    s << "xor eax ,0x80000000";
   } else {
     s << "neg eax";
   }
