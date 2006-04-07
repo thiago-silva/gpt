@@ -343,6 +343,8 @@ stm_ret
         x86.writeTEXT("addarg eax");
         x86.writeTEXT("call clone_literal");
         x86.writeTEXT("clargs 1");
+      } else {
+        x86.writeCast(etype, expecting_type);
       }
       x86.writeTEXT("return");
     }
@@ -716,7 +718,7 @@ func_decls
       {
         if((_t != antlr::nullAST) && (_t->getType() == TI_FRETURN)) {
           _t = _t->getNextSibling();
-        }    
+        }
       }
 
       (variaveis[X86::VAR_LOCAL])?
@@ -726,5 +728,3 @@ func_decls
       }
     )
   ;
-
-  
