@@ -146,7 +146,7 @@ bool ExpressionValue::matchesPrimitiveType(int other_type) const {
 //3: tipo_all eh compativel com todos
 
   //para funcoes sem retorno
-  if(_primitiveType == TIPO_NULO) {
+  if((_primitiveType == TIPO_NULO) || (other_type == TIPO_NULO)) {
     return _primitiveType == other_type;
   }
 
@@ -559,10 +559,14 @@ void SemanticEval::evaluateReturnCmd(ExpressionValue& ev, int line) {
       SymbolType sctype = stable.getSymbol(SymbolTable::GlobalScope, currentScope).type;
 
       if(!ev.isCompatibleWidth(sctype)) {
-          stringstream msg;
+        stringstream msg;
+        if(sctype.primitiveType() == TIPO_NULO) {
+          msg << "Função não tem tipo de retorno.";
+        } else {          
           msg << "Expressão de retorno deve ser compatível com o tipo \""
             << sctype.toString() <<  "\"";
-          GPTDisplay::self()->add(msg.str(), line);
+        }
+        GPTDisplay::self()->add(msg.str(), line);
       } //else ok!
     } catch(SymbolTableException& e) {
       cerr << "Erro interno: SemanticEval::evaluateReturnCmd exception\n";
