@@ -277,28 +277,24 @@ fcall[int expct_type] returns [int type]
             //imp_ptypes.push_back(etype);
             switch(etype) {
               case TIPO_INTEIRO:
-                x86.writeTEXT("push 'i'");
+                x86.writeTEXT("addarg 'i'");
                 break;
               case TIPO_REAL:
-                x86.writeTEXT("push 'r'");
+                x86.writeTEXT("addarg 'r'");
                 break;
               case TIPO_CARACTERE:
-                x86.writeTEXT("push 'c'");
+                x86.writeTEXT("addarg 'c'");
                 break;
               case TIPO_LITERAL:
-                x86.writeTEXT("push 's'");
+                x86.writeTEXT("addarg 's'");
                 break;
               case TIPO_LOGICO:
-                x86.writeTEXT("push 'l'");
+                x86.writeTEXT("addarg 'l'");
                 break;
             }
-/*          fimp = x86.translateFuncImprima(id->getText(), etype);
+          } else {            
             x86.writeTEXT("pop eax");
-            x86.writeTEXT("addarg eax");
-            x86.writeTEXT(string("call ") + fimp);
-            x86.writeTEXT("clargs 1");*/
-          } else {
-            x86.writeTEXT("pop eax");
+            x86.writeCast(etype, ptype);
             x86.writeTEXT("addarg eax");
             ptype = f.param.paramType(count++);
           }
