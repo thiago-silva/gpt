@@ -435,6 +435,7 @@ options {
         break;
       case T_DIFERENTE:
         ret << "str_comp(" << left.expr.second << "," << right.expr.second << ")";
+        break;
       case T_MAIOR:
         ret << "(str_strlen(" << left.expr.second << ") > str_strlen(" << right.expr.second << "))";
         break;
