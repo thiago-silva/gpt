@@ -78,7 +78,7 @@ public:
     }
   
     int c = 0;
-    for(list<pair<string,SymbolType> >::iterator it = params.begin(); it != params.end(); it++) {
+    for(list<pair<string,SymbolType> >::iterator it = params.begin(); it != params.end(); it++, c++) {
       if(c == idx) {
         return (*it).second.primitiveType();
       }
