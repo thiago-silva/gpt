@@ -3,10 +3,6 @@
 \CurrentEntry 1 NOW
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>Atualizar documentacao<br /><br /></li>
-<li>rever manual</li>
-<ul type="disc"><li>documentar multiple files compilation</li>
-<li>documentar GPT_INCLUDE<br /></li></ul>
-<li>-criar base.gpt e distribuir (funcoes como power, abs, sin, cos, sqrt, etc)</li>
 <li>-Lançar versão 9.3</li>
 <li>-fazer video apresentando GPT_INCLUDE e multiplefiles breakpoint</li></ul>
 </body></html>
@@ -21,7 +17,6 @@
 <ul type="disc"><li>Mas em x86, float eh usado....</li></ul></ul>
 <li>interpreter: </li>
 <ul type="disc"><li>(se for usar double)atof -&gt; &quot;a2double&quot;, (ou o que quer que seja str2double)<br /></li></ul>
-<li>opcoes &quot;-H&quot; e &quot;-P&quot; documentadas no manual<br /></li>
 <li>gpt: mover o exemplos/highlight.gpt para gpteditor</li></ul>
 <div></div>
 <li>Win x86:</li>
@@ -32,13 +27,11 @@
 <ul type="disc"><li>Documentar passos para desenvolver no windows (mingw, pcre, antlr...)</li>
 <li>Sobre compilacao (nasm/32)</li>
 <ul type="disc"><li>tamanho dos tipos (32 real,inteiro,logico, 8 literal)</li>
-<li>Overflow aritmetico</li>
-<li>Notas:<br /></li></ul></ul>
+<li>Overflow aritmetico<br /></li></ul></ul>
 <li>GPTEditor</li>
 <ul type="disc"><li>Settings:</li>
 <ul type="disc"><li>Remover &quot;argumentos&quot;</li></ul></ul></ul>
 </body></html>
-
 
 \NewEntry 1 Notas ideias etc
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
@@ -74,7 +67,6 @@
 <li>f(mat[0]);</li>
 <li>função f(matriz[3] de inteiros);</li></ul></ul>
 </body></html>
-
 
 \NewEntry 1 Bugs
 
