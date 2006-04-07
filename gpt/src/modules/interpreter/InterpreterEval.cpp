@@ -752,7 +752,7 @@ void InterpreterEval::setReturnExprValue(ExprValue& v) {
 ExprValue InterpreterEval::getReturnExprValue(const string& fname) {
   Symbol func = stable.getSymbol(SymbolTable::GlobalScope, fname);
   
-  if((func.type.primitiveType() != TIPO_REAL) || (retExpr.type == TIPO_REAL)) {
+  if((func.type.primitiveType() != TIPO_REAL) && (retExpr.type == TIPO_REAL)) {
     //trunca o valor inteiro
     stringstream s;
     s << atoi(retExpr.value.c_str());
