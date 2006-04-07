@@ -50,8 +50,9 @@ void X86SubProgram::writeTEXT(const string& str) {
   _txt << str << endl;
 }
 
-void X86SubProgram::init(const string& name) {
+void X86SubProgram::init(const string& name, int totalParams) {
   _name = name;
+  _param_offset = 4+(totalParams * SizeofDWord);
 }
 
 string X86SubProgram::name() {
@@ -85,7 +86,7 @@ void X86SubProgram::declareParam(const string& param, int type, int msize) {
     declareLocal(param, msize, false);
     writeMatrixCopyCode(param, type, msize);
   }
-  _param_offset += SizeofDWord;
+  _param_offset -= SizeofDWord;
 }
 
 void X86SubProgram::writeMatrixCopyCode(const string& param, int type, int msize) {
@@ -205,9 +206,8 @@ void X86::createScope(const string& scope) {
   if(scope == SymbolTable::GlobalScope) {
     _subprograms[scope].init(X86::EntryPoint);
   } else {
-//     Symbol symb = _stable.getSymbol(SymbolTable::GlobalScope, scope, true);
-    _subprograms[scope].init(scope);
-//       symb.param.symbolList().size(), _stable.getSymbols(scope).size());
+    Symbol symb = _stable.getSymbol(SymbolTable::GlobalScope, scope, true);    
+    _subprograms[scope].init(scope, symb.param.symbolList().size());
   }
 }
 
@@ -993,10 +993,12 @@ void X86::writeLValueExpr(pair< pair<int, bool>, string>& lv) {
 }
 
 string X86::toChar(const string& str) {
+  stringstream s;
   if(str.length() == 0) {
     return "0";
   } else if(str[0] != '\\') {
-    return str;
+    s << (int)str[0];
+    return s.str();
   } else {
     string ret;
     switch(str[1]) {
@@ -1007,10 +1009,11 @@ string X86::toChar(const string& str) {
         ret = "10";
         break;
       case 'r':
-        ret += "13";
+        ret = "13";
         break;
       default:
-        ret = str[1];
+        s << (int)str[1];
+        ret = s.str();
     }
     return ret;
   }

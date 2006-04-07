@@ -40,7 +40,7 @@ public:
 
   void writeTEXT(const string&);
 
-  void init(const string&);
+  void init(const string&, int = 0);
   string name();
 
   string source();
