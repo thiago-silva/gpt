@@ -16,9 +16,15 @@ Sumário de mudanças
    calculadas incorretamente).
  * Correção de bugs na interpretação (avaliação de diversas operações)   
  * Correção de bugs na interpretação (retorno de dados em funções).
- * Correção de bugs na compilação (estrutura "para" não funciona)
+ * Correção de bugs na compilação (avaliação de subtração envolvendo valores 
+   reais).
+ * Correção de bugs na compilação (operador unário de negação).
+ * Correção de bugs na compilação (retorno de valores de tipos diferentes
+   sem utilizar casting)
+ * Correção de bugs na análise semântica (avaliação de retorno de valores
+   em funções)
  * Correção de bugs na compilação (casting de parâmetro inteiro para
-   real).
+   real e real para inteiro).
  * Adicionado suporte a compilação de algoritmos usando mais de um arquivo.
  * Adicionado suporte a variável de ambiente GPT_INCLUDE para incluir algoritmos 
    automaticamente.
