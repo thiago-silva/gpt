@@ -207,8 +207,6 @@ void InterpreterEval::init(const string& file) {
 
 
 ExprValue InterpreterEval::evaluateOu(ExprValue& left, ExprValue& right) {
-
-
   ExprValue v;
   v.type = TIPO_LOGICO;
 
@@ -220,9 +218,9 @@ ExprValue InterpreterEval::evaluateOu(ExprValue& left, ExprValue& right) {
   }
 
   if(right.type == TIPO_LITERAL) {
-    l = (right.value.length() != 0)?true:false;
+    r = (right.value.length() != 0)?true:false;
   } else {
-    l = atof(right.value.c_str())?true:false;
+    r = atof(right.value.c_str())?true:false;
   }
 
   stringstream s;
@@ -437,7 +435,7 @@ ExprValue InterpreterEval::evaluateMenos(ExprValue& left, ExprValue& right) {
   ExprValue v;
 
   stringstream s;
-  if((left.type == TIPO_REAL) || (left.type == TIPO_REAL)) {
+  if((left.type == TIPO_REAL) || (right.type == TIPO_REAL)) {
     s << (atof(left.value.c_str()) - atof(right.value.c_str()));
     v.type = TIPO_REAL;
   } else {
@@ -462,7 +460,7 @@ ExprValue InterpreterEval::evaluateDiv(ExprValue& left, ExprValue& right) {
   }
 
   stringstream s;
-  if((left.type == TIPO_REAL) || (left.type == TIPO_REAL)) {
+  if((left.type == TIPO_REAL) || (right.type == TIPO_REAL)) {
     s << (atof(left.value.c_str()) / atof(right.value.c_str()));
     v.type = TIPO_REAL;
   } else {
@@ -478,7 +476,7 @@ ExprValue InterpreterEval::evaluateMultip(ExprValue& left, ExprValue& right) {
   ExprValue v;
 
   stringstream s;
-  if((left.type == TIPO_REAL) || (left.type == TIPO_REAL)) {
+  if((left.type == TIPO_REAL) || (right.type == TIPO_REAL)) {
     s << (atof(left.value.c_str()) * atof(right.value.c_str()));
     v.type = TIPO_REAL;
   } else {
