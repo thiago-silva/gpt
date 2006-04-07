@@ -1,0 +1,80 @@
+/*
+ * Biblioteca padrão da linguagem G-Portugol (v1.0).
+ * Autor: Thiago Silva
+ * $id$
+ */
+
+função arredonda(num: real) : real
+  trunc : inteiro;
+início
+  trunc := num + 0.5;
+fim
+
+função absoluto(num: real) : real
+início
+  se i < 0 então
+    retorne -i;
+  senão
+    retorne i;
+  fim-se
+fim
+
+função potencia(base: real, exp: real) : real
+  i    : inteiro;
+  res  : real;
+  expi : inteiro;
+início
+  se exp = 0 então
+    retorne 1;
+  fim-se
+
+  se exp = 1
+    retorne base;
+  fim-se
+
+  se exp = -1 então
+    retorne 1 / base;
+  fim-se
+
+  res := 1;
+  expi := exp;
+  para i de 0 até expi-1 faça
+    res := res * base;
+  fim-para
+  retorne res;
+fim
+
+/*
+ * Encontra a raiz usando o método Newton-Raphson
+ * baseado no código da página:
+ * http://en.literateprograms.org/Newton-Raphson's_method_for_root_finding_(C)
+ */
+função raiz_quadrada(num: real) : real
+  x     : real;
+  xn    : real;
+  iters : inteiro;
+  i     : inteiro;
+  n     : inteiro;
+  val   : real;
+início
+  n := num;
+  para i de 0 até n faça
+    val := i * i - num;
+    se val = 0 então
+      retorne i;
+    fim-se  
+
+    se val > 0 então
+      xn := (i+(i-1))/2.0;
+      i := n+1; //sair do loop!
+    fim-se
+  fim-para
+
+  enquanto não ((iters  >= 100) ou (x = xn) faça
+    iters := iters + 1;
+    x := xn;
+    xn := x - (x * x - n) / (2 * x);
+  fim-enquanto
+  
+  retorne xn;
+fim

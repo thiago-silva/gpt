@@ -142,6 +142,7 @@ AC_OUTPUT(Makefile
         doc/Makefile 
         doc/man/Makefile 
         exemplos/Makefile
+        lib/Makefile
         src/modules/Makefile 
         src/modules/parser/Makefile 
         src/modules/interpreter/Makefile 
@@ -159,5 +160,5 @@ Sumario:
 	pcre lib        : $PCRE_LIB
 
   CXXFLAGS        : $CXXFLAGS
-	running windows : $SO_WINDOWS
+	MS Windows      : $SO_WINDOWS
 ])
