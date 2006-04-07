@@ -159,6 +159,6 @@ Sumario:
 	pcre includes   : $PCRE_INC
 	pcre lib        : $PCRE_LIB
 
-  CXXFLAGS        : $CXXFLAGS
+	CXXFLAGS        : $CXXFLAGS
 	MS Windows      : $SO_WINDOWS
 ])
