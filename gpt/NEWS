@@ -12,12 +12,15 @@ Sumário de mudanças
    segmentation fault).
  * Correção de bugs na tradução para C (expressões faltando e/ou com 
    precedência incorreta).
+ * Correção de bugs na tradução para C (expressões envolvendo valores literais).
  * Correção de bugs na interpretação (expressões envolvendo valores reais
    calculadas incorretamente).
  * Correção de bugs na interpretação (avaliação de diversas operações)   
  * Correção de bugs na interpretação (retorno de dados em funções).
  * Correção de bugs na compilação (avaliação de subtração envolvendo valores 
    reais).
+ * Correção de bugs na compilação (avaliação de expressões relacionais 
+   envolvendo valores reais).
  * Correção de bugs na compilação (operador unário de negação).
  * Correção de bugs na compilação (retorno de valores de tipos diferentes
    sem utilizar casting)
@@ -30,7 +33,7 @@ Sumário de mudanças
    automaticamente.
  * Revisão da man-page.
  * Atualização do manual.
- * Nome do algoritmo é usado para criar arquivo executável ao invez de usar 
+ * Nome do algoritmo é usado para criar arquivo executável ao invés de usar 
    "a.exe" ou "a.out".
 
 05 de Abril de 2006  * gpt 0.9.2
