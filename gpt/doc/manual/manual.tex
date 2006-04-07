@@ -1135,8 +1135,8 @@ menor ou igual\\
     +, -            & operadores aritméticos soma e subtração \\
     \symbol{42}, /, \%     & operadores aritméticos multiplicação,
 divisão, módulo \\
-    +, -, \~{}, não & operadores unários positivo, negativo, NOT binário, NOT
-lógico \\
+    +, -, \~{}, não, () & operadores unários positivo, negativo, NOT binário, NOT
+lógico, parêntesis \\
     \hline
   \end{tabular}
   \caption{Precedência de Operadores \label{tb_precedencia_op}}
@@ -1146,7 +1146,11 @@ lógico \\
 
 Em G-Portugol, não há coerção ou \textit{casting} de tipos expliticamente.
 Todos os tipos numéricos (inteiro, real, lógico e caractere) são compativeis
-entre si.
+entre si. É importante ressaltar que expressões envolvendo igualdade ou 
+diferença de valores reais não são apropriadas dado a forma como esses valores 
+são representados internamente. Tais comparações podem ter resultados 
+imprevisíveis, e até diferentes, ao serem executados nos modos compilado,
+interpretado ou traduzido.
 
 Existem dois casos em que ocorre uma coerção implícita. O primeiro caso ocorre
 durante a avaliação de uma expressão que tem operandos de tipos diferentes (mas
