@@ -35,11 +35,11 @@
 <legalnotice>&GPLNotice;</legalnotice>
 
 <date>2006-01-23</date>
-<releaseinfo>0.50</releaseinfo>
+<releaseinfo>1.0</releaseinfo>
 
 <abstract>
 <para>
-&gpteditor; &#233; um editor front-end para a programas feitos em G-Portugol.
+&gpteditor; &#233; um editor front-end para escrever programas feitos em G-Portugol.
 </para>
 </abstract>
 
@@ -64,7 +64,7 @@
 &kapp; é um editor front-end que permite compilar,
 executar e depurar programas feitos em G-Portugol de forma amigável.
 Baseado no aplicativo <ulink url="http://www.sourceforge.net/projects/protoeditor">Protoeditor</ulink>,
-utiliza o compilador/interpretador &gptwebsite;.
+utiliza o compilador &gptwebsite;.
 </para>
 </chapter>
 
@@ -180,8 +180,8 @@ eles serão mostrados na aba "Mensagens" na áera de depuração e execução.
 entra no escopo da função.
 </simpara>
 </listitem>
-<listitem><simpara><emphasis>Passo Sobre</emphasis>: executa um comando por vez, entretanto, trata chamadas de funções como
-apenas um comando.</simpara>
+<listitem><simpara><emphasis>Passo Sobre</emphasis>: executa um comando por vez, entretanto, executa uma chamada de função
+sem entrar em seu escopo.</simpara>
 </listitem>
 <listitem><simpara><emphasis>Passo para Fora</emphasis>: permite sair do escopo atual para o escopo da função chamadora.</simpara></listitem>
 </itemizedlist>        
@@ -244,9 +244,9 @@ apenas um comando.</simpara>
             o algoritmo é compilado e gravado em um arquivo binário para, então, ser executado.
           </simpara>
         </listitem>
-        <listitem>
+<!--        <listitem>
           <simpara><emphasis>Argumentos</emphasis>: Permite passar argumentos extras para o programa GPT.</simpara>
-        </listitem>
+        </listitem>-->
         <listitem><simpara><emphasis>Shell</emphasis>: permite escolher o shell no qual o programa será executado. Por padrão
             esse valor é "/bin/sh".</simpara></listitem>
       </itemizedlist> 
@@ -292,7 +292,7 @@ apenas um comando.</simpara>
     </author>
   </authorgroup>  
   <date>23-01-2006</date> 
-  <releaseinfo>0.5</releaseinfo> 
+  <releaseinfo>1.0</releaseinfo> 
 </chapterinfo>
 
 <title>Sobre o &gpteditor;</title>
