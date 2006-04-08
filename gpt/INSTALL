@@ -1,5 +1,5 @@
-Instalação Básica
-=================
+Instalação Usando os Fontes
+===========================
 
   o Pré-requisitos
 
@@ -15,12 +15,17 @@ Instalação Básica
         Assembler usado para compilação.
         http://sourceforge.net/projects/nasm
 
-  o  Comandos para instalação padrão:
+  o  Comandos para compição e instalação padrão, assumindo um ambiente 
+     GNU (GNU/Linux, MS Windows + MingW ou Cygwin, etc):
     
     $ tar xvfz gpt-xxx.tar.gz
     $ cd gpt-xxx
     $ ./configure
     $ make
+    $ make install
+
+    Se precisar de acesso root para o diretório alvo:
+
     $ su
     # make install
 
