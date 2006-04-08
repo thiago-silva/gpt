@@ -49,21 +49,21 @@ CompilerSettingsWidget::CompilerSettingsWidget(QWidget *parent, const char *name
   grid->addWidget(m_cpExecutionMode, 0, 1);
 
 
-  label = new QLabel(this);
-  label->setText(i18n("Arguments:"));
-  grid->addWidget(label, 1, 0);
-  m_edArgs = new KLineEdit(this);
-  m_edArgs->setEnabled(false);
-  grid->addWidget(m_edArgs, 1, 1);
+//   label = new QLabel(this);
+//   label->setText(i18n("Arguments:"));
+//   grid->addWidget(label, 1, 0);
+//   m_edArgs = new KLineEdit(this);
+//   m_edArgs->setEnabled(false);
+//   grid->addWidget(m_edArgs, 1, 1);
 
 
   label = new QLabel(this);
   label->setText(i18n("Shell:"));
-  grid->addWidget(label, 2, 0);
+  grid->addWidget(label, 1, 0);
   
   m_edShell = new KURLRequester(this);
   m_edShell->setFilter(i18n("|All"));
-  grid->addWidget(m_edShell, 2, 1);
+  grid->addWidget(m_edShell, 1, 1);
 
 //   label = new QLabel(this);
 //   label->setText("Incluir arquivo automaticamente:");
@@ -91,7 +91,7 @@ void CompilerSettingsWidget::populate()
   m_cpExecutionMode->setCurrentItem(GPTEditorSettings::self()->executionMode());
   m_edShell->setURL(GPTEditorSettings::self()->shell());
 //   m_edIncludeFile->setURL(GPTEditorSettings::self()->includeFile());
-  m_edArgs->setText(GPTEditorSettings::self()->GPTArgs());
+//   m_edArgs->setText(GPTEditorSettings::self()->GPTArgs());
 }
 
 void CompilerSettingsWidget::updateSettings() 
@@ -100,7 +100,7 @@ void CompilerSettingsWidget::updateSettings()
   GPTEditorSettings::self()->setShell(m_edShell->url());
 //   GPTEditorSettings::self()->setIncludeFile(m_edIncludeFile->url());
   //GPTEditorSettings::self()->setGPTArgs(m_edArgs->text());
-  GPTEditorSettings::self()->setGPTArgs("");
+//   GPTEditorSettings::self()->setGPTArgs("");
 }
 
 #include "compilersettingswidget.moc"
