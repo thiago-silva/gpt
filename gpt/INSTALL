@@ -57,7 +57,7 @@ Instalação Básica
 
     Para utilizar a (pseudo) biblioteca padrão distribuida neste pacote
     deve-se adicionar as variáveis de ambiente a variável GPT_INCLUDE
-    contendo o caminho do arquivo base.gpt. Exemplo:
+    contendo o caminho do arquivo base.gpt. Exemplo (shell bash):
 
       Adicione ao script de inicialização de ambiente:
 
