@@ -16,10 +16,10 @@ fim
 
 função absoluto(num: real) : real
 início
-  se i < 0 então
-    retorne -i;
+  se num < 0 então
+    retorne -num;
   senão
-    retorne i;
+    retorne num;
   fim-se
 fim
 

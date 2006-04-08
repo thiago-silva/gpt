@@ -173,8 +173,9 @@ class ChangeLog {
         }
 
         if(count($log->msgs['BUGFIX'])) {
-          foreach($log->msgs['BUGFIX'] as $new) {            
-            $this->printMsg($new, "\n\tFix: ", true);
+          echo "\n\tFix:";
+          foreach($log->msgs['BUGFIX'] as $new) {
+            $this->printMsg($new, "\n\t-");
           }
         }
       }

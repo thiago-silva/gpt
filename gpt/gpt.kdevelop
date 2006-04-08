@@ -192,7 +192,7 @@
   </cppsupportpart>
   <kdevdebugger>
     <general>
-      <programargs>main.gpt inc.gpt inc2.gpt</programargs>
+      <programargs>main.gpt inc.gpt /usr/local/lib/gpt/base.gpt</programargs>
       <gdbpath></gdbpath>
       <dbgshell>libtool</dbgshell>
       <configGdbScript></configGdbScript>
