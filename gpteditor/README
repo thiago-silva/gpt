@@ -4,7 +4,7 @@ GPTEditor - versao: 1.0
 o O programa GPTEditor
 
   GPTEditor é um front-end que permite programar em G-Portugol de forma
-	mais amigavel. Alguns dos recursos presentes na versao atual:
+	amigavel. Alguns dos recursos presentes na versao atual:
 
 		-icones/mimetype para arquivos com extensao .gpt;
 		-Syntax highlight para codigos escritos em G-Portugol (para uso com 
