@@ -106,34 +106,27 @@ tokens {
 public:  
   PortugolLexer(ANTLR_USE_NAMESPACE(std)istream& in, TokenStreamSelector* s)
 	: ANTLR_USE_NAMESPACE(antlr)CharScanner(new ANTLR_USE_NAMESPACE(antlr)CharBuffer(in),true),
-    lexers(0), selector(s)
+    selector(s)
   {
     initLiterals();
   }
 
   void uponEOF()
   {
-    if(filenames.size()) {
-      GPTDisplay::self()->setCurrentFile(filenames.back());
-      filenames.pop_back();
-
+    if(!nextFilename.empty()) {
+      GPTDisplay::self()->setCurrentFile(nextFilename);
       selector->pop();      
       selector->retry();
     }
   }
 
-  void setTotalLexers(int value) {
-    lexers = value;
-  }
-
-  void addFilename(string str) {
-    filenames.push_back(str);
+  void setNextFilename(string str) {
+    nextFilename = str;
   }
 
 private:
-  int lexers;  
+  string nextFilename;
   TokenStreamSelector* selector;  
-  list<string> filenames;
   bool hasLatim;
 }
 /*------------------------- Operators -----------------------*/

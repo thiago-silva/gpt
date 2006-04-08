@@ -156,8 +156,9 @@ static int init(int argc, char** argv) {
   }
 
 //   if(!(_flags & FLAG_PIPE)) { //no pipe
-    while(optind < argc) {
-      _ifilenames.push_back(argv[optind++]);
+    c = optind;
+    while(c < argc) {
+      _ifilenames.push_back(argv[c++]);
     }
 
     if(_ifilenames.size() == 0) {

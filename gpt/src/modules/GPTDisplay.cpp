@@ -79,8 +79,8 @@ bool GPTDisplay::hasError() {
 }
 
 void GPTDisplay::showErrors() {
-  errors_map_t::iterator it;
-  for(it = _errors.begin(); it != _errors.end(); ++it) {
+  errors_map_t::reverse_iterator it;
+  for(it = _errors.rbegin(); it != _errors.rend(); ++it) {
     for(map<int, list<ErrorMsg> >::iterator ll = it->second.begin(); ll != it->second.end(); ++ll) {
       for(list<ErrorMsg>::iterator lit = ll->second.begin(); lit != ll->second.end(); ++lit) {
         showError((*lit));

@@ -279,10 +279,12 @@ bool GPT::parse(list<pair<string,istream*> >& istream_list) {
     //2: utilizar o filename adequado para error reporting
 
     PortugolLexer* lexer;
-    pair<string, PortugolLexer*> first;
+    PortugolLexer* prev = 0;
+    PortugolLexer* fst = 0;
+    string firstFile;
     int c = 0;
-    for(list<pair<string,istream*> >::iterator it = istream_list.begin(); 
-           it != istream_list.end(); 
+    for(list<pair<string,istream*> >::reverse_iterator it = istream_list.rbegin(); 
+           it != istream_list.rend(); 
            ++it, ++c) 
     {
       lexer = new PortugolLexer(*((*it).second), selector);
@@ -290,20 +292,22 @@ bool GPT::parse(list<pair<string,istream*> >& istream_list) {
       selector->addInputStream(lexer, (*it).first);
       selector->select(lexer);
       selector->push((*it).first);
-      if(!first.second) {
-        first.second = lexer;
-        first.first = (*it).first;
-      } else {
-        first.second->addFilename((*it).first);
-      }
+      if(!firstFile.empty()) {
+        lexer->setNextFilename(firstFile);
+      } 
+
+      prev = lexer;
       GPTDisplay::self()->addFileName((*it).first);
+
+      firstFile = (*it).first;
+      fst = lexer;      
     }
-    first.second->setTotalLexers(c);
-    selector->select(first.second);
+
+    selector->select(fst);
     
     PortugolParser parser(*selector);
 
-    GPTDisplay::self()->setCurrentFile(first.first);
+    GPTDisplay::self()->setCurrentFile(firstFile);
     
     ASTFactory ast_factory(PortugolAST::TYPE_NAME,&PortugolAST::factory);
     parser.initializeASTFactory(ast_factory);
