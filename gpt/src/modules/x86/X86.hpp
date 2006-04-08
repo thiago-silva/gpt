@@ -58,6 +58,7 @@ private:
 
   stringstream _head; //%definitions
   stringstream _init; //init commands
+  stringstream _end;  //cleanup commands
   stringstream _txt;  //body
 };
 

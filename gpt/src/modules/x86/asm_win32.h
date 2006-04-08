@@ -838,6 +838,11 @@ _lib <<
 "    wcall WriteConsoleA, [handle], [string], [length], 0, 0\n"
 "\n"
 "    return\n"
+"    %undef STD_OUTPUT_HANDLE\n"
+"    %undef string\n"
+"    %undef handle\n"
+"    %undef length\n"
+"\n"
 "readline:\n"
 "    %define STD_INPUT_HANDLE -10\n"
 " \n"
@@ -855,11 +860,15 @@ _lib <<
 "    lea ebx, [buffer]\n"
 "    lea ecx, [size]\n"
 "    lea edx, [read]\n"
-"    \n"
 "\n"
 "    wcall ReadConsoleA, [eax], [ebx], [ecx], edx, 0\n"
 "\n"
-"    return\n";
+"    return\n"
+"    %undef STD_INPUT_HANDLE\n"
+"    %undef buffer\n"
+"    %undef size\n"
+"    %undef handle\n"
+"    %undef read\n";
 
 /* Generic lib */
 

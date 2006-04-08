@@ -79,7 +79,8 @@ _lib <<
 "    int 80h\n"
 "\n"
 "    return\n"
-
+"    %undef string\n"
+"\n"
 "readline:\n"
 "    \n"
 "    %define buffer   ebp+12\n"
@@ -97,7 +98,9 @@ _lib <<
 "    mov ebx, [buffer]\n"
 "    mov [ebx+eax-1], byte 0\n"
 "\n"
-"    return\n\n";
+"    return\n\n"
+"    %undef buffer\n"
+"    %undef size\n";
 
 /* Generic lib */
 

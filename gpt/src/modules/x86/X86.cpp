@@ -62,7 +62,7 @@ string X86SubProgram::name() {
 void X86SubProgram::declareLocal(const string& local_var, int msize, bool minit) {
   if(msize == 0) {
     _head << "%define " << X86::makeID(local_var) << " ebp-" << _local_offset << endl;
-
+    _end  << "%undef " <<  X86::makeID(local_var) << endl;
     if(minit) {
       _init << "mov dword [" << X86::makeID(local_var) << "], 0" << endl;
     }
@@ -70,6 +70,7 @@ void X86SubProgram::declareLocal(const string& local_var, int msize, bool minit)
     _local_offset += SizeofDWord;
   } else {
     _head << "%define " << X86::makeID(local_var) << " ebp-" << (_local_offset+(msize*SizeofDWord)-SizeofDWord) << endl;
+    _end  << "%undef " <<  X86::makeID(local_var) << endl;
     if(minit) {
       writeMatrixInitCode(local_var, msize);
     }
@@ -81,8 +82,10 @@ void X86SubProgram::declareParam(const string& param, int type, int msize) {
 
   if(msize == 0) {
     _head << "%define " << X86::makeID(param) << " ebp+" << _param_offset << endl;
+    _end  << "%undef " <<  X86::makeID(param) << endl;
   } else {
     _head << "%define _p_" << X86::makeID(param) << " ebp+" << _param_offset << endl;
+    _end  << "%undef _p_" <<  X86::makeID(param) << endl;
     declareLocal(param, msize, false);
     writeMatrixCopyCode(param, type, msize);
   }
@@ -134,6 +137,7 @@ string X86SubProgram::source() {
   s << _init.str();
 
   s << _txt.str();
+  s << _end.str();
 
   return s.str();
 }
