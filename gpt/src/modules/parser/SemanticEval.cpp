@@ -700,8 +700,10 @@ bool SemanticEval::evalVariableRedeclaration(const string& scope, RefPortugolAST
   try {
     Symbol s = stable.getSymbol(scope, id->getText());
     stringstream err;
-    err << "Variável/função redeclarada: \"" << id->getText() << "\". Primeira declaração na linha "
-        << s.line;
+    err << "Variável/função redeclarada: \"" << id->getText() << "\"";
+    //usando mais de um arquivo, essa mensagem fica confusa
+    //err << "Variável/função redeclarada: \"" << id->getText() << "\". Primeira declaração na linha "
+    //    << s.line;
     GPTDisplay::self()->add(err.str(), id->getLine());
     return true;
   } catch(SymbolTableException& e) {

@@ -94,10 +94,9 @@ algoritmo
 variaveis
 {
   pair<int, list<RefPortugolAST> > prims;
-  pair< pair<int, list<int> >, list<RefPortugolAST> > ms;
-  GPTDisplay::self()->setCurrentFile(_t->getFilename());
+  pair< pair<int, list<int> >, list<RefPortugolAST> > ms;  
 }
-  : #(T_KW_VARIAVEIS
+  : #(v:T_KW_VARIAVEIS
       (
           prims=primitivo {evaluator.declareVars(prims);}
         | ms=matriz    {evaluator.declareVars(ms);}
@@ -172,7 +171,6 @@ tipo_matriz  returns [pair<int, list<int> > p]//pair<type, list<dimensions> >
 
 
 inicio
-{GPTDisplay::self()->setCurrentFile(_t->getFilename());}
   : #(T_KW_INICIO (stm)* )
   ;
 
@@ -191,7 +189,6 @@ stm
 stm_attr
 {
   ExpressionValue ltype, etype;
-  GPTDisplay::self()->setCurrentFile(_t->getFilename());
 }
   : #(t:T_ATTR ltype=lvalue etype=expr)
     {evaluator.evaluateAttribution(ltype, etype, t->getLine());}
@@ -216,7 +213,6 @@ fcall returns [ExpressionValue rettype]
 {
   ExpressionValue etype;
   list<ExpressionValue> args;//arg types
-  GPTDisplay::self()->setCurrentFile(_t->getFilename());
 }
   : #(TI_FCALL id:T_IDENTIFICADOR 
       (
@@ -231,7 +227,6 @@ fcall returns [ExpressionValue rettype]
 stm_ret
 {
   ExpressionValue etype;
-  GPTDisplay::self()->setCurrentFile(_t->getFilename());
 }
   : #(r:T_KW_RETORNE (TI_NULL|etype=expr))
     {evaluator.evaluateReturnCmd(etype, r->getLine());}
@@ -240,7 +235,6 @@ stm_ret
 stm_se
 {
   ExpressionValue etype;
-  GPTDisplay::self()->setCurrentFile(_t->getFilename());
 }
   : #(s:T_KW_SE etype=expr {evaluator.evaluateBooleanExpr(etype, s->getLine());} (stm)*   (T_KW_SENAO (stm)*)? )
   ;
@@ -248,7 +242,6 @@ stm_se
 stm_enquanto
 {
   ExpressionValue etype;
-  GPTDisplay::self()->setCurrentFile(_t->getFilename());
 }
   : #(e:T_KW_ENQUANTO etype=expr {evaluator.evaluateBooleanExpr(etype, e->getLine());} (stm)* )
   ;
@@ -256,7 +249,7 @@ stm_enquanto
 stm_para
 {
   ExpressionValue lv, de, ate;
-  GPTDisplay::self()->setCurrentFile(_t->getFilename());
+
 }
   : #(p:T_KW_PARA 
         lv=lvalue {evaluator.evaluateParaExpr(lv, p->getLine(), lv.id());} 
@@ -273,7 +266,6 @@ passo
 expr returns [ExpressionValue type]
 {
   ExpressionValue left, right;
-  GPTDisplay::self()->setCurrentFile(_t->getFilename());
 }
   : #(ou:T_KW_OU       left=expr right=expr) {type=evaluator.evaluateExpr(left, right, ou);#expr->setEvalType(type.primitiveType());}
   | #(e:T_KW_E         left=expr right=expr) {type=evaluator.evaluateExpr(left, right, e);#expr->setEvalType(type.primitiveType());}
@@ -321,7 +313,6 @@ func_proto
   Funcao   f;
   pair<int, list<RefPortugolAST> > argsp;
   pair< pair<int, list<int> >, list<RefPortugolAST> > argsm;
-  GPTDisplay::self()->setCurrentFile(_t->getFilename());
 }
   : #(id:T_IDENTIFICADOR
       {
@@ -346,17 +337,15 @@ func_decl
   pair<int, list<RefPortugolAST> > argsp;
   pair< pair<int, list<int> >, list<RefPortugolAST> > argsm;
   GPTDisplay::self()->setCurrentFile(_t->getFilename());
-//   Funcao   f;
 }
   : #(id:T_IDENTIFICADOR
       {
         evaluator.setCurrentScope(id->getText());
-//         f.setId(id);
       }
 
       (
-          argsp=primitivo /*{f.addParams(argsp);}*/
-        | argsm=matriz    /*{f.addParams(argsm);}*/
+          argsp=primitivo
+        | argsm=matriz
       )* 
 
       {
@@ -364,8 +353,7 @@ func_decl
           _t = _t->getNextSibling();
         }
       }
-//       ret_type[f]
-//         {evaluator.declareFunction(f);}
+
       (variaveis)?
       inicio
     )

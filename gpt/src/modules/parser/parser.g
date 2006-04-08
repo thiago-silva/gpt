@@ -141,8 +141,8 @@ var_decl!
   : id:T_IDENTIFICADOR {lastToken = id;}
     more:var_more {lastId=lastToken;} colon:T_COLON
      (
-         p:tp_prim   {#var_decl = #([TI_VAR_PRIMITIVE,"primitive!"], p, id, more);}
-       | m:tp_matriz {#var_decl = #([TI_VAR_MATRIX, "matrix!"], m, id, more);}
+         p:tp_prim   {#var_decl = #([TI_VAR_PRIMITIVE,"primitive!"], p, id, more);#var_decl->setLine(id->getLine());}
+       | m:tp_matriz {#var_decl = #([TI_VAR_MATRIX, "matrix!"], m, id, more);#var_decl->setLine(id->getLine());}
      )
   ;
 
@@ -224,7 +224,7 @@ tp_prim
 tp_matriz!
 {RefToken lst;}
   : mt:T_KW_MATRIZ dim:dimensoes {lst=lastToken;}T_KW_DE tipo:tp_prim_pl
-    {#tp_matriz = #(tipo, dim);}    
+    {#tp_matriz = #(tipo, dim);#tp_matriz->setLine(mt->getLine());} 
   ;
 
   exception
@@ -426,7 +426,7 @@ lvalue!
 {RefToken lst=lastToken;}
   : id:T_IDENTIFICADOR
     s:array_sub
-    {#lvalue = #(id, s);}
+    {#lvalue = #(id, s);#lvalue->setLine(id->getLine());}
   ;
 
   exception
@@ -715,10 +715,10 @@ options {
 
 op_unario!
   : (
-        T_MENOS   {#op_unario = #[TI_UN_NEG,"-"];}
-      | T_MAIS    {#op_unario = #[TI_UN_POS,"+"];}
-      | T_KW_NOT  {#op_unario = #[TI_UN_NOT,"não"];}
-      | T_BIT_NOT {#op_unario = #[TI_UN_BNOT,"~"];}
+        e:T_MENOS   {#op_unario = #[TI_UN_NEG,"-"];#op_unario->setLine(e->getLine());}
+      | a:T_MAIS    {#op_unario = #[TI_UN_POS,"+"];#op_unario->setLine(a->getLine());}
+      | n:T_KW_NOT  {#op_unario = #[TI_UN_NOT,"não"];#op_unario->setLine(n->getLine());}
+      | b:T_BIT_NOT {#op_unario = #[TI_UN_BNOT,"~"];#op_unario->setLine(b->getLine());}
     )?
   ; 
 
@@ -748,7 +748,11 @@ expr_elemento
   : (T_IDENTIFICADOR T_ABREP)=> fcall  
   | lvalue
   | literal
-  |! T_ABREP e:expr T_FECHAP {#expr_elemento = #([TI_PARENTHESIS,"!par"], e);}
+  |! t:T_ABREP e:expr T_FECHAP 
+    {
+      #expr_elemento = #([TI_PARENTHESIS,"!par"], e);
+      #expr_elemento->setLine(t->getLine());
+    }
   ;
 
   exception //ja foi tratado em op_unario
@@ -835,7 +839,10 @@ func_decls!
     fvars:fvar_decl
     block:stm_block
 
-    {#func_decls = #(id, params, ret, fvars, block);}
+    {
+      #func_decls = #(id, params, ret, fvars, block);
+      #func_decls->setLine(f->getLine());
+    }
   ;
 
   exception
@@ -914,7 +921,11 @@ fffvar_decl
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 fvar_decl!
-  : ( s:fffvar_decl {#fvar_decl = #([T_KW_VARIAVEIS,"variáveis!"],s);} )?
+  : ( s:fffvar_decl 
+      {
+        #fvar_decl = #([T_KW_VARIAVEIS,"variáveis!"],s);
+      } 
+    )?
   ;
 
   exception
@@ -955,8 +966,8 @@ fparam!
 {RefToken tk=lastToken;}
   : id:T_IDENTIFICADOR col:T_COLON {tk=lastToken;}
      (
-         p:tp_prim   {#fparam = #([TI_VAR_PRIMITIVE,"primitive!"], p, id);}
-       | m:tp_matriz {#fparam = #([TI_VAR_MATRIX, "matrix!"], m, id);}
+         p:tp_prim   {#fparam = #([TI_VAR_PRIMITIVE,"primitive!"], p, id);#fparam->setLine(id->getLine());}
+       | m:tp_matriz {#fparam = #([TI_VAR_MATRIX, "matrix!"], m, id);#fparam->setLine(id->getLine());}
      )
   ;
 
