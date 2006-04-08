@@ -28,7 +28,7 @@ Instalação Básica
   o  Opções de configuração
 
     ANTLR:
-      Se voce instalou o ANTLR em um diretório não-padrão ou se o 
+      Se você instalou o ANTLR em um diretório não-padrão ou se o 
       binário "antlr" não pode ser encontrado pela variável de 
       ambiente PATH, use o  argumento "--with-antlr-path".
   
@@ -51,6 +51,19 @@ Instalação Básica
       Nota: para desinstalar apenas os arquivos devel (header e libs) use:
       
       # make uninstall-devel
+
+
+  o Biblioteca padrão
+
+    Para utilizar a (pseudo) biblioteca padrão distribuida neste pacote
+    deve-se adicionar as variáveis de ambiente a variável GPT_INCLUDE
+    contendo o caminho do arquivo base.gpt. Exemplo:
+
+      Adicione ao script de inicialização de ambiente:
+
+      export GPT_INCLUDE="/usr/local/lib/gpt/base.gpt"
+
+    Outros arquivos podem ser incluídos, separando os caminhos por ":".
 
   o  Outras opções
 
