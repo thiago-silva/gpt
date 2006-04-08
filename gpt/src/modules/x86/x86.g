@@ -368,7 +368,7 @@ stm_se
       x86.writeTEXT("; se: resultado");
       x86.writeTEXT("pop eax");
       x86.writeTEXT("cmp eax, 0");
-      s << "je " << lbnext;
+      s << "je near " << lbnext;
       x86.writeTEXT(s.str());
 
       x86.writeTEXT("; se: verdadeiro:");
@@ -425,7 +425,7 @@ stm_enquanto
         x86.writeTEXT("; while: resultado");
         x86.writeTEXT("pop eax");
         x86.writeTEXT("cmp eax, 0");
-        s << "je " << lbfim;
+        s << "je near " << lbfim;
         x86.writeTEXT(s.str());
       }
       (stm)*
@@ -501,7 +501,7 @@ stm_para
           if(hasPasso && ps.first) {
             s << "jl " << lbfim;
           } else {
-            s << "jg " << lbfim;
+            s << "jg near " << lbfim;
           }
           x86.writeTEXT(s.str());
 
@@ -538,9 +538,9 @@ stm_para
 
           s.str("");
           if(hasPasso && ps.first) {
-            s << "jl " << lbfim;
+            s << "jl near " << lbfim;
           } else {
-            s << "jg " << lbfim;
+            s << "jg near " << lbfim;
           }
           x86.writeTEXT(s.str());
 
