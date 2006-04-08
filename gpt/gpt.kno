@@ -3,6 +3,7 @@
 \CurrentEntry 1 NOW
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>-Lançar versão 1.0</li>
+<ul type="disc"><li>fix: windows: compilacao nao cria &quot;algoritmo.exe&quot;, e sim &quot;algoritmo&quot;</li></ul>
 <li>-fazer video apresentando GPT_INCLUDE e multiplefiles breakpoint</li></ul>
 </body></html>
 

@@ -168,13 +168,13 @@ class ChangeLog {
 
         if(count($log->msgs['NEW'])) {
           foreach($log->msgs['NEW'] as $new) {            
-            $this->printMsg($new, "\n\t-New feature: ");
+            $this->printMsg($new, "\n\t-");
           }
         }
 
         if(count($log->msgs['BUGFIX'])) {
           foreach($log->msgs['BUGFIX'] as $new) {            
-            $this->printMsg($new, "\n\t-Fixed: ");
+            $this->printMsg($new, "\n\tFix: ", true);
           }
         }
       }
@@ -192,7 +192,7 @@ class ChangeLog {
     return false;
   }
 
-  function printMsg($msg, $indent) {
+  function printMsg($msg, $indent, $keepIndent = false) {
     //messages > 60 should be exploded in multiple lines
     if(strlen($msg) < 60) {
       echo $indent.$msg;
@@ -213,7 +213,11 @@ class ChangeLog {
       }
       
       $first = $indent;
-      $other = substr($indent, 0, strlen($indent)-1);
+      if(!$keepIndent) {
+        $other = substr($indent, 0, strlen($indent)-1);
+      } else {
+        $other = $indent;
+      }     
       $id = $first;
       foreach($lines as $line) {
         echo $id.$line;

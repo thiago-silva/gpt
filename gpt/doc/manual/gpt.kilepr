@@ -23,8 +23,8 @@ open=false
 
 [item:manual.tex]
 archive=true
-column=9
+column=43
 encoding=ISO 8859-1
 highlight=LaTeX
-line=1423
+line=1539
 open=true
