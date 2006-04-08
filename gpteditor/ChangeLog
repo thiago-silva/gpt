@@ -1,0 +1,252 @@
+2006-04-08
+
+	* /trunk/gpteditor/README:
+	* /trunk/gpteditor/configure.in.in:
+
+	-ver 1.0
+
+	* /trunk/gpteditor/src/settings/widgets/compilersettingswidget.cpp:
+
+	-remocao da opcao de argumentos
+
+2006-04-06
+
+	* /trunk/gpteditor/src/debuggergpt/debuggergpt.cpp:
+
+	-mensagens i18n devem estar em ingles
+
+	* /trunk/gpteditor/po/gpteditor.pot:
+	* /trunk/gpteditor/po/pt_BR.po:
+
+	-atualizacao das mensagens
+
+	* /trunk/gpteditor/src/debuggergpt/gptnet.h:
+	* /trunk/gpteditor/src/debuggergpt/debuggergpt.cpp:
+	* /trunk/gpteditor/src/debuggergpt/gptnet.cpp:
+
+	-Adicionado suporte a breakpoints em multiplos arquivos
+
+	* /trunk/gpteditor/src/debuggergpt/debuggergpt.cpp:
+	* /trunk/gpteditor/src/debuggergpt/debuggergpt.h:
+
+	-melhoria na checagem de erros de compilacao
+	-informando erros no arquivo correto onde ele se encontra
+	Fix:
+	-deletando processos para fechar possivel konsole ativo.
+	-Mensagem do console "Press Enter..." -> "Press any key"
+
+	* /trunk/gpteditor/src/debuggergpt/gptnet.cpp:
+
+	-Adicionado "file" nas informacoes de stack
+
+	* /trunk/gpteditor/src/gpteditor/debuggermanager.h:
+	* /trunk/gpteditor/src/gpteditor/debuggermanager.cpp:
+
+	-informando erros no arquivo correto onde ele se encontra
+	-melhoria no request de "continueExecution"
+
+2006-04-05
+
+	* /trunk/gpteditor/src/gpteditor/mainwindow.cpp:
+	* /trunk/gpteditor/src/gpteditor/mainwindow.h:
+
+	-fix: savedialog deve perguntar se deseja sobreescrever o
+	arquivo existente.
+
+2006-04-02
+
+	* /trunk/gpteditor/src/debuggergpt/debuggergpt.cpp:
+
+	-Quando compilacao terminar com sucesso, notificar com uma
+	mensagem.
+
+2006-03-08
+
+	* /trunk/gpteditor/src/settings/widgets/compilersettingswidget.cpp:
+
+	-desabilitando opcao de argumentos
+
+2006-03-07
+
+	* /trunk/gpteditor/src/gpteditor/background_parser/backgroundparser.cpp:
+
+	-rename Display -> GPTDisplay
+
+2006-01-24
+
+	* /trunk/gpteditor/data/highlight:
+	* /trunk/gpteditor/data/highlight/gportugol.xml:
+	* /trunk/gpteditor/data/highlight/Makefile.am:
+	* /trunk/gpteditor/data/highlight/gportugol.xml.custom:
+
+	-xml de syntax highlight para o katepart
+
+	* /trunk/gpteditor/configure.in.in:
+
+	-versao: 0.8b
+
+	* /trunk/gpteditor/src/gpteditor/gpteditor.cpp:
+
+	-endereco do site no About
+
+	* /trunk/gpteditor/src/gpteditor/variableslistviewitem.h:
+	* /trunk/gpteditor/src/settings/widgets/debuggersettingswidget.h:
+	* /trunk/gpteditor/data/pics/indicator_off.png:
+	* /trunk/gpteditor/src/settings/Makefile.am:
+	* /trunk/gpteditor/src/common/connection.h:
+	* /trunk/gpteditor/data/icons/hi16-app-protoeditor.png:
+	* /trunk/gpteditor/src/debuggergpt/debuggergpt.cpp:
+	* /trunk/gpteditor/admin/configure.in.bot.end:
+	* /trunk/gpteditor/admin/config.pl:
+	* /trunk/gpteditor/src/common/debuggerbreakpoint.h:
+	* /trunk/gpteditor/data/icons/hi16-action-checkboxoff.png:
+	* /trunk/gpteditor/data/icons/hi22-mime-source_gpt.png:
+	* /trunk/gpteditor/doc/pt_BR:
+	* /trunk/gpteditor/data/icons/hi16-action-preexecutionpoint.png:
+	* /trunk/gpteditor/data/icons/hi22-action-dbgstep.png:
+	* /trunk/gpteditor/src/gpteditor/variableslistview.h:
+	* /trunk/gpteditor/src/common/debuggerstack.h:
+	* /trunk/gpteditor/src/settings/widgets/compilersettingswidget.h:
+	* /trunk/gpteditor/src/gpteditor/messagelistview.cpp:
+	* /trunk/gpteditor/data/icons:
+	* /trunk/gpteditor/src/debuggergpt:
+	* /trunk/gpteditor/po/Makefile.am:
+	* /trunk/gpteditor/src/gpteditor/document.cpp:
+	* /trunk/gpteditor/src/debuggergpt/gptvariableparser.h:
+	* /trunk/gpteditor/src/gpteditor/editortabwidget.h:
+	* /trunk/gpteditor/src/gpteditor/background_parser/backgroundparser.cpp:
+	* /trunk/gpteditor/data/icons/hi16-action-executionpoint.png:
+	* /trunk/gpteditor/src/gpteditor/watchlistview.cpp:
+	* /trunk/gpteditor/INSTALL:
+	* /trunk/gpteditor/src/gpteditor/x-gptsrc.desktop:
+	* /trunk/gpteditor/subdirs:
+	* /trunk/gpteditor/src/debuggergpt/gptvariable.h:
+	* /trunk/gpteditor/admin/cvs-clean.pl:
+	* /trunk/gpteditor/src/settings/widgets/compilersettingswidget.cpp:
+	* /trunk/gpteditor/doc/Makefile.am:
+	* /trunk/gpteditor/admin/detect-autoconf.sh:
+	* /trunk/gpteditor/src/settings:
+	* /trunk/gpteditor/src/gpteditor/messagelistview.h:
+	* /trunk/gpteditor/src/settings/gpteditorsettings.cpp:
+	* /trunk/gpteditor/configure.in.in:
+	* /trunk/gpteditor/admin/Makefile.common:
+	* /trunk/gpteditor/data/pics/indicator_on.png:
+	* /trunk/gpteditor/src/gpteditor/background_parser/backgroundparser.h:
+	* /trunk/gpteditor/src/common/abstractdebugger.cpp:
+	* /trunk/gpteditor/data/icons/hi16-action-checkboxon.png:
+	* /trunk/gpteditor/NEWS:
+	* /trunk/gpteditor/admin/depcomp:
+	* /trunk/gpteditor/data/icons/hi22-action-dbgnext.png:
+	* /trunk/gpteditor/src/settings/widgets/configdlg.h:
+	* /trunk/gpteditor/data/icons/hi48-mime-source_gpt.png:
+	* /trunk/gpteditor/src/gpteditor/breakpointlistviewitem.h:
+	* /trunk/gpteditor/data/Makefile.am:
+	* /trunk/gpteditor/images/gpteditor.xcf:
+	* /trunk/gpteditor/admin/debianrules:
+	* /trunk/gpteditor/src/common/Makefile.am:
+	* /trunk/gpteditor/data/icons/Makefile.am:
+	* /trunk/gpteditor/data/icons/hi22-action-dbgstart.png:
+	* /trunk/gpteditor/src/debuggergpt/Makefile.am:
+	* /trunk/gpteditor/src/Makefile.am:
+	* /trunk/gpteditor/admin/nmcheck:
+	* /trunk/gpteditor/src/gpteditor/debuggercombostack.cpp:
+	* /trunk/gpteditor/src/gpteditor/breakpointlistview.h:
+	* /trunk/gpteditor/doc:
+	* /trunk/gpteditor/admin/install-sh:
+	* /trunk/gpteditor/gpteditor.kdevelop:
+	* /trunk/gpteditor/src/common/debuggerstack.cpp:
+	* /trunk/gpteditor/data/icons/hi16-mime-source_gpt.png:
+	* /trunk/gpteditor/src/common/abstractdebugger.h:
+	* /trunk/gpteditor/src/gpteditor/breakpointlistviewitem.cpp:
+	* /trunk/gpteditor/data/pics/Makefile.am:
+	* /trunk/gpteditor/po/pt_br:
+	* /trunk/gpteditor/data/icons/hi22-app-gpteditor.png:
+	* /trunk/gpteditor/admin:
+	* /trunk/gpteditor/src/gpteditor/debuggermanager.cpp:
+	* /trunk/gpteditor/src/gpteditor/editortabwidget.cpp:
+	* /trunk/gpteditor/src/gpteditor/gpteditorui.rc:
+	* /trunk/gpteditor/data/icons/hi16-action-view_detailed.png:
+	* /trunk/gpteditor/src/gpteditor/background_parser/Makefile.am:
+	* /trunk/gpteditor/src/gpteditor/document.h:
+	* /trunk/gpteditor/src/settings/widgets/parsersettingswidget.cpp:
+	* /trunk/gpteditor/admin/acinclude.m4.in:
+	* /trunk/gpteditor/doc/pt_BR/ss1.png:
+	* /trunk/gpteditor/data/icons/hi16-action-view_text.png:
+	* /trunk/gpteditor/src/settings/widgets/Makefile.am:
+	* /trunk/gpteditor/Makefile.cvs:
+	* /trunk/gpteditor/data:
+	* /trunk/gpteditor/admin/Doxyfile.global:
+	* /trunk/gpteditor/data/icons/hi16-action-disabledbreakpoint.png:
+	* /trunk/gpteditor/data/icons/hi64-mime-source_gpt.png:
+	* /trunk/gpteditor/src/common:
+	* /trunk/gpteditor/admin/compile:
+	* /trunk/gpteditor/admin/ltmain.sh:
+	* /trunk/gpteditor/src/settings/widgets/debuggersettingswidget.cpp:
+	* /trunk/gpteditor/src/gpteditor/variableslistviewitem.cpp:
+	* /trunk/gpteditor/src:
+	* /trunk/gpteditor/src/gpteditor:
+	* /trunk/gpteditor/src/gpteditor/mainwindow.h:
+	* /trunk/gpteditor/admin/cvs.sh:
+	* /trunk/gpteditor/src/gpteditor/debuggermanager.h:
+	* /trunk/gpteditor/src/common/connection.cpp:
+	* /trunk/gpteditor/po/pt_br/gpteditor.po:
+	* /trunk/gpteditor/src/common/debuggerbreakpoint.cpp:
+	* /trunk/gpteditor/data/icons/hi22-action-dbgstepout.png:
+	* /trunk/gpteditor/data/pics:
+	* /trunk/gpteditor/data/icons/hi32-mime-source_gpt.png:
+	* /trunk/gpteditor/data/icons/hi16-action-view_icon.png:
+	* /trunk/gpteditor/src/settings/widgets/configdlg.cpp:
+	* /trunk/gpteditor/src/debuggergpt/debuggergpt.h:
+	* /trunk/gpteditor/admin/ChangeLog:
+	* /trunk/gpteditor/admin/libtool.m4.in:
+	* /trunk/gpteditor/po/gpteditor.pot:
+	* /trunk/gpteditor/data/icons/hi16-action-activebreakpoint.png:
+	* /trunk/gpteditor/src/gpteditor/background_parser:
+	* /trunk/gpteditor/src/gpteditor/mainwindow.cpp:
+	* /trunk/gpteditor/admin/config.sub:
+	* /trunk/gpteditor/ChangeLog:
+	* /trunk/gpteditor/data/pics/indicator_wait.png:
+	* /trunk/gpteditor/src/settings/widgets:
+	* /trunk/gpteditor/po/pt_br/Makefile.am:
+	* /trunk/gpteditor/src/gpteditor/breakpointlistview.cpp:
+	* /trunk/gpteditor/data/icons/hi48-app-gpteditor.png:
+	* /trunk/gpteditor/admin/missing:
+	* /trunk/gpteditor/images:
+	* /trunk/gpteditor/FAQ:
+	* /trunk/gpteditor/src/debuggergpt/gptvariable.cpp:
+	* /trunk/gpteditor/src/debuggergpt/gptnet.cpp:
+	* /trunk/gpteditor/src/gpteditor/debuggercombostack.h:
+	* /trunk/gpteditor/Makefile.am:
+	* /trunk/gpteditor/src/gpteditor/gpteditor.cpp:
+	* /trunk/gpteditor/src/gpteditor/watchlistview.h:
+	* /trunk/gpteditor/po:
+	* /trunk/gpteditor/admin/bcheck.pl:
+	* /trunk/gpteditor/doc/pt_BR/Makefile.am:
+	* /trunk/gpteditor/AUTHORS:
+	* /trunk/gpteditor/data/icons/hi32-app-gpteditor.png:
+	* /trunk/gpteditor/src/common/variable.h:
+	* /trunk/gpteditor/README:
+	* /trunk/gpteditor/src/settings/gpteditorsettings.h:
+	* /trunk/gpteditor/admin/configure.in.min:
+	* /trunk/gpteditor/src/gpteditor/gpteditor.desktop:
+	* /trunk/gpteditor/src/gpteditor/Makefile.am:
+	* /trunk/gpteditor/doc/pt_BR/index.docbook:
+	* /trunk/gpteditor/src/settings/widgets/parsersettingswidget.h:
+	* /trunk/gpteditor/admin/ylwrap:
+	* /trunk/gpteditor/admin/Doxyfile.am:
+	* /trunk/gpteditor/COPYING:
+	* /trunk/gpteditor/admin/mkinstalldirs:
+	* /trunk/gpteditor/src/gpteditor/variableslistview.cpp:
+	* /trunk/gpteditor/admin/conf.change.pl:
+	* /trunk/gpteditor/src/debuggergpt/gptnet.h:
+	* /trunk/gpteditor/admin/config.guess:
+	* /trunk/gpteditor/src/debuggergpt/gptvariableparser.cpp:
+	* /trunk/gpteditor/src/common/variable.cpp:
+	* /trunk/gpteditor/admin/am_edit:
+
+	-adicionando o projeto gpteditor
+
+	* /trunk/gpteditor:
+
+	-adicionando o projeto gpteditor
+
