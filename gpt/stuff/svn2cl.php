@@ -168,13 +168,13 @@ class ChangeLog {
 
         if(count($log->msgs['NEW'])) {
           foreach($log->msgs['NEW'] as $new) {            
-            $this->printMsg($new, "\n\t-");
+            $this->printMsg($new, "\n\t-New feature: ");
           }
         }
 
         if(count($log->msgs['BUGFIX'])) {
           foreach($log->msgs['BUGFIX'] as $new) {            
-            $this->printMsg($new, "\n\t-");
+            $this->printMsg($new, "\n\t-Fixed: ");
           }
         }
       }
