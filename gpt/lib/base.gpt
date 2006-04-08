@@ -32,7 +32,7 @@ início
     retorne 1;
   fim-se
 
-  se exp = 1
+  se exp = 1 então
     retorne base;
   fim-se
 
@@ -74,7 +74,7 @@ início
     fim-se
   fim-para
 
-  enquanto não ((iters  >= 100) ou (x = xn) faça
+  enquanto não ((iters  >= 100) ou (x = xn)) faça
     iters := iters + 1;
     x := xn;
     xn := x - (x * x - n) / (2 * x);
