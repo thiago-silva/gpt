@@ -1,7 +1,7 @@
 /*
  * Biblioteca padrão da linguagem G-Portugol (v1.0).
  * Autor: Thiago Silva
- * $id$
+ * $Id$
  */
 
 função arredonda(num: real) : real
