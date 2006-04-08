@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-04-06 14:58+0000\n"
-"PO-Revision-Date: 2006-04-06 14:58+0000\n"
+"PO-Revision-Date: 2006-04-08 15:24+0000\n"
 "Last-Translator: Thiago Silva <thiago.silva@kdemail.net>\n"
 "Language-Team: Brazilian portuguese\n"
 "MIME-Version: 1.0\n"
@@ -201,8 +201,7 @@ msgid "\"%1\" is unreadable."
 msgstr "Não foi possível ler \"%1\"."
 
 #: src/gpteditor/mainwindow.cpp:419
-msgid ""
-"A file named \"%1\" already exists. Are you sure you want to overwrite it?"
+msgid "A file named \"%1\" already exists. Are you sure you want to overwrite it?"
 msgstr ""
 
 #: src/gpteditor/mainwindow.cpp:420
@@ -311,8 +310,7 @@ msgstr "%1 %2;echo \"Pressione qualquer tecla para continuar...\";read"
 
 #: src/debuggergpt/debuggergpt.cpp:167
 msgid "Unable to execute the algorithm. Check if it was compiled."
-msgstr ""
-"Não foi possível executar o algoritmo \"%1\". Verifique se ele foi compilado."
+msgstr "Não foi possível executar o algoritmo \"%1\". Verifique se ele foi compilado."
 
 #: src/debuggergpt/debuggergpt.cpp:177
 msgid ";echo \"Press any key to continue...\";read"
@@ -323,9 +321,8 @@ msgid "Unable to listen on port: %1"
 msgstr "Não foi possível escutar na porta: %1"
 
 #: src/debuggergpt/debuggergpt.cpp:334 src/debuggergpt/debuggergpt.cpp:376
-#, fuzzy
 msgid "Compilation successful"
-msgstr "Compilação"
+msgstr "Compilação efetuada com sucesso"
 
 #: debug/src/debuggergpt/gptnet.moc.cpp:34
 #: debug/src/debuggergpt/gptnet.moc.cpp:42
@@ -341,3 +338,4 @@ msgstr "Algoritmo"
 #, no-c-format
 msgid "Debug Toolbar"
 msgstr "Barra de ferramentas de Depuração"
+
