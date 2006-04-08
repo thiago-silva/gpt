@@ -42,8 +42,13 @@ arq_saida
 .SH DESCRIÇÃO
 .I gpt
 é um compilador simples para a linguagem G-portugol. Além de criar executáveis,
-pode interpretar algoritmos e traduzí-los para a linguagem C.
-Um algoritmo pode ser formado por vários arquivos, cada um podendo conter, por exemplo, funções. Os arquivos são passados na linha de comando, sendo que o primeiro arquivo do algoritmo deve ser aquele que contém o bloco principal.
+pode interpretar algoritmos e traduzí-los para a linguagem C. Um algoritmo pode 
+ser formado por vários arquivos, cada um podendo conter várias funções, por 
+exemplo. Os arquivos são passados na linha de comando, sendo que o primeiro 
+arquivo deve ser aquele que contém o bloco principal e a declaração do algoritmo. 
+É possível, também, ter a lista de arquivos adicionadas automaticamente 
+utilizando a variável de ambiente GPT_INCLUDE, que deve conter o caminho de 
+cada arquivo separado por ":". 
 .SH OPTIONS
 .TP
 .BI \-v
