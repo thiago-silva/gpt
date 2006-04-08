@@ -119,6 +119,7 @@ options {
          "   int *ds,*dd;\n"
          "   double *fs,*fd;\n"
          "   char *cs,*cd;\n"
+         "   char **css,**cdd;\n"
          "   boolean *bs,*bd;\n"          
          "   switch(type) {\n"
          "     case 'i':\n"
@@ -135,6 +136,11 @@ options {
          "       cs = (char*) src;\n"
          "       cd = (char*) dest;\n"
          "       for(i = 0; i < size; i++) cd[i] = cs[i];\n"
+         "       break;\n"
+         "     case 's':\n"
+         "       css = (char**) src;\n"
+         "       cdd = (char**) dest;\n"
+         "       for(i = 0; i < size; i++) cdd[i] = css[i];\n"
          "       break;\n"
          "     case 'b':\n"
          "       bs = (boolean*) src;\n"
@@ -921,8 +927,9 @@ func_decls
                   case TIPO_REAL:
                     cpy << "'f', ";break;
                   case TIPO_CARACTERE:
+                    cpy << "'c', ";break;
                   case TIPO_LITERAL:
-                    cpy << "'c', ";break;      
+                    cpy << "'s', ";break;      
                   case TIPO_LOGICO:
                     cpy << "'b', ";break;
                 }
