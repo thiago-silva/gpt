@@ -6,8 +6,10 @@ Sumário de mudanças
  * Adição de arquivo com funções básicas (base.gpt).
  * Melhorias no modulo de depuração.
  * Revisão e correção de mensagens de erro de compilação.
+ * Correção de bugs na compilação em GNU/Linux (cabeçalho ELF).
  * Correção de bugs na compilação e tradução de expressões envolvendo literais.
  * Correção de bugs na análise semântica (avaliação de parâmetros de função).
+ * Correção de bugs na compilação (parâmetros de função).
  * Correção de bugs na análise sintática (expressões sem parêntesis causando
    segmentation fault).
  * Correção de bugs na tradução para C (expressões faltando e/ou com 
@@ -16,6 +18,7 @@ Sumário de mudanças
  * Correção de bugs na interpretação (expressões envolvendo valores reais
    calculadas incorretamente).
  * Correção de bugs na interpretação (avaliação de diversas operações)   
+ * Correção de bugs na interpretação (enunciado "se" entrando em loop infinito)   
  * Correção de bugs na interpretação (retorno de dados em funções).
  * Correção de bugs na compilação (avaliação de subtração envolvendo valores 
    reais).
