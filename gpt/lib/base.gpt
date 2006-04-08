@@ -1,7 +1,6 @@
 /*
  * Biblioteca padrão da linguagem G-Portugol (v1.0).
  * Autor: Thiago Silva
- * $Id: README 474 2006-04-05 15:42:08Z thiago_silva $
  */
 
 função arredonda(num: real) : real
