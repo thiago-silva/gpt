@@ -623,6 +623,18 @@ fim>
 --------------
 <algoritmo bla;
 início
+  se (10 então
+  fim-se
+fim>
+--------------
+<algoritmo bla;
+início
+  se 10 + então
+  fim-se
+fim>
+--------------
+<algoritmo bla;
+início
   se x então
   senão fim>
 --------------
