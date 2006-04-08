@@ -1,6 +1,11 @@
 /*
  * Biblioteca padrão da linguagem G-Portugol (v1.0).
  * Autor: Thiago Silva
+ *
+ * Nota: as funções dessa biblioteca suprem apenas
+ * funcionalidades e cenários simples. Melhorias e 
+ * adições são bem vindas.
+ * 
  */
 
 função arredonda(num: real) : real
