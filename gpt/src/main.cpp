@@ -32,7 +32,7 @@
 
 using namespace std;
 
-enum {  
+enum {
   FLAG_DICA  = 0x1,
   FLAG_PRINT_AST = 0x2
   //FLAG_PIPE  = 0x1,
@@ -95,7 +95,7 @@ static int init(int argc, char** argv) {
         if(optarg) {
           _binprogram = optarg;
         }
-        break;        
+        break;
       case 't':
         count_cmds++;
         cmd = CMD_GPT_2_C;
@@ -186,7 +186,7 @@ static int init(int argc, char** argv) {
 static void appendDefaultFiles() {
   string inc;
 
-  char* env = getenv("GPT_INCLUDE");  
+  char* env = getenv("GPT_INCLUDE");
 
   if(!env || strlen(env) == 0) {
     return;
@@ -240,7 +240,9 @@ int main(int argc, char** argv) {
       GPT::self()->showHelp();
       break;
     case CMD_COMPILE:
-      GPT::self()->setOutputFile(_binprogram);
+      if(!_binprogram.empty()) {
+        GPT::self()->setOutputFile(_binprogram);
+      }
       success = GPT::self()->compile(_ifilenames);
       break;
     case CMD_GPT_2_C:
@@ -267,7 +269,7 @@ static void figureOutputFileName() {
     if(_ofilename.empty()) { //arquivo de saida nao foi setado
       string fname;
       string::size_type dirsep;
-      
+
       #ifdef WIN32
         if((dirsep = _ifilename.rfind('\\')) == string::npos) {
           dirsep = _ifilename.rfind('/');
@@ -275,13 +277,13 @@ static void figureOutputFileName() {
       #else
         dirsep = _ifilename.rfind('/');
       #endif
-      
+
       if(dirsep == string::npos) {
         fname = _ifilename;
       } else {
         fname = _ifilename.substr(dirsep+1);
       }
-          
+
       string::size_type dotpos;
       if((dotpos = fname.rfind('.')) != string::npos) {
         #ifdef WIN32
