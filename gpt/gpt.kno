@@ -1,12 +1,13 @@
 \NewEntry 0 devel
 
-\CurrentEntry 1 NOW
+\NewEntry 1 NOW
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
 <ul type="disc"><li>Atualizar documentacao<br /><br /></li>
+<li>testar matrizes de literais</li>
+<li>testar passagem de matrizes de literais por parametro</li>
 <li>-Lançar versão 9.3</li>
 <li>-fazer video apresentando GPT_INCLUDE e multiplefiles breakpoint</li></ul>
 </body></html>
-
 
 \NewEntry 1 TODO
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
@@ -68,7 +69,14 @@
 <li>função f(matriz[3] de inteiros);</li></ul></ul>
 </body></html>
 
-\NewEntry 1 Bugs
+\CurrentEntry 1 Bugs
+<html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
+<ul type="disc"><li>Compilando test/tester.gpt e examinando com valgrind, existem invalid read memories.</li>
+<ul type="disc"><li>o codigo da leitura eh, ao que parece, uma leitura de variavel global. Ao mover a funcao<br />para perto do entry point, no inicio do arquivo, o valgrind nao reclama mais.</li>
+<li>PS: nao gera segfault (ate agora)</li>
+<li>PS2: acontece utilizando tanto nasm -fbin quanto nasm -felf</li></ul></ul>
+</body></html>
+
 
 \NewEntry 1 latex2html
 <html><head><meta name="qrichtext" content="1" /></head><body style="font-size:11pt;font-family:Bitstream Vera Sans">
