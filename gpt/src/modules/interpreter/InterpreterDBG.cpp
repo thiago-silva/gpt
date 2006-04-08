@@ -321,15 +321,21 @@ string InterpreterDBG::receiveIncomingData(bool nonBlocking) {
   int idx = 0;
   int rec;
   while(true) {
-    if(nonBlocking) {
-      rec = recv(clientsock, &buffer[idx], sizeof(char), MSG_DONTWAIT);
-    } else {
-      rec = recv(clientsock, &buffer[idx], sizeof(char), 0);
-    }
 
-    if(nonBlocking && (rec==0)) {
-      return "";
-    }
+    #ifndef WIN32
+      if(nonBlocking) {
+        rec = recv(clientsock, &buffer[idx], sizeof(char), MSG_DONTWAIT);
+      } else {
+        rec = recv(clientsock, &buffer[idx], sizeof(char), 0);
+      }
+
+      if(nonBlocking && (rec==0)) {
+        return "";
+      }
+    #else
+      //todo[win]: this code is there just to compile on windows, it should be non-blocking
+      rec = recv(clientsock, &buffer[idx], sizeof(char), 0);
+    #endif
 
     received += rec;
 
@@ -421,7 +427,7 @@ void InterpreterDBG::processBreakpointCMD(string& bpcommand) {
 
 bool InterpreterDBG::breakOn(const string& file, int line) {
   //cerr << "Breakon file:" << file << " * line:" << line << endl;
-  for(list<int>::iterator it = breakpoints[file].begin(); it != breakpoints[file].end(); ++it) {   
+  for(list<int>::iterator it = breakpoints[file].begin(); it != breakpoints[file].end(); ++it) {
     //cerr << "---breakon checkin on " << file << " * line:" << (*it) << endl;
     if((*it) == line) {
       //cerr << "found! breakon BREAK on " << *it << endl;
