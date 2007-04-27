@@ -57,8 +57,8 @@ public:
   list<Symbol> getSymbols(const string& scope);
 
 protected:
-  void SymbolTable::registrarLeia();
-  void SymbolTable::registrarImprima();
+  void registrarLeia();
+  void registrarImprima();
 
   int currentCod;
   map<string,list<Symbol> > symbols;//map<scope, symbols>
