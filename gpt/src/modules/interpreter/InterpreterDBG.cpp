@@ -82,7 +82,7 @@ void InterpreterDBG::init(string host, int port) {
   clientsock = socket(PF_INET, SOCK_STREAM, 0);
   if(clientsock < 0) {
     stringstream s;
-    s << PACKAGE << ": não foi possível criar socket\n";
+    s << PACKAGE << ": nÃ£o foi possÃ­vel criar socket\n";
     GPTDisplay::self()->showError(s);
     return;
   }

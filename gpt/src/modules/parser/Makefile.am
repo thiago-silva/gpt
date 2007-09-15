@@ -4,7 +4,7 @@ INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/src/parser \
 
 noinst_LTLIBRARIES = libparser.la
 
-BUILT_SOURCES = PortugolLexer.cpp  PortugolParser.cpp SemanticWalker.cpp
+BUILT_SOURCES = PortugolLexer.cpp  PortugolParser.cpp SemanticWalker.cpp MismatchedUnicodeCharException.cpp
 
 nodist_libparser_la_SOURCES = $(BUILT_SOURCES)
 libparser_la_SOURCES = BasePortugolParser.cpp SemanticEval.cpp

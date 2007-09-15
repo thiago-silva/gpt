@@ -127,7 +127,7 @@ string Symbol::typeToString(int type) {
     case TIPO_REAL:      str = "real"; break;
     case TIPO_CARACTERE: str = "caractere"; break;
     case TIPO_LITERAL:   str = "literal"; break;
-    case TIPO_LOGICO:    str = "lógico"; break;    
+    case TIPO_LOGICO:    str = "lÃ³gico"; break;    
     case TIPO_ALL:       str = "@all"; break;
     default:             str = "desconhecido"; break;
   }

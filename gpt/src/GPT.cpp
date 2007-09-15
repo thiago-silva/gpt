@@ -91,17 +91,17 @@ string GPT::createTmpFile() {
 
 void GPT::showHelp() {
   stringstream s;
-  s << "Modo de uso: " << PACKAGE << " [opções] algoritmos...\n\n"
-          "Opções:\n"
-          "   -v            mostra versão do programa\n"
+  s << "Modo de uso: " << PACKAGE << " [opÃ§Ãµes] algoritmos...\n\n"
+          "OpÃ§Ãµes:\n"
+          "   -v            mostra versÃ£o do programa\n"
           "   -h            mostra esse texto\n"
           "   -o <arquivo>  compila e salva programa como <arquivo>\n"
-          "   -t <arquivo>  salva o código em linguagem C como <arquivo>\n"
-          "   -s <arquivo>  salva o código em linguagem assembly como <arquivo>\n"
+          "   -t <arquivo>  salva o cÃ³digo em linguagem C como <arquivo>\n"
+          "   -s <arquivo>  salva o cÃ³digo em linguagem assembly como <arquivo>\n"
           "   -i            interpreta o algoritmo\n"
           "\n"
-          "   -d            exibe dicas no relatório de erros\n\n"
-          "   Maiores informações no manual.\n";
+          "   -d            exibe dicas no relatÃ³rio de erros\n\n"
+          "   Maiores informaÃ§Ãµes no manual.\n";
 
   GPTDisplay::self()->showMessage(s);
 }
@@ -109,7 +109,7 @@ void GPT::showHelp() {
 void GPT::showVersion() {
   stringstream s;
   s << "GPT - Compilador G-Portugol\n"
-          "Versão  : " << VERSION << "\n"
+          "VersÃ£o  : " << VERSION << "\n"
           "Website : http://gpt.berlios.de\n"
           "Copyright (C) 2003-2006 Thiago Silva <thiago.silva@kdemail.net>\n\n";
   GPTDisplay::self()->showMessage(s);
@@ -121,7 +121,7 @@ bool GPT::prologue(const list<string>& ifnames) {
 
 //   if(_usePipe) { //shell pipe (stdin)
 //     if(cin.rdbuf()->in_avail() == 0) {
-//       s << PACKAGE << ": não existem dados na entrada padrão" << endl;
+//       s << PACKAGE << ": nÃ£o existem dados na entrada padrÃ£o" << endl;
 //       GPTDisplay::self()->showError(s);
 //       goto bail;
 //     }
@@ -135,7 +135,7 @@ bool GPT::prologue(const list<string>& ifnames) {
     ifstream *fi = new ifstream((*it).c_str());
     //fi.open((*it).c_str(), ios_base::in);
     if(!*fi) {
-      s << PACKAGE << ": não foi possível abrir o arquivo: \"" << (*it) << "\"" << endl;
+      s << PACKAGE << ": nÃ£o foi possÃ­vel abrir o arquivo: \"" << (*it) << "\"" << endl;
       GPTDisplay::self()->showError(s);
       goto bail;
     }
@@ -182,7 +182,7 @@ bool GPT::compile(const list<string>& ifnames, bool genBinary) {
   if(!genBinary) { //salva assembly code
     fo.open(ofname.c_str(), ios_base::out);
     if(!fo) {
-      s << PACKAGE << ": não foi possível abrir o arquivo: \"" << ofname << "\"" << endl;
+      s << PACKAGE << ": nÃ£o foi possÃ­vel abrir o arquivo: \"" << ofname << "\"" << endl;
       GPTDisplay::self()->showError(s);
       goto bail;
     }
@@ -191,7 +191,7 @@ bool GPT::compile(const list<string>& ifnames, bool genBinary) {
   } else { //compile
     fo.open(ftmpname.c_str(), ios_base::out);
     if(!fo) {
-      s << PACKAGE << ": erro ao processar arquivo temporário" << endl;
+      s << PACKAGE << ": erro ao processar arquivo temporÃ¡rio" << endl;
       GPTDisplay::self()->showError(s);
       goto bail;
     }
@@ -202,7 +202,7 @@ bool GPT::compile(const list<string>& ifnames, bool genBinary) {
     cmd << "nasm -fbin -o " << ofname << " " << ftmpname;
 
     if(system(cmd.str().c_str()) == -1) {
-      s << PACKAGE << ": não foi possível invocar gcc." << endl;
+      s << PACKAGE << ": nÃ£o foi possÃ­vel invocar gcc." << endl;
       GPTDisplay::self()->showError(s);
       goto bail;
     }
@@ -242,7 +242,7 @@ bool GPT::translate2C(const list<string>& ifnames) {
   ofstream fo;
   fo.open(ofname.c_str(), ios_base::out);
   if(!fo) {
-    s << PACKAGE << ": não foi possível abrir o arquivo: \"" << ofname << "\"" << endl;
+    s << PACKAGE << ": nÃ£o foi possÃ­vel abrir o arquivo: \"" << ofname << "\"" << endl;
     GPTDisplay::self()->showError(s);
     goto bail;
   }

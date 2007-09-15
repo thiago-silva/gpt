@@ -91,7 +91,7 @@ public:
   void setVariable(bool val) { variable_params = val;}
 protected:
   bool variable_params; //f(...)
-  list<pair<string, SymbolType> > params;   //par‚metros de funcao    <name, type>
+  list<pair<string, SymbolType> > params;   //par√¢metros de funcao    <name, type>
 };
 
 class Symbol {

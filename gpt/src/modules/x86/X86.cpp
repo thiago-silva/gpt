@@ -186,7 +186,7 @@ void X86::init(const string& name) {
             "    aux2            dd 0\n"
             "    str_true        db 'verdadeiro',0\n"
             "    str_false       db 'falso',0\n"
-            "    str_no_mem_left db 'Não foi possível alocar memória.',0\n\n";
+            "    str_no_mem_left db 'NÃ£o foi possÃ­vel alocar memÃ³ria.',0\n\n";
 
 
   createScope(SymbolTable::GlobalScope);

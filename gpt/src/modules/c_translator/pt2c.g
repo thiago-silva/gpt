@@ -103,7 +103,7 @@ options {
          "void collect(char* str) {\n"
          "  allocated = (char**) realloc((void*)allocated, sizeof(char**)*(idx+1));\n"
          "  if(!allocated) {\n"
-         "    fprintf(stderr, \"Erro ao alocar memória. Abordando...\\n\");\n"
+         "    fprintf(stderr, \"Erro ao alocar memÃ³ria. Abordando...\\n\");\n"
          "  }\n"
          "  allocated[idx++] = str;\n"
          "}\n";
@@ -967,7 +967,7 @@ func_decls
       (variaveis)?
       stm_block
       {
-        //força retorno, se o usuario esqueceu:
+        //forÃ§a retorno, se o usuario esqueceu:
 //         if(fret != TIPO_NULO) {
 //           writeln("return -1;");
 //         }

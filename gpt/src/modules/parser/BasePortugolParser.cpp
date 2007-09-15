@@ -25,22 +25,22 @@
 
 
 string BasePortugolParser::expecting_algorithm_name = "nome do algoritmo";
-string BasePortugolParser::expecting_variable = "uma variável";
+string BasePortugolParser::expecting_variable = "uma variÃ¡vel";
 string BasePortugolParser::expecting_datatype = "um tipo (inteiro, literal,...)";
 string BasePortugolParser::expecting_datatype_pl = "um tipo de conjunto/matriz (inteiros, literais,...)";
 string BasePortugolParser::expecting_identifier = "identificador";
-string BasePortugolParser::expecting_expression = "expressão";
-string BasePortugolParser::expecting_valid_sentence = "sentença válida";
+string BasePortugolParser::expecting_expression = "expressÃ£o";
+string BasePortugolParser::expecting_valid_sentence = "sentenÃ§a vÃ¡lida";
 string BasePortugolParser::expecting_attr_op = "operador \":=\"";
 string BasePortugolParser::expecting_fimse= "\"fim-se\"";
-string BasePortugolParser::expecting_fimvar_or_var = "\"fim-variáveis\" ou declaração de variável";
-string BasePortugolParser::expecting_stm_or_fim = "\"fim\" ou comando válido";
-string BasePortugolParser::expecting_stm_or_fimse = "\"fim-se\" ou comando válido";
-string BasePortugolParser::expecting_stm_or_fimenq = "\"fim-enquanto\" ou comando válido";
-string BasePortugolParser::expecting_stm_or_fimpara = "\"fim-para\" ou comando válido";
-string BasePortugolParser::expecting_eof_or_function = "fim de arquivo (EOF) ou \"função\"";
-string BasePortugolParser::expecting_function_name = "nome da função";
-string BasePortugolParser::expecting_param_or_fparen = "variável ou \")\"";
+string BasePortugolParser::expecting_fimvar_or_var = "\"fim-variÃ¡veis\" ou declaraÃ§Ã£o de variÃ¡vel";
+string BasePortugolParser::expecting_stm_or_fim = "\"fim\" ou comando vÃ¡lido";
+string BasePortugolParser::expecting_stm_or_fimse = "\"fim-se\" ou comando vÃ¡lido";
+string BasePortugolParser::expecting_stm_or_fimenq = "\"fim-enquanto\" ou comando vÃ¡lido";
+string BasePortugolParser::expecting_stm_or_fimpara = "\"fim-para\" ou comando vÃ¡lido";
+string BasePortugolParser::expecting_eof_or_function = "fim de arquivo (EOF) ou \"funÃ§Ã£o\"";
+string BasePortugolParser::expecting_function_name = "nome da funÃ§Ã£o";
+string BasePortugolParser::expecting_param_or_fparen = "variÃ¡vel ou \")\"";
 
 
 BasePortugolParser::BasePortugolParser(const ParserSharedInputState& lexer, int k_)
@@ -103,7 +103,7 @@ int BasePortugolParser::reportParserError(int line, string expecting, string fou
     str += found;
   }
   if(after.length()) {
-    str += " após \"";
+    str += " apÃ³s \"";
     str += after;
     str += "\"";
   }

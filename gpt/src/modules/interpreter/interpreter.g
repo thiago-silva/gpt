@@ -135,11 +135,11 @@ options {
 
 /*
  ( algoritmo teste ) 
-  ( variáveis ( primitive! inteiro x ) ) 
-  ( início ( := x 10 ) ( fcall! f x 1 ) ( para x 1 10 ( fcall! imprima x ) ) ) 
+  ( variÃ¡veis ( primitive! inteiro x ) ) 
+  ( inÃ­cio ( := x 10 ) ( fcall! f x 1 ) ( para x 1 10 ( fcall! imprima x ) ) ) 
   ( f ( primitive! inteiro z ) ( primitive! inteiro r ) 
-    ( variáveis! ( primitive! caractere c ) ) 
-    ( início ( se ( < z 1 ) ( := c 1 ) ( retorne null! ) senão ( := c 2 ) ( fcall! f ( - z 1 ) r ) ) ( := c 3 ) ) 
+    ( variÃ¡veis! ( primitive! caractere c ) ) 
+    ( inÃ­cio ( se ( < z 1 ) ( := c 1 ) ( retorne null! ) senÃ£o ( := c 2 ) ( fcall! f ( - z 1 ) r ) ) ( := c 3 ) ) 
   )
 
 */
@@ -342,7 +342,7 @@ stm_para
             stmNode = first_stm;
           }
 
-          //lv deve ter um valor a mais do que até (ou a menos, se loop decrescente).
+          //lv deve ter um valor a mais do que atÃ© (ou a menos, se loop decrescente).
           //setar o valor de lv para valor de ate
           interpreter.execAttribution(lv, ate);
           _t = _retTree;

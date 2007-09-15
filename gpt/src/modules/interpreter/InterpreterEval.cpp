@@ -140,7 +140,7 @@ Variable& Variables::get(const string& name) {
   if(currentVars->find(name) == currentVars->end()) {
     if(globalVars->find(name) == globalVars->end()) {
       stringstream s;
-      s << "BUG: variável " << name << " não encontrada." << endl;
+      s << "BUG: variÃ¡vel " << name << " nÃ£o encontrada." << endl;
       GPTDisplay::self()->showError(s);
       exit(1);
     } else {
@@ -453,8 +453,8 @@ ExprValue InterpreterEval::evaluateDiv(ExprValue& left, ExprValue& right) {
 
   if(atof(right.value.c_str()) == 0) {
     stringstream s;
-    s << PACKAGE << ": Erro de execução próximo a linha " << currentLine
-        << " - Divisão por 0 é ilegal. Abortando..." << endl;
+    s << PACKAGE << ": Erro de execuÃ§Ã£o prÃ³ximo a linha " << currentLine
+        << " - DivisÃ£o por 0 Ã© ilegal. Abortando..." << endl;
     GPTDisplay::self()->showError(s);
     exit(1);
   }
@@ -550,7 +550,7 @@ ExprValue InterpreterEval::getLValueValue(LValue& l) {
 //         value.values = var.values;
       } else {
         stringstream s;
-        s << PACKAGE << ": Erro de execução próximo a linha " << currentLine
+        s << PACKAGE << ": Erro de execuÃ§Ã£o prÃ³ximo a linha " << currentLine
             << " - Overflow em \"" << l.name
             << l.dimsToString() << "\". Abortando..." << endl;
         GPTDisplay::self()->showError(s);
@@ -579,7 +579,7 @@ void InterpreterEval::execPasso(LValue& lvalue, int passo) {
       var.setValue(lvalue.dims, s.str());
     } else {
       stringstream err;
-      err << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lvalue.name
+      err << PACKAGE << ": Erro de execuÃ§Ã£o prÃ³ximo a linha " << currentLine << " - Overflow em \"" << lvalue.name
           << lvalue.dimsToString() << "\". Abortando..." << endl;
       GPTDisplay::self()->showError(err);
       exit(1);
@@ -598,7 +598,7 @@ bool InterpreterEval::execLowerEq(LValue& lv, ExprValue& ate) {
       return atoi(val.c_str()) <= atoi(ate.value.c_str());
     } else {
       stringstream s;
-      s << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lv.name
+      s << PACKAGE << ": Erro de execuÃ§Ã£o prÃ³ximo a linha " << currentLine << " - Overflow em \"" << lv.name
           << lv.dimsToString() << "\". Abortando..." << endl;
       GPTDisplay::self()->showError(s);
       exit(1);
@@ -617,7 +617,7 @@ bool InterpreterEval::execBiggerEq(LValue& lv, ExprValue& ate) {
       return atoi(val.c_str()) <= atoi(ate.value.c_str());
     } else {
       stringstream s;
-      s << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lv.name
+      s << PACKAGE << ": Erro de execuÃ§Ã£o prÃ³ximo a linha " << currentLine << " - Overflow em \"" << lv.name
           << lv.dimsToString() << "\". Abortando..." << endl;
       GPTDisplay::self()->showError(s);
       exit(1);
@@ -635,7 +635,7 @@ void InterpreterEval::execAttribution(LValue& lvalue, ExprValue& v) {
       var.setValue(lvalue.dims, v.value);
     } else {
       stringstream s;
-      s << PACKAGE << ": Erro de execução próximo a linha " << currentLine << " - Overflow em \"" << lvalue.name
+      s << PACKAGE << ": Erro de execuÃ§Ã£o prÃ³ximo a linha " << currentLine << " - Overflow em \"" << lvalue.name
           << lvalue.dimsToString() << "\". Abortando..." << endl;
       GPTDisplay::self()->showError(s);
       exit(1);

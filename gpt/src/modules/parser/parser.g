@@ -53,7 +53,7 @@ algoritmo
   exception //nem "variaveis" nem "inicio"
   catch[antlr::NoViableAltException e] {
     reportParserError(e.getLine(), 
-      "\"vari·veis\" ou \"inÌcio\" apÛs declaraÁ„o de algoritmo", getTokenDescription(e.token));
+      "\"vari√°veis\" ou \"in√≠cio\" ap√≥s declara√ß√£o de algoritmo", getTokenDescription(e.token));
   }
 
   catch[antlr::MismatchedTokenException e] { //EOF
@@ -99,10 +99,10 @@ var_decl_block
     int cd;
     if(e.getLine() == tvars->getLine()) {
       cd = reportParserError(e.getLine(), expecting_variable, "", tvars->getText());
-      printTip("Pelo menos uma vari·vel deve ser declarada", e.getLine(), cd);
+      printTip("Pelo menos uma vari√°vel deve ser declarada", e.getLine(), cd);
     } else {
       cd = reportParserError(tvars->getLine(), expecting_variable, "", tvars->getText());
-      printTip("Pelo menos uma vari·vel deve ser declarada", tvars->getLine(), cd);
+      printTip("Pelo menos uma vari√°vel deve ser declarada", tvars->getLine(), cd);
     }    
   
     BitSet b;
@@ -156,7 +156,7 @@ var_decl!
         cd = reportParserError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
   
         if(e.token->getType() == T_IDENTIFICADOR) {
-          printTip(string("Coloque uma vÌrgula entre as vari·veis \"")
+          printTip(string("Coloque uma v√≠rgula entre as vari√°veis \"")
               + lastId->getText() + "\" e \"" + e.token->getText() + "\"", e.getLine(), cd);
         }
         if(isDatatype(e.token->getType())) {
@@ -311,13 +311,13 @@ stm_block!
       int cd = reportParserError(e.getLine(), expecting_stm_or_fim, getTokenDescription(e.token));
       if(e.token->getType() == T_IDENTIFICADOR) {
         printTip(string("Verifique o uso de \"[]\" (caso \"") + e.token->getText() + 
-                       "\" seja um conjunto/matriz), do operador \":=\" (caso seja um comando de atribuiÁ„o)"
-                       " e do uso de parÍntesis (caso \"" + e.token->getText() +
-                       "\" seja uma chamada de funÁ„o)", e.getLine(), cd);
+                       "\" seja um conjunto/matriz), do operador \":=\" (caso seja um comando de atribui√ß√£o)"
+                       " e do uso de par√™ntesis (caso \"" + e.token->getText() +
+                       "\" seja uma chamada de fun√ß√£o)", e.getLine(), cd);
 
 /*        printTip(string("se \"") + e.token->getText() 
-          + "\" È uma vari·vel, verifique o uso de \"[]\" caso seja um vetor/matriz adicione o operador de atribuiÁ„o " + getTokenNames()[T_ATTR]
-          + " logo apÛs. Se for uma funÁ„o, adicione " +  getTokenNames()[T_ABREP] , e.getLine(), cd);*/
+          + "\" √© uma vari√°vel, verifique o uso de \"[]\" caso seja um vetor/matriz adicione o operador de atribui√ß√£o " + getTokenNames()[T_ATTR]
+          + " logo ap√≥s. Se for uma fun√ß√£o, adicione " +  getTokenNames()[T_ABREP] , e.getLine(), cd);*/
       } 
     } else {
       reportParserError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
@@ -346,7 +346,7 @@ stm_list
     )*
   ;
 
-  //Nota: caso haja excecao em (stm_list)*, n„o haver· outra tentativa (causada pelo *),
+  //Nota: caso haja excecao em (stm_list)*, n√£o haver√° outra tentativa (causada pelo *),
   //      isso eh, a funcao stm_list retornara.
   exception
   catch[antlr::MismatchedTokenException e] {
@@ -455,7 +455,7 @@ stm_attr
   : lvalue T_ATTR^ expr
   ;
 
-//catches s„o feitos em stm_list (stm_list usa predicate antes de chamar stm_attr)
+//catches s√£o feitos em stm_list (stm_list usa predicate antes de chamar stm_attr)
 
 //   //catch para exceptions herdadas em expr
 //   exception
@@ -717,7 +717,7 @@ op_unario!
   : (
         e:T_MENOS   {#op_unario = #[TI_UN_NEG,"-"];#op_unario->setLine(e->getLine());}
       | a:T_MAIS    {#op_unario = #[TI_UN_POS,"+"];#op_unario->setLine(a->getLine());}
-      | n:T_KW_NOT  {#op_unario = #[TI_UN_NOT,"n„o"];#op_unario->setLine(n->getLine());}
+      | n:T_KW_NOT  {#op_unario = #[TI_UN_NOT,"n√£o"];#op_unario->setLine(n->getLine());}
       | b:T_BIT_NOT {#op_unario = #[TI_UN_BNOT,"~"];#op_unario->setLine(b->getLine());}
     )?
   ; 
@@ -786,7 +786,7 @@ fcall!
         || (e.token->getType() == T_INT_LIT)
         || (e.token->getType() == T_REAL_LIT)
         || (e.token->getType() == T_CARAC_LIT)) {
-        printTip(string("Coloque uma vÌrgula antes de \"") + e.token->getText() + "\"",e.getLine(),cd);
+        printTip(string("Coloque uma v√≠rgula antes de \"") + e.token->getText() + "\"",e.getLine(),cd);
       }
     } else {
       reportParserError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());  
@@ -923,7 +923,7 @@ fffvar_decl
 fvar_decl!
   : ( s:fffvar_decl 
       {
-        #fvar_decl = #([T_KW_VARIAVEIS,"vari·veis!"],s);
+        #fvar_decl = #([T_KW_VARIAVEIS,"vari√°veis!"],s);
       } 
     )?
   ;

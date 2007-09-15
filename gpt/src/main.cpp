@@ -136,9 +136,9 @@ static int init(int argc, char** argv) {
         return CMD_SHOW_HELP;
         case '?':
            if((optopt == 'o') || (optopt == 't')) {
-            s << PACKAGE << ": faltando argumento para opção -" << (char)optopt << endl;
+            s << PACKAGE << ": faltando argumento para opÃ§Ã£o -" << (char)optopt << endl;
            } else {
-            s << PACKAGE << ": opção inválida: -" <<  char(optopt) << endl;
+            s << PACKAGE << ": opÃ§Ã£o invÃ¡lida: -" <<  char(optopt) << endl;
            }
            GPTDisplay::self()->showError(s);
            goto bail;
@@ -170,7 +170,7 @@ static int init(int argc, char** argv) {
 
   if(CMD_INTERPRET == cmd) {
     if((_port != DEFAULT_PORT) && (atoi(_port.c_str()) == 0)) {
-      s << PACKAGE << ": porta de conexão inválida: \"" << _port << "\"" << endl;
+      s << PACKAGE << ": porta de conexÃ£o invÃ¡lida: \"" << _port << "\"" << endl;
       GPTDisplay::self()->showError(s);
       goto bail;
     }

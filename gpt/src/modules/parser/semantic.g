@@ -66,7 +66,7 @@ algoritmo
     (variaveis)?
 
     {
-      //pula para a declaração de funções
+      //pula para a declaraÃ§Ã£o de funÃ§Ãµes
       inicio_ = _t;
       _t = _t->getNextSibling();
     }
@@ -254,7 +254,7 @@ stm_para
   : #(p:T_KW_PARA 
         lv=lvalue {evaluator.evaluateParaExpr(lv, p->getLine(), lv.id());} 
         de=expr   {evaluator.evaluateParaExpr(de, p->getLine(), "de");} 
-        ate=expr  {evaluator.evaluateParaExpr(ate, p->getLine(), "até");} 
+        ate=expr  {evaluator.evaluateParaExpr(ate, p->getLine(), "atÃ©");} 
         (passo)? (stm)* 
     )
   ;

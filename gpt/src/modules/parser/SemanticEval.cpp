@@ -142,7 +142,7 @@ bool ExpressionValue::matchesDimensions(list<int>& other_dimensions) const {
 
 bool ExpressionValue::matchesPrimitiveType(int other_type) const {
 //1: todos os tipos numericos (inteiro, real, logico, caractere) sao compativeis entre si
-//2: tipos nulos s„o compativeis apenas com tipo nulo
+//2: tipos nulos s√£o compativeis apenas com tipo nulo
 //3: tipo_all eh compativel com todos
 
   //para funcoes sem retorno
@@ -165,7 +165,7 @@ bool ExpressionValue::matchesPrimitiveType(int other_type) const {
   } else if(other_type == TIPO_LITERAL) {
     return false; //um eh literal, o outro nao...incompativeis!
   } else {
-    return true; //ambos s„o numericos (int,real,logico,caractere) ok!
+    return true; //ambos s√£o numericos (int,real,logico,caractere) ok!
   }
 }
 
@@ -225,7 +225,7 @@ void SemanticEval::declareVar(int type, list<int> dims, RefPortugolAST mt) {
   stringstream msg;
   for(list<int>::iterator itd = dims.begin(); itd != dims.end(); ++itd) {
     if((*itd) == 0) {
-      msg << "Dimensıes de matrizes/conjuntos n„o podem ter tamanho 0";
+      msg << "Dimens√µes de matrizes/conjuntos n√£o podem ter tamanho 0";
       GPTDisplay::self()->add(msg.str(), mt->getLine());
     }
   }
@@ -252,7 +252,7 @@ void SemanticEval::declareVars(pair< pair<int, list<int> >, list<RefPortugolAST>
   stringstream msg;
   for(list<int>::iterator itd = ms.first.second.begin(); itd != ms.first.second.end(); ++itd) {
     if((*itd) == 0) {
-      msg << "Dimensıes de matrizes/conjuntos n„o podem ter tamanho 0";
+      msg << "Dimens√µes de matrizes/conjuntos n√£o podem ter tamanho 0";
       GPTDisplay::self()->add(msg.str(), (*(ms.second.begin()))->getLine());
     }
   }
@@ -278,10 +278,10 @@ void SemanticEval::evaluateAttribution(ExpressionValue&  lv, ExpressionValue& rv
   }
 
   if(rv.primitiveType() == TIPO_NULO) {
-    msg << "Express„o n„o retorna resultado para vari·vel";
+    msg << "Express√£o n√£o retorna resultado para vari√°vel";
     GPTDisplay::self()->add(msg.str(), line);
   } else  if(!lv.isCompatibleWidth(rv)) {
-    msg << "Vari·vel \"" << lv.id() << "\" n„o pode receber valores do tipo '"
+    msg << "Vari√°vel \"" << lv.id() << "\" n√£o pode receber valores do tipo '"
         << rv.toString() << "'";
     GPTDisplay::self()->add(msg.str(), line);
   }
@@ -308,7 +308,7 @@ ExpressionValue SemanticEval::evaluateLValue(RefPortugolAST id, list<ExpressionV
     }
   } catch(SymbolTableException& e) {
     stringstream msg;
-    msg << "Vari·vel \"" << id->getText() << "\" n„o foi declarada";
+    msg << "Vari√°vel \"" << id->getText() << "\" n√£o foi declarada";
     GPTDisplay::self()->add(msg.str(), id->getLine());
     return ret;
   }
@@ -317,7 +317,7 @@ ExpressionValue SemanticEval::evaluateLValue(RefPortugolAST id, list<ExpressionV
 
   if(lvalue.isFunction) {
     stringstream msg;
-    msg << "Faltando abrir parÍntesis apÛs funÁ„o \"" << id->getText() << "\"";
+    msg << "Faltando abrir par√™ntesis ap√≥s fun√ß√£o \"" << id->getText() << "\"";
     GPTDisplay::self()->add(msg.str(), id->getLine());
     return ret;
   }
@@ -326,7 +326,7 @@ ExpressionValue SemanticEval::evaluateLValue(RefPortugolAST id, list<ExpressionV
     ret.set(lvalue.type);
     if(dim.size() > 0) {
       stringstream msg;
-      msg << "Vari·vel \"" << id->getText() << "\" n„o È uma matriz/conjunto";
+      msg << "Vari√°vel \"" << id->getText() << "\" n√£o √© uma matriz/conjunto";
       GPTDisplay::self()->add(msg.str(), id->getLine());
       return ret;
     } else {
@@ -343,7 +343,7 @@ ExpressionValue SemanticEval::evaluateLValue(RefPortugolAST id, list<ExpressionV
       if(!(*it).isNumeric(true)) {
         stringstream msg;
         msg << "Subscritos da matriz/conjunto \"" << id->getText() 
-            << "\" devem ser valores numÈricos inteiros ou equivalente";
+            << "\" devem ser valores num√©ricos inteiros ou equivalente";
         GPTDisplay::self()->add(msg.str(), id->getLine());
       }
     }
@@ -365,9 +365,9 @@ ExpressionValue SemanticEval::evaluateLValue(RefPortugolAST id, list<ExpressionV
         msg << "Matriz/conjunto \"" << id->getText() << "\" possui " << lvalue.type.dimensions().size();
 
         if(lvalue.type.dimensions().size() == 1) {
-          msg << " dimens„o";
+          msg << " dimens√£o";
         } else {
-          msg << " dimensıes";
+          msg << " dimens√µes";
         }
         msg << ". Use " << lvalue.type.dimensions().size() << " subscrito(s)";
         GPTDisplay::self()->add(msg.str(), id->getLine());
@@ -382,7 +382,7 @@ ExpressionValue SemanticEval::evaluateLValue(RefPortugolAST id, list<ExpressionV
 }
 
 void SemanticEval::evaluateBooleanExpr(ExpressionValue& /*v*/, int /*line*/) {
-  //qualquer coisa pode ser avaliado como express„o booleana
+  //qualquer coisa pode ser avaliado como express√£o booleana
 }
 
 void SemanticEval::evaluateParaExpr(ExpressionValue& ev, int line, const string& term) {
@@ -392,12 +392,12 @@ void SemanticEval::evaluateParaExpr(ExpressionValue& ev, int line, const string&
     GPTDisplay::self()->add(err.str(), line);
   } else {
     if(ev.primitiveType() != TIPO_INTEIRO) {
-      err << "Express„o \"" << term << "\" deve ser do tipo inteiro";
+      err << "Express√£o \"" << term << "\" deve ser do tipo inteiro";
       GPTDisplay::self()->add(err.str(), line);
     }
   } /*else if(!ev.isNumeric()) {
     stringstream err;
-    err << "Esperando uma express„o numÈrica. Encontrado express„o \"" << ev.toString() << "\"";
+    err << "Esperando uma express√£o num√©rica. Encontrado express√£o \"" << ev.toString() << "\"";
     GPTDisplay::self()->add(err.str(), line);
   }*/
 }
@@ -412,10 +412,10 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
 //     return ret;
 //   }
 
-  //n„o permitir TIPO_ALL em expressıes binarias
+  //n√£o permitir TIPO_ALL em express√µes binarias
   if((left.primitiveType() == TIPO_ALL) || (right.primitiveType() == TIPO_ALL)) {
     stringstream msg;
-    msg << "FunÁ„o interna \"leia\" n„o pode participar de express„o";
+    msg << "Fun√ß√£o interna \"leia\" n√£o pode participar de express√£o";
     GPTDisplay::self()->add(msg.str(), op->getLine());
     return nulo;
   }
@@ -439,7 +439,7 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
         return ret;
       } else {
         stringstream msg;
-        msg << "Operador \"" << op->getText() << "\" n„o pode ser usado em expressıes no formato "
+        msg << "Operador \"" << op->getText() << "\" n√£o pode ser usado em express√µes no formato "
             << "'" << left.toString()
             << " " << op->getText()
             << " " << right.toString() << "'";
@@ -448,14 +448,14 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
       }
       break;
 
-    //qualquer numerico n„o-real (inteiro, caractere, lÛgico)
+    //qualquer numerico n√£o-real (inteiro, caractere, l√≥gico)
     case SemanticWalkerTokenTypes::T_BIT_OU:
     case SemanticWalkerTokenTypes::T_BIT_XOU:
     case SemanticWalkerTokenTypes::T_BIT_E:
       ret = evaluateNumTypes(left, right);
       if((ret.primitiveType() == TIPO_REAL) || (ret.primitiveType() == TIPO_NULO)) {
         stringstream msg;
-        msg << "Operador \"" << op->getText() << "\" sÛ pode ser usado com termos n˙mericos n„o-reais";
+        msg << "Operador \"" << op->getText() << "\" s√≥ pode ser usado com termos n√∫mericos n√£o-reais";
             GPTDisplay::self()->add(msg.str(), op->getLine());
          return nulo;
       } else {
@@ -463,7 +463,7 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
       }
       break;
 
-    //qualquer numÈrico
+    //qualquer num√©rico
     case SemanticWalkerTokenTypes::T_MAIS:
     case SemanticWalkerTokenTypes::T_MENOS:
     case SemanticWalkerTokenTypes::T_DIV:
@@ -471,7 +471,7 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
       ret = evaluateNumTypes(left, right);
       if(!ret.isNumeric()) {
         stringstream msg;
-        msg << "Operador \"" << op->getText() << "\" sÛ pode ser usado com termos numÈricos";
+        msg << "Operador \"" << op->getText() << "\" s√≥ pode ser usado com termos num√©ricos";
             GPTDisplay::self()->add(msg.str(), op->getLine());
             return nulo;
       } else {
@@ -482,8 +482,8 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
       ret = evaluateNumTypes(left, right);
       if(!ret.isNumeric(true)) {
         stringstream msg;
-        msg << "Operador \"" << op->getText() << "\" sÛ pode ser usado com termos "
-            << "numÈricos inteiros e compatÌveis";
+        msg << "Operador \"" << op->getText() << "\" s√≥ pode ser usado com termos "
+            << "num√©ricos inteiros e compat√≠veis";
             GPTDisplay::self()->add(msg.str(), op->getLine());
             return nulo;
       } else {
@@ -493,7 +493,7 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
   }
 
   stringstream msg;
-  msg << "Erro interno: operador n„o suportado: " << op->getText();
+  msg << "Erro interno: operador n√£o suportado: " << op->getText();
   GPTDisplay::self()->add(msg.str(), op->getLine());
   return nulo;
 }
@@ -501,23 +501,23 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& left, ExpressionValu
 ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& ev, RefPortugolAST unary_op) {
   ExpressionValue nulo;
 
-  //n„o permitir TIPO_ALL em expressıes binarias
+  //n√£o permitir TIPO_ALL em express√µes binarias
   if(ev.primitiveType() == TIPO_ALL) {
     stringstream msg;
-    msg << "FunÁ„o interna \"leia\" n„o pode participar de express„o";
+    msg << "Fun√ß√£o interna \"leia\" n√£o pode participar de express√£o";
     GPTDisplay::self()->add(msg.str(), unary_op->getLine());
     return nulo;
   }
 
   switch(unary_op->getType()) {
 
-    //operadores unarios para expressıes numÈricas (retorna o tipo da express„o 'expr')
+    //operadores unarios para express√µes num√©ricas (retorna o tipo da express√£o 'expr')
     case SemanticWalkerTokenTypes::TI_UN_POS://+
     case SemanticWalkerTokenTypes::TI_UN_NEG://-
       if(!ev.isNumeric()) {
         stringstream msg;
-        msg <<  "Operador un·rio \"" << unary_op->getText()
-            << "\" deve ser usado em termos numÈricos";
+        msg <<  "Operador un√°rio \"" << unary_op->getText()
+            << "\" deve ser usado em termos num√©ricos";
         GPTDisplay::self()->add(msg.str(), unary_op->getLine());
         return nulo;
       } else {
@@ -527,8 +527,8 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& ev, RefPortugolAST u
     case SemanticWalkerTokenTypes::TI_UN_BNOT://~
       if(!ev.isNumeric(true)) {
         stringstream msg;
-        msg <<  "Operador un·rio \"" << unary_op->getText()
-            << "\" deve ser usado em termos numÈricos inteiros e compatÌveis";
+        msg <<  "Operador un√°rio \"" << unary_op->getText()
+            << "\" deve ser usado em termos num√©ricos inteiros e compat√≠veis";
         GPTDisplay::self()->add(msg.str(), unary_op->getLine());
         return nulo;
       } else {
@@ -544,7 +544,7 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& ev, RefPortugolAST u
   }
 
   stringstream msg;
-  msg << "Erro interno: operador n„o suportado: " << unary_op->getText() << "";
+  msg << "Erro interno: operador n√£o suportado: " << unary_op->getText() << "";
   GPTDisplay::self()->add(msg.str(), unary_op->getLine());
   return nulo;
 }
@@ -552,7 +552,7 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& ev, RefPortugolAST u
 void SemanticEval::evaluateReturnCmd(ExpressionValue& ev, int line) {
   if(currentScope == SymbolTable::GlobalScope) {
     //tentando retornar no bloco principal
-    GPTDisplay::self()->add("Bloco principal n„o deve ter retorno", line);
+    GPTDisplay::self()->add("Bloco principal n√£o deve ter retorno", line);
   } else {
     //currentScope eh o nome da funcao atual
     try {
@@ -561,9 +561,9 @@ void SemanticEval::evaluateReturnCmd(ExpressionValue& ev, int line) {
       if(!ev.isCompatibleWidth(sctype)) {
         stringstream msg;
         if(sctype.primitiveType() == TIPO_NULO) {
-          msg << "FunÁ„o n„o tem tipo de retorno.";
+          msg << "Fun√ß√£o n√£o tem tipo de retorno.";
         } else {          
-          msg << "Express„o de retorno deve ser compatÌvel com o tipo \""
+          msg << "Express√£o de retorno deve ser compat√≠vel com o tipo \""
             << sctype.toString() <<  "\"";
         }
         GPTDisplay::self()->add(msg.str(), line);
@@ -608,7 +608,7 @@ void SemanticEval::declareFunction(Funcao& f) {
 //     fcallsList.push_back(pair<RefPortugolAST,list<ExpressionValue> >(f,args));
 //   } catch(SymbolTableException& e) {
 //       stringstream msg;
-//       msg << "FunÁ„o \"" << f->getText() << "\" n„o foi declarada";
+//       msg << "Fun√ß√£o \"" << f->getText() << "\" n√£o foi declarada";
 //       GPTDisplay::self()->add(msg.str(), f->getLine());
 //   }
 //
@@ -623,7 +623,7 @@ ExpressionValue SemanticEval::evaluateFCall(RefPortugolAST f, list<ExpressionVal
     v.set(s.type);
   } catch(SymbolTableException& e) {
     stringstream msg;
-    msg << "FunÁ„o \"" << f->getText() << "\" n„o foi declarada";
+    msg << "Fun√ß√£o \"" << f->getText() << "\" n√£o foi declarada";
     GPTDisplay::self()->add(msg.str(), f->getLine());
     return v;
   }
@@ -634,7 +634,7 @@ ExpressionValue SemanticEval::evaluateFCall(RefPortugolAST f, list<ExpressionVal
     //nao permitir 0 argumentos
     if(args.size() == 0) {
       stringstream msg;
-      msg << "Pelo menos um argumento deve ser passado para a funÁ„o \"" << f->getText() << "\"";
+      msg << "Pelo menos um argumento deve ser passado para a fun√ß√£o \"" << f->getText() << "\"";
       GPTDisplay::self()->add(msg.str(), f->getLine());
       return v;
     }
@@ -645,7 +645,7 @@ ExpressionValue SemanticEval::evaluateFCall(RefPortugolAST f, list<ExpressionVal
       if(!(*it).isPrimitive()) {
         stringstream msg;
         msg << "Argumento " << count;
-        msg << " da funÁ„o \"" << f->getText() << "\" n„o pode ser matriz/conjunto";
+        msg << " da fun√ß√£o \"" << f->getText() << "\" n√£o pode ser matriz/conjunto";
         GPTDisplay::self()->add(msg.str(), f->getLine());
         return v;
       }
@@ -656,7 +656,7 @@ ExpressionValue SemanticEval::evaluateFCall(RefPortugolAST f, list<ExpressionVal
 
   if(params.symbolList().size() != args.size()) {
     stringstream msg;
-    msg << "N˙mero de argumentos diferem do n˙mero de par‚metros da funÁ„o \""
+    msg << "N√∫mero de argumentos diferem do n√∫mero de par√¢metros da fun√ß√£o \""
       << f->getText() << "\"";
     GPTDisplay::self()->add(msg.str(), f->getLine());
     return v;
@@ -672,7 +672,7 @@ ExpressionValue SemanticEval::evaluateFCall(RefPortugolAST f, list<ExpressionVal
   while((pit != pend) && (ait != aend)) {
     if(!(*ait).isCompatibleWidth((*pit).second)) {
       stringstream msg;
-      msg << "Argumento " << count << " da funÁ„o \"" << f->getText() << "\" deve ser do tipo \""
+      msg << "Argumento " << count << " da fun√ß√£o \"" << f->getText() << "\" deve ser do tipo \""
         << (*pit).second.toString() << "\"";
       GPTDisplay::self()->add(msg.str(), f->getLine());
       return v;
@@ -688,7 +688,7 @@ ExpressionValue SemanticEval::evaluateFCall(RefPortugolAST f, list<ExpressionVal
 void SemanticEval::evaluatePasso(int line, const string& str) {
   if(atoi(str.c_str()) == 0) {
     stringstream msg;
-    msg << "Passo com valor \"0\" n„o È permitido";
+    msg << "Passo com valor \"0\" n√£o √© permitido";
     GPTDisplay::self()->add(msg.str(), line);
   }
 }
@@ -700,9 +700,9 @@ bool SemanticEval::evalVariableRedeclaration(const string& scope, RefPortugolAST
   try {
     Symbol s = stable.getSymbol(scope, id->getText());
     stringstream err;
-    err << "Vari·vel/funÁ„o redeclarada: \"" << id->getText() << "\"";
+    err << "Vari√°vel/fun√ß√£o redeclarada: \"" << id->getText() << "\"";
     //usando mais de um arquivo, essa mensagem fica confusa
-    //err << "Vari·vel/funÁ„o redeclarada: \"" << id->getText() << "\". Primeira declaraÁ„o na linha "
+    //err << "Vari√°vel/fun√ß√£o redeclarada: \"" << id->getText() << "\". Primeira declara√ß√£o na linha "
     //    << s.line;
     GPTDisplay::self()->add(err.str(), id->getLine());
     return true;

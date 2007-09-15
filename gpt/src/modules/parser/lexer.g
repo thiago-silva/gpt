@@ -26,6 +26,8 @@ header {
   #include <iostream>
   #include <ctype.h>
   #include <antlr/TokenStreamSelector.hpp>
+	#include "UnicodeCharBuffer.hpp"
+	#include "UnicodeCharScanner.hpp"
 
   using namespace antlr;
   using namespace std;
@@ -35,7 +37,7 @@ options {
   language="Cpp";  
 }
 
-class PortugolLexer extends Lexer;
+class PortugolLexer extends Lexer("UnicodeCharScanner");
 options {
   k=2;
   charVocabulary='\u0003'..'\u00FF'; // latin-1  
@@ -49,45 +51,46 @@ options {
 
 //we have to create the tokens here, because some of them have accents
 //and, if used inline in parser rules, antlr generates an entry like
-//TK_algorÌtmos (wich is an invalid C ID, because of the accents)
+//TK_algor√≠tmos (wich is an invalid C ID, because of the accents)
+
 tokens {
-  T_KW_FIM_VARIAVEIS="fim-vari·veis";
+  T_KW_FIM_VARIAVEIS="fim-vari√°veis";
   T_KW_ALGORITMO="algoritmo";
-  T_KW_VARIAVEIS="vari·veis";  
+  T_KW_VARIAVEIS="vari√°veis";  
   T_KW_INTEIRO="inteiro";
   T_KW_REAL="real";
   T_KW_CARACTERE="caractere";
   T_KW_LITERAL="literal";
-  T_KW_LOGICO="lÛgico";
-  T_KW_INICIO="inÌcio";
+  T_KW_LOGICO="l√≥gico";
+  T_KW_INICIO="in√≠cio";
   T_KW_VERDADEIRO="verdadeiro";
   T_KW_FALSO="falso";
   T_KW_FIM="fim";
   T_KW_OU="ou";
   T_KW_E="e";
-  T_KW_NOT="n„o";
+  T_KW_NOT="n√£o";
   T_KW_SE="se";
-  T_KW_SENAO="sen„o";
-  T_KW_ENTAO="ent„o";
+  T_KW_SENAO="sen√£o";
+  T_KW_ENTAO="ent√£o";
   T_KW_FIM_SE="fim-se";
   T_KW_ENQUANTO="enquanto";
-  T_KW_FACA="faÁa";
+  T_KW_FACA="fa√ßa";
   T_KW_FIM_ENQUANTO="fim-enquanto";
   T_KW_PARA="para";
   T_KW_DE="de";
-  T_KW_ATE="atÈ";
+  T_KW_ATE="at√©";
   T_KW_FIM_PARA="fim-para";
   T_KW_MATRIZ="matriz";
   T_KW_INTEIROS="inteiros";
   T_KW_REAIS="reais";
   T_KW_CARACTERES="caracteres";
   T_KW_LITERAIS="literais";
-  T_KW_LOGICOS="lÛgicos";
-  T_KW_FUNCAO="funÁ„o";
+  T_KW_LOGICOS="l√≥gicos";
+  T_KW_FUNCAO="fun√ß√£o";
   T_KW_RETORNE="retorne";  
   T_KW_PASSO="passo";
 
-  T_REAL_LIT="n˙mero real"; //nondeterminism T_INT_LIT & T_REAL_LIT
+  T_REAL_LIT="n√∫mero real"; //nondeterminism T_INT_LIT & T_REAL_LIT
 
   //imaginaries for AST
   TI_UN_POS;
@@ -105,7 +108,7 @@ tokens {
 {
 public:  
   PortugolLexer(ANTLR_USE_NAMESPACE(std)istream& in, TokenStreamSelector* s)
-	: ANTLR_USE_NAMESPACE(antlr)CharScanner(new ANTLR_USE_NAMESPACE(antlr)CharBuffer(in),true),
+	: UnicodeCharScanner(new UnicodeCharBuffer(in),true),
     selector(s)
   {
     initLiterals();
@@ -269,7 +272,7 @@ options {
 
 T_INT_LIT
 options {
-  paraphrase = "n˙mero inteiro";
+  paraphrase = "n√∫mero inteiro";
 }
   : ('0' ('c'|'C') )=> T_OCTAL_LIT
   | ('0' ('x'|'X') )=> T_HEX_LIT
@@ -295,14 +298,14 @@ T_OCTAL_LIT
         if((str.find("8",0) != string::npos) ||
            (str.find("9",0) != string::npos) ) {
           stringstream s;
-          s << "\"" << $getText << "\" n„o È um valor octal v·lido";
+          s << "\"" << $getText << "\" n√£o √© um valor octal v√°lido";
           GPTDisplay::self()->add(s.str(), getLine());          
           haserror = true;
         } else {
           for(unsigned int i = 2; i < str.length(); ++i) {
             if(!isdigit(str[i])) {
               stringstream s;
-              s << "\"" << str << "\" n„o È um valor hexadecimal v·lido";
+              s << "\"" << str << "\" n√£o √© um valor hexadecimal v√°lido";
               GPTDisplay::self()->add(s.str(), getLine());
               haserror = true;
               break;
@@ -332,7 +335,7 @@ T_HEX_LIT
       for(unsigned int i = 2; i < str.length(); ++i) {
         if(!isxdigit(str[i])) {
           stringstream s;
-          s << "\"" << str << "\" n„o È um valor hexadecimal v·lido";
+          s << "\"" << str << "\" n√£o √© um valor hexadecimal v√°lido";
           GPTDisplay::self()->add(s.str(), getLine());
           haserror = true;
           break;
@@ -360,7 +363,7 @@ T_BIN_LIT
     for(unsigned int i = 2; i < str.length(); ++i) {
       if((str[i] != '0') && (str[i] != '1')) {
         stringstream s;
-        s << "\"" << str << "\" n„o È um valor bin·rio v·lido";
+        s << "\"" << str << "\" n√£o √© um valor bin√°rio v√°lido";
         GPTDisplay::self()->add(s.str(), getLine());
         haserror = true;
         break;
@@ -465,7 +468,7 @@ ML_COMMENT
 exception
 catch[antlr::RecognitionException] {  
   stringstream s;
-  s << "AVISO: coment·rio iniciado na linha " << line << " n„o termina com \"*/\".";
+  s << "AVISO: coment√°rio iniciado na linha " << line << " n√£o termina com \"*/\".";
   GPTDisplay::self()->add(s.str(), getLine());
 
   _ttype = antlr::Token::SKIP;
@@ -514,10 +517,10 @@ T_IDENTIFICADOR
 options {
   testLiterals = true;
    //nota: identificador pode ser:
-   // -nome do algoritmo (ver declaraÁ„o de algoritmo)
-   // -vari·vel
-   // -nome de funÁ„o
-//   paraphrase = "vari·vel/funÁ„o";
+   // -nome do algoritmo (ver declara√ß√£o de algoritmo)
+   // -vari√°vel
+   // -nome de fun√ß√£o
+//   paraphrase = "vari√°vel/fun√ß√£o";
 }
   { int m=-1,len; hasLatim=false;}
   
@@ -543,7 +546,7 @@ options {
     //check for latim non-keywords
     if(hasLatim && (testLiteralsTable(_ttype) == T_IDENTIFICADOR)) {
       stringstream s;
-      s << "Identificador \"" << $getText << "\" n„o pode ter caracteres especiais.";
+      s << "Identificador \"" << $getText << "\" n√£o pode ter caracteres especiais.";
       GPTDisplay::self()->add(s.str(), getLine());
     }
   }
@@ -573,7 +576,7 @@ T_INVALID
       } else {
         stringstream s;
         if(($getText != "\"") && ($getText != "'")) {
-          s << "Caractere inv·lido: \"" << $getText << "\"";
+          s << "Caractere inv√°lido: \"" << $getText << "\"";
         } else {
           s << "Faltando fechar aspas";
         }
