@@ -1,21 +1,21 @@
-InstalaÁ„o Usando os Fontes
+Instala√ß√£o Usando os Fontes
 ===========================
 
-  o PrÈ-requisitos
+  o Pr√©-requisitos
 
     - ANTLR:
-        Ferramenta para construÁ„o de compiladores (testado com v2.7.5).
+        Ferramenta para constru√ß√£o de compiladores (testado com v2.7.5).
         http://www.antlr.org
 
     - Perl Compatible Regular Expressions (testado com v6.4):
-        Biblioteca de expressıes regulares.
+        Biblioteca de express√µes regulares.
         http://www.pcre.org/
 
     - NASM - The Netwide Assembler (testado com v0.89.39):
-        Assembler usado para compilaÁ„o.
+        Assembler usado para compila√ß√£o.
         http://sourceforge.net/projects/nasm
 
-  o  Comandos para compiÁ„o e instalaÁ„o padr„o, assumindo um ambiente 
+  o  Comandos para compi√ß√£o e instala√ß√£o padr√£o, assumindo um ambiente 
      GNU (GNU/Linux, MS Windows + MingW ou Cygwin, etc):
     
     $ tar xvfz gpt-xxx.tar.gz
@@ -24,17 +24,17 @@ InstalaÁ„o Usando os Fontes
     $ make
     $ make install
 
-    Se precisar de acesso root para o diretÛrio alvo:
+    Se precisar de acesso root para o diret√≥rio alvo:
 
     $ su
     # make install
 
 
-  o  OpÁıes de configuraÁ„o
+  o  Op√ß√µes de configura√ß√£o
 
     ANTLR:
-      Se vocÍ instalou o ANTLR em um diretÛrio n„o-padr„o ou se o 
-      bin·rio "antlr" n„o pode ser encontrado pela vari·vel de 
+      Se voc√™ instalou o ANTLR em um diret√≥rio n√£o-padr√£o ou se o 
+      bin√°rio "antlr" n√£o pode ser encontrado pela vari√°vel de 
       ambiente PATH, use o  argumento "--with-antlr-path".
   
       Exemplo:
@@ -44,32 +44,37 @@ InstalaÁ„o Usando os Fontes
 
 
     Devel:
-      Se vocÍ deseja que a biblioteca din‚mica (.so) e headers do 
+      Se voc√™ deseja que a biblioteca din√¢mica (.so) e headers do 
       compilador sejam instalados no sistema, execute o script 
       "configure" da seguinte forma:
 
       $ ./configure --enable-install-devel
 
-      Essa opcao È nescess·ria se vocÍ deseja utilizar a opÁ„o
-      "an·lise em segundo plano" do programa GPTEditor.
+      Essa opcao √© nescess√°ria se voc√™ deseja utilizar a op√ß√£o
+      "an√°lise em segundo plano" do programa GPTEditor.
 
       Nota: para desinstalar apenas os arquivos devel (header e libs) use:
       
       # make uninstall-devel
 
 
-  o Biblioteca padr„o
+  o Biblioteca padr√£o
 
-    Para utilizar a (pseudo) biblioteca padr„o distribuida neste pacote
-    deve-se adicionar as vari·veis de ambiente a vari·vel GPT_INCLUDE
+    Para utilizar a (pseudo) biblioteca padr√£o distribuida neste pacote
+    deve-se adicionar as vari√°veis de ambiente a vari√°vel GPT_INCLUDE
     contendo o caminho do arquivo base.gpt. Exemplo (shell bash):
 
-      Adicione ao script de inicializaÁ„o de ambiente:
+      Adicione ao script de inicializa√ß√£o de ambiente:
 
       export GPT_INCLUDE="/usr/local/lib/gpt/base.gpt"
 
-    Outros arquivos podem ser incluÌdos, separando os caminhos por ":".
+    Outros arquivos podem ser inclu√≠dos, separando os caminhos por ":".
 
-  o  Outras opÁıes
+  o  Outras op√ß√µes
 
     Para maiores detalhes, leia INSTALL.default
+
+  o Se o c√≥digo fonte foi baixado diretamente do reposit√≥rio, √© necess√°rio
+    gerar o script "configure", executando o seguinte comando:
+
+      $ make -f Makefile.cvs

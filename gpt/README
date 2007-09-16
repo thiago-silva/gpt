@@ -1,28 +1,28 @@
-G-Portugol - versao: 1.0
+G-Portugol - vers√£o: 1.0
 ========================
 
 o Sobre a linguagem
 
-  G-Portugol È um dialeto da linguagem/pseudo-cÛdigo portugol (ou
-  portugÍs estruturado), que È muito usada para descrever algoritmos em
-  portuguÍs, de forma livre e espont‚nea. Em geral, livros dedicados ao ensino
-  de algoritmos, lÛgica e estruturas de dados utilizam alguma forma
+  G-Portugol √© um dialeto da linguagem/pseudo-c√≥digo portugol (ou
+  portug√™s estruturado), que √© muito usada para descrever algoritmos em
+  portugu√™s, de forma livre e espont√¢nea. Em geral, livros dedicados ao ensino
+  de algoritmos, l√≥gica e estruturas de dados utilizam alguma forma
   dessa linguagem.
   
-  A proposta de G-Portugol È disponibilizar uma implementaÁ„o da
-  linguagem portugol, fornecendo ferramentas que ofereÁam recursos de ediÁ„o,
-  compilaÁ„o, execuÁ„o e depuraÁ„o de programas escritos nessa linguagem, de 
-  forma a favorecer estudantes que d„o os primeiros passos no aprendizado de
+  A proposta de G-Portugol √© disponibilizar uma implementa√ß√£o da
+  linguagem portugol, fornecendo ferramentas que ofere√ßam recursos de edi√ß√£o,
+  compila√ß√£o, execu√ß√£o e depura√ß√£o de programas escritos nessa linguagem, de 
+  forma a favorecer estudantes que d√£o os primeiros passos no aprendizado de
   desenvolvimento de softwares, bem como professores que ensinam disciplinas
-  relacionadas a computaÁ„o. Portanto, seu foco È primariamente did·tico.
+  relacionadas a computa√ß√£o. Portanto, seu foco √© primariamente did√°tico.
   
-  Se encontram disponÌveis atualmente um compilador, tradutor e interpretador 
+  Se encontram dispon√≠veis atualmente um compilador, tradutor e interpretador 
   para a linguagem (GPT) e um ambiente visual simples (GPTEditor) que permite a
-  ediÁ„o, execuÁ„o e depuraÁ„o de programas escritos em G-Portugol.
+  edi√ß√£o, execu√ß√£o e depura√ß√£o de programas escritos em G-Portugol.
 
 o O programa GPT
 
-  GPT È o programa que implementa a linguagem G-Portugol, permitindo:
+  GPT √© o programa que implementa a linguagem G-Portugol, permitindo:
 
     -compilar algoritmos;
     -traduzir algoritmos para C;
@@ -30,12 +30,12 @@ o O programa GPT
     -depurar algoritmos interativamente.
 
 
-  Embora se encontre us·vel, o GPT n„o est· imune a bugs. AlÈm do mais, 
+  Embora se encontre us√°vel, o GPT n√£o est√° imune a bugs. Al√©m do mais, 
   alguns recursos podem estar faltando. Portanto, convido-lhes a participar,
-  enviando sugestıes, crÌticas, cÛdigos-fonte, patches, idÈias e algoritmos que 
-  n„o s„o processados corretamente pelo GPT.
+  enviando sugest√µes, cr√≠ticas, c√≥digos-fonte, patches, id√©ias e algoritmos que 
+  n√£o s√£o processados corretamente pelo GPT.
 
-o Maiores informaÁıes
+o Maiores informa√ß√µes
 
   Website: http://gpt.berlios.de
 
