@@ -1,0 +1,171 @@
+Desenvolvendo
+=============
+
+o Instalando dependências
+
+  Para desenvolver o GPT é necessário instalar os seguintes programas:
+
+  - g++ 
+  - make
+  - automake (v1.9 ou superior)
+  - autoconf
+  - libtool
+  - antlr (v2.6.x ou superior)
+  - pcre e pcrecpp
+  - nasm
+
+  Se quiser trabalhar na última versão do GPT, ainda é necessário obter o
+  programa Subversion, para acessar o repositório de código fonte.
+
+  Para satisfazer estas dependências no (K)Ubuntu ou Debian, pode-se executar
+  o seguinte comando:
+
+  $ aptitude install g++ make automake1.9 autoconf libtool antlr libantlr-dev \
+  > pcre libpcre3-dev nasm
+
+
+o Baixando a última versão do GPT
+
+  Para obter as últimas versões do código fonte do GPT, é necessário
+  fazer um checkout no repositório, utilizando o subversion.
+
+  ex (checkout anônimo):
+
+    $ svn checkout svn://svn.berlios.de/gpt/trunk/gpt
+
+  Se você for um membro do projeto, deve ser autenticado.
+
+  ex (checkout autenticado):
+
+    $ svn checkout svn+ssh://username@svn.berlios.de/svnroot/repos/gpt/trunk/gpt
+
+  Maiores informações na página do projeto no BerliOS:
+
+    http://developer.berlios.de/projects/gpt
+
+
+o Iniciando o desenvolvimento
+
+  Se você estiver utilizando o código fonte do repositório, é necessário
+  fazer o setup do sistema de construção com o seguinte comando:
+
+  $ make -f Makefile.cvs
+
+  Isto criará os Makefile.in's nescessários e o shell script "configure"
+  utilizado para criar os Makefile's utilizados pelo programa "make"
+  para automatizar a compilação do projeto.
+
+  Se estiver utilizando o código fonte de uma versão específica
+  (obtida por meio de um pacote tar.gz, por exemplo), o script "configure"
+  já está disponível.
+
+
+  NOTA: se estiver obtendo erros nos arquivos Makefile.am ao executar
+  make -f Makefile.cvs, verifique a versão do automake sendo utilizada:
+
+    $ automake --version
+
+  Se o comando acima informar uma versão inferior à 1.9, desinstale esta versão,
+  execute manualmente o automake1.9 ou faça as devidas configurações para que 
+  a versão correta seja utilizada.
+
+
+o Configurando e construindo
+
+  Agora, basta seguir as instruções do arquivo INSTALL, executando o 
+  "configure" com as opções desejadas e, em seguida, executando "make" e 
+  "make install", se quiser instalar os arquivos no sistema.
+
+o Realizando commits
+
+  As mensagens de commit devem, idealmente, seguir pequenas convenções:
+
+  -Toda mensagem de commit deve ser enviada em UTF-8 (para casos em que a 
+   mensagem contenha acento)
+
+  -Toda descrição lógica deve iniciar em uma nova linha, prefixada pro "-".
+
+    Ex: Duas descrições para as modificações do arquivo A.cpp :
+
+      $ svn ci A.cpp -m"-Utilizando algoritmo mais rápido para a função f()
+      >-Adicionado classe X para lidar com erros do usuário"
+
+
+  - Todas as modificações lógicas que envolvem vários arquivos devem
+    ser commitadas em uma mesma leva, a não ser que um ou mais arquivos
+    envolvidos contenham outras modificações. Neste último caso,
+    o arquivo poderá ser commitado separadamente, mas com a mesma
+    mensagem do commit da leva, além da mensagem descrevendo as 
+    modificações específicas.
+
+    Ex 1: A.cpp e B.cpp foram modificados. A.cpp teve o nome de uma função
+    modificada, e B.cpp, por usar esta função, teve que ser modificado também.
+    Os dois arquivos, A.cpp e B.cpp devem ser commitados em conjunto:
+
+      $ svn ci a.cpp b.cpp -m"-Função func() renomeada para f()"
+
+
+    Ex 2: A.cpp e B.cpp foram modificados. A.cpp melhorou um algoritmo e 
+    modificou o nome de uma função. B.cpp, por utilizar esta função, teve que
+    ser modificado também. Os dois arquivos, A.cpp e B.cpp podem ser
+    commitdos separadamente:
+
+      $ svn ci A.cpp -m"-Função func() renomeada para f()
+      >-Utilizando algoritmo xyz para a funcao z()"
+ 
+      $ svn ci B.cpp -m"-Função func() renomeada para f()"
+
+      Note que a mesma mensagem da mudança da função foi utilizada nos dois
+      commits.
+
+   Ou em conjunto (o que ficar mais claro para quem ler os Logs :-)
+
+      $ svn ci A.cpp B.cpp -m"-Função func() renomeada para f()
+      >-Utilizando algoritmo xyz para a funcao z() em A.cpp"
+
+
+  -Mensagens de modificações que resolvem bugs devem ser precedidos por BUGFIX:
+
+     $svn ci A.cpp -m"BUGFIX: resolvido bug ao fazer atribuição de inteiros"
+
+  -Mensagens de modificações que representam novas funcionalidades ou algo 
+   visível/relevante para o usuário devem iniciar com NEW:
+
+     $svn ci A.cpp -m"NEW: estruturas caso/repita agora são suportados"
+
+  -Mensagens que devem ser ignoradas devem iniciar com DEVNULL
+
+     $svn ci A.cpp -m"DEVNULL: identacão de código corrigida"
+
+
+ Ex 3: Misturando tudo:
+
+
+    $ svn ci -m"-Função func() renomeada para f()
+    > BUGFIX:
+    -Resolvido bug ao depurar arrays de literais
+    -Resolvido bug ao fazer atribuição de inteiros
+    NEW:
+    -Adicionado suporte a estruturas caso/repita
+    -Adicionado suporte a estruturas eterogêneas
+    DEVNULL: 
+    -retirado texto commitado acidentalmente
+    REGULAR:
+    -Adicionado gerador de código para caso/repita"
+
+   No exemplo acima, 2 mensagens são de bugfix, 2 são de novidades,
+   1 será ignorada e 2 (a primeira e a última) são mensagens normais.
+ 
+   Portanto, todas as keywords são flags que marcam o texto a seguir em diante.
+   REGULAR, portanto, resolve para o default, que são mensagens normais.
+
+
+  Estas convenções devem ser seguidas para a geração de arquivos ChangeLog
+  e NEWS automatizada. ChangeLog reunirá todas as modificações feitas em um 
+  período, ignorando mensagens marcadas com DEVNULL, e exibindo mensagens 
+  normais e de bugfix. O arquivo NEWS conterá mensagens marcadas com NEW
+  e bugfixes.
+
+  Além do mais, BUGFIX pode ser seguido de um número (ie #1234), que representa
+  o número do bug em um sistema de gerencia de bugs, como bugzilla. Porém
+  ainda não usamos tal sistema.

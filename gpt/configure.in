@@ -66,32 +66,37 @@ dnl------------------------------
 dnl Checks for ANTLR
 dnl------------------------------
 
-AC_ARG_WITH(antlr,
-    [  --with-antlr=PATH  caminho da instalacao do ANTLR (ex: /usr/local)],
-[
-  AC_PATH_PROG(ANTLR, "${antlr}bin/antlr", no, $withval)
-  ANTLR_BIN="${ANTLR}"
-],
-[
-  AC_PATH_PROG(ANTLR, antlr)
-  ANTLR_BIN="antlr"
-])
-
-ANTLR_LIB=`${ANTLR_BIN}-config --libs`
-ANTLR_INC=`${ANTLR_BIN}-config --cflags`
-
-AC_SUBST(ANTLR_BIN)
-AC_SUBST(ANTLR_INC)
-AC_SUBST(ANTLR_LIB)
+AC_PATH_PROG(ANTLR_BIN, antlr)
 
 if test "x${ANTLR}" = "x"; then
+  AC_PATH_PROG(ANTLR_BIN, runantlr)
+fi
+
+if test "x${ANTLR_BIN}" = "x"; then
   AC_MSG_ERROR(
   [
-    O programa "antlr" nao foi encontrado no seu sistema (PATH).
+    O programa "antlr" (ou runantlr) nao foi encontrado no seu sistema (PATH).
     GPT precisa do ANTLR (versao 2.7.5) instalado.
     Baixe em: http://www.antlr.org
   ])
 fi
+
+AC_PATH_PROG(ANTLR_CFG, antlr-config)
+if test "x${ANTLR_CFG}" = "x"; then
+  AC_MSG_ERROR(
+  [
+    O programa "antlr-config" nao foi encontrado no seu sistema (PATH).
+    GPT precisa do ANTLR (versao 2.7.5) instalado.
+    Baixe em: http://www.antlr.org
+  ])
+fi
+
+ANTLR_LIB=`${ANTLR_CFG} --libs`
+ANTLR_INC=`${ANTLR_CFG} --cflags`
+
+AC_SUBST(ANTLR_BIN)
+AC_SUBST(ANTLR_INC)
+AC_SUBST(ANTLR_LIB)
 
 
 dnl------------------------------
@@ -111,6 +116,8 @@ else
     Baixe em: http://www.pcre.org/
   ])
 fi
+
+#pcrecpp
 
 PCRE_INC=`${PCRE_CONFIG} --cglags`
 PCRE_LIB="-L`${PCRE_CONFIG} --prefix`/lib -lpcrecpp"

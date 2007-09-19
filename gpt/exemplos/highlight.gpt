@@ -5,11 +5,11 @@
 */
 
 //palavras chave
-fim-variáveis
+fim-variÃ¡veis
 algoritmo
-variáveis
-início
-função
+variÃ¡veis
+inÃ­cio
+funÃ§Ã£o
 fim
 
 //tipos de dado
@@ -24,8 +24,8 @@ caractere
 caracteres
 literal
 literais
-lógico
-lógicos
+lÃ³gico
+lÃ³gicos
 
 //valores booleanos
 verdadeiro
@@ -39,34 +39,34 @@ falso
 
 //estruturas de controle
 se
-senão
-então
+senÃ£o
+entÃ£o
 fim-se
 enquanto
-faça
+faÃ§a
 fim-enquanto
 para
 de
-até
+atÃ©
 passo
-até
+atÃ©
 fim-para
 retorne
 
 //operadores
-e ou não := | ^ < ~  = < <= > >= + - / * %
+e ou nÃ£o := | ^ < ~  = < <= > >= + - / * %
 
 
 //simbolos
 ( ) [ ] ; : ,
 
 
-//funções incorporadas
+//funÃ§Ãµes incorporadas
 leia
 imprima
 
 //variaveis
 var
 
-//funções de usuário    
+//funÃ§Ãµes de usuÃ¡rio    
 fazerAlgo()

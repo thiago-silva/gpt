@@ -1,5 +1,5 @@
 algoritmo olamundo;
 
-inÌcio
-  imprima("Ol· Mundo!");
+in√≠cio
+  imprima("Ol√° Mundo!");
 fim
