@@ -21,7 +21,7 @@ o Instalando dependências
   o seguinte comando:
 
   # aptitude install g++ make automake1.9 autoconf libtool antlr libantlr-dev \
-  > pcre libpcre3-dev nasm
+  > libpcrecpp0 libpcre3-dev nasm
 
 
 o Baixando a última versão do GPT
