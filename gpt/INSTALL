@@ -15,6 +15,9 @@ Instalação Usando os Fontes
         Assembler usado para compilação.
         http://sourceforge.net/projects/nasm
 
+    A instalação destes componentes está além do escopo deste documento.
+
+
   o  Comandos para compição e instalação padrão, assumindo um ambiente 
      GNU (GNU/Linux, MS Windows + MingW ou Cygwin, etc):
     
