@@ -14,9 +14,6 @@ o Instalando dependências
   - pcre e pcrecpp
   - nasm
 
-  Se quiser trabalhar na última versão do GPT, ainda é necessário obter o
-  programa Subversion, para acessar o repositório de código fonte.
-
   Para satisfazer estas dependências no (K)Ubuntu ou Debian, pode-se executar
   o seguinte comando:
 
@@ -27,7 +24,9 @@ o Instalando dependências
 o Baixando a última versão do GPT
 
   Para obter as últimas versões do código fonte do GPT, é necessário
-  fazer um checkout no repositório, utilizando o subversion.
+  fazer um checkout no repositório, utilizando o subversion. Para instala-lo, use o seguinte comando:
+
+  # aptitude install subversion 
 
   ex (checkout anônimo):
 
@@ -83,7 +82,7 @@ o Realizando commits
   -Toda mensagem de commit deve ser enviada em UTF-8 (para casos em que a 
    mensagem contenha acento)
 
-  -Toda descrição lógica deve iniciar em uma nova linha, prefixada pro "-".
+  -Toda descrição lógica deve iniciar em uma nova linha, prefixada por "-".
 
     Ex: Duas descrições para as modificações do arquivo A.cpp :
 
