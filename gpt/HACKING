@@ -79,8 +79,8 @@ o Realizando commits
 
   As mensagens de commit devem, idealmente, seguir pequenas convenções:
 
-  -Toda mensagem de commit deve ser enviada em UTF-8 (para casos em que a 
-   mensagem contenha acento)
+  -Toda mensagem de commit deve ser enviada utilizando ASCII, sem acentos.
+   (pelo menos, até termos os emails em gpt-commit exibidos corretamente)
 
   -Toda descrição lógica deve iniciar em uma nova linha, prefixada por "-".
 
@@ -168,3 +168,14 @@ o Realizando commits
   Além do mais, BUGFIX pode ser seguido de um número (ie #1234), que representa
   o número do bug em um sistema de gerencia de bugs, como bugzilla. Porém
   ainda não usamos tal sistema.
+
+o Unit Testing
+
+  -Todo código que pode se beneficiar de testes automatizados *devem* ter testes
+  automatizados. Versões de nós mesmos no futuro agradecem.
+  
+  -Mensagens de commit para arquivos de testes não são tão obrigatórios.
+  Use o bom senso para decidir se a descrição do commit ajudaria ou não.
+  
+
+  TODO: explicar a infraestrutura de testes (quando houver uma)
