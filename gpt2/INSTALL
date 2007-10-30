@@ -1,0 +1,83 @@
+Instalação Usando os Fontes
+===========================
+
+  o Pré-requisitos
+
+    - ANTLR:
+        Ferramenta para construção de compiladores (testado com v2.7.5).
+        http://www.antlr.org
+
+    - Perl Compatible Regular Expressions (testado com v6.4):
+        Biblioteca de expressões regulares.
+        http://www.pcre.org/
+
+    - NASM - The Netwide Assembler (testado com v0.89.39):
+        Assembler usado para compilação.
+        http://sourceforge.net/projects/nasm
+
+    A instalação destes componentes está além do escopo deste documento.
+
+
+  o  Comandos para compição e instalação padrão, assumindo um ambiente 
+     GNU (GNU/Linux, MS Windows + MingW ou Cygwin, etc):
+    
+    $ tar xvfz gpt-xxx.tar.gz
+    $ cd gpt-xxx
+    $ ./configure
+    $ make
+    $ make install
+
+    Se precisar de acesso root para o diretório alvo:
+
+    $ su
+    # make install
+
+
+  o  Opções de configuração
+
+    ANTLR:
+      Se você instalou o ANTLR em um diretório não-padrão ou se o 
+      binário "antlr" não pode ser encontrado pela variável de 
+      ambiente PATH, use o  argumento "--with-antlr-path".
+  
+      Exemplo:
+        $ ./configure --with-antlr=/path/to/antlr
+  
+      de forma que "/path/to/antlr" seja o caminho do antlr no sistema.
+
+
+    Devel:
+      Se você deseja que a biblioteca dinâmica (.so) e headers do 
+      compilador sejam instalados no sistema, execute o script 
+      "configure" da seguinte forma:
+
+      $ ./configure --enable-install-devel
+
+      Essa opcao é nescessária se você deseja utilizar a opção
+      "análise em segundo plano" do programa GPTEditor.
+
+      Nota: para desinstalar apenas os arquivos devel (header e libs) use:
+      
+      # make uninstall-devel
+
+
+  o Biblioteca padrão
+
+    Para utilizar a (pseudo) biblioteca padrão distribuida neste pacote
+    deve-se adicionar as variáveis de ambiente a variável GPT_INCLUDE
+    contendo o caminho do arquivo base.gpt. Exemplo (shell bash):
+
+      Adicione ao script de inicialização de ambiente:
+
+      export GPT_INCLUDE="/usr/local/lib/gpt/base.gpt"
+
+    Outros arquivos podem ser incluídos, separando os caminhos por ":".
+
+  o  Outras opções
+
+    Para maiores detalhes, leia INSTALL.default
+
+  o Se o código fonte foi baixado diretamente do repositório, é necessário
+    gerar o script "configure", executando o seguinte comando:
+
+      $ make -f Makefile.cvs

@@ -1,0 +1,5 @@
+algoritmo olamundo;
+
+início
+  imprima("Olá Mundo!");
+fim

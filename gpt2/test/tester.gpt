@@ -1,0 +1,548 @@
+/* algoritmo para testar comportamento da linguagem */
+/* Nota: nao testar errors de compilacao aqui */
+
+algoritmo tester;
+
+variáveis
+  i : inteiro;
+  r : real;
+  l : lógico;
+  c : caractere;
+  str : literal;  
+  mat: matriz[2] de inteiros;
+fim-variáveis
+
+início
+  testar_inicializacao();
+  testar_expr_aritm();
+  testar_expr_log();
+
+  testar_matriz_carac();
+  testar_matriz_literais();  
+  testar_enquanto();
+  testar_para();
+
+
+  testar_funcoes();
+
+//overflow de inteiros, caracteres logicos e reais
+  //testar_overflow();
+
+//testar_castings();
+
+fim
+
+função testar_inicializacao()
+  local : inteiro;
+início
+  se i <> 0 então
+    imprima("testar_inicializacao: i <> 0");
+  fim-se
+
+  se r <> 0 então
+    imprima("testar_inicializacao: r <> 0");
+  fim-se
+
+  se r <> 0.0 então
+    imprima("testar_inicializacao: r <> 0.0");
+  fim-se
+
+  se l <> 0 então 
+    imprima("testar_inicializacao: l <> 0");
+  fim-se
+
+  se l <> falso então
+    imprima("testar_inicializacao: l <> falso");
+  fim-se
+
+  se str <> "" então
+    imprima("testar_inicializacao: str <> \"\"");
+  fim-se
+
+  se local <> 0 então
+    imprima("testar_inicializacao: local <> 0");
+  fim-se
+
+  para local de 0 até 1 faça  
+    se mat[local] <> 0 então
+      imprima("testar_inicializacao: mat[",local,"] <> 0");
+    fim-se
+  fim-para
+
+  se local <> 1 então
+    imprima("testar_inicializacao: local <> 2");
+  fim-se  
+fim
+
+função testar_expr_aritm()
+início
+
+  se verdadeiro então
+    //
+  senão
+    imprima("testar_expr_aritm: se verdadeiro");
+  fim-se
+
+  se falso então
+    imprima("testar_expr_aritm: se falso");
+  fim-se
+
+  se não verdadeiro então
+    imprima("testar_expr_aritm: se não verdadeiro");
+  fim-se
+    
+  se 2 + 2 então
+    //ok
+  senão  
+    imprima("testar_expr_aritm: 2 + 2");
+  fim-se
+
+  se 2 - 2 então
+    imprima("testar_expr_aritm: 2 - 2");
+  fim-se
+
+  se 2 + 2 <> 4 então
+    imprima("testar_expr_aritm: 2 + 2 <> 4");
+  fim-se
+
+  se não (2 - 2) então
+    //
+  senão
+    imprima("testar_expr_aritm: se não (2-2)");  
+  fim-se
+
+  se 10 + 2 * 3 <> 16 então
+    imprima("testar_expr_aritm: 10 + 2 * 3 <> 16");
+  fim-se
+  
+  se 10 + 2 * 3 - 12 / 3 <> 12 então
+    imprima("testar_expr_aritm: 10 + 2 * 3 - 12 / 3 <> 12");
+  fim-se
+
+  se (10 + 2) * (12 - 10) / 3 <> 8 então
+    imprima("testar_expr_aritm: (10 + 2) * (12 - 10) / 3 <> 8");
+  fim-se
+  
+  se 0b101 <> 5 então
+    imprima("testar_expr_aritm: 0b101 <> 5");
+  fim-se
+
+  se 0xA <> 10 então
+    imprima("testar_expr_aritm: 0xA <> 10");
+  fim-se
+
+  se 0c10 <> 8 então
+    imprima("testar_expr_aritm: 0c10 <> 8");
+  fim-se
+
+  se 10 * -1 <> -10 então
+    imprima("testar_expr_aritm: 10 * -1 <> -10");
+  fim-se
+
+  se 10 - 5.5 <> 4.5 então
+    imprima("testar_expr_aritm: 10 - 5.5 <> 4.5");
+  fim-se
+
+  se 5.5 - 1 <> 4.5 então
+    imprima("testar_expr_aritm: 5.5 - 1 <> 4.5");
+  fim-se
+
+  se 5.5 * 2 <> 11 então
+    imprima("testar_expr_aritm: 5.5 * 2 <> 11");
+  fim-se
+
+  se 2 * 5.5  <> 11 então
+    imprima("testar_expr_aritm: 2 * 5.5  <> 11");
+  fim-se
+
+  se 1 + 2 * 5.5  <> 12 então
+    imprima("testar_expr_aritm: 1 + 2 * 5.5  <> 12");
+  fim-se
+
+  se 1 + 5.5 * 2 <> 12 então
+    imprima("testar_expr_aritm: 1 + 5.5 * 2 <> 12");
+  fim-se
+
+  se 5 / 2 <> 2 então
+    imprima("testar_expr_aritm: 5 / 2 <> 2");
+  fim-se
+  
+  se 5.0 / 2 <> 2.5 então
+    imprima("testar_expr_aritm: 5.0 / 2 <> 2.5");
+  fim-se
+
+  se 1 + 5.0 / 2 <> 3.5 então
+    imprima("testar_expr_aritm: 1 + 5.0 / 2 <> 3.5");
+  fim-se
+
+  se 1 > 2 então
+    imprima("testar_expr_aritm: 1 > 2");
+  fim-se
+
+  se 1 >= 2 então
+    imprima("testar_expr_aritm: 1 >= 2");
+  fim-se
+
+  se 1 >= 1 então
+  senão
+    imprima("testar_expr_aritm: 1 >= 1");
+  fim-se
+
+  se 2 < 1 então
+    imprima("testar_expr_aritm: 2 < 1");
+  fim-se
+
+  se 2 <= 1 então
+    imprima("testar_expr_aritm: 2 <= 1");
+  fim-se
+
+  se 2 <= 2 então
+  senão
+    imprima("testar_expr_aritm: 2 <= 1");
+  fim-se
+
+fim
+
+função testar_expr_log()
+início
+  se verdadeiro e verdadeiro então
+  senão
+    imprima("testar_expr_log: verdadeiro e verdadeiro");
+  fim-se
+
+  se verdadeiro e falso então
+    imprima("testar_expr_log: verdadeiro e falso");
+  fim-se
+
+  se falso e verdadeiro então
+    imprima("testar_expr_log: falso e verdadeiro");
+  fim-se
+
+  se falso e falso então
+    imprima("testar_expr_log: falso e falso");
+  fim-se
+
+  se verdadeiro ou verdadeiro então
+  senão
+    imprima("testar_expr_log: verdadeiro ou verdadeiro");
+  fim-se
+
+  se verdadeiro ou falso então
+  senão
+    imprima("testar_expr_log: verdadeiro ou falso");
+  fim-se
+
+  se falso ou verdadeiro então
+  senão
+    imprima("testar_expr_log: falso ou verdadeiro");
+  fim-se
+
+  se falso ou falso então
+    imprima("testar_expr_log: falso ou falso");
+  fim-se
+
+
+  //not
+  se não (verdadeiro e verdadeiro) então
+    imprima("testar_expr_log: não verdadeiro e verdadeiro");
+  fim-se
+
+  se não (verdadeiro e falso) então
+  senão
+    imprima("testar_expr_log: não verdadeiro e falso");
+  fim-se
+
+  se não (falso e verdadeiro) então
+  senão
+    imprima("testar_expr_log: não falso e verdadeiro");
+  fim-se
+
+  se não (falso e falso) então
+  senão
+    imprima("testar_expr_log: não falso e falso");
+  fim-se
+
+  se não (verdadeiro ou verdadeiro) então
+    imprima("testar_expr_log: não verdadeiro ou verdadeiro");
+  fim-se
+
+  se não (verdadeiro ou falso) então
+    imprima("testar_expr_log: não verdadeiro ou falso");
+  fim-se
+
+  se não (falso ou verdadeiro) então
+    imprima("testar_expr_log: não falso ou verdadeiro");
+  fim-se
+
+  se não (falso ou falso) então
+  senão
+    imprima("testar_expr_log: não falso ou falso");
+  fim-se
+
+  //operadores binarios &, |, ^
+
+  se (5 & 0b100) <> 4 então
+    imprima("testar_expr_log: 5 & 0b100 <> 4");
+  fim-se
+
+  //<> maior precedencia que |
+  se 0b101 | 2 <> 7 então
+  senão
+    imprima("testar_expr_log: 0b101 | 2 <> 7");
+  fim-se
+
+  se (0b101 | 2) <> 7 então
+    imprima("testar_expr_log: 0b101 | 2 <> 7");
+  fim-se
+
+  se (0b1011 ^ 0b0101) <> 14 então
+    imprima("testar_expr_log: (0b1011 ^ 0b0101) <> 14");
+  fim-se
+
+  se ~4 <> -5 então
+    imprima("testar_expr_log: ~4 <> -5");
+  fim-se
+fim
+
+
+função testar_matriz_carac()
+  gg: matriz[2][3] de caracteres;
+  i,j: inteiro;
+início  
+
+  para i de 0 até 1 faça
+    para j de 0 até 2 faça      
+      se gg[i][j] <> '' ou  gg[i][j] <> 0 então
+        imprima("testar_matriz_carac: gg[i][j] <> \"\"");
+      fim-se
+      c := c + 1;
+    fim-para
+  fim-para
+
+  gg[0][0] := 'a';
+  gg[0][1] := 'b';
+  gg[0][2] := 'c';
+  gg[1][0] := 'd';
+  gg[1][1] := 'e';
+  gg[1][2] := 'f';
+
+  matriz_carac_func(gg);
+fim
+
+função matriz_carac_func(qq: matriz[2][3] de caracteres)
+  cp : matriz[6] de caracteres;
+  i : inteiro;
+  j : inteiro;
+  c : inteiro;
+início  
+  cp[0] := 'a';
+  cp[1] := 'b';
+  cp[2] := 'c';
+  cp[3] := 'd';
+  cp[4] := 'e';
+  cp[5] := 'f';
+
+  para i de 0 até 1 faça
+    para j de 0 até 2 faça      
+      se qq[i][j] <> cp[c] então        
+        imprima("matriz_carac_func: qq[i][j] <> cp[c]");
+      fim-se
+      c := c + 1;
+    fim-para
+  fim-para
+
+fim
+
+função testar_matriz_literais()
+  gg : matriz[2][3] de literais;
+  i,j: inteiro;
+início
+
+  para i de 0 até 1 faça
+    para j de 0 até 2 faça
+      se gg[i][j] <> "" então
+        imprima("testar_matriz_literais: gg[i][j] <> \"\"");
+      fim-se
+      c := c + 1;
+    fim-para
+  fim-para
+
+  gg[0][0] := "oi1";
+  gg[0][1] := "oi2";
+  gg[0][2] := "oi3";
+  gg[1][0] := "oi4";
+  gg[1][1] := "oi5";
+  gg[1][2] := "oi6";
+
+  matriz_lit_func(gg);
+fim
+
+função matriz_lit_func(qq: matriz[2][3] de literais)
+  cp : matriz[6] de literais;
+  i : inteiro;
+  j : inteiro;
+  c : inteiro;
+início
+  cp[0] := "oi1";
+  cp[1] := "oi2";
+  cp[2] := "oi3";
+  cp[3] := "oi4";
+  cp[4] := "oi5";
+  cp[5] := "oi6";
+
+  para i de 0 até 1 faça
+    para j de 0 até 2 faça
+      se qq[i][j] <> cp[c] então
+        imprima("testar_matriz_literais: qq[i][j] <> cp[c]");
+      fim-se
+      c := c + 1;
+    fim-para
+  fim-para
+
+fim
+
+função testar_enquanto()
+  local : inteiro;
+  z : inteiro;
+início
+
+  enquanto não local faça
+    
+    se z = 0 então
+      z := 1;    
+    fim-se
+  
+    se z = 1 então
+      local := 1;
+    fim-se
+  fim-enquanto
+
+  se local <> 1 ou z <> 1 então
+    imprima("testar_enquanto: local <> 1 e z <> 1");
+  fim-se
+fim
+
+função testar_para()
+  str : inteiro; //shadow global str
+  g : inteiro;
+início
+
+  para str de 0 até 4 faça
+    g := g + str;
+  fim-para
+
+  se g <> 10 ou str <> 4 então
+    imprima("testar_para: g <> 10 ou str <> 4");
+  fim-se
+
+  g := 0;
+  para str de 0 até 10 passo 2 faça
+    g := g + str;
+  fim-para
+
+  se g <> 30 ou str <> 10 então
+    imprima("testar_para: g <> 30 ou str <> 10");
+  fim-se
+  
+  g := 30;
+  para str de 10 até 0 passo -2 faça
+    g := g - str;
+  fim-para  
+
+  se g <> 0 ou str <> 0 então
+    imprima("testar_para: g <> 0 ou str <> 0");
+  fim-se
+fim
+
+
+
+função testar_funcoes()
+  lit : literal;
+  mm  : matriz[2] de inteiros;
+  i : inteiro;
+  r : real;
+início
+  mm[0] := -7;
+  mm[1] := -8;
+
+  lit := f(13, 5.5, mm, 'a');
+  se lit <> "ok" então
+    imprima("testar_funcoes: lit <> \"oi\"");
+  fim-se
+
+  se mm[0] = 99 então
+    imprima("testar_funcoes: mm[0] = 99");
+  fim-se
+
+  se mm[0] <> -7 então
+    imprima("testar_funcoes: mm[0] <> -7");
+  fim-se
+
+  mm[0] := 0;
+  mm[1] := 0;
+  lit := f(1,0, mm, 0);
+
+  se lit <> "ret" então
+    imprima("testar_funcoes: lit <> \"ret\"");
+  fim-se
+
+  r := f2(2.6);
+
+  i := r + 0.5;
+  se i <> 6 então
+    imprima("testar_funcoes: i <> 6");
+  fim-se
+
+  i := f2(2.6);
+  se i <> 5 então
+    imprima("testar_funcoes: i <> 5");
+  fim-se
+
+  r := f3();
+  se r <> 99 então
+    imprima("testar_funcoes: r <> 99");
+  fim-se
+
+  f2('\n'-8);
+  f4(2);
+fim
+
+função f(x:inteiro, r:real, m: matriz[2] de inteiros, c: caractere) : literal
+  count : inteiro;
+início
+  count := x + r + m[0] + m[1] + c + 0.5;
+  
+  se count = 1 então
+    retorne "ret";
+  fim-se
+    
+  se count <> 101 então
+    imprima("f: count <> 101");
+  fim-se
+
+  m[0] := 99;
+
+  retorne "ok";
+fim
+
+função f2(x: inteiro) : real
+início
+  se x <> 2 então
+    imprima("f2: x <> 2");
+  fim-se
+
+  retorne 5.6;
+fim
+
+função f3() : inteiro
+início
+  retorne 99;
+fim
+
+função f4(r:real)
+início
+  se r <> 2 então
+    imprima("f4: r <> 2");
+  fim-se
+fim
+

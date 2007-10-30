@@ -1,0 +1,105 @@
+.\" Copyright 2003-2005, Thiago Silva
+.\" All rights reserved.
+.\"
+.\" Redistribution and use in source and binary forms, with or without
+.\" modification, are permitted provided that the following conditions
+.\" are met:
+.\" 1. Redistributions of source code must retain the above copyright
+.\"    notice, this list of conditions and the following disclaimer.
+.\" 2. Redistributions in binary form must reproduce the above copyright
+.\"    notice, this list of conditions and the following disclaimer in the
+.\"    documentation and/or other materials provided with the distribution.
+.\" 3. Neither the name of Julianne F. Haugh nor the names of its contributors
+.\"    may be used to endorse or promote products derived from this software
+.\"    without specific prior written permission.
+.\"
+.\" THIS SOFTWARE IS PROVIDED BY THIAGO SILVA AND CONTRIBUTORS 
+.\" ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+.\" THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+.\" ARE DISCLAIMED.  IN NO EVENT SHALL JULIE HAUGH OR CONTRIBUTORS BE LIABLE
+.\" FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+.\" OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+.\" HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+.\" LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+.\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+.\" SUCH DAMAGE.
+.\"
+.\"
+.TH GPT 1
+.SH NOME
+gpt \- compilador, interpretador e tradutor da linguagem G-Portugol
+
+.SH SINOPSE
+  gpt 
+[ 
+.BR \-vhid
+] [
+.BI \-ots  
+arq_saida 
+] arquivo1 arquivo2 ...
+
+.SH DESCRIÇÃO
+.I gpt
+é um compilador simples para a linguagem G-portugol. Além de criar executáveis,
+pode interpretar algoritmos e traduzí-los para a linguagem C. Um algoritmo pode 
+ser formado por vários arquivos, cada um podendo conter várias funções, por 
+exemplo. Os arquivos são passados na linha de comando, sendo que o primeiro 
+arquivo deve ser aquele que contém o bloco principal e a declaração do algoritmo. 
+É possível, também, ter a lista de arquivos adicionadas automaticamente 
+utilizando a variável de ambiente GPT_INCLUDE, que deve conter o caminho de 
+cada arquivo separado por ":". 
+.SH OPTIONS
+.TP
+.BI \-v
+Exibe informações de versão e termina execução.
+.br
+.ns
+.TP
+.BI \-h
+Exibe sumário de opções termina execução.
+.br
+.ns
+.TP
+.TP
+.BI \-i
+Executa o algoritmo em modo 
+.I interpretação.
+.br
+.ns
+.TP
+.BI \-d
+Mostra dicas no relatório de erros.
+.br
+.ns
+.TP
+.BI \-o " arq_saída" 
+Compila o algoritmo e salva o arquivo executável com o nome
+.I arq_saída.
+.br
+.ns
+.TP
+.BI \-t " arq_saída"
+Traduz o algoritmo para a linguagem C e salva o arquivo com o código resultante
+como
+.I arq_saída.
+.br
+.ns
+.TP
+.BI \-s " arq_saída"
+Compila o algoritmo mas não cria código executável. Salva o arquivo com código em assembly como
+.I arq_saída.
+.br
+.ns
+.SH VEJA TAMBÉM
+.BR nasm (1)
+
+.SH INFORMAÇÕES ADICIONAIS
+
+Para maiores informações, visite o website em: 
+.br
+.BI http://gpt.berlios.de
+
+.SH AUTOR
+Thiago Silva <thiago.silva@kdemail.net>
+
