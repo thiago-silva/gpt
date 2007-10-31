@@ -4,30 +4,21 @@
 #include <vector>
 using namespace std;
 
-
-
-// TODO: talvez nao precise de todos esses headers abaixo...
-#include <antlr/config.hpp>
-#include <antlr/TokenStream.hpp>
-#include <antlr/TokenBuffer.hpp>
-#include <antlr/NoViableAltException.hpp>
-#include <antlr/LLkParser.hpp>
 #include "PortugolParserTokenTypes.hpp"
 
-
-
-
-
-//#include "GASMFE_CArgument.hpp"
 #include "GASMFE_CSubroutine.hpp"
 
 class CArguments : public vector<antlr::RefToken> // usar list :-)
 {
 public:
-	CArguments( CSubroutine *subroutine );
-	// TODO: subroutine no construtor
+	CArguments( );
+	void init( CSubroutine* subroutine, const string &subroutineName );
 	void emitMnsInSubroutineCall( );
+	void setSubroutineName( const string &_name ) {
+		_subroutineName = _name;
+	}
 private:
+	string _subroutineName;
 	CSubroutine *_subroutine;
 };
 

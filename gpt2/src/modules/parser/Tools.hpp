@@ -1,5 +1,5 @@
-#ifndef ASG_TOOLS_H
-#define ASG_TOOLS_H
+#ifndef GPT_TOOLS_H
+#define GPT_TOOLS_H
 
 #include <iomanip>
 
@@ -32,5 +32,6 @@ string alltrim(string);
 string wo_ctrl_chrs(string str, char = ' ');
 bool streamtoken(istringstream&, string&, string&);
 // string& getStringWithTab(string, string);
+const string typeToText(const int &type);
 
 #endif

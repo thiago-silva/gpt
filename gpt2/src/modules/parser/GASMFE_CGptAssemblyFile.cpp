@@ -14,23 +14,24 @@ CGptAssemblyFile::~CGptAssemblyFile( )
 
 void CGptAssemblyFile::makeFileHeader( const string &filename )
 {
-//		writeln( "///////////////////////////////////////////////////" );
-//		writeln( "// Programa XXX.hasm gerado a partir de XXX.gpt //" );
-//		writeln( "///////////////////////////////////////////////////" );
-}
-
-
-void CGptAssemblyFile::makeBeingHeader( const string &being )
-{
-//		writeln( "///////////////" );
-//		writeln( "// Being XXX //" );
-//		writeln( "///////////////" );
+	writeln( "// Programa XXX.gasm gerado a partir de XXX.gpt" );
 }
 
 
 void CGptAssemblyFile::makeProcedureHeader( const string &name )
 {
-		writeln( "//****" );
-		writeln( string( "// Procedure " ) + name );
-		writeln( "//****" );
+	writeln( string( "// Procedure " ) + name );
 }
+
+
+void CGptAssemblyFile::makeProcedureFooter( )
+{
+	writeln( "// Fim da procedure" );
+	writeln( );
+}
+
+
+void CGptAssemblyFile::makeFileFooter( )
+{
+}
+

@@ -51,6 +51,7 @@ options {
       COptions options;
       CAsmProgram  *asmPrg;
       CSubroutine *subroutine;
+      CArguments args;
       void initParser( )
       {
          options.sourcefile = "xxx.gpt";
@@ -339,18 +340,17 @@ termo returns [RefToken tk_ret]
 //  ;
 
 chamada_subrotina
-  : tk_id:T_IDENTIFICADOR T_ABREP (lista_argumentos)? T_FECHAP
+  : tk_id:T_IDENTIFICADOR T_ABREP
+    ( {args.init( subroutine, tk_id->getText( ) ); } lista_argumentos { args.emitMnsInSubroutineCall( ); })? T_FECHAP
     { subroutine->emitPCALLMn( tk_id->getText( ) ); }
   ; 
 
 lista_argumentos
 {
    RefToken exp;
-   CArguments args(subroutine);
 }
   : exp=expressao { args.push_back( exp ); }
     (T_COMMA exp=expressao { args.push_back( exp ); } )*
-    { args.emitMnsInSubroutineCall( ); }
   ;
 
 literal

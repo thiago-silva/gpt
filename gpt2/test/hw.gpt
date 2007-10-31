@@ -1,8 +1,5 @@
-algoritmo teste ;
+algoritmo teste;
 
 início
-    v := 2;
-    imprima( 1 );
     imprima( "Hello world !!!" );
 fim
-

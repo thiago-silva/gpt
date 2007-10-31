@@ -18,6 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#include "PortugolParserTokenTypes.hpp"
+
 #include "Tools.hpp"
 
 
@@ -233,3 +235,20 @@ bool streamtoken(istringstream& stream, string& key, string& val) {
 
      return !stream.eof();
 }
+
+
+const string typeToText(const int &type)
+{
+   if (type == PortugolParserTokenTypes::T_INT_LIT) {
+      return "int";
+   } else if (type == PortugolParserTokenTypes::T_CARAC_LIT) {
+      return "carac lit ???";
+   } else if (type == PortugolParserTokenTypes::T_STRING_LIT) {
+      return "string";
+   } else if (type == PortugolParserTokenTypes::T_IDENTIFICADOR) {
+      return "id";
+   }
+
+   return "ERRO !!!";
+}
+

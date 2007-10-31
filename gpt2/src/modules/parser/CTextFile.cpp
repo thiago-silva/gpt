@@ -1,14 +1,14 @@
 #include "CTextFile.hpp"
 
 
-/*inline*/ CTextFile::CTextFile( const string &filename, const string &chrTab )
+CTextFile::CTextFile( const string &filename, const string &chrTab )
 	: _chrTab( chrTab ), _emitTab( true )
 {
 	_file = new ofstream( filename.c_str( ) );
 }
 
 
-/*inline*/ CTextFile::~CTextFile( )
+CTextFile::~CTextFile( )
 {
 	delete _file;
 }
@@ -41,14 +41,13 @@ void CTextFile::write( const string &message )
 }
 
 
-/*inline*/
 void CTextFile::incTab( )
 {
     _tabs += _chrTab;
 }
 
 
-/*inline*/ void CTextFile::decTab( )
+void CTextFile::decTab( )
 {
     _tabs.erase( _tabs.length( ) - _chrTab.length( ), _chrTab.length( ) );
 }

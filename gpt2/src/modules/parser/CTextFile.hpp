@@ -1,5 +1,5 @@
-#ifndef CTEXT_FILE_H
-#define CTEXT_FILE_H
+#ifndef GPT_CTEXT_FILE_H
+#define GPT_CTEXT_FILE_H
 
 #include <string>
 #include <fstream>
@@ -8,14 +8,13 @@ using namespace std;
 class CTextFile
 {
 public:
-	/*inline*/ CTextFile( const string &filename, const string &chrTab = "\t" );
-	/*inline*/ ~CTextFile( );
+	CTextFile( const string &filename, const string &chrTab = "\t" );
+	~CTextFile( );
 	void writeln( const string &message );
 	void writeln( );
 	void write( const string &message );
-	/*inline*/
 	void incTab( );
-	/*inline*/ void decTab( );
+	void decTab( );
 	CTextFile& operator << ( const string &message );
 private:
 	string _chrTab;

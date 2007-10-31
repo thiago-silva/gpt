@@ -1,6 +1,6 @@
 #include "GASMFE_CContext.hpp"
 
-CContext::CContext( ) : _arity(0), lastStoredVar(NULL), lastInvocationType(IT_QU)
+CContext::CContext( ) : _arity(0), lastStoredVar(NULL)//, lastInvocationType(IT_QU)
 {
 }
 

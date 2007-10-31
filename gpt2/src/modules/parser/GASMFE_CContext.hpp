@@ -24,8 +24,8 @@ public:
 	string tempVar1;
 	string tempVar2;
 //	CArguments arguments;
-	int lastInvocationType;
-	int blackboardType;
+//	int lastInvocationType;
+//	int blackboardType;
 };
 
 #endif

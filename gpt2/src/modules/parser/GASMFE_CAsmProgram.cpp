@@ -6,10 +6,16 @@ CAsmProgram::CAsmProgram( COptions *options )
 {
 	_file = new CGptAssemblyFile( _options->destfile );
 	_file->makeFileHeader( _options->destfile );
+	_file->writeln( "program " + _options->destfile );
+	_file->writeln( );
 }
 
 CAsmProgram::~CAsmProgram( )
 {
+	_file->makeFileFooter( );
+
+	_file->writeln( "end-program" );
+
 	delete _file;
 }
 

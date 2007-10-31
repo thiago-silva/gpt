@@ -1,5 +1,5 @@
-#ifndef CTEMPORARY_SYMBOL_H
-#define CTEMPORARY_SYMBOL_H
+#ifndef GPT_CTEMPORARY_SYMBOL_H
+#define GPT_CTEMPORARY_SYMBOL_H
 
 #include <string>
 

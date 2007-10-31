@@ -7,10 +7,10 @@ using namespace std;
 
 
 CSubroutine::CSubroutine( COptions *options, CGptAssemblyFile *file, const string &name )
-	: _options( options ), _file( file ), _lastSourceLine( 0 )
+	: _options( options ), _file( file ), _name( name ), _lastSourceLine( 0 )
 {
-	_file->makeProcedureHeader( name );
-	_file->writeln( "proc " + name );
+	_file->makeProcedureHeader( _name );
+	_file->writeln( "proc " + _name );
 	_file->incTab( );
 
 	if ( _options->sentences ) {
@@ -27,7 +27,9 @@ CSubroutine::~CSubroutine( )
 	//}
 
 	_file->decTab( );
-	_file->writeln( "end" );
+	_file->writeln( "end-proc" );
+
+	_file->makeProcedureFooter( );
 }
 
 
@@ -57,7 +59,7 @@ void CSubroutine::addParam( const string &name )
 void CSubroutine::emitCodeToLoadParamValues( )
 {
 	for( int param = _params.size( )-1; param >= 0; param-- ) {
-		emitLVMn( _params[param] );
+		//emitLVMn( _params[param] );
 	}
 }
 
@@ -74,307 +76,36 @@ void CSubroutine::emitISETMn( const string &var, const string &value )
 }
 
 
-void CSubroutine::emitPUSHMn( const string &literal )
+void CSubroutine::emitPUSHMn( const antlr::RefToken &_token, const bool &_pushType )
 {
-	writeln( string("push ") + literal );
+//	writeln( string("push ") + literal );
+   if (_token->getType( ) == PortugolParserTokenTypes::T_STRING_LIT) {
+      writeln( string("push \"") + _token->getText( ) + "\"" );
+   } else {
+      writeln( string("push ") + _token->getText( ) );
+   }
+   if (_pushType) {
+      writeln( string("push_") + typeToText( _token->getType( ) ) );
+   }
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void CSubroutine::emitSVMn(const string &var)
+void CSubroutine::emitPUSHMn( const int& value )
 {
-	writeln( string("sv ") + var );
+   writeln( string("push ") + itoa( value ) );
 }
 
 
-void CSubroutine::emitLVMn(const string &var)
-{
-	writeln( string("lv ") + var );
-}
-
-
-void CSubroutine::emitSIVMn(const string &var)
-{
-	writeln( string("siv ") + var );
-}
-
-
-void CSubroutine::emitLIVMn(const string &var)
-{
-	writeln( string("liv ") + var );
-}
-
-
-void CSubroutine::emitADDMn( )
-{
-	writeln( "add" );
-}
-
-
-void CSubroutine::emitSUBMn( )
-{
-	writeln( "sub" );
-}
-
-
-void CSubroutine::emitMULMn( )
-{
-	writeln( "mul" );
-}
-
-
-void CSubroutine::emitDIVMn( )
-{
-	writeln( "div" );
-}
-
-
-void CSubroutine::emitINCMn( )
-{
-	writeln( "inc" );
-}
-
-
-void CSubroutine::emitDECMn( )
-{
-	writeln( "dec" );
-}
-
-
-void CSubroutine::emitLSBMn( const string &symbol )
-{
-	if ( symbol == "null" ) {
-		emitLNMn( );
-	} else {
-		writeln( string("lsb ") + symbol );
-	}
-}
-
+//void CSubroutine::emitADDMn( )
+//{
+//	writeln( "add" );
+//}
 
 void CSubroutine::emitLabel( const string &label )
 {
-	writeln( string(":") + label );
+	writeln( label + string(":") );
 }
 
-
-void CSubroutine::emitGTMn( )
-{
-	writeln( "gt" );
-}
-
-
-void CSubroutine::emitGEMn( )
-{
-	writeln( "ge" );
-}
-
-
-void CSubroutine::emitEQMn( )
-{
-	writeln( "eq" );
-}
-
-
-void CSubroutine::emitLEMn( )
-{
-	writeln( "le" );
-}
-
-
-void CSubroutine::emitLTMn( )
-{
-	writeln( "lt" );
-}
-
-
-void CSubroutine::emitNEMn( )
-{
-	writeln( "ne" );
-}
-
-
-void CSubroutine::emitIFNOTMn( const string &label )
-{
-	writeln( string("ifnot ") + label );
-}
-
-
-void CSubroutine::emitIFMn( const string &label )
-{
-	writeln( string("if ") + label );
-}
-
-
-void CSubroutine::emitGOTOMn( const string &label )
-{
-	writeln( string("goto ") + label );
-}
-
-
-void CSubroutine::emitSNMn( )
-{
-	writeln( "sn" );
-}
-
-
-void CSubroutine::emitLNMn( )
-{
-	writeln( "ln" );
-}
-
-
-void CSubroutine::emitLBMn( )
-{
-	writeln( "lb" );
-}
-
-
-void CSubroutine::emitLOBMn( )
-{
-	writeln( "lob" );
-}
-
-
-void CSubroutine::emitLHMn( )
-{
-	writeln( "lh" );
-}
-
-
-void CSubroutine::emitLOHMn( )
-{
-	writeln( "loh" );
-}
-
-
-void CSubroutine::emitAFMn( )
-{
-	writeln( "af" );
-}
-
-
-void CSubroutine::emitQUMn( )
-{
-	writeln( "qu" );
-}
-
-
-void CSubroutine::emitNBQUMn( )
-{
-	writeln( "nbqu" );
-}
-
-
-void CSubroutine::emitNBDQUMn( )
-{
-	writeln( "nbdqu" );
-}
-
-
-void CSubroutine::emitDQUMn( )
-{
-	writeln( "dqu" );
-}
-
-
-void CSubroutine::emitWHOAMIMn( )
-{
-	writeln( "whoami" );
-}
-
-
-void CSubroutine::emitHOWMANYMn( )
-{
-	writeln( "howmany" );
-}
-
-
-void CSubroutine::emitWHEREAMIMn( )
-{
-	writeln( "whereami" );
-}
-
-
-void CSubroutine::emitTIMEMn( )
-{
-	writeln( "time" );
-}
-
-
-void CSubroutine::emitREADMn( )
-{
-	writeln( "read" );
-}
-
-
-void CSubroutine::emitWRMn( )
-{
-	writeln( "wr" );
-}
-
-
-void CSubroutine::emitWRLNMn( )
-{
-	writeln( "wrln" );
-}
-
-
-void CSubroutine::emitANDMn( )
-{
-	writeln( "and" );
-}
-
-
-void CSubroutine::emitORMn( )
-{
-	writeln( "or" );
-}
-
-
-void CSubroutine::emitCLONEMn( )
-{
-	writeln( "clone" );
-}
-
-
-void CSubroutine::emitMOVEMn( )
-{
-	writeln( "move" );
-}
-
-void CSubroutine::emitLISTSIZEMn( )
-{
-	writeln( "ivs" );
-}
-
-void CSubroutine::emitLISTINDEXMn( )
-{
-	writeln( "ivi" );
-}
-
-void CSubroutine::emitLISTVALUEMn( )
-{
-	writeln( "ivv" );
-}
 
 void CSubroutine::write( string value )
 {
@@ -402,30 +133,5 @@ void CSubroutine::writeln( string value )
 	}*/
 
 	_file->writeln( value );
-}
-
-
-void CSubroutine::emitInvocationTypeMn( const int &invocationType )
-{
-	switch( invocationType ) {
-		case IT_AF:
-			emitAFMn( );
-			break;
-		case IT_QU:
-			emitQUMn( );
-			break;
-		case IT_NBQU:
-			emitNBQUMn( );
-			break;
-		case IT_NBDQU:
-			emitNBDQUMn( );
-			break;
-		case IT_DQU:
-			emitDQUMn( );
-			break;
-		default:
-			break;
-			// TODO: Nao deveria chegar aqui... abortar
-	}
 }
 

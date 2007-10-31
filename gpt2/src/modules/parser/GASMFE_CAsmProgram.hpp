@@ -1,7 +1,6 @@
 #ifndef GASMFE_CASM_PROGRAM_H
 #define GASMFE_CASM_PROGRAM_H
 
-//#include "GASMFE_CBeing.h"
 #include "GASMFE_CContext.hpp"
 #include "GASMFE_CGptAssemblyFile.hpp"
 #include "GASMFE_COptions.hpp"
