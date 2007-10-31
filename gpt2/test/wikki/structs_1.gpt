@@ -1,0 +1,15 @@
+algoritmo teste;
+
+estrutura coordenada
+    x: inteiro;
+    y: inteiro;
+fim-estrutura
+
+variável c: coordenada;
+
+início
+    c.x := 10;
+    c.y := 20;
+    imprima( "c.x=", c.x );
+    imprima( "c.y=", c.y );
+fim

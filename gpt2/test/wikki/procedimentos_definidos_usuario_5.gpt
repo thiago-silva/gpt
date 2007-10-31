@@ -1,0 +1,14 @@
+// Procedimento com passagem de parâmetros por referência
+algoritmo exemplo;
+
+variável s : inteiro;
+
+início
+    soma( s, 2, 7 );
+    imprima( s );
+fim
+
+procedimento soma( ref r: inteiro; v1: inteiro, v2: inteiro )
+início
+    r := v1 + v2;
+fim

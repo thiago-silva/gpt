@@ -1,0 +1,15 @@
+algoritmo exemplo;
+
+variável v: caractere;
+
+início
+    // testes com caractere
+    v3 := 'a';
+    v3 := v3;
+    v3 := 'a' + 'b';
+    v3 := v3 + 'b';
+    v3 := 'c' + v3;
+    v3 := v3 + v3;
+    imprima( 'a' );
+    imprima( v3 );
+fim

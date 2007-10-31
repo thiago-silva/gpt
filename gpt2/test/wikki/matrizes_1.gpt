@@ -1,0 +1,18 @@
+algoritmo exemplo;
+
+variáveis
+    m: matriz[10] do tipo inteiro;
+    i: inteiro;
+fim-variáveis
+
+início
+    para i de 1 até 10 faça
+        m[i] := i * 10;
+    fim-para
+
+    imprima( "Valores das coordenadas:" );
+
+    para i de 1 até 10 faça
+        imprima( m[i] );
+    fim-para
+fim

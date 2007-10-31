@@ -1,0 +1,27 @@
+algoritmo teste;
+
+estrutura est
+    v1: inteiro;
+    v2: real;
+    v3: literal;
+    v4: caractere;
+    v5: lógico;
+fim-estrutura
+
+variáveis
+    v: est := { 
+        v1 := 10, 
+        v2 := 20.0, 
+        v3 := "teste", 
+        v4 := 'c', 
+        v5 := verdadeiro };
+fim-variáveis
+
+início
+    imprima( 
+        "v.v1=", v.v1, 
+        "v.v2=", v.v2, 
+        "v.v3=", v.v3, 
+        "v.v4=", v.v4, 
+        "v.v5=", v.v5 );
+fim

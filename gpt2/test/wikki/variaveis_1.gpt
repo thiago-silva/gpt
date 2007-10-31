@@ -1,0 +1,12 @@
+algoritmo exemplo;
+
+variáveis
+    x: inteiro;
+    y: inteiro;
+fim-variáveis
+
+início
+    x := 10;
+    y := 20;
+    imprima( "x*y+4=", x*y+4 );
+fim

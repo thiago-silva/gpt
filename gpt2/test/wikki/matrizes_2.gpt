@@ -1,0 +1,22 @@
+algoritmo teste;
+
+estrutura coordenada
+    x: inteiro;
+    y: inteiro;
+fim-estrutura
+
+variáveis
+    c: matriz[10] de coordenada;
+    i: inteiro;
+fim-variáveis
+
+início
+    para i de 1 até 10 faça
+        c[i].x := i * 10;
+        c[i].y := i * 100;
+    fim-para
+    imprima( "Valores das coordenadas:" );
+    para i de 1 até 10 faça
+        imprima( "x=", c[i].x, "y=", c[i].y );
+    fim-para
+fim

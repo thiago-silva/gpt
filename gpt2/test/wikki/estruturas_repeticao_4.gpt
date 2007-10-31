@@ -1,0 +1,11 @@
+algoritmo exemplo;
+
+variável x: inteiro;
+
+início
+    x := 1;
+    repita
+        imprima( x );
+        x := x + 1;
+    enquanto x <= 10
+fim

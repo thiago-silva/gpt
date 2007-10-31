@@ -1,0 +1,11 @@
+algoritmo exemplo;
+
+constante total: inteiro = 100;
+
+variável i: inteiro;
+
+início
+    para i de 1 até total faça
+        imprima( i );
+    fim-para
+fim

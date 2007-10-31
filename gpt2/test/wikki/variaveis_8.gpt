@@ -1,0 +1,14 @@
+algoritmo exemplo;
+
+variáveis
+    l: literal;
+    c: caractere;
+fim-variáveis
+
+início
+    l := "test1";
+    l[4] := '2';
+    c := l[4];
+    imprima(l);
+    imprima(c);
+fim

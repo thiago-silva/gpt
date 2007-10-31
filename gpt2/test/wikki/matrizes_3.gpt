@@ -1,0 +1,14 @@
+algoritmo exemplo;
+
+início
+    mostra( );
+fim
+
+procedimento mostra( )
+variável resultado: matriz[3] de inteiros;
+início
+    resultado[0] := 10;
+    resultado[1] := 20;
+    resultado[2] := resultado[0] + resultado[1];
+    imprima( "resultado[2]=", resultado[2] );
+fim

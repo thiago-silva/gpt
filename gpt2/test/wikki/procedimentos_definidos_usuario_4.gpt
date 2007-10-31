@@ -1,0 +1,20 @@
+// Variáveis globais sendo acessadas em um procedimento com parâmetros
+algoritmo exemplo;
+
+variáveis
+    x: inteiro;
+    y: inteiro;
+fim-variáveis
+
+início
+    x := 10;
+    y := 20;
+    soma( 30 );
+fim
+
+procedimento soma( z: inteiro )
+variável s: inteiro;
+início
+    s := x + y + z;
+    imprima( "A soma de x, y e z é: ", s );
+fim

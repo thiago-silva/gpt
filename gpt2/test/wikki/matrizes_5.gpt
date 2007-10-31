@@ -1,0 +1,20 @@
+algoritmo exemplo;
+
+variável x: matriz[3] do tipo inteiro := [1,2,3];
+
+início
+    imprima( soma (x) ); // 6
+fim
+
+função soma(matriz[] do tipo inteiro) : inteiro
+variáveis
+    total: inteiro;
+    i: inteiro;
+fim-variáveis
+início
+    total := 0;
+    para i de 0 até dimensão1(matriz) - 1 faça
+        total := total + matriz[i];
+    fim-para
+    retorne total;
+fim

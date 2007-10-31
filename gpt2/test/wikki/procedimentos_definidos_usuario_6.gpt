@@ -1,0 +1,19 @@
+// Procedimento com passagem de parâmetros por referência
+algoritmo exemplo;
+
+variável x : inteiro;
+
+início
+    proc1( x, 10, 20 );
+    imprima( x );
+fim
+
+procedimento proc1( ref r1: inteiro, v11: inteiro, v12: inteiro )
+início
+    proc2( r1, v11, v12 );
+fim
+
+procedimento proc2( ref r2: inteiro, v21: inteiro, v22: inteiro )
+início
+    r2 := v21 + v22;
+fim 

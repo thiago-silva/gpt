@@ -1,0 +1,11 @@
+// Funções não recursivas
+algoritmo exemplo;
+
+início
+    imprima( "A soma é: ", soma( 2, 7 ) );
+fim
+
+função soma( x: inteiro, y: inteiro ) : inteiro
+início
+    retorne( x + y );
+fim	

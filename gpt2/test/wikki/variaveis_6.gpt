@@ -1,0 +1,13 @@
+algoritmo exemplo;
+
+variável v: lógico;
+
+início
+    // testes com lógico
+    v := verdadeiro;
+    v := falso;
+    v := v;
+    imprima( verdadeiro );
+    imprima( falso );
+    imprima( v );
+fim

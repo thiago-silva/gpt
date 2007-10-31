@@ -1,0 +1,20 @@
+// Funções recursivas
+
+algoritmo fatorial_recursivo;
+
+variável x: inteiro;
+
+início
+    imprima( "Digite um número:" );
+    x := leia( );
+    imprima( "Fatorial de ", x, "é ", fatorial( x ) );
+fim
+
+função fatorial( z: inteiro ) : inteiro
+início
+    se z = 1 então
+        retorne 1;
+    senão
+        retorne z * fatorial( z - 1 );
+    fim-se
+fim	

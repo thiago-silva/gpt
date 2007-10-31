@@ -1,0 +1,15 @@
+algoritmo exemplo;
+
+variável v: inteiro;
+
+início
+    // testes com inteiro
+    v := 10;
+    v := v;
+    v := 10 + 20;
+    v := v + 20;
+    v := 30 + v;
+    v := v + v;
+    imprima( 10 );
+    imprima( v );
+fim

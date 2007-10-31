@@ -1,0 +1,12 @@
+algoritmo variável_local;
+
+início
+    mostra( );
+fim
+
+procedimento mostra( )
+variável resultado: inteiro;
+início
+    resultado := 4 + 5;
+    imprima( "soma de 4 e 5 é: ", resultado );
+fim

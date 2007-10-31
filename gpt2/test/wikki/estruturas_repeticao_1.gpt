@@ -1,0 +1,9 @@
+algoritmo exemplo;
+
+variável x: inteiro;
+
+início
+    para x de 1 até 10 faça
+        imprima( x );
+    fim-para
+fim

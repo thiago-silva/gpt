@@ -1,0 +1,7 @@
+algoritmo exemplo;
+
+variável x: matriz[3] do tipo inteiro := [0,2,1];
+
+início
+    imprima (x); // [0,2,1]
+fim

@@ -1,0 +1,9 @@
+algoritmo exemplo;
+
+variável x: inteiro;
+
+início
+    para x de 100 até 0 passo -2 faça
+        imprima( x );
+    fim-para
+fim

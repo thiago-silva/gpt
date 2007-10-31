@@ -1,0 +1,13 @@
+algoritmo exemplo;
+
+variável x: inteiro;
+
+início
+    x := 10;
+    imprima( x );
+    asm
+        iset x, 20
+        isum x, x, 80
+    fim-asm
+    imprima( x );
+fim

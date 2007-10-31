@@ -1,0 +1,15 @@
+algoritmo exemplo;
+
+variável v: literal;
+
+início
+    // testes com literal
+    v := "a";
+    v := v;
+    v := "a" + "b";
+    v := v + "b";
+    v := "c" + v;
+    v := v + v;
+    imprima( "aa" );
+    imprima( v );
+fim

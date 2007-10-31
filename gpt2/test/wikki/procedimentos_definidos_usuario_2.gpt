@@ -1,0 +1,11 @@
+// Procedimento com passagem de parâmetros por valor
+algoritmo exemplo;
+
+início
+    soma( 2, 7 );
+fim
+
+procedimento soma( x: inteiro, y: inteiro )
+início
+    imprima( "A soma é: ", x + y );
+fim

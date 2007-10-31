@@ -1,0 +1,16 @@
+algoritmo exemplo;
+
+variável x: inteiro;
+
+início
+    x := 20;
+    se x >= 0 então
+        se x > 40 então
+            imprima( "x>40" );
+        senão
+            imprima( "x<=40" );
+        fim-se
+    senão
+        imprima( "x eh negativo !!!" );
+    fim-se
+fim

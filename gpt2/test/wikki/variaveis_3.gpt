@@ -1,0 +1,15 @@
+algoritmo exemplo;
+
+variável v: real;
+
+início
+    // testes com real
+    v := 10.0;
+    v := v;
+    v := 10.0 + 20.0;
+    v := v + 20.0;
+    v := 30.0 + v;
+    v := v + v;
+    imprima( 10.0 );
+    imprima( v );
+fim

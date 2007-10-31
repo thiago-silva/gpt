@@ -1,0 +1,9 @@
+algoritmo exemplo;
+
+variável x: inteiro;
+
+início
+    imprima( "Digite um número: " );
+    x := leia( );
+    imprima( "O número digitado foi ", x );
+fim
