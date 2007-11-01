@@ -1,5 +1,7 @@
 #include "GASMFE_CAsmProgram.hpp"
 
+#include "Tools.hpp"
+
 
 CAsmProgram::CAsmProgram( COptions *options )
 	: _options( options ), _context( NULL )
@@ -60,5 +62,11 @@ CContext *CAsmProgram::remContext( )
 CContext *CAsmProgram::getContext( )
 {
 	return _context;
+}
+
+
+void CAsmProgram::emitVarDefinition( const string &name, const int &type )
+{
+	_file->writeln( "var " + name + " " + typeInAsm( type ) );
 }
 

@@ -33,5 +33,6 @@ string wo_ctrl_chrs(string str, char = ' ');
 bool streamtoken(istringstream&, string&, string&);
 // string& getStringWithTab(string, string);
 const string typeToText(const int &type);
+const string typeInAsm( const int &type );
 
 #endif

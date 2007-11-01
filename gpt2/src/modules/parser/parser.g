@@ -24,6 +24,7 @@ header {
   #include "GPTDisplay.hpp"
   #include "GASMFE_CAsmProgram.hpp"
   #include "GASMFE_COptions.hpp"
+  #include "CTemporarySymbol.hpp"
 }
 
 options {
@@ -42,21 +43,20 @@ options {
 }
 
 {  
-//  public:
-//    RefPortugolAST getPortugolAST()
-//    {
-//      return returnAST;
-//    }
    public:
       COptions options;
       CAsmProgram  *asmPrg;
       CSubroutine *subroutine;
       CArguments args;
+      CTemporarySymbol tempVar;
+      CTemporarySymbol tempLabel;
       void initParser( )
       {
          options.sourcefile = "xxx.gpt";
          options.destfile   = "xxx.gasm";
          asmPrg = new CAsmProgram( &options );
+         tempVar.setBaseName( "__temp_" );
+         tempLabel.setBaseName( "__label_" );
       }
       void finishParser( )
       {
@@ -66,26 +66,17 @@ options {
 }
 
 
+//#########################
+//## Início da gramática ##
+//#########################
 
+//##############
+//## Programa ##
+//##############
 
-/******************************** GRAMATICA *************************************************/
-
-/*algoritmo
-  : declaracao_algoritmo (var_decl_block)? stm_block (func_decls)* EOF
-  ;
-
-  exception //nem "variaveis" nem "inicio"
-  catch[antlr::NoViableAltException e] {
-    reportParserError(e.getLine(), 
-      "\"variáveis\" ou \"início\" após declaração de algoritmo", getTokenDescription(e.token));
-  }
-
-  catch[antlr::MismatchedTokenException e] { //EOF
-    reportParserError(e.getLine(), expecting_eof_or_function, getTokenDescription(e.token));
-  }
-*/
-
-programa 
+//--------
+  programa
+//-------- 
   : { initParser( ); } (declaracao_algoritmo)? (importacao)*
     (declaracao_constantes | bloco_declaracao_estrutura | declaracao_variaveis)* corpo EOF
     { finishParser( ); }
@@ -106,10 +97,15 @@ corpo
   ;
 
 
-/****************************************************************************/
-declaracao_variaveis
+//#############################
+//## Declaração de variáveis ##
+//#############################
+
+//--------------------
+  declaracao_variaveis
+//--------------------
   : bloco_declaracao_variaveis
-  | "variável" declaracao_variavel T_SEMICOL
+  | "variável" declaracao_variavel
   ;
 
 bloco_declaracao_variaveis
@@ -117,7 +113,16 @@ bloco_declaracao_variaveis
   ;
 
 declaracao_variavel
-  : T_IDENTIFICADOR (T_COMMA T_IDENTIFICADOR)* T_COLON tipo (lista_inicializacao)? T_SEMICOL
+{
+  RefToken tk_type;
+}
+  : tk_id:T_IDENTIFICADOR 
+    (T_COMMA T_IDENTIFICADOR)* 
+    T_COLON tipo {tk_type = lastToken; }
+    (lista_inicializacao)? T_SEMICOL
+    { // TODO: nao esta correto porque so gera uma variavel...
+       asmPrg->emitVarDefinition( tk_id->getText( ), tk_type->getType( ) );
+    }
   ;
 
 declaracao_variavel_sing
@@ -131,7 +136,7 @@ tipo
   ;
 
 lista_inicializacao
-  : T_ATTR (expressao | inicializacao_composta)
+  : T_ATTR (expr | inicializacao_composta)
   ;
 
 inicializacao_composta
@@ -140,11 +145,11 @@ inicializacao_composta
   ;
 
 inicializacao_indices
-  : (expressao | inicializacao_composta)
+  : (expr | inicializacao_composta)
   ;
 
 inicializacao_membros
-  : T_IDENTIFICADOR T_ATTR (expressao | inicializacao_composta)
+  : T_IDENTIFICADOR T_ATTR (expr | inicializacao_composta)
   ;
 
 tipo_primitivo
@@ -217,46 +222,105 @@ lista_enunciados
   ;
 
 enunciado
-  : en_atribuicao
+  : (lvalue T_ATTR)=> en_atribuicao
   | en_retorne
   | en_se
   | en_enquanto
-  | en_repita
+//  | en_repita
   | en_para
   | en_caso
   | en_asm
-  | expressao
+  | expr
   | "sair" T_SEMICOL
   | T_SEMICOL
   ;
 
 en_atribuicao
 {
-   RefToken tklvalue;
-   RefToken tkexpret;
+   string tklvalue;
+   string tkexpret;
 }
-  : tklvalue=lvalue T_ATTR tkexpret=expressao T_SEMICOL
-    { subroutine->emitISETMn( tklvalue->getText( ), tkexpret->getText( ) ); }
+  : tklvalue=lvalue T_ATTR tkexpret=expr T_SEMICOL
+//  : tklvalue=lvalue T_ATTR tkexpret=expr T_SEMICOL
+//  : (lvalue T_ATTR)=> stm_attr {tkexpret=lastToken;} T_SEMICOL
+    { subroutine->emitISETMn( tklvalue, tkexpret ); }
+  ;
+
+stm_attr
+  : lvalue T_ATTR expr
   ;
 
 en_retorne
-  : "retorne" (expressao)? T_SEMICOL
+  : "retorne" (expr)? T_SEMICOL
   ;
 
-lvalue returns [RefToken tk_id]
-  : T_IDENTIFICADOR {tk_id=lastToken;} //(T_ABREC expressao T_FECHAC)*
+lvalue returns [string tk_id]
+  : T_IDENTIFICADOR {tk_id=lastToken->getText( );} //(T_ABREC expr T_FECHAC)*
   ;
 
 en_se
-  : "se" expressao "então" lista_enunciados ("senão" lista_enunciados)? "fim-se"
+{
+  string expRet;
+  string elseLabel;
+  string nextLabel;
+}
+  : "se" expRet=expr "então" { elseLabel = tempLabel.getNew( ); subroutine->emitIFNOTMn( expRet, elseLabel ); }
+    lista_enunciados
+    { nextLabel = tempLabel.getNew( ); subroutine->emitJMPMn( nextLabel ); }
+    ("senão" { subroutine->emitLabel( elseLabel ); } lista_enunciados)? "fim-se"
+    { subroutine->emitLabel( nextLabel ); }
   ;
 
 en_enquanto
-  : "enquanto" expressao "faça" lista_enunciados "fim-enquanto"
+{
+  string testLabel;
+  string expRet;
+  string nextCommandLabel;
+}
+  : "enquanto"
+    {
+       testLabel = tempLabel.getNew( );
+       nextCommandLabel = tempLabel.getNew( );
+       subroutine->emitLabel( testLabel );
+    }
+    expRet=expr "faça"
+    {
+       subroutine->emitIFNOTMn( expRet, nextCommandLabel );
+    }
+    lista_enunciados
+    "fim-enquanto"
+    {
+       subroutine->emitJMPMn( testLabel );
+       subroutine->emitLabel( nextCommandLabel );
+    }
   ;
 
 en_para
-  : "para" lvalue "de" expressao "até" expressao (passo)? "faça" lista_enunciados "fim-para"
+{
+  string lvalueRet;
+  string exp1;
+  string exp2;
+  string testLabel;
+  string nextCommandLabel;
+  string testVar;
+}
+  : "para" lvalueRet=lvalue "de" exp1=expr "até" exp2=expr (passo)? "faça"
+    {
+       subroutine->emitISETMn( lvalueRet, exp1 );
+       testLabel = tempLabel.getNew( );
+       nextCommandLabel = tempLabel.getNew( );
+       testVar   = tempVar.getNew( );
+       subroutine->emitLabel( testLabel );
+       subroutine->emitMn( "ile", testVar, lvalueRet, exp2 );
+       subroutine->emitIFNOTMn( testVar, nextCommandLabel );
+    }
+    lista_enunciados
+    "fim-para"
+    {
+       subroutine->emitMn( "iinc", lvalueRet, "1" );
+       subroutine->emitJMPMn( testLabel );
+       subroutine->emitLabel( nextCommandLabel );
+    }
   ;
 
 passo
@@ -264,20 +328,48 @@ passo
   ;
 
 //en_repita
-//  : "repita" lista_enunciados "enquanto" expressao
-//  | "repita" lista_enunciados "até" expressao
+//  : "repita" lista_enunciados "enquanto" expr
+//  | "repita" lista_enunciados "até" expr
 //  ;
 
-en_repita
-  : "repita" lista_enunciados "até" expressao
-  ;
+//en_repita
+//  : "repita" lista_enunciados "até" expr
+//  ;
 
 en_caso 
-  : "caso" expressao "seja" (teste_caso)+ ("senão" lista_enunciados "fim-senão")? "fim-caso" 
+{
+  string expret;
+  string varTest;
+  string nextCommandLabel;
+  string nextTestLabel;
+}
+  : "caso" expret=expr "seja" 
+    {
+       varTest = tempVar.getNew( );
+       subroutine->emitISETMn( varTest, expret );
+       nextCommandLabel = tempLabel.getNew( );
+    }
+    (
+       nextTestLabel=teste_caso[varTest]
+       {subroutine->emitJMPMn( nextCommandLabel ); subroutine->emitLabel( nextTestLabel );}
+    )+ ("senão" lista_enunciados "fim-senão")? "fim-caso" 
+    {
+       subroutine->emitLabel( nextCommandLabel );
+    }
   ; 
   
-teste_caso
-  : literal "faça" lista_enunciados "fim-faça"
+teste_caso [string varTest] returns [string nextTestLabel]
+{
+  string lit;
+}
+  : lit=literal "faça" 
+    {
+       subroutine->emitMn( "ieq", tempVar.getNew( ), varTest, lit );
+       nextTestLabel = tempLabel.getNew( );
+       subroutine->emitIFNOTMn( tempVar.getLast( ), nextTestLabel );
+    }
+    lista_enunciados
+    "fim-faça"
   ;
 
 en_asm
@@ -286,59 +378,6 @@ en_asm
 
 
 /****************************************************************************/
-expressao returns [RefToken tk_ret]
-  : termo {tk_ret=lastToken;} //T_BIT_E termo
-  ;
-
-/*
-expressao
-  : termo "|" termo
-  | termo "^" termo
-  | termo "&" termo
-  | termo ">>" termo 
-  | termo "<<" termo
-  | termo ("ou" | "||") termo
-  | termo ("e" | "&&") termo
-  | termo ("=" | "<>") termo
-  | termo (">" | ">="|"<"|"<=") termo
-  | termo ("+" | "-") termo
-  | termo ("/" | "*" | "%") termo
-  | ("+" | "-" | "~" | "não")? termo
-  | "(" termo ")"
-  | chamada_subrotina
-  ;
-*/
-
-/*expressao
-  : expressao "|" expressao
-  | expressao "^" expressao
-  | expressao "&" expressao
-  | expressao ">>" expressao 
-  | expressao "<<" expressao
-  | expressao ("ou" | "||") expressao
-  | expressao ("e" | "&&") expressao
-  | expressao ("=" | "<>") expressao
-  | expressao (">" | ">="|"<"|"<=") expressao
-  | expressao ("+" | "-") expressao
-  | expressao ("/" | "*" | "%") expressao
-  | ("+" | "-" | "~" | "não")? termo
-  ;
-*/
-
-
-termo returns [RefToken tk_ret]
-  : tk_ret=lvalue
-  | literal { tk_ret = lastToken; }
-  | chamada_subrotina
-  ;
-
-//termo
-//  : chamada_subrotina
-//  | lvalue
-//  | literal
-////  | "(" expressao ")"
-//  ;
-
 chamada_subrotina
   : tk_id:T_IDENTIFICADOR T_ABREP
     ( {args.init( subroutine, tk_id->getText( ) ); } lista_argumentos { args.emitMnsInSubroutineCall( ); })? T_FECHAP
@@ -349,16 +388,113 @@ lista_argumentos
 {
    RefToken exp;
 }
-  : exp=expressao { args.push_back( exp ); }
-    (T_COMMA exp=expressao { args.push_back( exp ); } )*
+  : expr { args.push_back( lastToken ); }
+    (T_COMMA expr { args.push_back( lastToken ); } )*
   ;
 
-literal
-  : T_STRING_LIT
-  | T_INT_LIT
-  | T_REAL_LITERAL
-  | T_CARAC_LITERAL
-  | "verdadeiro"
-  | "falso"
+literal returns [string ret]
+  : ( T_STRING_LIT | T_INT_LIT | T_REAL_LITERAL | T_CARAC_LITERAL | "verdadeiro" | "falso" ) {ret=lastToken->getText( );}
+  ;
+
+
+/* ----------------------------- Expressoes ---------------------------------- */
+
+expr returns [string ret]
+  : ret=expr_e (T_KW_OU expr_e)*
+  ;
+  
+expr_e  returns [string ret]
+options {
+  defaultErrorHandler=false; //noviable should be caught on expr
+}
+{
+  string op2;
+}
+  : ret=expr_bit_ou (T_KW_E op2=expr_bit_ou {subroutine->emitMn( "and", tempVar.getNew( ), ret, op2 ); ret=tempVar.getLast( ); } )*
+  ;
+
+expr_bit_ou returns [string ret]
+options {
+  defaultErrorHandler=false; //noviable should be caught on expr
+}
+  : ret=expr_bit_xou (T_BIT_OU expr_bit_xou)*
+  ;
+
+expr_bit_xou  returns [string ret]
+options {
+  defaultErrorHandler=false; //noviable should be caught on expr
+}
+  : ret=expr_bit_e (T_BIT_XOU expr_bit_e)*
+  ;
+
+expr_bit_e returns [string ret]
+options {
+  defaultErrorHandler=false; //noviable should be caught on expr
+}
+  : ret=expr_igual (T_BIT_E expr_igual)*
+  ;
+  
+expr_igual returns [string ret]
+options {
+  defaultErrorHandler=false; //noviable should be caught on expr
+}
+  : ret=expr_relacional (T_IGUAL expr_relacional|T_DIFERENTE expr_relacional)*
+  ;
+        
+expr_relacional returns [string ret]
+options {
+  defaultErrorHandler=false; //noviable should be caught on expr
+}
+{
+  string op2;
+}
+  : ret=expr_ad ((T_MAIOR| T_MAIOR_EQ| T_MENOR| T_MENOR_EQ)
+    op2=expr_ad {subroutine->emitIGEMn( tempVar.getNew( ), ret, op2 ); ret=tempVar.getLast( ); } )*
+  ;
+
+expr_ad returns [string ret]
+options {
+  defaultErrorHandler=false; //noviable should be caught on expr
+}
+{
+   string op2;
+}
+  : ret=expr_multip (T_MAIS op2=expr_multip {subroutine->emitISUMMn( tempVar.getNew( ), ret, op2 ); ret=tempVar.getLast( ); }
+                    | T_MENOS expr_multip)*
+  ;
+
+expr_multip returns [string op1]
+options {
+  defaultErrorHandler=false; //noviable should be caught on expr
+}
+{
+  string op2;
+  RefToken op;
+}
+  : op1=expr_unario
+    (( T_DIV | T_MULTIP | T_MOD ) {op=lastToken;} op2=expr_unario {subroutine->emitIMULMn( tempVar.getNew( ), op1, op2 ); op1=tempVar.getLast( ); } )*
+  ;
+
+expr_unario returns [string ret]
+options {
+  defaultErrorHandler=false; //noviable should be caught on expr
+}
+  : op_unario ret=expr_elemento
+  ;
+
+op_unario
+  : (
+        e:T_MENOS
+      | a:T_MAIS
+      | n:T_KW_NOT
+      | b:T_BIT_NOT
+    )?
+  ; 
+
+expr_elemento returns [string ret]
+  : (T_IDENTIFICADOR T_ABREP)=> chamada_subrotina // ret= ???
+  | ret=lvalue
+  | ret=literal
+  | t:T_ABREP ret=expr T_FECHAP 
   ;
 

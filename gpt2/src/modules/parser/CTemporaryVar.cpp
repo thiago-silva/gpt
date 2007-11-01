@@ -1,9 +1,7 @@
 #include <Tools.hpp>
-
 #include "CTemporarySymbol.hpp"
 
 CTemporarySymbol::CTemporarySymbol( )
-	: _baseName("_ts"), _count(1)
 {
 }
 
@@ -26,22 +24,22 @@ void CTemporarySymbol::setInitialValue( int initialValue )
 	_count = initialValue;
 }
 
-string CTemporarySymbol::getNew( )
+string CTemporarySymbol::getNewSymbol( )
 {
 	return( _baseName + itoa( _count++ ) );
 }
 
-void CTemporarySymbol::removeLast( )
+void CTemporarySymbol::removeLastSymbol( )
 {
 	_count--;
 }
 
-unsigned int CTemporarySymbol::getMaxUsed( )
+unsigned int CTemporarySymbol::getMaxSymbolsUsed( )
 {
 	return( _count );
 }
 
-string CTemporarySymbol::getLast( )
+string CTemporarySymbol::getLastSymbol( )
 {
 	return( _baseName + itoa( _count - 1 ) );
 }

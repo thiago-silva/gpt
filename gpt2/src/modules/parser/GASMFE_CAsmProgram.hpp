@@ -19,6 +19,7 @@ public:
 	CContext *addContext( );
 	CContext *remContext( );
 	CContext *getContext( );
+	void emitVarDefinition( const string &name, const int &type );
 private:
 	COptions *_options;
 	CContext *_context;

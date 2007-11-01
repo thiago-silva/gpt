@@ -8,9 +8,9 @@ BUILT_SOURCES = PortugolLexer.cpp  PortugolParser.cpp
 
 nodist_libparser_la_SOURCES = $(BUILT_SOURCES)
 libparser_la_SOURCES = BasePortugolParser.cpp MismatchedUnicodeCharException.cpp GASMFE_CSubroutine.cpp \
-                       GASMFE_CArguments.cpp  GASMFE_CMakeTempVars.cpp CTemporarySymbol.cpp   \
+                       GASMFE_CArguments.cpp  CTemporarySymbol.cpp   \
                        GASMFE_CContext.cpp Tools.cpp CTextFile.cpp GASMFE_CGptAssemblyFile.cpp          \
-                       GASMFE_CAsmProgram.cpp GASMFE_CMakeLabels.cpp
+                       GASMFE_CAsmProgram.cpp
 
 
 if INSTALL_DEVEL

@@ -4,15 +4,15 @@ variável x: inteiro;
 
 início
     x := leia( );
-    caso x faça
-    opção 1:
+    caso x seja
+    1 faça
         imprima( "x = um" );
-    fim-opção
-    opção 2:
+    fim-faça
+    2 faça
         imprima( "x = dois" );
-    fim-opção
-    senão:
+    fim-faça
+    senão
         imprima( "x diferente de um e dois" );
-    fim-opção
+    fim-senão
     fim-caso
 fim

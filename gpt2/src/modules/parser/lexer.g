@@ -96,6 +96,7 @@ tokens {
   T_KW_SEJA="seja";
   T_KW_FIM_SENAO="fim-senão";
   T_KW_FIM_FACA="fim-faça";
+  T_KW_FIM_CASO="fim-caso";
   T_KW_VARIAVEL="variável";
   T_KW_USE="use";
   T_KW_CORINGA="coringa";

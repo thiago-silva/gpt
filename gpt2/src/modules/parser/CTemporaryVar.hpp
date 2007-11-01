@@ -13,10 +13,10 @@ public:
 	~CTemporarySymbol( );
 	void setBaseName( string baseName );
 	void setInitialValue( int initialValue );
-	string getNew( );
-	void removeLast( );
-	unsigned int getMaxUsed( );
-	string getLast( );
+	string getNewSymbol( );
+	void removeLastSymbol( );
+	unsigned int getMaxSymbolsUsed( );
+	string getLastSymbol( );
 private:
 	string _baseName;
 	int _count;

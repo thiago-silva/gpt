@@ -252,3 +252,22 @@ const string typeToText(const int &type)
    return "ERRO !!!";
 }
 
+const string typeInAsm( const int &type )
+{
+   if (type == PortugolParserTokenTypes::T_KW_INTEIRO) {
+      return "int";
+   } else if (type == PortugolParserTokenTypes::T_KW_LITERAL) {
+      return "string";
+   } else if (type == PortugolParserTokenTypes::T_KW_CARACTERE) {
+      return "int";
+   } else if (type == PortugolParserTokenTypes::T_KW_LOGICO) {
+      return "int";
+   } else if (type == PortugolParserTokenTypes::T_KW_CORINGA) {
+      return "pointer ???";
+   } else if (type == PortugolParserTokenTypes::T_KW_MATRIZ) {
+      return "matrix";
+   }
+
+   return "ERRO !!!";
+}
+

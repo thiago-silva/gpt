@@ -27,10 +27,17 @@ public:
         void emitISETMn( const string &var, const string &value );
         void emitPUSHMn( const antlr::RefToken &_token, const bool &_pushType = false );
 	void emitPUSHMn( const int& value );
+	void emitISUMMn( const string &var, const string &op1, const string &op2 );
+	void emitIMULMn( const string &var, const string &op1, const string &op2 );
+	void emitIGEMn( const string &var, const string &op1, const string &op2 );
+	void emitIFNOTMn( const string &var, const string &label );
+	void emitJMPMn( const string &label );
+	void emitMn( const string &mn, const string &op1 = "", const string &op2 = "", const string &op3 = "");
+
 	void emitLabel( const string &label );
 
 	void write( string value );
-	void writeln( string value );
+	void writeln( string value = "" );
 
 	const string& getName( ) const
 	{

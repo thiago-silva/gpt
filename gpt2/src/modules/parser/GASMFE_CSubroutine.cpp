@@ -101,10 +101,66 @@ void CSubroutine::emitPUSHMn( const int& value )
 //	writeln( "add" );
 //}
 
+
+void CSubroutine::emitISUMMn( const string &var, const string &op1, const string &op2 )
+{
+	writeln( "isum " + var + ", " + op1 + ", " + op2 );
+}
+
+
+void CSubroutine::emitIMULMn( const string &var, const string &op1, const string &op2 )
+{
+	writeln( "imul " + var + ", " + op1 + ", " + op2 );
+}
+
+
+void CSubroutine::emitIGEMn( const string &var, const string &op1, const string &op2 )
+{
+	writeln( "ige " + var + ", " + op1 + ", " + op2 );
+}
+
+
+void CSubroutine::emitIFNOTMn( const string &var, const string &label )
+{
+	writeln( "ifnot " + var + ", " + label );
+}
+
+void CSubroutine::emitJMPMn( const string &label )
+{
+	writeln( "jmp " + label );
+}
+
+
+void CSubroutine::emitMn( const string &mn, const string &op1, const string &op2, const string &op3)
+{
+	write( mn );
+	if (op1.empty()) {
+		writeln( );
+		return;
+	}
+
+	write( " " + op1 );
+	if (op2.empty()) {
+		writeln( );
+		return;
+	}
+
+	write( ", " + op2 );
+	if (op3.empty()) {
+		writeln( );
+		return;
+	}
+
+	writeln( ", " + op3 );
+}
+
+
 void CSubroutine::emitLabel( const string &label )
 {
 	writeln( label + string(":") );
 }
+
+
 
 
 void CSubroutine::write( string value )
