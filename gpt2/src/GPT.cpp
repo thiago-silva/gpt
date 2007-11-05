@@ -131,25 +131,13 @@ bool GPT::compile(const list<string>& ifnames, bool genBinary) {
   }
 
   string ofname = _outputfile;
-//  if(!_useOutputFile) {
-//    if(!genBinary) {
-      ofname += ".asm";
-//    } 
-//    #ifdef WIN32
-//    else 
-//    {      
-//      ofname += ".exe";      
-//    }
-//    #endif
-//  }
+  ofname += ".asm";
 
-//  X86Walker x86(_stable);
   string asmsrc = "teste.gasm";//x86.algoritmo(_astree);
 
   string ftmpname = createTmpFile();
   ofstream fo;
 
-//  if(!genBinary) { //salva assembly code
     fo.open(ofname.c_str(), ios_base::out);
     if(!fo) {
       s << PACKAGE << ": não foi possível abrir o arquivo: \"" << ofname << "\"" << endl;
@@ -158,31 +146,7 @@ bool GPT::compile(const list<string>& ifnames, bool genBinary) {
     }
     fo << asmsrc;
     fo.close();
-//  } else { //compile
-//    fo.open(ftmpname.c_str(), ios_base::out);
-//    if(!fo) {
-//      s << PACKAGE << ": erro ao processar arquivo temporário" << endl;
-//      GPTDisplay::self()->showError(s);
-//      goto bail;
-//    }
-//    fo << asmsrc;
-//    fo.close();
 
-//    stringstream cmd;
-//    cmd << "nasm -fbin -o " << ofname << " " << ftmpname;
-
-//    if(system(cmd.str().c_str()) == -1) {
-//      s << PACKAGE << ": não foi possível invocar gcc." << endl;
-//      GPTDisplay::self()->showError(s);
-//      goto bail;
-//    }
-
-//    #ifndef WIN32
-//      cmd.str("");
-//      cmd << "chmod +x " << ofname;
-//      system(cmd.str().c_str());
-//    #endif
-  //}
 
   success = true;
 
@@ -192,53 +156,6 @@ bool GPT::compile(const list<string>& ifnames, bool genBinary) {
     }
     return success;
 }
-
-/*bool GPT::translate2C(const list<string>& ifnames) {
-  bool success = false;
-  stringstream s;
-
-  if(!prologue(ifnames)) {
-    return false;
-  }
-
-  string ofname = _outputfile;
-  if(!_useOutputFile) {
-     ofname += ".c";
-  }
-
-  Portugol2CWalker pt2c(_stable);
-  string c_src = pt2c.algoritmo(_astree);
-
-  ofstream fo;
-  fo.open(ofname.c_str(), ios_base::out);
-  if(!fo) {
-    s << PACKAGE << ": não foi possível abrir o arquivo: \"" << ofname << "\"" << endl;
-    GPTDisplay::self()->showError(s);
-    goto bail;
-  }
-  fo << c_src;
-  fo.close();
-
-  success = true;
-
-  bail:
-    return success;
-}
-*/
-
-
-/*
-bool GPT::interpret(const list<string>& ifnames, const string& host, int port) {
-  if(!prologue(ifnames)) {
-    return false;
-  }
-
-  InterpreterWalker interpreter(_stable, host, port);
-  interpreter.algoritmo(_astree);
-
-  return true;
-}
-*/
 
 
 bool GPT::parse(list<pair<string,istream*> >& istream_list) {
@@ -282,35 +199,31 @@ bool GPT::parse(list<pair<string,istream*> >& istream_list) {
 
     GPTDisplay::self()->setCurrentFile(firstFile);
     
-//    ASTFactory ast_factory(PortugolAST::TYPE_NAME,&PortugolAST::factory);
-//    parser.initializeASTFactory(ast_factory);
-//    parser.setASTFactory(&ast_factory);
+    // nao esta correto, mas funciona utilizarmos fistFile enquanto tivermos um arquivo apenas
+    string file = firstFile;
+    // retira a extensao
+    size_t pos = file.rfind( "." );
+    file.erase( pos, 4 );
 
-//    parser.algoritmo();
-    parser.programa();
-    if(_outputfile.empty()) {
-      _outputfile = parser.nomeAlgoritmo();
-    }
+    string asmProgram = parser.programa(file);
 
     if(GPTDisplay::self()->hasError()) {
       GPTDisplay::self()->showErrors();
       return false;
     }
 
-//    _astree = parser.getPortugolAST();
 
-//    if(!_astree) {
-//      s << PACKAGE << ": erro interno: no parse tree" << endl;
-//      GPTDisplay::self()->showError(s);
-//      return false;
-//    }
+    ofstream fo;
 
-//    if(_printParseTree) {
-//      std::cerr << _astree->toStringList() << std::endl << std::endl;
-//    }
-
-//    SemanticWalker semantic(_stable);
-//    semantic.algoritmo(_astree);
+    string asmFile = file + ".gasm";
+    fo.open(asmFile.c_str(), ios_base::out);
+    if(!fo) {
+      s << PACKAGE << ": não foi possível abrir o arquivo: \"" << asmFile << "\"" << endl;
+      GPTDisplay::self()->showError(s);
+      return false;
+    }
+    fo << asmProgram;
+    fo.close();
 
     if(GPTDisplay::self()->hasError()) {
       GPTDisplay::self()->showErrors();

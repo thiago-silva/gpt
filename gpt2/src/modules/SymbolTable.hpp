@@ -50,6 +50,8 @@ public:
   void declareVar(const string& scope, const string& lexeme, int line, int type
       , const list<int>& dimensions);
 
+  void addConstant( const string& scope, const string& lexeme, int line, int type);
+
   void insertSymbol(Symbol& s, const string& scope);
 
   Symbol& getSymbol(const string& scope, const string& lexeme, bool searchGlobal = false);

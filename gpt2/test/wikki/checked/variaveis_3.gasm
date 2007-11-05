@@ -1,0 +1,33 @@
+// Programa variaveis_3.gasm gerado a partir de variaveis_3.gpt
+program variaveis_3
+
+var v real
+// Procedure main
+proc main
+	var __temp_1 real
+	var __temp_2 real
+	var __temp_3 real
+	var __temp_4 real
+	rset v, 10.0
+	rset v, v
+	rsum __temp_1, 10.0, 20.0
+	rset v, __temp_1
+	rsum __temp_2, v, 20.0
+	rset v, __temp_2
+	rsum __temp_3, 30.0, v
+	rset v, __temp_3
+	rsum __temp_4, v, v
+	rset v, __temp_4
+	push 10.0
+	push_real
+	push 1
+	pcall imprima
+	push v
+	push_real
+	push 1
+	pcall imprima
+	exit_0
+end-proc
+// Fim da procedure
+
+end-program

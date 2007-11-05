@@ -37,22 +37,28 @@ enum {
 class SymbolType {
 public:
   SymbolType();
-  SymbolType(int type);
+  SymbolType(int type, bool isVariable);
 
   void setPrimitiveType(int type);
-  int primitiveType() const;
+  int getPrimitiveType() const;
   
   void setPrimitive(bool);
   bool isPrimitive() const;
+
+  void setIsVariable(bool);
 
   void setDimensions(const list<int>&);
   list<int>& dimensions();
 
   string toString() const;
+  string toAsmType() const;
+
+  bool getIsVariable( ) const;
 protected:
   bool _isPrimitive;
   int _primitiveType;  
   list<int>    _dimensions; //conjunto/matrizASTRef  
+  bool _isVariable;
 };
 
 class ParameterSig {
@@ -61,7 +67,7 @@ public:
   : variable_params(false)  {}
 
   void add(const string& name, int type) {
-    SymbolType s(type);
+    SymbolType s(type, false);
     params.push_back(pair<string, SymbolType>(name,s));
   }
 
@@ -72,7 +78,7 @@ public:
     params.push_back(pair<string, SymbolType>(name,t));
   }
 
-  int paramType(int idx) {
+  int getParamType(int idx) {
     if(isVariable()) {
       return TIPO_ALL;
     }
@@ -80,7 +86,7 @@ public:
     int c = 0;
     for(list<pair<string,SymbolType> >::iterator it = params.begin(); it != params.end(); it++, c++) {
       if(c == idx) {
-        return (*it).second.primitiveType();
+        return (*it).second.getPrimitiveType();
       }
     }
     return TIPO_NULO; //throw exception?
@@ -100,14 +106,16 @@ public:
   
   Symbol(const string& scope_, const string& lexeme_, int line_, bool isfunction_);
 
-  Symbol(const string& scope_, const string& lexeme_, int line_, bool isfunction_, int type_);
+  Symbol(const string& scope_, const string& lexeme_, int line_, bool isfunction_, int type_, bool isVariable_);
 
-  Symbol(const string& scope_, const string& lexeme_, int line_, bool isfunction_, int type_,
+  Symbol(const string& scope_, const string& lexeme_, int line_, bool isfunction_, int type_, bool isVariable_,
     const list<int>& dimensions);
 
   bool isValid() const;
      
   static string typeToString(int type);
+
+  SymbolType getType( ) const;
 
 
   //attrs

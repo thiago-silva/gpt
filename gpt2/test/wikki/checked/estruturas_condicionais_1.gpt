@@ -1,0 +1,13 @@
+algoritmo exemplo;
+
+variável x : inteiro;
+
+início
+    x := 10;
+    se x >= 20 então
+        x := 2;
+    senão
+        x := 1;
+    fim-se
+    imprima( x );
+fim

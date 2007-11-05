@@ -4,11 +4,9 @@
 #include <vector>
 using namespace std;
 
-#include "PortugolParserTokenTypes.hpp"
-
 #include "GASMFE_CSubroutine.hpp"
 
-class CArguments : public vector<antlr::RefToken> // usar list :-)
+class CArguments : public vector<string> // usar list :-)
 {
 public:
 	CArguments( );

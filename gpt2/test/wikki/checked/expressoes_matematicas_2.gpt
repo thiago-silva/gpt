@@ -1,0 +1,5 @@
+algoritmo exemplo;
+
+início
+    imprima( "2+5*3=", 2+5*3 );
+fim

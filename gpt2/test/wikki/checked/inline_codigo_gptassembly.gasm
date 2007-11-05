@@ -1,0 +1,28 @@
+// Programa inline_codigo_gptassembly.gasm gerado a partir de inline_codigo_gptassembly.gpt
+program inline_codigo_gptassembly
+
+var x int
+// Procedure main
+proc main
+	iset x, 10
+	push x
+	push_int
+	push 1
+	pcall imprima
+
+	// asm-begin
+	
+        iset x, 20
+        isum x, x, 80
+    
+	// asm-end
+
+	push x
+	push_int
+	push 1
+	pcall imprima
+	exit_0
+end-proc
+// Fim da procedure
+
+end-program

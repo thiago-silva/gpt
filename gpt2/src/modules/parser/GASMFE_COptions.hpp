@@ -10,8 +10,9 @@ public:
 		sentences = false;
 		sourceLine = NULL;
 	}
-	string sourcefile;
-	string destfile;
+	string filename;
+//	string sourcefile;
+//	string destfile;
 	bool sentences;
 	int *sourceLine;
 };

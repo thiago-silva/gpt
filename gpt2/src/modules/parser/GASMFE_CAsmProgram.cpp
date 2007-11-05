@@ -3,27 +3,31 @@
 #include "Tools.hpp"
 
 
-CAsmProgram::CAsmProgram( COptions *options )
-	: _options( options ), _context( NULL )
+CAsmProgram::CAsmProgram( COptions *options, SymbolTable *symbolTable )
+	: _options( options ), _symbolTable( symbolTable ), _context( NULL )
 {
-	_file = new CGptAssemblyFile( _options->destfile );
-	_file->makeFileHeader( _options->destfile );
-	_file->writeln( "program " + _options->destfile );
-	_file->writeln( );
+}
+
+void CAsmProgram::init( )
+{
+	_asmPrg.writeln( "// Programa " + _options->filename + ".gasm gerado a partir de " + _options->filename + ".gpt" );
+	_asmPrg.writeln( "program " + _options->filename );
+	_asmPrg.writeln( );
+}
+
+void CAsmProgram::finish( )
+{
+	_asmPrg.writeln( "end-program" );
 }
 
 CAsmProgram::~CAsmProgram( )
 {
-	_file->makeFileFooter( );
-
-	_file->writeln( "end-program" );
-
-	delete _file;
 }
 
-CSubroutine *CAsmProgram::initSubroutine( const char *name )
+CSubroutine *CAsmProgram::initSubroutine( string name )
 {
-	CSubroutine *action = new CSubroutine( _options, _file, name );
+	CSubroutine *action = new CSubroutine( _options, /*_file,*/ name, _symbolTable );
+	action->init( );
 
 	return action;
 }
@@ -31,11 +35,13 @@ CSubroutine *CAsmProgram::initSubroutine( const char *name )
 
 void CAsmProgram::finishSubroutine( CSubroutine *action )
 {
+	action->finish( );
+	_asmPrg.write( action->getCode( ) );
 	delete action;
 }
 
 
-CContext *CAsmProgram::addContext( )
+/*CContext *CAsmProgram::addContext( )
 {
 	CContext* context = new CContext( );
 	_contexts.push( context );
@@ -63,10 +69,16 @@ CContext *CAsmProgram::getContext( )
 {
 	return _context;
 }
-
+*/
 
 void CAsmProgram::emitVarDefinition( const string &name, const int &type )
 {
-	_file->writeln( "var " + name + " " + typeInAsm( type ) );
+	_asmPrg.writeln( "var " + name + " " + typeInAsm( type ) );
+}
+
+
+string CAsmProgram::getAsm( ) const
+{
+	return _asmPrg.getText( );
 }
 

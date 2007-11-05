@@ -34,5 +34,6 @@ bool streamtoken(istringstream&, string&, string&);
 // string& getStringWithTab(string, string);
 const string typeToText(const int &type);
 const string typeInAsm( const int &type );
+const int typeToLiteral( const int &type );
 
 #endif

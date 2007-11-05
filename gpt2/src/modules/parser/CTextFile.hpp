@@ -3,24 +3,27 @@
 
 #include <string>
 #include <fstream>
+#include <sstream>
+
 using namespace std;
 
 class CTextFile
 {
 public:
-	CTextFile( const string &filename, const string &chrTab = "\t" );
+	CTextFile( const string &chrTab = "\t" );
 	~CTextFile( );
 	void writeln( const string &message );
 	void writeln( );
 	void write( const string &message );
 	void incTab( );
 	void decTab( );
-	CTextFile& operator << ( const string &message );
+	string getText( ) const;
+	bool writeToFile( const string &filename );
 private:
 	string _chrTab;
 	string _tabs;
-	ofstream *_file;
 	bool _emitTab;
+	stringstream _txt;
 };
 
 #endif

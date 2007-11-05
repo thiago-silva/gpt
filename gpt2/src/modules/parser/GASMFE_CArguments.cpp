@@ -1,5 +1,7 @@
 #include "GASMFE_CArguments.hpp"
 
+#include "Tools.hpp"
+
 
 CArguments::CArguments( )
 {
@@ -18,15 +20,13 @@ void CArguments::emitMnsInSubroutineCall( )
 
 	bool varArgs = _subroutineName == "imprima";
 
-	// TODO: emite ao contrario
 	// se for "imprima" empilha o nro de argumentos e o tipo de cada um
 	// por enquanto imprima eh um caso especial, mas nas proximas versoes isso seria corrigido...
-	for( argument = begin(); argument != end(); argument++ ) {
-                antlr::RefToken token = *argument;
-		_subroutine->emitPUSHMn( token, varArgs );
+	for( argument = end() - 1; argument >= begin(); argument-- ) {
+		_subroutine->emitPUSHMn( *argument, varArgs );
 
 	}
 	if (varArgs) {
-		_subroutine->emitPUSHMn( size( ) );
+		_subroutine->emitMn( "push", itoa( size( ) ) );
 	}
 }

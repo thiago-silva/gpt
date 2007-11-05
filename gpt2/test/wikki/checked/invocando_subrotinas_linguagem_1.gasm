@@ -1,0 +1,14 @@
+// Programa invocando_subrotinas_linguagem_1.gasm gerado a partir de invocando_subrotinas_linguagem_1.gpt
+program invocando_subrotinas_linguagem_1
+
+// Procedure main
+proc main
+	push "Olá mundo !!!"
+	push_string
+	push 1
+	pcall imprima
+	exit_0
+end-proc
+// Fim da procedure
+
+end-program

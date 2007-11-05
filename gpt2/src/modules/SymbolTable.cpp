@@ -37,14 +37,14 @@ SymbolTable::~SymbolTable()
 }
 
 void SymbolTable::registrarLeia() {
-  Symbol f(SymbolTable::GlobalScope, "leia", 0, true, TIPO_ALL);
+  Symbol f(SymbolTable::GlobalScope, "leia", 0, true, TIPO_ALL, false);
   f.cd = currentCod++;
   f.isBuiltin = true;
   insertSymbol(f, SymbolTable::GlobalScope);
 }
 
 void SymbolTable::registrarImprima() {
-  Symbol f(SymbolTable::GlobalScope, "imprima", 0, true, TIPO_NULO);
+  Symbol f(SymbolTable::GlobalScope, "imprima", 0, true, TIPO_NULO, false);
   f.cd = currentCod++;
   f.param.setVariable(true);
   f.isBuiltin = true;
@@ -52,7 +52,7 @@ void SymbolTable::registrarImprima() {
 }
 
 void SymbolTable::declareVar(const string& scope, const string& lexeme, int line, int type) {
-  Symbol s(scope, lexeme, line, false, type);
+  Symbol s(scope, lexeme, line, false, type, true);
   s.cd = currentCod++;
   symbols[scope].push_back(s);
 }
@@ -60,9 +60,16 @@ void SymbolTable::declareVar(const string& scope, const string& lexeme, int line
 void SymbolTable::declareVar(const string& scope, const string& lexeme, int line, int type
       , const list<int>& dimensions) {
 
-  Symbol s(scope, lexeme, line, false, type, dimensions);
+  Symbol s(scope, lexeme, line, false, type, true, dimensions);
   s.cd = currentCod++;
   symbols[scope].push_back(s);  
+}
+
+void SymbolTable::addConstant(const string& scope, const string& lexeme, int line, int type) {
+  // O codigo ta igual ao declareVar...
+  Symbol s(scope, lexeme, line, false, type, false);
+  s.cd = currentCod++;
+  symbols[scope].push_back(s);
 }
 
 
@@ -92,7 +99,7 @@ Symbol& SymbolTable::getSymbol(const string& scope, const string& lexeme, bool s
     }
   }
 
-  throw SymbolTableException("no symbol found");
+  throw SymbolTableException("no symbol found[" + scope + ":" + lexeme);
 }
 
 list<Symbol> SymbolTable::getSymbols(const string& scope) {

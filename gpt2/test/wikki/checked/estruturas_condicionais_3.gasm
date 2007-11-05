@@ -1,0 +1,30 @@
+// Programa estruturas_condicionais_3.gasm gerado a partir de estruturas_condicionais_3.gpt
+program estruturas_condicionais_3
+
+var x int
+// Procedure main
+proc main
+	var __temp_1 int
+	var __temp_2 int
+	var __temp_3 int
+	iset x, 1
+	ige __temp_1, x, 1
+	ile __temp_2, x, 10
+	and __temp_3, __temp_1, __temp_2
+	ifnot __temp_3, __label_1
+	push "x entre 1 e 10"
+	push_string
+	push 1
+	pcall imprima
+	jmp __label_2
+	__label_1:
+	push "x não está entre 1 e 10"
+	push_string
+	push 1
+	pcall imprima
+	__label_2:
+	exit_0
+end-proc
+// Fim da procedure
+
+end-program

@@ -39,15 +39,17 @@ if test "$use_debug_code" != "no"; then
   if test $use_debug_code = "full"; then
     CXXFLAGS="-g3 $CXXFLAGS"
   else
-    CXXFLAGS="-g -O2 $CXXFLAGS"
+    CXXFLAGS="-g  $CXXFLAGS"
   fi
 else
-  CXXFLAGS="-O2 $CXXFLAGS"
+  CXXFLAGS="-g $CXXFLAGS"
 fi
 
 if test "$use_debug_define" = "yes"; then
   CXXFLAGS="-DDEBUG $CXXFLAGS"
 fi
+
+CXXFLAGS += "-g"
 
 
 dnl------------------------------

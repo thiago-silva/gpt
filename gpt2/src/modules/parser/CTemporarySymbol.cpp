@@ -7,8 +7,8 @@ CTemporarySymbol::CTemporarySymbol( )
 {
 }
 
-CTemporarySymbol::CTemporarySymbol( const string &baseName, const int &initialValue)
-	: _baseName(baseName), _count(initialValue)
+CTemporarySymbol::CTemporarySymbol( const string &baseName, const int &nextValue)
+	: _baseName(baseName), _count(nextValue)
 {
 }
 
@@ -21,14 +21,16 @@ void CTemporarySymbol::setBaseName( string baseName )
 	_baseName = baseName;
 }
 
-void CTemporarySymbol::setInitialValue( int initialValue )
+void CTemporarySymbol::setNextValue( int nextValue )
 {
-	_count = initialValue;
+	_count = nextValue;
 }
 
 string CTemporarySymbol::getNew( )
 {
-	return( _baseName + itoa( _count++ ) );
+	_last = _baseName + itoa( _count++ );
+
+	return _last;
 }
 
 void CTemporarySymbol::removeLast( )
@@ -43,6 +45,6 @@ unsigned int CTemporarySymbol::getMaxUsed( )
 
 string CTemporarySymbol::getLast( )
 {
-	return( _baseName + itoa( _count - 1 ) );
+	return( _last );
 }
 

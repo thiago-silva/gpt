@@ -1,32 +1,30 @@
 #include "CTextFile.hpp"
 
 
-CTextFile::CTextFile( const string &filename, const string &chrTab )
+CTextFile::CTextFile( const string &chrTab )
 	: _chrTab( chrTab ), _emitTab( true )
 {
-	_file = new ofstream( filename.c_str( ) );
 }
 
 
 CTextFile::~CTextFile( )
 {
-	delete _file;
 }
 
 
 void CTextFile::writeln( const string &message )
 {
 	if ( _emitTab ) {
-		(*_file) << _tabs;
+		_txt << _tabs;
 	}
-	(*_file) << message << endl;
+	_txt << message << endl;
 	_emitTab = true;
 }
 
 
 void CTextFile::writeln( )
 {
-	(*_file) << endl;
+	_txt << endl;
 	_emitTab = true;
 }
 
@@ -34,9 +32,9 @@ void CTextFile::writeln( )
 void CTextFile::write( const string &message )
 {
 	if ( _emitTab ) {
-		(*_file) << _tabs;
+		_txt << _tabs;
 	}
-	(*_file) << message;
+	_txt << message;
 	_emitTab = false;
 }
 
@@ -53,26 +51,21 @@ void CTextFile::decTab( )
 }
 
 
-CTextFile& CTextFile::operator << ( const string &message )
+string CTextFile::getText( ) const
 {
-    write(message);
-	
-	return *this;
+	return _txt.str( );
 }
 
 
-/*
-ostream& operator << (ostream& os, const ConstantPool& constantPool) {
-    os << "Constant pool size: " << constantPool.size( ) << endl;
-
-    for ( ConstantPool::const_iterator constant = constantPool.begin( );
-          constant != constantPool.end( ); constant++ ) {
-        // number
-        os << "\t" << strZero(constant - constantPool.begin( ), 3) << ":"
-        << *constant;
-    }
-
-    return ( os );
+bool CTextFile::writeToFile( const string &filename )
+{
+	ofstream *_file;
+	_file = new ofstream( filename.c_str( ) );
+	if (_file) {
+		(*_file) << _txt;
+		delete _file;
+		return true;
+	}
+	return false;
 }
-*/
 

@@ -1,0 +1,61 @@
+// Programa funcoes_definidas_usuario_2.gasm gerado a partir de funcoes_definidas_usuario_2.gpt
+program funcoes_definidas_usuario_2
+
+var x int
+// Procedure main
+proc main
+	var __temp_1 int
+	var __temp_2 int
+	push "Digite um número:"
+	push_string
+	push 1
+	pcall imprima
+	push_0
+	pcall leia
+	pop __temp_1
+	iset x, __temp_1
+	push_0
+	push x
+	pcall fatorial
+	pop __temp_2
+	push __temp_2
+	push_int
+	push "é "
+	push_string
+	push x
+	push_int
+	push "Fatorial de "
+	push_string
+	push 4
+	pcall imprima
+	exit_0
+end-proc
+// Fim da procedure
+
+// Procedure fatorial
+proc fatorial
+	par z int
+	var __result int
+	var __temp_3 int
+	var __temp_4 int
+	var __temp_5 int
+	var __temp_6 int
+	ieq __temp_3, z, 1
+	ifnot __temp_3, __label_1
+	iset __result, 1
+	ret
+	jmp __label_2
+	__label_1:
+	push_0
+	isub __temp_4, z, 1
+	push __temp_4
+	pcall fatorial
+	pop __temp_5
+	imul __temp_6, z, __temp_5
+	iset __result, __temp_6
+	ret
+	__label_2:
+end-proc
+// Fim da procedure
+
+end-program

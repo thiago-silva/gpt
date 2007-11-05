@@ -1,0 +1,42 @@
+// Programa procedimentos_definidos_usuario_3.gasm gerado a partir de procedimentos_definidos_usuario_3.gpt
+program procedimentos_definidos_usuario_3
+
+var g int
+// Procedure main
+proc main
+	iset g, 0
+	iset g, g
+	push 10
+	push g
+	pcall roda
+	exit_0
+end-proc
+// Fim da procedure
+
+// Procedure roda
+proc roda
+	par p1 int
+	par p2 int
+	var l1 int
+	var l2 int
+	iset l1, 0
+	iset l1, l2
+	iset l1, g
+	iset g, l1
+	iset p1, p2
+	iset l1, p1
+	iset p1, l1
+	iset p1, g
+	iset g, p1
+	push l1
+	push_int
+	push p1
+	push_int
+	push g
+	push_int
+	push 3
+	pcall imprima
+end-proc
+// Fim da procedure
+
+end-program

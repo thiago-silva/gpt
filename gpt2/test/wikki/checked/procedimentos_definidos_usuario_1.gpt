@@ -1,0 +1,11 @@
+// Procedimento sem passagem de parâmetros
+algoritmo exemplo;
+
+início
+    soma( );
+fim
+
+procedimento soma( )
+início
+    imprima( "A soma de 2 + 7 é: ", 2 + 7 );
+fim	

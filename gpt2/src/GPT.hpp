@@ -24,7 +24,6 @@
 #include <list>
 #include <string>
 
-//#include "PortugolAST.hpp"
 #include "SymbolTable.hpp"
 
 
@@ -39,16 +38,12 @@ public:
   static GPT* self();
 
   void reportDicas(bool value);
-//  void printParseTree(bool value);
-//   void usePipe(bool value);
   void setOutputFile(string str);
 
   void showHelp();
   void showVersion();
 
   bool compile(const list<string>& ifnames, bool genBinary = true);
-//  bool translate2C(const list<string>& ifnames);
-//  bool interpret(const list<string>& ifnames, const string& host, int port);
   
 private:
   GPT();
@@ -61,12 +56,9 @@ private:
 
   bool prologue(const list<string>& ifname);
 
-//   bool _usePipe;
-//  bool _printParseTree;
   bool _useOutputFile;
   string _outputfile;
 
-//  RefPortugolAST _astree;
   SymbolTable    _stable;
   
 };

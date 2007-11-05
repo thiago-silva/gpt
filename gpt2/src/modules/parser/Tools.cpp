@@ -242,9 +242,11 @@ const string typeToText(const int &type)
    if (type == PortugolParserTokenTypes::T_INT_LIT) {
       return "int";
    } else if (type == PortugolParserTokenTypes::T_CARAC_LIT) {
-      return "carac lit ???";
+      return "char";
    } else if (type == PortugolParserTokenTypes::T_STRING_LIT) {
       return "string";
+   } else if (type == PortugolParserTokenTypes::T_REAL_LIT) {
+      return "real";
    } else if (type == PortugolParserTokenTypes::T_IDENTIFICADOR) {
       return "id";
    }
@@ -259,9 +261,11 @@ const string typeInAsm( const int &type )
    } else if (type == PortugolParserTokenTypes::T_KW_LITERAL) {
       return "string";
    } else if (type == PortugolParserTokenTypes::T_KW_CARACTERE) {
-      return "int";
+      return "char";
    } else if (type == PortugolParserTokenTypes::T_KW_LOGICO) {
-      return "int";
+      return "bool";
+   } else if (type == PortugolParserTokenTypes::T_KW_REAL) {
+      return "real";
    } else if (type == PortugolParserTokenTypes::T_KW_CORINGA) {
       return "pointer ???";
    } else if (type == PortugolParserTokenTypes::T_KW_MATRIZ) {
@@ -269,5 +273,27 @@ const string typeInAsm( const int &type )
    }
 
    return "ERRO !!!";
+}
+
+
+const int typeToLiteral( const int &type )
+{
+   switch (type) {
+      case PortugolParserTokenTypes::T_KW_INTEIRO:
+         return PortugolParserTokenTypes::T_INT_LIT;
+      case PortugolParserTokenTypes::T_KW_LITERAL:
+         return PortugolParserTokenTypes::T_STRING_LIT;
+      case PortugolParserTokenTypes::T_KW_CARACTERE:
+         return PortugolParserTokenTypes::T_CARAC_LIT;
+      case PortugolParserTokenTypes::T_KW_LOGICO:
+         return PortugolParserTokenTypes::T_INT_LIT;
+//      case PortugolParserTokenTypes::T_KW_CORINGA:
+//         return "pointer ???";
+//      case PortugolParserTokenTypes::T_KW_MATRIZ:
+//          return PortugolParserTokenTypes::T_MATRIZ;
+      default:
+          return 0;
+          // trow exception ???
+   }
 }
 

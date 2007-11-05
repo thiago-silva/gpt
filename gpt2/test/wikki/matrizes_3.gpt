@@ -5,7 +5,7 @@ início
 fim
 
 procedimento mostra( )
-variável resultado: matriz[3] de inteiros;
+variável resultado: matriz[3] do tipo inteiro;
 início
     resultado[0] := 10;
     resultado[1] := 20;

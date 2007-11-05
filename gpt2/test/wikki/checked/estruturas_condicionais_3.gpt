@@ -1,0 +1,12 @@
+algoritmo exemplo;
+
+variável x: inteiro;
+
+início
+    x := 1;
+    se x >= 1 e x <= 10 então
+        imprima( "x entre 1 e 10" );
+    senão
+        imprima( "x não está entre 1 e 10" );
+    fim-se
+fim

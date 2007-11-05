@@ -1,0 +1,28 @@
+// Programa procedimentos_definidos_usuario_2.gasm gerado a partir de procedimentos_definidos_usuario_2.gpt
+program procedimentos_definidos_usuario_2
+
+// Procedure main
+proc main
+	push 7
+	push 2
+	pcall soma
+	exit_0
+end-proc
+// Fim da procedure
+
+// Procedure soma
+proc soma
+	par x int
+	par y int
+	var __temp_1 int
+	isum __temp_1, x, y
+	push __temp_1
+	push_int
+	push "A soma é: "
+	push_string
+	push 2
+	pcall imprima
+end-proc
+// Fim da procedure
+
+end-program

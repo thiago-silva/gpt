@@ -1,0 +1,23 @@
+// Programa estruturas_condicionais_5.gasm gerado a partir de estruturas_condicionais_5.gpt
+program estruturas_condicionais_5
+
+var x int
+// Procedure main
+proc main
+	var __temp_1 int
+	iset x, 10
+	ige __temp_1, x, 20
+	ifnot __temp_1, __label_1
+	iset x, 2
+	jmp __label_2
+	__label_1:
+	__label_2:
+	push x
+	push_int
+	push 1
+	pcall imprima
+	exit_0
+end-proc
+// Fim da procedure
+
+end-program

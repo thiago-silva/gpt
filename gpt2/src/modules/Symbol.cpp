@@ -20,15 +20,18 @@
 
 #include "Symbol.hpp"
 
+#include "PortugolParserTokenTypes.hpp"
+
 #include <sstream>
 
 SymbolType::SymbolType() 
   : _isPrimitive(true)
   , _primitiveType(TIPO_NULO)
+  , _isVariable(true)
   {}
   
-SymbolType::SymbolType(int type) 
-  : _isPrimitive(true), _primitiveType(type)
+SymbolType::SymbolType(int type, bool isVariable) 
+  : _isPrimitive(true), _primitiveType(type), _isVariable(isVariable)
   {
 }
 
@@ -38,7 +41,7 @@ void SymbolType::setPrimitiveType(int type) {
   _dimensions.clear();
 }
 
-int SymbolType::primitiveType() const {
+int SymbolType::getPrimitiveType() const {
   return _primitiveType;
 }
   
@@ -48,6 +51,11 @@ void SymbolType::setPrimitive(bool val) {
 
 bool SymbolType::isPrimitive() const {
   return _isPrimitive;
+}
+
+void SymbolType::setIsVariable(bool isVariable)
+{
+  _isVariable = isVariable;
 }
 
 void SymbolType::setDimensions(const list<int>& d) {
@@ -73,10 +81,36 @@ string SymbolType::toString() const {
   return str.str();
 }
 
+
+string SymbolType::toAsmType() const {
+  string str;
+  switch(_primitiveType) {
+//    case TIPO_NULO:      str = "null"; break;
+    case PortugolParserTokenTypes::T_KW_INTEIRO:    str = "int"; break;
+    case PortugolParserTokenTypes::T_KW_REAL:   str = "real"; break;
+    case PortugolParserTokenTypes::T_KW_CARACTERE:  str = "char"; break;
+    case PortugolParserTokenTypes::T_KW_LITERAL: str = "string"; break;
+    case PortugolParserTokenTypes::T_KW_LOGICO: str = "bool"; break;
+    case PortugolParserTokenTypes::T_KW_MATRIZ: str = "matrix"; break;
+//    case TIPO_LOGICO:    str = "bool"; break;    
+//    case TIPO_MATRIZ:    str = "matrix"; break;
+//    case TIPO_ALL:       str = "@all"; break;
+    default:             str = "desconhecido"; break;
+  }
+  return str;
+}
+
+bool SymbolType::getIsVariable( ) const
+{
+   return _isVariable;
+}
+
+
+
 //------------------------------------------------------------------------------------//
 
 Symbol::Symbol() 
-  : cd(-1), scope(), lexeme(), line(-1), type(TIPO_NULO), isFunction(false), isBuiltin(false)
+  : cd(-1), scope(), lexeme(), line(-1), type(TIPO_NULO,false), isFunction(false), isBuiltin(false)
   , param()
 {
 
@@ -84,20 +118,21 @@ Symbol::Symbol()
 
 Symbol::Symbol(const string& scope_, const string& lexeme_, int line_, bool isfunction_) 
   : cd(-1), scope(scope_), lexeme(lexeme_), line(line_)
-  , type(TIPO_NULO), isFunction(isfunction_), isBuiltin(false)
+  , type(TIPO_NULO,false), isFunction(isfunction_), isBuiltin(false)
   , param() {}
 
 
-Symbol::Symbol(const string& scope_, const string& lexeme_, int line_, bool isfunction_, int type_) 
+Symbol::Symbol(const string& scope_, const string& lexeme_, int line_, bool isfunction_, int type_, bool isVariable_) 
     : cd(-1), scope(scope_), lexeme(lexeme_), line(line_)
     , type(), isFunction(isfunction_), isBuiltin(false)
     , param() {
 
   type.setPrimitive(true);
   type.setPrimitiveType(type_);
+  type.setIsVariable(isVariable_);
 }
 
-Symbol::Symbol(const string& scope_, const string& lexeme_, int line_, bool isfunction_, int type_,
+Symbol::Symbol(const string& scope_, const string& lexeme_, int line_, bool isfunction_, int type_, bool isVariable_,
   const list<int>& dimensions) 
     : cd(-1), scope(scope_)
     , lexeme(lexeme_)
@@ -113,6 +148,7 @@ Symbol::Symbol(const string& scope_, const string& lexeme_, int line_, bool isfu
   } else {
     type.setPrimitive(true);
   }
+  type.setIsVariable(isVariable_);
 }
 
 bool Symbol::isValid() const {
@@ -132,4 +168,10 @@ string Symbol::typeToString(int type) {
     default:             str = "desconhecido"; break;
   }
   return str;
+}
+
+
+SymbolType Symbol::getType( ) const
+{
+   return type;
 }

@@ -1,6 +1,6 @@
 algoritmo exemplo;
 
-constante total: inteiro = 100;
+constante total: inteiro := 100;
 
 variável i: inteiro;
 

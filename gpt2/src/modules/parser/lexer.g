@@ -105,9 +105,11 @@ tokens {
   T_KW_CONSTANTE="constante";
   T_KW_CONSTANTES="constantes";
   T_KW_ESTRUTURA="estrutura";
+  T_KW_FIM_ESTRUTURA="fim-estrutura";
   T_KW_PROCEDIMENTO="procedimento";
   T_KW_SAIR="sair";
   T_KW_ASM="asm";
+  T_KW_FIM_ASM="fim-asm";
 
 
   T_REAL_LIT="número real"; //nondeterminism T_INT_LIT & T_REAL_LIT
@@ -145,6 +147,11 @@ public:
 
   void setNextFilename(string str) {
     nextFilename = str;
+  }
+
+  string getNextFilename( )
+  {
+    return nextFilename;
   }
 
 private:
@@ -290,6 +297,7 @@ options {
 /*-----------------Constant literals ***********************/
 
 
+// TODO: realmente eh nao deterministico ???
 T_INT_LIT
 options {
   paraphrase = "número inteiro";
@@ -408,7 +416,8 @@ options {
   paraphrase = "caractere";
 }
 //  : '\''! ( ~('\''|'\n'|'\r'|'\\') | ESC )? '\''!
-  : '\''! ( ~( '\'' | '\\' ) | ESC )? '\''!
+//  : '\''! ( ~( '\'' | '\\' ) | ESC )? '\''!
+  : '\'' ( ~( '\'' | '\\' ) | ESC )? '\''
   ;
 
 //"Digite um \");
@@ -418,8 +427,10 @@ options {
   paraphrase = "literal";
 }
 //  : '"'! (ESC|~('"'|'\\'|'\n'|'\r'))* '"'!
-  : '"'! ( ~( '"' | '\\' | '\n' | '\r') | ESC)* '"'!
+  : '"' ( ~( '"' | '\\' | '\n' | '\r') | ESC)* '"'
+//  : '"'! ( ~( '"' | '\\' | '\n' | '\r') | ESC)* '"'!
   ;
+
 
 protected
 ESC
@@ -462,6 +473,13 @@ options {
   : ','
   ;
 
+T_DOT
+options {
+  paraphrase = "'.'";
+}
+  : '.'
+  ;
+
 T_WS_ : (' '
   | '\t'
   | '\n' { newline(); }
@@ -491,6 +509,42 @@ ML_COMMENT
     "*/"
     {$setType(antlr::Token::SKIP);}
   ;
+
+// TODO: nao consegui seguir a sintaxe de "asm" .. "fim-asm" sem o uso de { }
+T_ASM_CODE
+{int line = getLine();}
+  : '{'!
+    ( 
+      options { generateAmbigWarnings=false; } :  
+        '\n'                     {newline();}
+      | ('\r' '\n')=> '\r' '\n'  {newline();}
+      | '\r'                     {newline();}
+      |~('}')
+//      |~('*'|'\n'|'\r')
+//      | ('*' ~'/' )=> '*' 
+    )* 
+    '}'!
+  ;
+
+//T_ASM
+//  : "asm" (~("fim-asm"))* "fim-asm"
+//  ;
+
+
+//ASM_CODE
+//{int line = getLine();}
+//  : "asm"!
+//    ( 
+//      options { generateAmbigWarnings=false; } :  
+//        '\n'                     {newline();}
+//      | ('\r' '\n')=> '\r' '\n'  {newline();}
+//      | '\r'                     {newline();}
+//      |~('*'|'\n'|'\r')
+//      | ('*' ~'/' )=> '*' 
+//      |~("fim-asm")
+//    )* 
+//    "fim-asm"!
+//  ;
 
 exception
 catch[antlr::RecognitionException] {  

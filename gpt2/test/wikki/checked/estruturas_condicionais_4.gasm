@@ -1,0 +1,41 @@
+// Programa estruturas_condicionais_4.gasm gerado a partir de estruturas_condicionais_4.gpt
+program estruturas_condicionais_4
+
+var x int
+// Procedure main
+proc main
+	var __temp_1 int
+	var __temp_2 int
+	var __temp_3 int
+	var __temp_4 int
+	push_0
+	pcall leia
+	pop __temp_1
+	iset x, __temp_1
+	iset __temp_2, x
+	ieq __temp_3, __temp_2, 1
+	ifnot __temp_3, __label_2
+	push "x = um"
+	push_string
+	push 1
+	pcall imprima
+	jmp __label_1
+	__label_2:
+	ieq __temp_4, __temp_2, 2
+	ifnot __temp_4, __label_3
+	push "x = dois"
+	push_string
+	push 1
+	pcall imprima
+	jmp __label_1
+	__label_3:
+	push "x diferente de um e dois"
+	push_string
+	push 1
+	pcall imprima
+	__label_1:
+	exit_0
+end-proc
+// Fim da procedure
+
+end-program

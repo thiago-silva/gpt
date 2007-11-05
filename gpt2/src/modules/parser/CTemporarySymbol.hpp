@@ -9,10 +9,10 @@ class CTemporarySymbol
 {
 public:
 	CTemporarySymbol( );
-	CTemporarySymbol( const string &baseName, const int &initialValue = 0 );
+	CTemporarySymbol( const string &baseName, const int &nextValue = 0 );
 	~CTemporarySymbol( );
 	void setBaseName( string baseName );
-	void setInitialValue( int initialValue );
+	void setNextValue( int initialValue );
 	string getNew( );
 	void removeLast( );
 	unsigned int getMaxUsed( );
@@ -20,6 +20,7 @@ public:
 private:
 	string _baseName;
 	int _count;
+	string _last;
 };
 
 #endif
