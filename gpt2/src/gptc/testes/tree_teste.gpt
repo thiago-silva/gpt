@@ -1,0 +1,106 @@
+// algoritmo teste;
+
+// use "bib1";
+// use "bib2";
+// use "bib3";
+// use "bib4";
+
+// variáveis
+//   p : T;
+//   a,b : real;
+//   c : inteiro := 10;
+//   j : matriz[] do tipo inteiro := [1,2,3];
+//   es,e2 : T := {nome:="foo",id:=6};
+//   e4    : matriz[] do tipo T := [{nome:="a",id:=2},{nome:="b",id:=3}];
+// fim-variáveis
+
+
+// variável q : T;
+// variável j : K := "oi";
+// variável m : matriz[] do tipo I := [9,8,7];
+// variável z : T := {i:=10, j:=20};
+// variável e4    : matriz[10][20] do tipo T := [{nome:="a",id:=2},{nome:="b",id:=3}];
+
+// constantes
+//   z  : inteiro := 3;
+//   j  : matriz[] do tipo inteiro := [1,2,3];
+//   es : T := {nome:="foo",id:=6};
+//   e4 : matriz[] do tipo T := [{nome:="a",id:=2},{nome:="b",id:=3},{k:=[9,8,7]}];
+// fim-constantes
+//
+// constante x : inteiro := {z := [1,2,3]};
+
+// estrutura T
+//   z   : inteiro := 1;
+//   j,z : kkk;
+// fim-estrutura
+
+início
+//   x := 10;
+//   z[1] := 9;
+//   z[0][0] := não(~1 + -2 * +3);
+
+//   se x > 2 então
+//     x := 2;
+//   fim-se
+//
+//   se z = "oi" então
+//     z := 1;
+//   senão
+//     z := 2;
+//   fim-se
+
+// enquanto x > 2 faça
+//   x := 2;
+// fim-enquanto
+
+// repita
+//   x := 2;
+//   k := 3;
+// até x > 3
+
+// para x de 1+2 até 10+100 faça
+//   x := 3;
+// fim-para
+
+// para x[y] de 0 até 100 passo -1 faça
+//   x := 3;
+// fim-para
+
+// caso x seja
+//   "oi" faça
+//     x := 1;
+//     z := 2;
+//   fim-faça
+//
+//   10 faça
+//     x:=3;
+//     sair;
+//   fim-faça
+//
+//   senão
+//     x:= 10;
+//   fim-senão
+// fim-caso
+//
+//   retorne 10+10;
+
+  f(10, 1+2, g());
+
+//   "se" x > 10
+/*  asm
+    ola  as "sss" 1 se então
+    adasd "fim-asm"
+  fim-asm*/
+fim
+
+
+// função f(a:I,k:matriz[1][2] do tipo I) : T
+// início
+//   x := 2;
+// fim
+
+// procedimento p(a:I,k:matriz[1][2] do tipo I)
+// início
+//   z := 2;
+// fim
