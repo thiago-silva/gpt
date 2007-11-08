@@ -182,7 +182,7 @@ tipo_matriz!
   : T_KW_MATRIZ dim:matriz_dimensoes
     T_KW_DO T_KW_TIPO t:matriz_tipo
 
-    {#tipo_matriz = #([TI_MATRIZ, "&matriz"], t,dim);}
+                    {#tipo_matriz = #([TI_MATRIZ, "&matriz"], t,dim);}
   ;
 
 matriz_dimensoes
@@ -265,7 +265,8 @@ lista_parametros
 
 parametro!
   : ((c:T_KW_CONSTANTE)? r:T_KW_REF)? id:T_IDENTIFICADOR T_2_PONTOS t:tipo
-    {#parametro = #([T_KW_VARIAVEL,"&param"],t,id,c,r);}
+
+                        {#parametro = #([T_KW_VARIAVEL,"&param"],t,id,c,r);}
   ;
 
 
@@ -452,15 +453,15 @@ expr_elemento
   :  (T_IDENTIFICADOR T_ABRE_PAREN)=> chamada_subrotina
   |  lvalue
   |  literal
-  |! T_ABRE_PAREN e:expressao T_FECHA_PAREN
-     {#expr_elemento = #([TI_PARENTESIS,"&paren"], e);}
+  |! T_ABRE_PAREN e:expressao T_FECHA_PAREN {#expr_elemento =
+                                              #([TI_PARENTESIS,"&paren"], e);}
   ;
 
 
 chamada_subrotina!
   : id:T_IDENTIFICADOR T_ABRE_PAREN (args:lista_argumentos)? T_FECHA_PAREN
 
-    {#chamada_subrotina = #([TI_CALL,"&call"], id, args);}
+                        {#chamada_subrotina = #([TI_CALL,"&call"], id, args);}
   ;
 
 lista_argumentos
