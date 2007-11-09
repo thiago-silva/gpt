@@ -82,9 +82,9 @@ importacao
   ;
 
 corpo
-  :  (declaracao_subrotina)*
-      bloco_codigo
-     (declaracao_subrotina)*
+  :  declaracao_subrotina corpo
+  |  bloco_codigo corpo
+  |  /*vazio*/
   ;
 
 
