@@ -18,14 +18,26 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             */
 
 
+header {
+  #include "BaseSemanticWalker.hpp"
+}
+
+
 options {
   language="Cpp";
 }
 
-class SemanticWalker extends TreeParser;
+class SemanticWalker extends TreeParser("BaseSemanticWalker");
 options {
-  importVocab   = Portugol;
-  genHashLines  = false;
+  importVocab    = Portugol;
+  noConstructors = true;
+  genHashLines   = false;
+}
+
+{
+public:
+  SemanticWalker::SemanticWalker()
+	 : BaseSemanticWalker() { }
 }
 
 

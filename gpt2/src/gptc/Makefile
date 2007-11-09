@@ -1,26 +1,32 @@
 output = ./obj
 
 objects = $(output)/PortugolLexer.o $(output)/PortugolParser.o \
-					$(output)/SemanticWalker.o $(output)/teste.o \
-					$(output)/MismatchedUnicodeCharException.o
+					$(output)/BaseSemanticWalker.o $(output)/SemanticWalker.o \
+					$(output)/teste.o $(output)/MismatchedUnicodeCharException.o
 
 
 cpp = g++ -I$(output) -I.
 
-teste: bin $(objects)
+all: $(output) $(objects) $(output)/teste
+
+$(output)/teste:
 	$(cpp) -o $(output)/teste $(objects) /usr/local/lib/libantlr.a
 
-bin:
+$(output):
 	mkdir -p $(output)
 
-$(output)/PortugolLexer.o: $(output)/PortugolLexer.hpp $(output)/PortugolLexer.cpp
+$(output)/PortugolLexer.o: $(output)/PortugolLexer.hpp
 	$(cpp) -c $(output)/PortugolLexer.cpp -o $(output)/PortugolLexer.o
 
-$(output)/PortugolParser.o: $(output)/PortugolParser.hpp $(output)/PortugolParser.cpp
+$(output)/PortugolParser.o: $(output)/PortugolParser.hpp
 	$(cpp) -c $(output)/PortugolParser.cpp -o $(output)/PortugolParser.o
 
-$(output)/SemanticWalker.o: $(output)/SemanticWalker.hpp $(output)/SemanticWalker.cpp
+$(output)/SemanticWalker.o: $(output)/BaseSemanticWalker.o \
+		$(output)/SemanticWalker.hpp
 	$(cpp) -c $(output)/SemanticWalker.cpp -o $(output)/SemanticWalker.o
+
+$(output)/BaseSemanticWalker.o: BaseSemanticWalker.hpp BaseSemanticWalker.cpp
+	$(cpp) -c BaseSemanticWalker.cpp -o $(output)/BaseSemanticWalker.o
 
 $(output)/MismatchedUnicodeCharException.o:
 	$(cpp) -c MismatchedUnicodeCharException.cpp \
@@ -49,9 +55,3 @@ $(output)/table.hpp:
 clean:
 	rm -rf $(output)
 
-cleanold:
-	rm -f *.o PortugolLexer.cpp PortugolLexer.hpp PortugolTokenTypes.hpp \
-	PortugolTokenTypes.txt PortugolParser.cpp PortugolParser.hpp teste \
-	PortugolParserTokenTypes.hpp PortugolParserTokenTypes.txt table.hpp \
-	SemanticWalkerTokenTypes.txt SemanticWalkerTokenTypes.hpp \
-	SemanticWalker.hpp SemanticWalker.cpp
