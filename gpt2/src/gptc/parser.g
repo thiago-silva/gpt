@@ -188,7 +188,7 @@ tipo_matriz!
 matriz_dimensoes
   : ( T_ABRE_CHAVE!
       ( T_INTEIRO_LITERAL
-        | /*vazio*/  {addChildNode(currentAST, createNode(T_NULL,"&null"));}
+        | /*vazio*/  {addChildNode(currentAST, createNode(T_NULO,"&null"));}
       )
       T_FECHA_CHAVE!
     )+

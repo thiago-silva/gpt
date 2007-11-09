@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "PortugolLexer.hpp"
 #include "PortugolParser.hpp"
+#include "SemanticWalker.hpp"
 #include "PortugolTokenTypes.hpp"
 #include <antlr/TokenBuffer.hpp>
 #include <antlr/CommonAST.hpp>
@@ -26,7 +27,7 @@ void dump_tokens(char* fname) {
   }
 }
 
-void dump_tree(char* fname) {
+antlr::RefAST dump_tree(char* fname, bool should_dump) {
 
   std::ifstream fi(fname);
   PortugolLexer lexer(fi, true);
@@ -38,27 +39,44 @@ void dump_tree(char* fname) {
 
   parser.programa();
 
-  antlr::RefCommonAST ast = antlr::RefCommonAST(parser.getAST());
+  antlr::RefAST ast = parser.getAST();
+  antlr::RefCommonAST cast = antlr::RefCommonAST(ast);
 
-  if (ast) {
-    std::cerr << ast->toStringList() << std::endl << std::endl;
-  } else {
-    std::cerr << ": no parse tree" << std::endl;
+  if (!cast) {
+    std::cerr << "no parse tree!" << std::endl;
   }
+
+  if (should_dump) {
+    std::cerr << cast->toStringList() << std::endl << std::endl;
+  }
+  return ast;
+}
+
+void semantic(char* fname) {
+  antlr::RefAST ast;
+
+  ast = dump_tree(fname, true);
+
+  SemanticWalker semantic;
+  semantic.programa(ast);
 }
 
 int main(int argc, char** argv) {
 
   if (argc < 3) {
-    std::cerr << "./test [lp] <file.gpt>" << std::endl;
+    std::cerr << "./test [lps] <file.gpt>" << std::endl;
     return 0;
   }
 
-  if (*argv[1] == 't') {
-    dump_tree(argv[2]);
-  } else {
-    dump_tokens(argv[2]);
+  switch(*argv[1]) {
+    case 'l':
+      dump_tokens(argv[2]);
+      break;
+    case 'p':
+      dump_tree(argv[2], true);
+      break;
+    case 's':
+    default:
+      semantic(argv[2]);
   }
-
-  return 0;
 }

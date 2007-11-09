@@ -5,17 +5,19 @@
 // use "bib3";
 // use "bib4";
 
-// variáveis
+// variável q : T;
+
+variáveis
 //   p : T;
 //   a,b : real;
 //   c : inteiro := 10;
-//   j : matriz[] do tipo inteiro := [1,2,3];
+  j : matriz[] do tipo inteiro := [1,2,3];
 //   es,e2 : T := {nome:="foo",id:=6};
 //   e4    : matriz[] do tipo T := [{nome:="a",id:=2},{nome:="b",id:=3}];
-// fim-variáveis
+fim-variáveis
 
 
-// variável q : T;
+
 // variável j : K := "oi";
 // variável m : matriz[] do tipo I := [9,8,7];
 // variável z : T := {i:=10, j:=20};
@@ -34,8 +36,15 @@
 //   z   : inteiro := 1;
 //   j,z : kkk;
 // fim-estrutura
-
+/*
+função f(a:I,k:matriz[1][2] do tipo I) : T
 início
+  x := 2;
+fim*/
+
+
+
+// início
 //   x := 10;
 //   z[1] := 9;
 //   z[0][0] := não(~1 + -2 * +3);
@@ -85,20 +94,15 @@ início
 //
 //   retorne 10+10;
 
-  f(10, 1+2, g());
+//   f(10, 1+2, g());
 
 //   "se" x > 10
 /*  asm
     ola  as "sss" 1 se então
     adasd "fim-asm"
   fim-asm*/
-fim
-
-
-// função f(a:I,k:matriz[1][2] do tipo I) : T
-// início
-//   x := 2;
 // fim
+
 
 // procedimento p(a:I,k:matriz[1][2] do tipo I)
 // início
