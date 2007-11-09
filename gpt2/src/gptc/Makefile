@@ -1,42 +1,55 @@
-objects = PortugolLexer.o PortugolParser.o SemanticWalker.o \
-			    MismatchedUnicodeCharException.o teste.o
+output = ./obj
 
-teste: $(objects)
-	g++ -o teste $(objects) /usr/local/lib/libantlr.a
+objects = $(output)/PortugolLexer.o $(output)/PortugolParser.o \
+					$(output)/SemanticWalker.o $(output)/teste.o \
+					$(output)/MismatchedUnicodeCharException.o
 
-PortugolLexer.o: PortugolLexer.hpp PortugolLexer.cpp
-	g++ -c PortugolLexer.cpp
 
-PortugolParser.o: PortugolParser.hpp PortugolParser.cpp
-	g++ -c PortugolParser.cpp
+cpp = g++ -I$(output) -I.
 
-SemanticWalker.o: SemanticWalker.hpp SemanticWalker.cpp
-	g++ -c SemanticWalker.cpp
+teste: bin $(objects)
+	$(cpp) -o $(output)/teste $(objects) /usr/local/lib/libantlr.a
 
-MismatchedUnicodeCharException.o:
-	g++ -c MismatchedUnicodeCharException.cpp
+bin:
+	mkdir -p $(output)
 
-teste.o: teste.cpp table.hpp
-	g++ -c teste.cpp
+$(output)/PortugolLexer.o: $(output)/PortugolLexer.hpp $(output)/PortugolLexer.cpp
+	$(cpp) -c $(output)/PortugolLexer.cpp -o $(output)/PortugolLexer.o
 
-PortugolLexer.hpp PortugolLexer.cpp: lexer.g
-	antlr lexer.g
+$(output)/PortugolParser.o: $(output)/PortugolParser.hpp $(output)/PortugolParser.cpp
+	$(cpp) -c $(output)/PortugolParser.cpp -o $(output)/PortugolParser.o
 
-PortugolParser.hpp PortugolParser.cpp: parser.g
-	antlr parser.g
+$(output)/SemanticWalker.o: $(output)/SemanticWalker.hpp $(output)/SemanticWalker.cpp
+	$(cpp) -c $(output)/SemanticWalker.cpp -o $(output)/SemanticWalker.o
 
-SemanticWalker.hpp SemanticWalker.cpp: semantic.g
-	antlr semantic.g
+$(output)/MismatchedUnicodeCharException.o:
+	$(cpp) -c MismatchedUnicodeCharException.cpp \
+	-o $(output)/MismatchedUnicodeCharException.o
 
-table.hpp:
-	grep = PortugolTokenTypes.txt > table.hpp
-	sed -i -e 's/([^=]*)//' table.hpp
-	sed -i -e 's/"[^"]*"//' table.hpp
-	sed -i -e 's/==/=/' table.hpp
-	sed -i -e 's/\([^=]*\)=\(.*\)/table[\2]="\1";/' table.hpp
+$(output)/teste.o: teste.cpp $(output)/table.hpp
+	$(cpp) -c teste.cpp -o $(output)/teste.o
+
+$(output)/PortugolLexer.hpp $(output)/PortugolLexer.cpp: lexer.g
+	antlr -o $(output) lexer.g
+
+$(output)/PortugolParser.hpp $(output)/PortugolParser.cpp: parser.g
+	antlr -o $(output) parser.g
+
+$(output)/SemanticWalker.hpp $(output)/SemanticWalker.cpp: semantic.g
+	antlr -o $(output) semantic.g
+
+$(output)/table.hpp:
+	grep = $(output)/PortugolTokenTypes.txt > $(output)/table.hpp
+	sed -i -e 's/([^=]*)//' $(output)/table.hpp
+	sed -i -e 's/"[^"]*"//' $(output)/table.hpp
+	sed -i -e 's/==/=/' $(output)/table.hpp
+	sed -i -e 's/\([^=]*\)=\(.*\)/table[\2]="\1";/' $(output)/table.hpp
 
 
 clean:
+	rm -rf $(output)
+
+cleanold:
 	rm -f *.o PortugolLexer.cpp PortugolLexer.hpp PortugolTokenTypes.hpp \
 	PortugolTokenTypes.txt PortugolParser.cpp PortugolParser.hpp teste \
 	PortugolParserTokenTypes.hpp PortugolParserTokenTypes.txt table.hpp \
