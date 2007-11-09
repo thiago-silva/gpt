@@ -180,7 +180,7 @@ tipo_primitivo
 
 tipo_matriz!
   : m:T_MATRIZ dim:matriz_dimensoes
-    T_DO T_TIPO t:matriz_tipo
+    T_DO T_TIPO t:tipo_da_matriz
 
                     {#tipo_matriz = #(m, t,dim);}
   ;
@@ -194,7 +194,7 @@ matriz_dimensoes
     )+
   ;
 
-matriz_tipo
+tipo_da_matriz
   : tipo_primitivo | T_IDENTIFICADOR
   ;
 
