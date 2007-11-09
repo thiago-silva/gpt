@@ -260,15 +260,18 @@ declaracao_procedimento
   ;
 
 lista_parametros
-  : parametro (T_VIRGULA! parametro)*
+  : (param_reticencias | parametro (T_VIRGULA! lista_parametros)?)
+  ;
+
+param_reticencias!
+  : ret:T_RETICENCIAS     {#param_reticencias = #([T_VARIAVEL,"&param"],ret);}
   ;
 
 parametro!
   : ((c:T_CONSTANTE)? r:T_REF)? id:T_IDENTIFICADOR T_2_PONTOS t:tipo
 
-                        {#parametro = #([T_VARIAVEL,"&param"],t,id,c,r);}
+                          {#parametro = #([T_VARIAVEL,"&param"],t,id,c,r);}
   ;
-
 
 
 //####################################

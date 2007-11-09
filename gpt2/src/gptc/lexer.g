@@ -472,6 +472,13 @@ options {
   ;
 
 
+T_RETICENCIAS
+options {
+  paraphrase = "reticências (...)";
+}
+  : "..."
+  ;
+
 
 //####################################
 //##            Protecteds          ##
