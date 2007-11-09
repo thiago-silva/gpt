@@ -83,7 +83,7 @@ importacao
 
 corpo
   :  declaracao_subrotina corpo
-  |  bloco_codigo corpo
+  |  bloco_codigo         corpo
   |  /*vazio*/
   ;
 
