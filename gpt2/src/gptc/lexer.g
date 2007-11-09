@@ -42,78 +42,74 @@ options {
 }
 
 tokens {
-  T_KW_ALGORITMO="algoritmo";
-  T_KW_USE="use";
-  T_KW_VARIAVEL="variável";
-  T_KW_VARIAVEIS="variáveis";
-  T_KW_FIM_VARIAVEIS="fim-variáveis";
-  T_KW_INTEIRO="inteiro";
-  T_KW_REAL="real";
-  T_KW_CARACTERE="caractere";
-  T_KW_LITERAL="literal";
-  T_KW_LOGICO="lógico";
-  T_KW_CORINGA="coringa";
-  T_KW_MATRIZ="matriz";
-  T_KW_DO="do";
-  T_KW_TIPO="tipo";
-  T_KW_CONSTANTE="constante";
-  T_KW_CONSTANTES="constantes";
-  T_KW_FIM_CONSTANTES="fim-constantes";
-  T_KW_ESTRUTURA="estrutura";
-  T_KW_FIM_ESTRUTURA="fim-estrutura";
-  T_KW_FUNCAO="função";
-  T_KW_PROCEDIMENTO="procedimento";
-  T_KW_REF="ref";
-  T_KW_INICIO="início";
-  T_KW_FIM="fim";
-  T_KW_SAIR="sair";
-  T_KW_RETORNE="retorne";
-  T_KW_SE="se";
-  T_KW_ENTAO="então";
-  T_KW_SENAO="senão";
-  T_KW_FIM_SE="fim-se";
-  T_KW_ENQUANTO="enquanto";
-  T_KW_FACA="faça";
-  T_KW_FIM_ENQUANTO="fim-enquanto";
-  T_KW_PARA="para";
-  T_KW_DE="de";
-  T_KW_ATE="até";
-  T_KW_FIM_PARA="fim-para";
-  T_KW_PASSO="passo";
-  T_KW_REPITA="repita";
-  T_KW_CASO="caso";
-  T_KW_SEJA="seja";
-  T_KW_FIM_SENAO="fim-senão";
-  T_KW_FIM_CASO="fim-caso";
-  T_KW_FIM_FACA="fim-faça";
-  T_KW_OU="ou";
-  T_KW_E="e";
-  T_KW_NAO="não";
-  T_KW_VERDADEIRO="verdadeiro";
-  T_KW_FALSO="falso";
-  T_KW_ASM="asm";
-  T_KW_FIMASM="fim-asm";
+  T_ALGORITMO="algoritmo";
+  T_USE="use";
+  T_VARIAVEL="variável";
+  T_VARIAVEIS="variáveis";
+  T_FIM_VARIAVEIS="fim-variáveis";
+  T_INTEIRO="inteiro";
+  T_REAL="real";
+  T_CARACTERE="caractere";
+  T_LITERAL="literal";
+  T_LOGICO="lógico";
+  T_CORINGA="coringa";
+  T_MATRIZ="matriz";
+  T_DO="do";
+  T_TIPO="tipo";
+  T_CONSTANTE="constante";
+  T_CONSTANTES="constantes";
+  T_FIM_CONSTANTES="fim-constantes";
+  T_ESTRUTURA="estrutura";
+  T_FIM_ESTRUTURA="fim-estrutura";
+  T_FUNCAO="função";
+  T_PROCEDIMENTO="procedimento";
+  T_REF="ref";
+  T_INICIO="início";
+  T_FIM="fim";
+  T_SAIR="sair";
+  T_RETORNE="retorne";
+  T_SE="se";
+  T_ENTAO="então";
+  T_SENAO="senão";
+  T_FIM_SE="fim-se";
+  T_ENQUANTO="enquanto";
+  T_FACA="faça";
+  T_FIM_ENQUANTO="fim-enquanto";
+  T_PARA="para";
+  T_DE="de";
+  T_ATE="até";
+  T_FIM_PARA="fim-para";
+  T_PASSO="passo";
+  T_REPITA="repita";
+  T_CASO="caso";
+  T_SEJA="seja";
+  T_FIM_SENAO="fim-senão";
+  T_FIM_CASO="fim-caso";
+  T_FIM_FACA="fim-faça";
+  T_OU="ou";
+  T_E="e";
+  T_NAO="não";
+  T_VERDADEIRO="verdadeiro";
+  T_FALSO="falso";
+  T_ASM="asm";
+  T_FIMASM="fim-asm";
 
   T_REAL_LITERAL="número real"; //a regra T_INTEIRO_LITERAL lida com reais
 
 
   //imaginários para a AST
 
-  TI_VALOR;
-  TI_VMATRIZ;    //valor da matriz    (literal [])
-  TI_VESTRUTURA; //valor da estrutura (literal {})
+  T_VALOR;
+  T_VAL_MATRIZ;    //valor da matriz    (literal [])
+  T_VAL_ESTRUTURA; //valor da estrutura (literal {})
 
-  TI_MATRIZ;
-  TI_DIMENSOES;
-  TI_NULL;
+  T_DIMENSOES;
+  T_NULL;
 
-  TI_UN_POSITIVO;
-  TI_UN_NEGATIVO;
-  TI_UN_NEGACAO;
-  TI_UN_NEGACAOB;
-  TI_PARENTESIS;
+  T_UN_POSITIVO;
+  T_UN_NEGATIVO;
 
-  TI_CALL;
+  T_CALL;
 }
 
 
