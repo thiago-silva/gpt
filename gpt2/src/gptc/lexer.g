@@ -91,6 +91,7 @@ tokens {
   T_NAO="não";
   T_VERDADEIRO="verdadeiro";
   T_FALSO="falso";
+  T_NULO="nulo";
   T_ASM="asm";
   T_FIMASM="fim-asm";
 
@@ -479,6 +480,12 @@ options {
   : "..."
   ;
 
+T_PONTO
+options {
+  paraphrase = "ponto (.)";
+}
+  : '.'
+  ;
 
 //####################################
 //##            Protecteds          ##

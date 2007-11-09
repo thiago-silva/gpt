@@ -317,7 +317,7 @@ en_retorne
   ;
 
 lvalue
-  : T_IDENTIFICADOR^ matriz_indices
+  : T_IDENTIFICADOR^ (matriz_indices | T_PONTO! lvalue)
   ;
 
 matriz_indices
@@ -477,4 +477,5 @@ literal
   | T_CARACTERE_LITERAL
   | T_VERDADEIRO
   | T_FALSO
+  | T_NULO
   ;
