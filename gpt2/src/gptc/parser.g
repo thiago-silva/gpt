@@ -329,7 +329,7 @@ matriz_indices
 
 en_se
   : T_SE^ expressao T_ENTAO!
-      lista_enunciados (T_SENAO! lista_enunciados)? T_FIM_SE!
+      lista_enunciados (T_SENAO lista_enunciados)? T_FIM_SE!
   ;
 
 en_enquanto
