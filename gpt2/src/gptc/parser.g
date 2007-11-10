@@ -377,6 +377,7 @@ en_asm!
 //##            Expressões          ##
 //####################################
 
+
 expressao
   : expr_e (T_OU^ expr_e)*
   ;
@@ -406,10 +407,10 @@ expr_bit_e
 options {
   defaultErrorHandler=false;
 }
-  : expr_igual (T_BIT_E^ expr_igual)*
+  : expr_eq (T_BIT_E^ expr_eq)*
   ;
 
-expr_igual
+expr_eq
 options {
   defaultErrorHandler=false;
 }
@@ -420,10 +421,17 @@ expr_relacional
 options {
   defaultErrorHandler=false;
 }
-  : expr_ad ((T_MAIOR^ | T_MAIOR_EQ^ | T_MENOR^ | T_MENOR_EQ^) expr_ad)*
+  : expr_bit_shift ((T_MAIOR^ | T_MAIOR_EQ^ | T_MENOR^ | T_MENOR_EQ^) expr_bit_shift)*
   ;
 
-expr_ad
+expr_bit_shift
+options {
+  defaultErrorHandler=false;
+}
+  : expr_soma ((T_BIT_SHIFT_LEFT^ | T_BIT_SHIFT_RIGHT^) expr_soma)*
+  ;
+
+expr_soma
 options {
   defaultErrorHandler=false;
 }

@@ -311,6 +311,20 @@ options {
   : '~'
   ;
 
+T_BIT_SHIFT_LEFT
+options {
+  paraphrase = "operador '<<'";
+}
+  : "<<"
+  ;
+
+T_BIT_SHIFT_RIGHT
+options {
+  paraphrase = "operador '>>'";
+}
+
+  : ">>"
+  ;
 
 T_IGUAL
 options {
