@@ -9,15 +9,14 @@
 #include <fstream>
 
 void dump_tokens(char* fname) {
-  char *table[200];
-  #include "table.hpp"
+  #include "tokenNames.hpp"
   std::ifstream fi(fname);
   PortugolLexer lexer(fi, true);
   antlr::TokenBuffer *buffer = new antlr::TokenBuffer(lexer);
 
   while (true) {
     std::cout << lexer.getLine() << ": [" << buffer->LA(1) << "] "
-              << table[buffer->LA(1)] << " (" << lexer.getText() << ")";
+              << tokenNames[buffer->LA(1)] << " (" << lexer.getText() << ")";
     buffer->consume();
     getchar();
 

@@ -17,6 +17,11 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             */
 
+header {
+#include <antlr/NoViableAltException.hpp>
+#include <antlr/SemanticException.hpp>
+  using namespace antlr;
+}
 
 options {
   language="Cpp";
@@ -24,12 +29,53 @@ options {
 
 class PortugolParser extends Parser;
 options {
-  importVocab  = Portugol;
-  genHashLines = false;
-  buildAST     = true;
+  importVocab    = Portugol;
+  genHashLines   = false;
+  buildAST       = true;
+  noConstructors = true;
 }
 
 {
+public:
+  PortugolParser(antlr::TokenBuffer& tokenBuf, bool report = true)
+  : antlr::LLkParser(tokenBuf,1), _reportErrors(report), _hasErrors(false)
+  {
+  }
+
+  PortugolParser(antlr::TokenStream& lexer, bool report = true)
+  : antlr::LLkParser(lexer,1), _reportErrors(report), _hasErrors(false)
+  {
+  }
+
+  void reportError(const RecognitionException& ex) {
+    _hasErrors = true;
+    if (!_reportErrors) return;
+    std::cerr << ex.toString().c_str() << std::endl;
+  }
+
+  void reportError(const std::string& s) {
+    _hasErrors = true;
+    if (!_reportErrors) return;
+    if (getFilename() == "") {
+      std::cerr << "error: " << s.c_str() << std::endl;
+    } else {
+      std::cerr << getFilename().c_str() << ": error: " << s.c_str() << std::endl;
+    }
+  }
+
+  void reportWarning(const std::string& s) {
+    if (!_reportErrors) return;
+    if (getFilename() == "") {
+      std::cerr << "warning: " << s.c_str() << std::endl;
+    } else {
+      std::cerr << getFilename().c_str() << ": warning: " << s.c_str() << std::endl;
+    }
+  }
+
+  bool hasErorrs() {
+    return _hasErrors;
+  }
+
 private:
   void createRootNode(antlr::ASTPair& ast, antlr::RefToken token) {
     astFactory->makeASTRoot(ast, astFactory->create(token));
@@ -50,6 +96,9 @@ private:
   antlr::RefAST createNode(int type, const std::string& txt) {
     return astFactory->create(type, txt);
   }
+
+  bool _reportErrors;
+  bool _hasErrors;
 }
 
 

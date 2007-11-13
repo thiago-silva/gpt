@@ -32,7 +32,7 @@ $(output)/MismatchedUnicodeCharException.o:
 	$(cpp) -c MismatchedUnicodeCharException.cpp \
 	-o $(output)/MismatchedUnicodeCharException.o
 
-$(output)/teste.o: teste.cpp $(output)/table.hpp
+$(output)/teste.o: teste.cpp $(output)/tokenNames.hpp
 	$(cpp) -c teste.cpp -o $(output)/teste.o
 
 $(output)/PortugolLexer.hpp $(output)/PortugolLexer.cpp: lexer.g
@@ -44,12 +44,15 @@ $(output)/PortugolParser.hpp $(output)/PortugolParser.cpp: parser.g
 $(output)/SemanticWalker.hpp $(output)/SemanticWalker.cpp: semantic.g
 	antlr -o $(output) semantic.g
 
-$(output)/table.hpp:
-	grep = $(output)/PortugolTokenTypes.txt > $(output)/table.hpp
-	sed -i -e 's/([^=]*)//' $(output)/table.hpp
-	sed -i -e 's/"[^"]*"//' $(output)/table.hpp
-	sed -i -e 's/==/=/' $(output)/table.hpp
-	sed -i -e 's/\([^=]*\)=\(.*\)/table[\2]="\1";/' $(output)/table.hpp
+$(output)/tokenNames.hpp:
+	echo "std::map<int, std::string > tokenNames;"  > $(output)/tokenNames.hpp
+	grep = $(output)/PortugolTokenTypes.txt >> $(output)/tokenNames.hpp
+	sed -i -e 's/([^=]*)//' $(output)/tokenNames.hpp
+	sed -i -e 's/"[^"]*"//' $(output)/tokenNames.hpp
+	sed -i -e 's/==/=/' $(output)/tokenNames.hpp
+	sed -i -e 's/()//' $(output)/tokenNames.hpp
+	sed -i -e 's/\([^=]*\)=\(.*\)/tokenNames[\2]="\1";/' \
+		$(output)/tokenNames.hpp
 
 
 clean:
