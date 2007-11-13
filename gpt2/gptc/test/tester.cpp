@@ -2,23 +2,28 @@
 #include "LangTestLexer.hpp"
 #include "LangTestParser.hpp"
 #include "LangTestLexerTokenTypes.hpp"
+#include "TestAST.hpp"
 #include <antlr/TokenBuffer.hpp>
 #include <antlr/CommonAST.hpp>
 #include <antlr/ANTLRException.hpp>
 #include <fstream>
 #include <iostream>
 
+#include <map>
+#include <string>
+
 using namespace std;
+using namespace antlr;
 
 void dump_tokens(char* fname) {
-  #include "tokenNames.hpp"
-  std::ifstream fi(fname);
+  #include "testTokenNames.hpp"
+  ifstream fi(fname);
   LangTestLexer lexer(fi);
-  antlr::TokenBuffer *buffer = new antlr::TokenBuffer(lexer);
+  TokenBuffer *buffer = new TokenBuffer(lexer);
 
   while (true) {
-    std::cout << lexer.getLine() << ": [" << buffer->LA(1) << "] "
-              << tokenNames[buffer->LA(1)] << " (" << lexer.getText() << ")";
+    cerr << lexer.getLine() << ": [" << buffer->LA(1) << "] "
+              << testTokenNames[buffer->LA(1)] << " (" << lexer.getText() << ")";
     buffer->consume();
     getchar();
 
@@ -28,11 +33,38 @@ void dump_tokens(char* fname) {
   }
 }
 
-void f(char* fname) {
+RefAST dump_tree(char* fname) {
 
   std::ifstream fi(fname);
   LangTestLexer lexer(fi);
   LangTestParser parser(lexer);
+
+  ASTFactory ast_factory(TestAST::TYPE_NAME,&TestAST::factory);
+  parser.initializeASTFactory(ast_factory);
+  parser.setASTFactory(&ast_factory);
+
+  parser.teste_desc();
+
+  RefAST ast    = parser.getAST();
+  RefCommonAST cast = RefCommonAST(ast);
+
+  if (!cast) {
+    cerr << "no parse tree!" << endl;
+  } else {
+    cerr << cast->toStringList() << endl << endl;
+  }
+  return ast;
+}
+
+void f(char* fname) {
+
+  ifstream fi(fname);
+  LangTestLexer lexer(fi);
+  LangTestParser parser(lexer);
+
+  ASTFactory ast_factory(TestAST::TYPE_NAME,&TestAST::factory);
+  parser.initializeASTFactory(ast_factory);
+  parser.setASTFactory(&ast_factory);
 
   parser.teste_desc();
 }
@@ -40,15 +72,17 @@ void f(char* fname) {
 int main(int argc, char** argv) {
 
   if (argc < 2) {
-    std::cerr << "./tester <file.gpt>" << std::endl;
+    cerr << "./tester <file.gpt>" << endl;
     return 0;
   }
 
+//   DEBUG_PARSER = true;
   try {
 //     dump_tokens(argv[1]);
     f(argv[1]);
+//     dump_tree(argv[1]);
 	}
-  catch(antlr::ANTLRException& e)
+  catch(ANTLRException& e)
 	{
 		cerr << "Parse exception: " << e.toString() << endl;
 		return -1;

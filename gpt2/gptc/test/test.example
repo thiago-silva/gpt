@@ -1,0 +1,42 @@
+teste
+  {
+    início
+      x := 2 + 3 * 5;
+    fim
+  }
+
+  erros: []
+
+  ast : (T_INICIO
+          (T_ATRIBUICAO T_IDENTIFICADOR
+            (T_MAIS T_INTEIRO_LITERAL
+              (T_MULTIP T_INTEIRO_LITERAL T_INTEIRO_LITERAL))))
+
+fim
+
+teste
+  {
+      algoritmo teste;
+
+      função f() : inteiro
+      início
+        x := 2;
+      fim
+  }
+
+  ast : (T_FUNCAO T_IDENTIFICADOR T_INTEIRO
+          (T_INICIO
+            (T_ATRIBUICAO T_IDENTIFICADOR T_INTEIRO_LITERAL)))
+
+fim
+
+teste
+  {
+      função f() : inteiro
+      início
+      fim
+  }
+
+  ast : (T_OPS)
+
+fim

@@ -1,32 +1,16 @@
-/*
-
-teste
-  caso {
-    algoritmo teste
-  }
-
-  ast: ([T_ALGORITMO,"algoritmo"] [T_IDENTIFICADOR,"teste"])
-  erros: [ES001] //ponto virgula
-fim
-
-Codigos de erros:
-
-EXXXX - Erro XXXX
-ESXXX - Erro Sintatico
-EMXXX - Erro Semantico
-
-
-*/
-
 header {
 
   #include "PortugolParser.hpp"
   #include "PortugolLexer.hpp"
 
+  #include "TestAST.hpp"
+
   #include <antlr/TokenBuffer.hpp>
   #include <antlr/CommonAST.hpp>
 
   #include <iostream>
+  #include <map>
+  #include <string>
 
   #include "UnicodeCharBuffer.hpp"
   #include "UnicodeCharScanner.hpp"
@@ -46,8 +30,6 @@ options {
   genHashLines   = false;
   testLiterals   = false;
   noConstructors = true;
-  buildAST       = true;
-  ASTLabelType   = "TestAST";
 }
 
 {
@@ -160,20 +142,27 @@ T_ETC
 class LangTestParser extends Parser;
 options {
   k=2;
-  genHashLines = false;
+  genHashLines   = false;
+  buildAST       = true;
+  ASTLabelType   = "RefTestAST";
 }
 
-{
-private:
-  string searchToken(int token) {
-    #include "tokenNames.hpp"
-    if (token >= 4) {
-      return tokenNames[token];
-    } else {
-      return "EOF";
-    }
-  }
-}
+// {
+// private:
+//   int searchToken(string text) {
+//     #include "tokenNames.hpp"
+//     std::map<int, std::string >::iterator it;
+//     for (it = tokenNames.begin(); it != tokenNames.end(); it++) {
+//       if (it->second == text) {
+//         //return astFactory->create(it->first, "&test_empty");
+//         return it->first;
+//       }
+//     }
+//     cerr << "searchToken::leave2\n";
+// //     return astFactory->create(0, "&test_invalid");
+//     return it->first;
+//   }
+// }
 
 teste_desc
   : bloco EOF
@@ -187,81 +176,102 @@ bloco
       PortugolLexer lexer(fi, true);
       PortugolParser parser(lexer,false);
 
-      antlr::ASTFactory ast_factory(antlr::CommonAST::TYPE_NAME,
+      ASTFactory ast_factory(antlr::CommonAST::TYPE_NAME,
                                       &antlr::CommonAST::factory);
       parser.initializeASTFactory(ast_factory);
       parser.setASTFactory(&ast_factory);
 
-      try {
-        parser.programa();
-      } catch ( ... ) {
-        cerr << "Houveram erros...\n";
+      parser.programa();
+
+      if (parser.hasErorrs()) {
+        cerr << "Parser has errors!!\n";
       }
 
       RefAST root = parser.getAST();
 
       RefCommonAST cast = antlr::RefCommonAST(root);
 
-      if (cast) {
+/*      if (cast) {
         std::cerr << cast->toStringList() << std::endl << std::endl;
       } else {
         cerr << "no tree!\n";
-      }
+      }*/
     }
 
-    (erros)? (ast[root])? "fim" (bloco)?
+    (erros)?
+
+    (ast[root])?
+
+    "fim"
+
+    (bloco)?
   ;
 
-erros
+erros!
   : "erros" T_DOIS_PONTOS T_ABRE_CHAVE (T_TOKEN_NAME)* T_FECHA_CHAVE
   ;
 
-ast[RefAST node]
-  : "ast" T_DOIS_PONTOS lista[node]
+
+ast[RefAST gptRoot]
+  : tline:"ast"! T_DOIS_PONTOS! lista
+    {
+      int line = tline->getLine();
+      TestAST* tast = 0;
+      tast = RefTestAST(currentAST.root).get();
+
+      if (!tast->equalsList(gptRoot)) {
+        cerr << "-Erro na AST da linha [" << line << "]\n";
+        cerr << "Esperando: \n-----\n" << tast->toStringList() << endl;
+        cerr << "-----\nEncontrado: \n-----\n" << gptRoot->toStringList() << endl;
+        cerr << "-----\n";
+      }
+    }
+  ;
+
+
+
+lista
+
+  : T_ABRE_PAREN!
+    T_TOKEN_NAME^  (cdr)*
+    T_FECHA_PAREN!
+  ;
+
+cdr
+  : T_TOKEN_NAME
+  | lista
   ;
 
 /*
-TODO:
-  Se "ast: ()" omitir nós, este parser não saberá.
-
-  -Criar a AST do "ast ()" e, ao final, comparar com
-    ast->equalsList(other)
-*/
-
-lista[RefAST node]
-{
-  RefAST child;
-  if (node != nullAST) child = node->getFirstChild();
-}
-
-  : T_ABRE_PAREN atomo[node] (cdr[child])? T_FECHA_PAREN
+lista!
+{cerr << "lista::enter\n";}
+  : T_ABRE_PAREN t:T_TOKEN_NAME
+    {cerr << "lista::matched token\n";}
+    (c:cdr)? T_FECHA_PAREN
+    {
+      cerr << "lista::buildingAST\n";
+      #lista = #(searchToken(t->getText()),c);
+      {cerr << "lista::leave\n";}
+    }
   ;
 
-cdr[RefAST node]
-{
-  RefAST sib;
-  if (node != nullAST) sib = node->getNextSibling();
-}
-  : (lista[node] | atomo[node])
-    (irmao[sib] {if (sib != nullAST) sib = sib->getNextSibling();})*
-  ;
-
-irmao[RefAST node]
-  : lista[node]
-  | atomo[node]
-  ;
-
-atomo[RefAST node]
-  : tk:T_TOKEN_NAME
+cdr
+{cerr << "cdr::enter\n";}
+  :  lista         (cdr)?
+  |! t:T_TOKEN_NAME
+    (
+      c:cdr
       {
-        if (node == nullAST) {
-          cerr << "erro(ast) " << tk->getLine()
-                << ": esperando " << tk->getText() << " encontrado *null*\n";
-        } else if(tk->getText() != searchToken(node->getType())) {
-          cerr << "erro(ast) " << tk->getLine()
-               << ": esperando " << tk->getText()
-               << ", encontrado '" << searchToken(node->getType()) << "'\n";
-        }
+        cerr << "cdr::buildingAST\n";
+        #cdr = #(searchToken(t->getText()),c);
+        cerr << "cdr::leaving\n";
       }
-  ;
 
+      |
+        {
+          cerr << "cdr::building2\n";
+          #cdr = (#t);
+          cerr << "cdr::leaving2\n";
+        }
+    )
+  ;*/
