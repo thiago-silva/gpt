@@ -268,8 +268,8 @@ bloco_declaracao_constantes
 declaracao_constante!
   : id:T_IDENTIFICADOR T_2_PONTOS t:tipo
     l:lista_inicializacao T_PONTO_VIRGULA
-
-               {#declaracao_constante = #([T_CONSTANTE,"&const"], t,id,l);}
+               {#declaracao_constante =
+                    #([T_CONSTANTE,"&const"],t,id,([T_VALOR,"&valor"],l));}
   ;
 
 
@@ -290,6 +290,7 @@ bloco_declaracao_estrutura
 //####################################
 //##    Declaração de Subrotinas    ##
 //####################################
+
 
 declaracao_subrotina
   : declaracao_funcao
@@ -315,7 +316,8 @@ lista_parametros
   ;
 
 param_reticencias!
-  : ret:T_RETICENCIAS     {#param_reticencias = #([T_VARIAVEL,"&param"],ret);}
+  : ret:T_RETICENCIAS id:T_IDENTIFICADOR
+                       {#param_reticencias = #([T_VARIAVEL,"&param"],ret,id);}
   ;
 
 parametro!
