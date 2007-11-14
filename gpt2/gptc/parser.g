@@ -81,8 +81,8 @@ private:
     astFactory->makeASTRoot(ast, astFactory->create(token));
   }
 
-  void createRootNode(antlr::ASTPair& ast, int token) {
-    astFactory->makeASTRoot(ast, astFactory->create(token));
+  void createRootNode(antlr::ASTPair& ast, int token, std::string txt = "") {
+    astFactory->makeASTRoot(ast, astFactory->create(token, txt));
   }
 
   void addChildNode(antlr::ASTPair& ast, antlr::RefToken token) {
@@ -108,6 +108,8 @@ private:
 //####################################
 
 programa
+{createRootNode(currentAST, T_ALGORITMO, "&algoritmo");}
+
   : (declaracao_algoritmo)?
 
     (importacao)*
