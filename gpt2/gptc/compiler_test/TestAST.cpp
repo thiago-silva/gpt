@@ -72,6 +72,11 @@ bool TestAST::equals(RefAST other) const
     }
   }
 
+  if (token == -1) {
+    cerr << "\n\n[TestAST::equals] ops: token não encontrado: "
+         << getText() << endl << endl;
+  }
+
   return token  == other->getType();
 }
 
@@ -96,16 +101,15 @@ bool TestAST::equalsList(RefAST t) const
       }
 		}
 		// sibling has no kids, make sure t doesn't either
-		else if (t->getFirstChild()) {
+		else if (t->getFirstChild() && t->getFirstChild()->getType() != 1) {//1==eof
 			return false;
     }
 	}
 
 	if (!sibling && !t) {
 		return true;
-  } else if (!sibling && (t->getType() == 1)) {
+  } else if (!sibling && (t->getType() == 1)) {//1==eof
     return true;
   }
-
 	return false;
 }
