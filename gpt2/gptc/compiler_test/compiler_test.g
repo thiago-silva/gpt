@@ -220,6 +220,13 @@ ast[RefAST gptRoot]
       TestAST* tast = 0;
       tast = RefTestAST(currentAST.root).get();
 
+      if (!tast && gptRoot) {
+        cerr << "-Erro na AST da linha [" << line << "]\n";
+        cerr << "Esperando: \n-----\n()\n";
+        cerr << "-----\nEncontrado: \n-----\n" << gptRoot->toStringList() << endl;
+        cerr << "-----\n";
+      }
+
       if (tast && !tast->equalsList(gptRoot)) {
         cerr << "-Erro na AST da linha [" << line << "]\n";
         cerr << "Esperando: \n-----\n" << tast->toStringList() << endl;
