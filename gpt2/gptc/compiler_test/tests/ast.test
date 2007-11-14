@@ -1,6 +1,221 @@
+/*************** testes de prologo ****************************/
+
 teste
   {}
 
-  ast :
+  ast : ()
 fim
 
+teste
+  {
+    algoritmo teste;
+  }
+
+  ast : ()
+fim
+
+teste
+  {
+    use "bib1";
+  }
+
+  ast: (T_ALGORITMO (T_USE T_TEXTO_LITERAL))
+fim
+
+teste
+  {
+    use "bib1";
+    use "bib2";
+    use "bib3";
+  }
+
+  ast: (T_ALGORITMO
+        (T_USE T_TEXTO_LITERAL)
+        (T_USE T_TEXTO_LITERAL)
+        (T_USE T_TEXTO_LITERAL))
+fim
+
+
+
+
+
+/*************** testes de variaveis ****************************/
+
+
+
+teste
+  {
+    variável x : inteiro;
+  }
+
+  ast: (T_ALGORITMO
+           (T_VARIAVEL T_INTEIRO T_IDENTIFICADOR))
+fim
+
+teste
+  {
+    variável x : T;
+  }
+
+  ast: (T_ALGORITMO
+           (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR))
+
+fim
+
+teste
+  {
+    variável x : literal := 10;
+  }
+
+  ast: (T_ALGORITMO
+         (T_VARIAVEL T_LITERAL T_IDENTIFICADOR
+           (T_VALOR T_INTEIRO_LITERAL)))
+fim
+
+teste
+  {
+    variável x : matriz[] do tipo real;
+  }
+
+  ast: (T_ALGORITMO
+         (T_VARIAVEL (T_MATRIZ T_REAL T_NULO) T_IDENTIFICADOR))
+fim
+
+teste
+  {
+    variável x : matriz[] do tipo caractere := ['6','5','4'];
+  }
+
+  ast: (T_ALGORITMO
+         (T_VARIAVEL (T_MATRIZ T_CARACTERE T_NULO) T_IDENTIFICADOR
+           (T_VALOR
+             (T_VAL_MATRIZ
+                T_CARACTERE_LITERAL T_CARACTERE_LITERAL T_CARACTERE_LITERAL))))
+fim
+
+teste
+  {
+    variável z : T;
+  }
+
+  ast: (T_ALGORITMO (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR))
+fim
+
+teste
+  {
+    variável z : T := {chave := valor\};
+  }
+
+  ast: (T_ALGORITMO
+          (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR
+            (T_VALOR (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR))))
+fim
+
+teste
+  {
+    variável z : T := {chave := [1,2,3]\};
+  }
+
+  ast: (T_ALGORITMO
+          (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR
+            (T_VALOR
+              (T_VAL_ESTRUTURA T_IDENTIFICADOR
+                (T_VAL_MATRIZ T_INTEIRO_LITERAL
+                              T_INTEIRO_LITERAL
+                              T_INTEIRO_LITERAL)))))
+fim
+
+teste
+  {
+    variável z : matriz[1][2] do tipo T
+      := [{chave := valor\},
+          {ch:="valor"\},
+          {z:=verdadeiro\}];
+  }
+
+  ast: (T_ALGORITMO
+          (T_VARIAVEL
+            (T_MATRIZ T_IDENTIFICADOR T_INTEIRO_LITERAL T_INTEIRO_LITERAL)
+            T_IDENTIFICADOR
+            (T_VALOR
+              (T_VAL_MATRIZ
+                (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR)
+                (T_VAL_ESTRUTURA T_IDENTIFICADOR T_TEXTO_LITERAL)
+                (T_VAL_ESTRUTURA T_IDENTIFICADOR T_VERDADEIRO)))))
+fim
+
+
+teste
+  {
+    variável z : matriz[1][2] do tipo T
+      := [{chave := valor\},
+          {ch:="valor"\},
+          {z:=verdadeiro\}];
+  }
+
+  ast: (T_ALGORITMO
+          (T_VARIAVEL
+            (T_MATRIZ T_IDENTIFICADOR T_INTEIRO_LITERAL T_INTEIRO_LITERAL)
+            T_IDENTIFICADOR
+            (T_VALOR
+              (T_VAL_MATRIZ
+                (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR)
+                (T_VAL_ESTRUTURA T_IDENTIFICADOR T_TEXTO_LITERAL)
+                (T_VAL_ESTRUTURA T_IDENTIFICADOR T_VERDADEIRO)))))
+fim
+
+teste
+  {
+    variáveis
+      z : real;
+    fim-variáveis
+  }
+
+  ast: (T_ALGORITMO (T_VARIAVEIS
+          (T_VARIAVEL T_REAL T_IDENTIFICADOR)))
+fim
+
+teste
+  {
+    variáveis
+      z,K : real;
+    fim-variáveis
+  }
+
+  ast: (T_ALGORITMO (T_VARIAVEIS
+          (T_VARIAVEL T_REAL T_IDENTIFICADOR T_IDENTIFICADOR)))
+fim
+
+teste
+  {
+    variáveis
+      P : T;
+      i,j,k : matriz[1][2] do tipo T
+      := [{chave := valor\},
+          {ch:='a'\},
+          {z:=10.2\}];
+    fim-variáveis
+  }
+
+  ast: (T_ALGORITMO
+        (T_VARIAVEIS
+          (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR)
+          (T_VARIAVEL
+            (T_MATRIZ T_IDENTIFICADOR T_INTEIRO_LITERAL T_INTEIRO_LITERAL)
+            T_IDENTIFICADOR T_IDENTIFICADOR T_IDENTIFICADOR
+            (T_VALOR
+              (T_VAL_MATRIZ
+                (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR)
+                (T_VAL_ESTRUTURA T_IDENTIFICADOR T_CARACTERE_LITERAL)
+                (T_VAL_ESTRUTURA T_IDENTIFICADOR T_REAL_LITERAL))))))
+fim
+
+
+teste
+  {
+    variável z : T;
+  }
+fim
+
+
+/*************** testes de prologo ****************************/

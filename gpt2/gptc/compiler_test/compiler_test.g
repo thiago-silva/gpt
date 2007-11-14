@@ -83,6 +83,7 @@ T_CODIGO
     (
         options { generateAmbigWarnings=false; } :
         '\n'                     {newline();}
+      | '\\'! '}'
       | ~('}')
     )*
 
@@ -174,7 +175,7 @@ bloco
     {
       stringstream fi(codigo->getText());
       PortugolLexer lexer(fi, true);
-      PortugolParser parser(lexer,false);
+      PortugolParser parser(lexer, false);
 
       ASTFactory ast_factory(antlr::CommonAST::TYPE_NAME,
                                       &antlr::CommonAST::factory);
@@ -184,7 +185,7 @@ bloco
       parser.programa();
 
       if (parser.hasErorrs()) {
-        cerr << "Parser has errors!!\n";
+        cerr << "++++ Parser has errors+++++\n";
       }
 
       RefAST root = parser.getAST();
@@ -213,13 +214,13 @@ erros!
 
 
 ast[RefAST gptRoot]
-  : tline:"ast"! T_DOIS_PONTOS! lista
+  : tline:"ast"! T_DOIS_PONTOS! (lista)?
     {
       int line = tline->getLine();
       TestAST* tast = 0;
       tast = RefTestAST(currentAST.root).get();
 
-      if (!tast->equalsList(gptRoot)) {
+      if (tast && !tast->equalsList(gptRoot)) {
         cerr << "-Erro na AST da linha [" << line << "]\n";
         cerr << "Esperando: \n-----\n" << tast->toStringList() << endl;
         cerr << "-----\nEncontrado: \n-----\n" << gptRoot->toStringList() << endl;
@@ -233,7 +234,7 @@ ast[RefAST gptRoot]
 lista
 
   : T_ABRE_PAREN!
-    T_TOKEN_NAME^  (cdr)*
+    (T_TOKEN_NAME^  (cdr)*)?
     T_FECHA_PAREN!
   ;
 

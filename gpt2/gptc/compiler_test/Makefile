@@ -6,7 +6,7 @@ objects = $(output)/LangTestLexer.o $(output)/LangTestParser.o \
 other = ../obj/PortugolLexer.o ../obj/PortugolParser.o \
 				../obj/MismatchedUnicodeCharException.o
 
-cpp = g++ -g3 -I$(output) -I. -I../ -I../obj
+cpp = g++ -I$(output) -I. -I../ -I../obj
 
 $(output)/tester: $(output) $(objects)
 	$(cpp) -o $(output)/tester $(objects) $(other) /usr/local/lib/libantlr.a
