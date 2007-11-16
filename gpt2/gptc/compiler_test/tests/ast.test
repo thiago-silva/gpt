@@ -39,8 +39,6 @@ fim
 
 
 
-
-
 /*************** variaveis ****************************/
 
 
@@ -213,8 +211,8 @@ teste
     fim-variáveis
   }
 
-  ast: (T_ALGORITMO (T_VARIAVEIS
-          (T_VARIAVEL T_REAL T_IDENTIFICADOR)))
+  ast: (T_ALGORITMO
+          (T_VARIAVEL T_REAL T_IDENTIFICADOR))
 fim
 
 teste
@@ -224,8 +222,8 @@ teste
     fim-variáveis
   }
 
-  ast: (T_ALGORITMO (T_VARIAVEIS
-          (T_VARIAVEL T_REAL T_IDENTIFICADOR T_IDENTIFICADOR)))
+  ast: (T_ALGORITMO
+          (T_VARIAVEL T_REAL T_IDENTIFICADOR T_IDENTIFICADOR))
 fim
 
 teste
@@ -240,7 +238,6 @@ teste
   }
 
   ast: (T_ALGORITMO
-        (T_VARIAVEIS
           (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR)
           (T_VARIAVEL
             (T_MATRIZ T_IDENTIFICADOR T_INTEIRO_LITERAL T_INTEIRO_LITERAL)
@@ -249,7 +246,7 @@ teste
               (T_VAL_MATRIZ
                 (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR)
                 (T_VAL_ESTRUTURA T_IDENTIFICADOR T_CARACTERE_LITERAL)
-                (T_VAL_ESTRUTURA T_IDENTIFICADOR T_REAL_LITERAL))))))
+                (T_VAL_ESTRUTURA T_IDENTIFICADOR T_REAL_LITERAL)))))
 fim
 
 
@@ -268,18 +265,18 @@ teste
 
   ast:  (T_ALGORITMO
            (T_VARIAVEL T_INTEIRO T_IDENTIFICADOR)
-           (T_VARIAVEIS
-              (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR)
-              (T_VARIAVEL
-                  (T_MATRIZ T_IDENTIFICADOR
-                            T_INTEIRO_LITERAL
-                            T_INTEIRO_LITERAL)
-                  T_IDENTIFICADOR T_IDENTIFICADOR T_IDENTIFICADOR
-                  (T_VALOR (T_VAL_MATRIZ
-                        (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR)
-                        (T_VAL_ESTRUTURA T_IDENTIFICADOR T_CARACTERE_LITERAL)
-                        (T_VAL_ESTRUTURA T_IDENTIFICADOR T_REAL_LITERAL)))))
-           (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR
+           (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR)
+           (T_VARIAVEL
+               (T_MATRIZ T_IDENTIFICADOR
+                         T_INTEIRO_LITERAL
+                         T_INTEIRO_LITERAL)
+               T_IDENTIFICADOR T_IDENTIFICADOR T_IDENTIFICADOR
+               (T_VALOR
+                  (T_VAL_MATRIZ
+                     (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR)
+                     (T_VAL_ESTRUTURA T_IDENTIFICADOR T_CARACTERE_LITERAL)
+                      (T_VAL_ESTRUTURA T_IDENTIFICADOR T_REAL_LITERAL))))
+          (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR
              (T_VALOR (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR))))
 fim
 
@@ -305,17 +302,16 @@ teste
            (T_USE T_TEXTO_LITERAL)
            (T_USE T_TEXTO_LITERAL)
            (T_VARIAVEL T_INTEIRO T_IDENTIFICADOR)
-           (T_VARIAVEIS
-              (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR)
-              (T_VARIAVEL
-                  (T_MATRIZ T_IDENTIFICADOR
-                            T_INTEIRO_LITERAL
-                            T_INTEIRO_LITERAL)
-                  T_IDENTIFICADOR T_IDENTIFICADOR T_IDENTIFICADOR
-                  (T_VALOR (T_VAL_MATRIZ
-                        (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR)
-                        (T_VAL_ESTRUTURA T_IDENTIFICADOR T_CARACTERE_LITERAL)
-                        (T_VAL_ESTRUTURA T_IDENTIFICADOR T_REAL_LITERAL)))))
+           (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR)
+           (T_VARIAVEL
+               (T_MATRIZ T_IDENTIFICADOR
+                         T_INTEIRO_LITERAL
+                         T_INTEIRO_LITERAL)
+               T_IDENTIFICADOR T_IDENTIFICADOR T_IDENTIFICADOR
+               (T_VALOR (T_VAL_MATRIZ
+                     (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR)
+                     (T_VAL_ESTRUTURA T_IDENTIFICADOR T_CARACTERE_LITERAL)
+                     (T_VAL_ESTRUTURA T_IDENTIFICADOR T_REAL_LITERAL))))
            (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR
              (T_VALOR (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR))))
 fim
@@ -415,8 +411,7 @@ teste
   }
 
   ast : (T_ALGORITMO
-          (T_CONSTANTES
-            (T_CONSTANTE T_INTEIRO T_IDENTIFICADOR
+          (T_CONSTANTE T_INTEIRO T_IDENTIFICADOR
                         (T_VALOR T_INTEIRO_LITERAL))
           (T_CONSTANTE
             (T_MATRIZ T_IDENTIFICADOR T_INTEIRO_LITERAL T_INTEIRO_LITERAL)
@@ -425,7 +420,7 @@ teste
               (T_VAL_MATRIZ
                 (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR)
                 (T_VAL_ESTRUTURA T_IDENTIFICADOR T_CARACTERE_LITERAL)
-                (T_VAL_ESTRUTURA T_IDENTIFICADOR T_REAL_LITERAL))))))
+                (T_VAL_ESTRUTURA T_IDENTIFICADOR T_REAL_LITERAL)))))
 fim
 
 teste
@@ -441,8 +436,7 @@ teste
   }
 
   ast : (T_ALGORITMO
-          (T_CONSTANTES
-            (T_CONSTANTE T_INTEIRO T_IDENTIFICADOR
+          (T_CONSTANTE T_INTEIRO T_IDENTIFICADOR
                         (T_VALOR T_INTEIRO_LITERAL))
           (T_CONSTANTE
             (T_MATRIZ T_IDENTIFICADOR T_INTEIRO_LITERAL T_INTEIRO_LITERAL)
@@ -451,13 +445,46 @@ teste
               (T_VAL_MATRIZ
                 (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR)
                 (T_VAL_ESTRUTURA T_IDENTIFICADOR T_CARACTERE_LITERAL)
-                (T_VAL_ESTRUTURA T_IDENTIFICADOR T_REAL_LITERAL)))))
+                (T_VAL_ESTRUTURA T_IDENTIFICADOR T_REAL_LITERAL))))
                     (T_CONSTANTE T_IDENTIFICADOR T_IDENTIFICADOR
             (T_VALOR
               (T_VAL_ESTRUTURA
                 T_IDENTIFICADOR T_IDENTIFICADOR
                 T_IDENTIFICADOR T_REAL_LITERAL))))
 fim
+
+
+
+/*************** estruturas ****************************/
+
+teste
+  {
+    estrutura T
+      P : T;
+      x : inteiro := 1;
+      i,j,k : matriz[1][2] do tipo T
+        := [{chave := valor\},
+            {ch:='a'\},
+            {z:=10.2\}];
+    fim-estrutura
+  }
+
+  ast: (T_ALGORITMO
+          (T_ESTRUTURA T_IDENTIFICADOR
+            (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR)
+            (T_VARIAVEL T_INTEIRO T_IDENTIFICADOR
+               (T_VALOR T_INTEIRO_LITERAL))
+            (T_VARIAVEL
+              (T_MATRIZ T_IDENTIFICADOR T_INTEIRO_LITERAL T_INTEIRO_LITERAL)
+              T_IDENTIFICADOR T_IDENTIFICADOR T_IDENTIFICADOR
+              (T_VALOR
+                (T_VAL_MATRIZ
+                  (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR)
+                  (T_VAL_ESTRUTURA T_IDENTIFICADOR T_CARACTERE_LITERAL)
+                  (T_VAL_ESTRUTURA T_IDENTIFICADOR T_REAL_LITERAL))))))
+fim
+
+
 
 
 /*************** subprogramas ****************************/
@@ -574,7 +601,6 @@ teste
               (T_PARAM T_RETICENCIAS T_IDENTIFICADOR)
               (T_TIPO_RETORNO T_LITERAL)
            (T_VARIAVEL T_INTEIRO T_IDENTIFICADOR)
-           (T_VARIAVEIS
               (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR)
               (T_VARIAVEL
                   (T_MATRIZ T_IDENTIFICADOR
@@ -584,7 +610,7 @@ teste
                   (T_VALOR (T_VAL_MATRIZ
                         (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR)
                         (T_VAL_ESTRUTURA T_IDENTIFICADOR T_CARACTERE_LITERAL)
-                        (T_VAL_ESTRUTURA T_IDENTIFICADOR T_REAL_LITERAL)))))
+                        (T_VAL_ESTRUTURA T_IDENTIFICADOR T_REAL_LITERAL))))
            (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR
              (T_VALOR (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR)))
             (T_INICIO)))

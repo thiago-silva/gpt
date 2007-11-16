@@ -150,7 +150,7 @@ declaracao_variaveis
   ;
 
 bloco_declaracao_variaveis
-  : T_VARIAVEIS^ (declaracao_variavel)+ T_FIM_VARIAVEIS!
+  : T_VARIAVEIS! (declaracao_variavel)+ T_FIM_VARIAVEIS!
   ;
 
 declaracao_variavel!
@@ -262,7 +262,7 @@ declaracao_constantes
   ;
 
 bloco_declaracao_constantes
-  : T_CONSTANTES^ (declaracao_constante)+ T_FIM_CONSTANTES!
+  : T_CONSTANTES! (declaracao_constante)+ T_FIM_CONSTANTES!
   ;
 
 declaracao_constante!
