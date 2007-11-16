@@ -299,7 +299,7 @@ declaracao_subrotina
 
 declaracao_funcao
   : T_FUNCAO^ T_IDENTIFICADOR
-      T_ABRE_PAREN! (lista_parametros)? T_FECHA_PAREN! T_2_PONTOS! tipo
+      T_ABRE_PAREN! (lista_parametros)? T_FECHA_PAREN! T_2_PONTOS! tipo_retorno
     (declaracao_constantes | declaracao_variaveis)*
     bloco_codigo
   ;
@@ -311,19 +311,23 @@ declaracao_procedimento
     bloco_codigo
   ;
 
+tipo_retorno!
+  : t:tipo {#tipo_retorno = #([T_TIPO_RETORNO,"&ret"],t);}
+  ;
+
 lista_parametros
   : (param_reticencias | parametro (T_VIRGULA! lista_parametros)?)
   ;
 
 param_reticencias!
   : ret:T_RETICENCIAS id:T_IDENTIFICADOR
-                       {#param_reticencias = #([T_VARIAVEL,"&param"],ret,id);}
+                       {#param_reticencias = #([T_PARAM,"&param"],ret,id);}
   ;
 
 parametro!
   : ((c:T_CONSTANTE)? r:T_REF)? id:T_IDENTIFICADOR T_2_PONTOS t:tipo
 
-                          {#parametro = #([T_VARIAVEL,"&param"],t,id,c,r);}
+                          {#parametro = #([T_PARAM,"&param"],t,id,c,r);}
   ;
 
 

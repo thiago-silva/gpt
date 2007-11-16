@@ -100,6 +100,9 @@ tokens {
 
   //imaginários para a AST
 
+  T_PARAM;
+  T_TIPO_RETORNO;
+
   T_VALOR;
   T_VAL_MATRIZ;    //valor da matriz    (literal [])
   T_VAL_ESTRUTURA; //valor da estrutura (literal {})
