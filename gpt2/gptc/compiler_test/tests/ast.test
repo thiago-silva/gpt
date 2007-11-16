@@ -482,8 +482,23 @@ teste
 
   ast : (T_ALGORITMO
           (T_PROCEDIMENTO T_IDENTIFICADOR
-              (T_VARIAVEL T_INTEIRO T_IDENTIFICADOR)
-              (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR)
+              (T_PARAM T_INTEIRO T_IDENTIFICADOR)
+              (T_PARAM T_IDENTIFICADOR T_IDENTIFICADOR)
+            (T_INICIO)))
+fim
+
+teste
+  {
+    procedimento p(i:inteiro, g: matriz[1][] do tipo real)
+    início
+    fim
+  }
+
+  ast : (T_ALGORITMO
+          (T_PROCEDIMENTO T_IDENTIFICADOR
+              (T_PARAM T_INTEIRO T_IDENTIFICADOR)
+              (T_PARAM
+                (T_MATRIZ T_REAL T_INTEIRO_LITERAL T_NULO) T_IDENTIFICADOR)
             (T_INICIO)))
 fim
 
@@ -496,9 +511,9 @@ teste
 
   ast : (T_ALGORITMO
           (T_PROCEDIMENTO T_IDENTIFICADOR
-              (T_VARIAVEL T_INTEIRO T_IDENTIFICADOR)
-              (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR)
-              (T_VARIAVEL T_RETICENCIAS T_IDENTIFICADOR)
+              (T_PARAM T_INTEIRO T_IDENTIFICADOR)
+              (T_PARAM T_IDENTIFICADOR T_IDENTIFICADOR)
+              (T_PARAM T_RETICENCIAS T_IDENTIFICADOR)
             (T_INICIO)))
 fim
 
@@ -514,7 +529,182 @@ teste
   ast : (T_ALGORITMO
           (T_PROCEDIMENTO T_IDENTIFICADOR
               (T_VARIAVEL T_INTEIRO T_IDENTIFICADOR)
-              (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR)
-              (T_VARIAVEL T_RETICENCIAS T_IDENTIFICADOR)
             (T_INICIO)))
+fim
+
+
+teste
+  {
+    procedimento p(i:inteiro, t:T)
+      variável x : inteiro;
+    início
+    fim
+  }
+
+  ast : (T_ALGORITMO
+          (T_PROCEDIMENTO T_IDENTIFICADOR
+              (T_PARAM T_INTEIRO T_IDENTIFICADOR)
+              (T_PARAM T_IDENTIFICADOR T_IDENTIFICADOR)
+              (T_VARIAVEL T_INTEIRO T_IDENTIFICADOR)
+            (T_INICIO)))
+fim
+
+
+
+teste
+  {
+    função f(i:inteiro, t:T, ... resto) : literal
+      variável x : inteiro;
+      variáveis
+        P : T;
+        i,j,k : matriz[1][2] do tipo T
+        := [{chave := valor\},
+            {ch:='a'\},
+            {z:=10.2\}];
+      fim-variáveis
+      variável z : T := {chave := valor\};
+    início
+    fim
+  }
+
+  ast : (T_ALGORITMO
+          (T_FUNCAO T_IDENTIFICADOR
+              (T_PARAM T_INTEIRO T_IDENTIFICADOR)
+              (T_PARAM T_IDENTIFICADOR T_IDENTIFICADOR)
+              (T_PARAM T_RETICENCIAS T_IDENTIFICADOR)
+              (T_TIPO_RETORNO T_LITERAL)
+           (T_VARIAVEL T_INTEIRO T_IDENTIFICADOR)
+           (T_VARIAVEIS
+              (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR)
+              (T_VARIAVEL
+                  (T_MATRIZ T_IDENTIFICADOR
+                            T_INTEIRO_LITERAL
+                            T_INTEIRO_LITERAL)
+                  T_IDENTIFICADOR T_IDENTIFICADOR T_IDENTIFICADOR
+                  (T_VALOR (T_VAL_MATRIZ
+                        (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR)
+                        (T_VAL_ESTRUTURA T_IDENTIFICADOR T_CARACTERE_LITERAL)
+                        (T_VAL_ESTRUTURA T_IDENTIFICADOR T_REAL_LITERAL)))))
+           (T_VARIAVEL T_IDENTIFICADOR T_IDENTIFICADOR
+             (T_VALOR (T_VAL_ESTRUTURA T_IDENTIFICADOR T_IDENTIFICADOR)))
+            (T_INICIO)))
+fim
+
+
+
+
+
+/************** expressões *****************************/
+
+
+
+
+teste
+  {
+    variável x : inteiro;
+    início
+      x := 1 + 1;
+    fim
+  }
+
+  ast: (T_ALGORITMO
+         (T_VARIAVEL T_INTEIRO T_IDENTIFICADOR)
+         (T_INICIO
+            (T_ATRIBUICAO T_IDENTIFICADOR
+              (T_MAIS T_INTEIRO_LITERAL T_INTEIRO_LITERAL))))
+fim
+
+teste
+  {
+    início
+      x := 1 + 2 * 3;
+    fim
+  }
+
+  ast: (T_ALGORITMO
+         (T_INICIO
+            (T_ATRIBUICAO T_IDENTIFICADOR
+              (T_MAIS T_INTEIRO_LITERAL
+                (T_MULTIP T_INTEIRO_LITERAL T_INTEIRO_LITERAL)))))
+fim
+
+
+
+
+/******************* enunciados **************************/
+
+teste
+  {
+    início
+      para x de 0 até 10 faça
+        para x de 0 até 1 passo -1 faça
+          x := 1;
+        fim-para
+      fim-para
+
+      enquanto x > 10 / 3 faça
+        repita
+          se x % 2 <> 3 / 4 então
+            f(x);
+          fim-se
+        até 10 > 3
+      fim-enquanto
+
+      sair;
+
+      se verdadeiro então
+        retorne a.b >> a[1];
+      senão
+        f((1+2)*3);
+      fim-se
+
+      caso x seja
+        "teste" faça
+          f(1);
+          x := 1;
+        fim-faça
+
+        1.0 faça
+          x := 1;
+        fim-faça
+
+        senão
+          x := 1;
+        fim-senão
+      fim-caso
+    fim
+  }
+
+  ast:
+(T_ALGORITMO
+  (T_INICIO
+    (T_PARA T_IDENTIFICADOR T_INTEIRO_LITERAL T_INTEIRO_LITERAL
+      (T_PARA T_IDENTIFICADOR T_INTEIRO_LITERAL T_INTEIRO_LITERAL
+            ( T_PASSO T_MENOS T_INTEIRO_LITERAL )
+        ( T_ATRIBUICAO T_IDENTIFICADOR T_INTEIRO_LITERAL ) ) )
+    (T_ENQUANTO
+      (T_MAIOR T_IDENTIFICADOR (T_DIV T_INTEIRO_LITERAL T_INTEIRO_LITERAL))
+        (T_REPITA
+          (T_SE (T_DIFERENTE
+                  (T_MOD T_IDENTIFICADOR T_INTEIRO_LITERAL)
+                  (T_DIV T_INTEIRO_LITERAL T_INTEIRO_LITERAL))
+            (T_CALL T_IDENTIFICADOR T_IDENTIFICADOR))
+          T_ATE ( T_MAIOR T_INTEIRO_LITERAL T_INTEIRO_LITERAL)))
+    (T_SAIR)
+    (T_SE T_VERDADEIRO
+      (T_RETORNE (T_BIT_SHIFT_RIGHT
+                    (T_IDENTIFICADOR T_IDENTIFICADOR)
+                    (T_IDENTIFICADOR T_INTEIRO_LITERAL)))
+      T_SENAO (T_CALL T_IDENTIFICADOR (T_MULTIP
+                                      (T_MAIS T_INTEIRO_LITERAL
+                                              T_INTEIRO_LITERAL)
+                                       T_INTEIRO_LITERAL)))
+    (T_CASO T_IDENTIFICADOR
+      (T_TEXTO_LITERAL
+        (T_CALL T_IDENTIFICADOR T_INTEIRO_LITERAL)
+        (T_ATRIBUICAO T_IDENTIFICADOR T_INTEIRO_LITERAL))
+      (T_REAL_LITERAL
+        (T_ATRIBUICAO T_IDENTIFICADOR T_INTEIRO_LITERAL))
+      (T_SENAO
+        (T_ATRIBUICAO T_IDENTIFICADOR T_INTEIRO_LITERAL)))))
 fim
