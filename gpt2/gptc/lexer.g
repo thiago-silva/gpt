@@ -108,7 +108,6 @@ tokens {
   T_VAL_ESTRUTURA; //valor da estrutura (literal {})
 
   T_DIMENSOES;
-  T_NULL;
 
   T_UN_POSITIVO;
   T_UN_NEGATIVO;
