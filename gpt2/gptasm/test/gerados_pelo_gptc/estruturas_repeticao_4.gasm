@@ -1,0 +1,23 @@
+// Programa estruturas_repeticao_4.gasm gerado a partir de estruturas_repeticao_4.gpt
+program estruturas_repeticao_4
+
+var x int
+// Procedure main
+proc main
+	var __temp_1 int
+	var __temp_2 int
+	iset x, 1
+	__label_1:
+	push x
+	push_int
+	push 1
+	pcall imprima
+	isum __temp_1, x, 1
+	iset x, __temp_1
+	igt __temp_2, x, 10
+	ifnot __temp_2, __label_1
+	exit 0
+endproc
+// Fim da procedure
+
+endprogram

@@ -1,0 +1,24 @@
+// Programa procedimentos_definidos_usuario_1.gasm gerado a partir de procedimentos_definidos_usuario_1.gpt
+program procedimentos_definidos_usuario_1
+
+// Procedure main
+proc main
+	pcall soma
+	exit 0
+endproc
+// Fim da procedure
+
+// Procedure soma
+proc soma
+	var __temp_1 int
+	isum __temp_1, 2, 7
+	push __temp_1
+	push_int
+	push "A soma de 2 + 7 é: "
+	push_string
+	push 2
+	pcall imprima
+endproc
+// Fim da procedure
+
+endprogram

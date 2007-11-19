@@ -1,0 +1,33 @@
+program exemplo
+
+var x int
+
+proc main
+    // imprima( "Digite um número: " );
+    push_sp
+    push "Digite um número: "
+    push_string
+    push_1
+    pcall imprima
+    pop_sp
+    // x := leia( );
+    push_0 // resultado da função
+    push_sp
+    pcall leia
+    pop_sp
+    pop x
+    // imprima( "O número digitado foi ", x );
+    push_sp
+    push x
+    push_int
+    push "O número digitado foi "
+    push_string
+    push_2
+    pcall imprima
+    pop_sp
+
+    exit_0
+endproc
+
+endprogram
+

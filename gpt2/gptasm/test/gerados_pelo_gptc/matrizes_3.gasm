@@ -1,0 +1,28 @@
+// Programa matrizes_3.gasm gerado a partir de matrizes_3.gpt
+program matrizes_3
+
+// Procedure main
+proc main
+	pcall mostra
+	exit 0
+endproc
+// Fim da procedure
+
+// Procedure mostra
+proc mostra
+	var resultado matrix
+	var __temp_1 matrix
+	m1set resultado, 10
+	m1set resultado, 20
+	m1sum __temp_1, resultado, resultado
+	m1set resultado, __temp_1
+	push resultado
+	push_matrix
+	push "resultado[2]="
+	push_string
+	push 2
+	pcall imprima
+endproc
+// Fim da procedure
+
+endprogram

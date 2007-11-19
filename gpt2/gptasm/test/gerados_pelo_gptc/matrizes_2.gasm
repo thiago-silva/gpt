@@ -1,0 +1,45 @@
+// Programa matrizes_2.gasm gerado a partir de matrizes_2.gpt
+program matrizes_2
+
+var x int
+var y int
+var c ERRO !!!
+var i int
+// Procedure main
+proc main
+	var __temp_1 int
+	var __temp_2 int
+	var __temp_3 int
+	var __temp_4 int
+	iset i, 1
+	__label_1:
+	ile __temp_1, i, 10
+	ifnot __temp_1, __label_2
+	imul __temp_2, i, 10
+	iset x, __temp_2
+	imul __temp_3, i, 100
+	iset y, __temp_3
+	iinc i, 1
+	jmp __label_1
+	__label_2:
+	push "Valores das coordenadas:"
+	push_string
+	push 1
+	pcall imprima
+	iset i, 1
+	__label_3:
+	ile __temp_4, i, 10
+	ifnot __temp_4, __label_4
+	push c
+	push_desconhecido
+	push "x="
+	push_string
+	push 2
+	iinc i, 1
+	jmp __label_3
+	__label_4:
+	exit 0
+endproc
+// Fim da procedure
+
+endprogram

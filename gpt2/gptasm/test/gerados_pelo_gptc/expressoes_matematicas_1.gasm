@@ -1,0 +1,38 @@
+// Programa expressoes_matematicas_1.gasm gerado a partir de expressoes_matematicas_1.gpt
+program expressoes_matematicas_1
+
+var t1 int
+var t2 int
+// Procedure main
+proc main
+	var __temp_1 int
+	var __temp_2 int
+	var __temp_3 int
+	var __temp_4 int
+	var __temp_5 int
+	isum __temp_1, 1, 2
+	iset t1, __temp_1
+	imul __temp_2, 5, 3
+	iset t1, __temp_2
+	isum __temp_3, 2, t1
+	iset t2, __temp_3
+	push t2
+	push_int
+	push "2+5*3="
+	push_string
+	push 2
+	pcall imprima
+	imul __temp_4, 5, 3
+	isum __temp_5, 2, __temp_4
+	iset t1, __temp_5
+	push t1
+	push_int
+	push "2+5*3="
+	push_string
+	push 2
+	pcall imprima
+	exit 0
+endproc
+// Fim da procedure
+
+endprogram

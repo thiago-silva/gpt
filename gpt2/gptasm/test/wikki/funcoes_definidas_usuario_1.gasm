@@ -1,0 +1,31 @@
+program exemplo
+
+proc main
+    // imprima( "A soma é: ", soma( 2, 7 ) );
+    push_sp
+    push_0 // resultado da função
+    push 7 // empilha 7
+    push 2 // empilha 2
+    pcall soma
+    push_int
+    push "A soma é: "
+    push_string
+    push_2
+    pcall imprima
+    pop_sp
+	
+    exit_0
+endproc
+
+proc soma
+    param __result int
+    param x int
+    param y int
+
+    isum __result, x, y
+
+    ret
+endproc
+
+endprogram
+

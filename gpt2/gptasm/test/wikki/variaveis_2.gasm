@@ -1,0 +1,31 @@
+program exemplo
+
+var v int
+
+proc main
+    iset v, 0
+    iset v, v
+    isum v, 10, 10
+    isum v, v, v
+    isum v, v, 10
+    isum v, 10, v
+
+    push_sp
+    push v
+    push_int
+    push_1
+    pcall imprima
+    pop_sp
+	
+    push_sp
+    push 10
+    push_int
+    push_1
+    pcall imprima
+    pop_sp
+	
+    exit_0
+endproc
+
+endprogram
+

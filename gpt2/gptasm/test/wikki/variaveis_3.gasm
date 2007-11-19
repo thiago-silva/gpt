@@ -1,0 +1,31 @@
+program exemplo
+
+var v real
+
+proc main
+    rset v, 0.0
+    rset v, v
+    rsum v, 10.0, 10.0
+    rsum v, v, v
+    rsum v, v, 10.0
+    rsum v, 10.0, v
+
+    push_sp
+    push v
+    push_real
+    push_1
+    pcall imprima
+    pop_sp
+
+    push_sp
+    push 10.0
+    push_real
+    push_1
+    pcall imprima
+    pop_sp
+
+    exit_0
+endproc
+
+endprogram
+

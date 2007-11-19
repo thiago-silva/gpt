@@ -1,0 +1,23 @@
+// Programa estruturas_repeticao_2.gasm gerado a partir de estruturas_repeticao_2.gpt
+program estruturas_repeticao_2
+
+var x int
+// Procedure main
+proc main
+	var __temp_1 int
+	iset x, 100
+	__label_1:
+	ige __temp_1, x, 0
+	ifnot __temp_1, __label_2
+	push x
+	push_int
+	push 1
+	pcall imprima
+	idec x, 2
+	jmp __label_1
+	__label_2:
+	exit 0
+endproc
+// Fim da procedure
+
+endprogram

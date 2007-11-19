@@ -1,0 +1,38 @@
+program exemplo
+
+var s int
+
+proc main
+    // soma( s, 2, 7 );
+    push_sp
+    push 7
+    push 2
+    push s
+    pcall soma
+    pop_sp
+	
+    // imprima( s );
+    push_sp
+    push s
+    push_int
+    push_1
+    pcall imprima
+    pop_sp
+	
+    exit_0
+endproc
+
+proc soma
+    param r int
+    param v1 int
+    param v2 int
+
+    // r := v1 + v2;
+    isum t1, v1, v2
+    isetv r:0, t1
+
+    ret	
+endproc
+
+endprogram
+

@@ -1,0 +1,23 @@
+// Programa variaveis_8.gasm gerado a partir de variaveis_8.gpt
+program variaveis_8
+
+var l string
+var c char
+// Procedure main
+proc main
+	sset l, "test1"
+	sset l, '2'
+	iset c, l
+	push l
+	push_string
+	push 1
+	pcall imprima
+	push c
+	push_char
+	push 1
+	pcall imprima
+	exit 0
+endproc
+// Fim da procedure
+
+endprogram

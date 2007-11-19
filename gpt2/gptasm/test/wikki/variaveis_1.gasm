@@ -1,0 +1,32 @@
+program exemplo
+
+var x int
+var y int
+
+proc main
+    var t1 int
+    var t2 int
+
+    // x := 10;
+    iset x, 10
+	
+    // y := 20;
+    iset y, 20
+	
+    // imprima( "x*y+4=", x*y+4 );
+    push_sp
+    imul t1, x, y
+    isum t2, t1, 4
+    push t2
+    push_int
+    push "x*y+4"
+    push_string
+    push_2
+    pcall imprima
+    pop_sp
+	
+    exit_0
+endproc
+
+endprogram
+

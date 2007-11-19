@@ -1,0 +1,26 @@
+// Programa variaveis_7.gasm gerado a partir de variaveis_7.gpt
+program variaveis_7
+
+// Procedure main
+proc main
+	pcall mostra
+	exit 0
+endproc
+// Fim da procedure
+
+// Procedure mostra
+proc mostra
+	var resultado int
+	var __temp_1 int
+	isum __temp_1, 4, 5
+	iset resultado, __temp_1
+	push resultado
+	push_int
+	push "soma de 4 e 5 é: "
+	push_string
+	push 2
+	pcall imprima
+endproc
+// Fim da procedure
+
+endprogram

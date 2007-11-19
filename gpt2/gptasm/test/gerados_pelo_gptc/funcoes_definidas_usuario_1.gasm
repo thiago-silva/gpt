@@ -1,0 +1,34 @@
+// Programa funcoes_definidas_usuario_1.gasm gerado a partir de funcoes_definidas_usuario_1.gpt
+program funcoes_definidas_usuario_1
+
+// Procedure main
+proc main
+	var __temp_1 int
+	push 0
+	push 7
+	push 2
+	pcall soma
+	pop __temp_1
+	push __temp_1
+	push_int
+	push "A soma é: "
+	push_string
+	push 2
+	pcall imprima
+	exit 0
+endproc
+// Fim da procedure
+
+// Procedure soma
+proc soma
+	param x int
+	param y int
+	var __result int
+	var __temp_2 int
+	isum __temp_2, x, y
+	iset __result, __temp_2
+	ret
+endproc
+// Fim da procedure
+
+endprogram

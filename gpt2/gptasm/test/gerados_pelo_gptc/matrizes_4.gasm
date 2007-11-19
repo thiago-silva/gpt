@@ -1,0 +1,15 @@
+// Programa matrizes_4.gasm gerado a partir de matrizes_4.gpt
+program matrizes_4
+
+var x matrix
+// Procedure main
+proc main
+	push x
+	push_matrix
+	push 1
+	pcall imprima
+	exit 0
+endproc
+// Fim da procedure
+
+endprogram

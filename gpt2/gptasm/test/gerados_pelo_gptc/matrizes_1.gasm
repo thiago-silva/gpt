@@ -1,0 +1,39 @@
+// Programa matrizes_1.gasm gerado a partir de matrizes_1.gpt
+program matrizes_1
+
+var m matrix
+var i int
+// Procedure main
+proc main
+	var __temp_1 int
+	var __temp_2 int
+	var __temp_3 int
+	iset i, 1
+	__label_1:
+	ile __temp_1, i, 10
+	ifnot __temp_1, __label_2
+	imul __temp_2, i, 10
+	m1set m, __temp_2
+	iinc i, 1
+	jmp __label_1
+	__label_2:
+	push "Valores das coordenadas:"
+	push_string
+	push 1
+	pcall imprima
+	iset i, 1
+	__label_3:
+	ile __temp_3, i, 10
+	ifnot __temp_3, __label_4
+	push m
+	push_matrix
+	push 1
+	pcall imprima
+	iinc i, 1
+	jmp __label_3
+	__label_4:
+	exit 0
+endproc
+// Fim da procedure
+
+endprogram

@@ -1,0 +1,32 @@
+program exemplo
+
+var x int
+
+proc main
+    var t1 int
+
+    // para x de 1 até 10 faça
+    iset x, 1
+    teste:
+    ile t1, x, 10
+    ifnot t1, proximo
+
+    // imprima( x );
+    push_sp
+    push x
+    push_int
+    push_1
+    pcall imprima
+    pop_sp
+
+    // fim-para
+    iinc x, 1
+    jmp teste
+
+    proximo:
+
+    exit_0
+endproc
+
+endprogram
+

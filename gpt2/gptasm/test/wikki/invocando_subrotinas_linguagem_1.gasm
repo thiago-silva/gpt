@@ -1,0 +1,14 @@
+program exemplo
+
+proc main
+    push_sp
+    push "Olá mundo !!!"
+    push_string
+    push_1
+    pcall imprima
+    pop_sp
+
+    exit_0
+endproc
+
+endprogram

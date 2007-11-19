@@ -1,0 +1,26 @@
+// Programa invocando_subrotinas_linguagem_2.gasm gerado a partir de invocando_subrotinas_linguagem_2.gpt
+program invocando_subrotinas_linguagem_2
+
+var x int
+// Procedure main
+proc main
+	var __temp_1 int
+	push "Digite um número: "
+	push_string
+	push 1
+	pcall imprima
+	push 0
+	pcall leia
+	pop __temp_1
+	iset x, __temp_1
+	push x
+	push_int
+	push "O número digitado foi "
+	push_string
+	push 2
+	pcall imprima
+	exit 0
+endproc
+// Fim da procedure
+
+endprogram

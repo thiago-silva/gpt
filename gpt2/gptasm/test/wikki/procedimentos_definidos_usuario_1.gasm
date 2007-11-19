@@ -1,0 +1,39 @@
+program exemplo
+
+proc main
+    // soma( 2, 7 );
+    push_sp
+    push 7
+    push 2
+    pcall soma
+    pop_sp
+	
+    exit_0
+endproc
+
+proc soma
+    param x int
+    param y int
+
+    var t1 int
+
+    push_sp
+    push "A soma é: "
+    push_string
+    push_1
+    pcall imprima
+    pop_sp
+
+    push_sp
+    isum t1, x, y
+    push t1
+    push_int
+    push_1
+    pcall imprima
+    pop_sp
+
+    ret	
+endproc
+
+endprogram
+

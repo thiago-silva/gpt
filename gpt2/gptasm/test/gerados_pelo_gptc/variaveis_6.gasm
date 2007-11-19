@@ -1,0 +1,26 @@
+// Programa variaveis_6.gasm gerado a partir de variaveis_6.gpt
+program variaveis_6
+
+var v bool
+// Procedure main
+proc main
+	iset v, true
+	iset v, false
+	iset v, v
+	push true
+	push_bool
+	push 1
+	pcall imprima
+	push false
+	push_bool
+	push 1
+	pcall imprima
+	push v
+	push_bool
+	push 1
+	pcall imprima
+	exit 0
+endproc
+// Fim da procedure
+
+endprogram

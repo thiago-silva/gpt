@@ -1,0 +1,40 @@
+program exemplo
+
+//var c byte[8] // sizeof c
+
+proc main
+    var t1 int
+
+    // c.x := 10;
+    isetv c:0, 10 // *( c + 0 ) := 10
+
+    // c.y := 20;
+    isetv c:4, 20 // *(c + 4 ) := 20
+
+    // imprima( "c.x=", c.x );
+    push_sp
+    igetv t1, c:0 // t1 := *( c + 0)
+    push t1
+    push_int
+    push "c.x="
+    push_string
+    push_2
+    pcall imprima
+    pop_sp
+
+    // imprima( "c.y=", c.y );
+    push_sp
+    igetv t1, c:4 // t1 := *(c + 4)
+    push t1
+    push_int
+    push "c.y="
+    push_string
+    push_2
+    pcall imprima
+    pop_sp
+
+    exit_0
+endproc
+
+endprogram
+

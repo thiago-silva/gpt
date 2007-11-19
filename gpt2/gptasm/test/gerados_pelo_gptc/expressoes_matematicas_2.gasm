@@ -1,0 +1,20 @@
+// Programa expressoes_matematicas_2.gasm gerado a partir de expressoes_matematicas_2.gpt
+program expressoes_matematicas_2
+
+// Procedure main
+proc main
+	var __temp_1 int
+	var __temp_2 int
+	imul __temp_1, 5, 3
+	isum __temp_2, 2, __temp_1
+	push __temp_2
+	push_int
+	push "2+5*3="
+	push_string
+	push 2
+	pcall imprima
+	exit 0
+endproc
+// Fim da procedure
+
+endprogram

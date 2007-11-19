@@ -1,0 +1,38 @@
+program exemplo
+
+var x int
+
+proc main
+    var t1 int
+
+    // x := 10;
+    iset x, 10
+
+    // se x >= 20 entao
+    ige t1, x, 20
+    ifnot t1, senao
+
+    // x := 2;
+    iset x, 2
+
+    jmp proximo
+    senao:
+
+    // x := 1;
+    iset x, 1
+
+    proximo:
+
+    // imprima( x );
+    push_sp
+    push x
+    push_int
+    push_1
+    pcall imprima
+    pop_sp
+
+    exit_0
+endproc
+
+endprogram
+

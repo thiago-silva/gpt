@@ -1,0 +1,36 @@
+// Programa estruturas_condicionais_2.gasm gerado a partir de estruturas_condicionais_2.gpt
+program estruturas_condicionais_2
+
+var x int
+// Procedure main
+proc main
+	var __temp_1 int
+	var __temp_2 int
+	iset x, 20
+	ige __temp_1, x, 0
+	ifnot __temp_1, __label_1
+	igt __temp_2, x, 40
+	ifnot __temp_2, __label_2
+	push "x>40"
+	push_string
+	push 1
+	pcall imprima
+	jmp __label_3
+	__label_2:
+	push "x<=40"
+	push_string
+	push 1
+	pcall imprima
+	__label_3:
+	jmp __label_4
+	__label_1:
+	push "x eh negativo !!!"
+	push_string
+	push 1
+	pcall imprima
+	__label_4:
+	exit 0
+endproc
+// Fim da procedure
+
+endprogram

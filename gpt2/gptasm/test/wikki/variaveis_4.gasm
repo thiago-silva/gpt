@@ -1,0 +1,35 @@
+program exemplo
+
+var v string
+
+proc main
+    salloc v
+
+    sset v, "0"
+    sset v, v
+    ssum v, "10", "10"
+    ssum v, v, v
+    ssum v, v, "10"
+    ssum v, "10", v
+
+    push_sp
+    push v
+    push_string
+    push_1
+    pcall imprima
+    pop_sp
+	
+    push_sp
+    push "10"
+    push_string
+    push_1
+    pcall imprima
+    pop_sp
+	
+    sfree v
+
+    exit_0
+endproc
+
+endprogram
+
