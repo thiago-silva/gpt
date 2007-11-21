@@ -22,11 +22,49 @@
 #define BASESEMANTICWALKER_H
 
 #include <antlr/TreeParser.hpp>
+#include <list>
+#include <string>
+
+class PortugolAST;
+class SymbolTable;
+class SymbolList;
+class Type;
+class TypeList;
+
+typedef std::list<PortugolAST*> IDList;
 
 class BaseSemanticWalker : public antlr::TreeParser {
 
 public:
-  BaseSemanticWalker() : antlr::TreeParser() {}
+  BaseSemanticWalker(SymbolTable*);
+
+protected:
+  void useLib(const std::string&);
+
+  void declare(const IDList&, Type*, bool);
+
+  void defineStruct(const std::string&, const SymbolList&, int);
+
+  void declareProc(const std::string&, const SymbolList&, int, Type* = 0);
+
+  Type* getType(const std::string&);
+  Type* getType(int);
+
+  Type* getSymbolType(const std::string&);
+
+  void evalFCall(const std::string&, const TypeList&);
+
+  void evalMatrixSubscript(Type*);
+
+  void evalAttribution(Type*, Type*);
+
+  template<int>
+  Type* evalExpr(Type*, Type*);
+
+  template<int>
+  Type* evalExpr(Type*);
+
+  SymbolTable* _symtable;
 };
 
 #endif
