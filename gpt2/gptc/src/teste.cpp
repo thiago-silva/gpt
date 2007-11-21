@@ -1,22 +1,26 @@
 #include <stdio.h>
+#include <fstream>
+
+#include <antlr/TokenBuffer.hpp>
+#include <antlr/CommonAST.hpp>
+
 #include "PortugolLexer.hpp"
 #include "PortugolParser.hpp"
 #include "SemanticWalker.hpp"
 #include "PortugolTokenTypes.hpp"
-#include <antlr/TokenBuffer.hpp>
-#include <antlr/CommonAST.hpp>
+#include "SymbolTable.hpp"
 
-#include <fstream>
+#include "TokenNames.hpp"
 
 void dump_tokens(char* fname) {
-  #include "tokenNames.hpp"
+
   std::ifstream fi(fname);
   PortugolLexer lexer(fi, true);
   antlr::TokenBuffer *buffer = new antlr::TokenBuffer(lexer);
 
   while (true) {
     std::cout << lexer.getLine() << ": [" << buffer->LA(1) << "] "
-              << tokenNames[buffer->LA(1)] << " (" << lexer.getText() << ")";
+              << g_tokenNames[buffer->LA(1)] << " (" << lexer.getText() << ")";
     buffer->consume();
     getchar();
 
@@ -26,20 +30,22 @@ void dump_tokens(char* fname) {
   }
 }
 
-antlr::RefAST dump_tree(char* fname, bool should_dump) {
+RefPortugolAST dump_tree(char* fname, bool should_dump) {
 
   std::ifstream fi(fname);
   PortugolLexer lexer(fi, true);
   PortugolParser parser(lexer);
 
-  antlr::ASTFactory ast_factory(antlr::CommonAST::TYPE_NAME,&antlr::CommonAST::factory);
+  antlr::ASTFactory ast_factory(PortugolAST::TYPE_NAME,
+                                &PortugolAST::factory);
+
   parser.initializeASTFactory(ast_factory);
   parser.setASTFactory(&ast_factory);
 
   parser.programa();
 
   antlr::RefAST ast = parser.getAST();
-  antlr::RefCommonAST cast = antlr::RefCommonAST(ast);
+  RefPortugolAST cast = RefPortugolAST(ast);
 
   if (!cast) {
     std::cerr << "no parse tree!" << std::endl;
@@ -48,16 +54,20 @@ antlr::RefAST dump_tree(char* fname, bool should_dump) {
   if (should_dump) {
     std::cerr << cast->toStringList() << std::endl << std::endl;
   }
-  return ast;
+  return cast;
 }
 
 void semantic(char* fname) {
-  antlr::RefAST ast;
+  RefPortugolAST ast;
 
   ast = dump_tree(fname, true);
 
-  SemanticWalker semantic;
+  SymbolTable* symtable = SymbolTable::create(fname);
+
+  SemanticWalker semantic(symtable);
   semantic.programa(ast);
+
+  symtable->dump();
 }
 
 int main(int argc, char** argv) {
