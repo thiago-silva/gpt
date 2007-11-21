@@ -18,8 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             */
 
 header {
-#include <antlr/NoViableAltException.hpp>
-#include <antlr/SemanticException.hpp>
+  #include <antlr/NoViableAltException.hpp>
+  #include <antlr/SemanticException.hpp>
+
+  #include "PortugolAST.hpp"
   using namespace antlr;
 }
 
@@ -32,6 +34,7 @@ options {
   importVocab    = Portugol;
   genHashLines   = false;
   buildAST       = true;
+  ASTLabelType   = "RefPortugolAST";
   noConstructors = true;
 }
 
@@ -89,7 +92,7 @@ private:
     astFactory->addASTChild(ast, astFactory->create(token));
   }
 
-  void addChildNode(antlr::ASTPair& ast, antlr::RefAST child) {
+  void addChildNode(antlr::ASTPair& ast, RefAST child) {
     astFactory->addASTChild(ast, child);
   }
 
@@ -133,8 +136,8 @@ importacao
   ;
 
 corpo
-  :  declaracao_subrotina corpo
-  |  bloco_codigo         corpo
+  :  declaracao_subprograma corpo
+  |  bloco_codigo           (declaracao_subprograma)*
   |  /*vazio*/
   ;
 
@@ -292,7 +295,7 @@ bloco_declaracao_estrutura
 //####################################
 
 
-declaracao_subrotina
+declaracao_subprograma
   : declaracao_funcao
   | declaracao_procedimento
   ;
@@ -325,9 +328,9 @@ param_reticencias!
   ;
 
 parametro!
-  : ((c:T_CONSTANTE)? r:T_REF)? id:T_IDENTIFICADOR T_2_PONTOS t:tipo
+  : (r:T_REF (c:T_CONSTANTE)?)? id:T_IDENTIFICADOR T_2_PONTOS t:tipo
 
-                          {#parametro = #([T_PARAM,"&param"],t,id,c,r);}
+                          {#parametro = #([T_PARAM,"&param"],t,id,r,c);}
   ;
 
 
@@ -373,15 +376,24 @@ en_retorne
   : T_RETORNE^ (expressao)? T_PONTO_VIRGULA!
   ;
 
-lvalue
-  : T_IDENTIFICADOR^ (matriz_indices | T_PONTO! lvalue)
+lvalue!
+  : id:T_IDENTIFICADOR (m:lvalue_indices)? (T_PONTO es:lvalue_membro)?
+    {#lvalue = #(id, m, es);}
   ;
 
-matriz_indices
+lvalue_membro!
+  : l:lvalue             {#lvalue_membro = #([T_MEMBRO,"&membro"], l);}
+  ;
+
+lvalue_indices
+  : i:indices_matriz     {#lvalue_indices = #([T_SUBSCRITO,"&subscrito"], i);}
+  ;
+
+indices_matriz
   : ( T_ABRE_CHAVE!
       expressao
       T_FECHA_CHAVE!
-    )*
+    )+
   ;
 
 en_se
@@ -521,7 +533,7 @@ expr_elemento
   :  (T_IDENTIFICADOR T_ABRE_PAREN)=> chamada_subrotina
   |  lvalue
   |  literal
-  | T_ABRE_PAREN! expressao T_FECHA_PAREN!
+  | T_ABRE_PAREN^ expressao T_FECHA_PAREN!
   ;
 
 
