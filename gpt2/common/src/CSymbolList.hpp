@@ -8,9 +8,10 @@
 #include <stdlib.h>
 
 #include "CSymbol.hpp"
+#include "CBinString.hpp"
 
 
-class CSymbolList
+class CSymbolList : public CBinString
 {
 public:
    CSymbolList();
@@ -20,22 +21,18 @@ public:
    int getAddress( const std::string &name );
    CSymbol* getSymbol(const std::string &name);
    std::vector<CSymbol*>::iterator find(const std::string &name);
-   CBinString getBinary() const
-   {
-      return _data;
-   }
    int getDataSize() const
    {
-      return _data.size();
+      return size();
    }
    int getSymbolsCount() const
    {
       return _symbols.size();
    }
    bool readFromBinary(CBinString &bin);
+   CBinString::find;
 protected:
    std::vector<CSymbol*> _symbols;
-   CBinString _data;
 private:
 };
 

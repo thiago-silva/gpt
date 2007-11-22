@@ -8,6 +8,7 @@
 
 
 CGenBytecode::CGenBytecode()
+   : _currentSP(0)
 {
    _opcodes[ "isum"        ] = OP_ISUM;
    _opcodes[ "ssum"        ] = OP_SSUM;
@@ -138,11 +139,15 @@ void CGenBytecode::initProcedure(const std::string &procedureName, const bool &h
 // Talvez temos q fazer como em C e gerar procedure_name + retorno + parametros (int_procedure_int_real)
    _symbolTable.addProcedure (procedureName, CSymbol::NO_TYPE, _code.size(), hasVarArguments, staticParameters, parameters);
    _currentProcedure = procedureName;
+   _currentSP = 0;
+   _unsolvedLabels.clear();
+   _solvedLabels.clear();
 }
 
 
 void CGenBytecode::finishProcedure()
 {
+   translateLabelsToAddress();
    _currentProcedure.clear();
    // TODO: delete na procedure ???
 }
@@ -150,46 +155,37 @@ void CGenBytecode::finishProcedure()
 
 void CGenBytecode::makeVarDefinition(const std::string &lexeme, const int &type)
 {
-//   if (_currentProcedure.empty()) { // assumindo que sao dados globais...
-//      _symbolTable.add(new CVariableDefinition(lexeme, type, _data.getDataSize()));
-//   }
+   if (_currentProcedure.empty()) { // assumindo que sao dados globais...
+      _symbolTable.addVariable (lexeme, type, _data.getDataSize());
+   }
    _data.addVariable (lexeme, type, _data.getDataSize());
 }
 
 
 void CGenBytecode::makeParDefinition(const std::string &lexeme, const int &type)
 {
-   _symbolTable.addParameter(lexeme, type, 0); // TODO: colocar endereco relativo a SP
+   CSymbol *symbol = _symbolTable.addParameter(lexeme, type, _currentSP);
+   _currentSP += symbol->getTypeSize();
 }
 
 
 void CGenBytecode::registryLabel(const std::string &labelName)
 {
+   // TODO
+   if (_solvedLabels.find(labelName) != _solvedLabels.end()) {
+      std::cout << "Label ja definido: " << labelName << std::endl;
+      abort();
+   }
+   _solvedLabels[labelName] = _code.size();
+//   std::cout << "Registry label: " << labelName << " address: " << _code.size() << std::endl;
 }
 
 
 void CGenBytecode::addOpcode(const std::string &mn)
 {
 //   std::cout << "Mn=" << mn << " opcode: " << (int)_opcodes[mn] << std::endl;
-   _code.addByte(_opcodes[mn]);
+   _code.writeByte(_opcodes[mn]);
 }
-
-
-//void CGenBytecode::addIdReference(const std::string &id)
-//{
-//   int ref = _symbolTable.getReference(id);
-//   _code.add(ref);
-//}
-
-
-//void CGenBytecode::addReference(const std::string &id, const int &category, const int &type)
-//{
-//   int ref = _data.getReference(id);
-//   if (ref == -1) {
-//      ref = _data.add(new CConstantData( id, type, _data.size()))->getAddress();
-//   }
-//   _code.addInt(ref);
-//}
 
 
 void CGenBytecode::addAddress(const std::string &id, const int &category, const int &type)
@@ -199,30 +195,52 @@ void CGenBytecode::addAddress(const std::string &id, const int &category, const 
       //ref = _data.add((new CSymbol())->setAsConstantData( id, type, _data.getDataSize()))->getAddress();
       ref = _data.addConstant (id, type, _data.getDataSize())->getAddress();
    }
-   _code.addInt(ref);
+   _code.writeInt(ref);
 }
 
 
 CBinString CGenBytecode::getBinary()
 {
-//   _header.setSizes(_symbolTable.size(), _data.size(), _code.size());
-
    CBinString ret;
 
    ret += _header.getBinary();
 
 //   std::cout << "symbolTable.getSymbolsCount()=" << _symbolTable.getSymbolsCount() << std::endl;
    ret.writeInt(_symbolTable.getSymbolsCount());
-   ret += _symbolTable.getBinary();
+   ret += _symbolTable;
 
 //   std::cout << "data.size()=" << _data.getDataSize() << std::endl;
    ret.writeInt(_data.getDataSize());
-   ret += _data.getBinary();
+   ret += _data;
 
 //   std::cout << "code.size()=" << _code.size() << std::endl;
    ret.writeInt(_code.size());
-   ret += _code.getBinary();
+   ret += _code;
 
    return ret;
+}
+
+void CGenBytecode::unsolvedLabel(const std::string &label)
+{
+   _unsolvedLabels.push_back(std::pair<std::string, int>(label, _code.size()));
+//   std::cout << "Unsolved label: " << label << " address: " << _code.size() << std::endl;
+   _code.writeInt(0);
+}
+
+
+void CGenBytecode::translateLabelsToAddress()
+{
+   // Varre os labels referenciados
+   for (std::list<std::pair<std::string,int> >::const_iterator unsolvedLabel = _unsolvedLabels.begin();
+         unsolvedLabel != _unsolvedLabels.end(); unsolvedLabel++) {
+      std::map<std::string,int>::const_iterator solvedLabel;
+      solvedLabel = _solvedLabels.find(unsolvedLabel->first);
+      if (solvedLabel == _solvedLabels.end()) {
+         std::cout << "Label nao encontrado: " << unsolvedLabel->second << std::endl;
+         abort();
+      }
+      _code.setInt(unsolvedLabel->second, solvedLabel->second);
+//      std::cout << "code[" << unsolvedLabel->second << "]=" << solvedLabel->second << std::endl;
+   }
 }
 

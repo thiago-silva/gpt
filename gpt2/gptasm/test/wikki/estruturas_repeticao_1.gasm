@@ -1,9 +1,10 @@
 program exemplo
 
 var x int
+var t1 int
 
 proc main
-    var t1 int
+//    var t1 int
 
     // para x de 1 até 10 faça
     iset x, 1
@@ -15,7 +16,7 @@ proc main
     push_sp
     push x
     push_int
-    push_1
+    push 1
     pcall imprima
     pop_sp
 
@@ -25,7 +26,7 @@ proc main
 
     proximo:
 
-    exit_0
+    exit 0
 endproc
 
 endprogram

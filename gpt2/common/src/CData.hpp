@@ -17,8 +17,6 @@ public:
    CSymbol* addConstant (const std::string &name, const int &type, const int &address);
    bool readFromBinary(CBinString &bin);
    std::string getString(const int &address);
-   int getInt(const int &address);
-   void setInt(const int &address, const int &value);
 };
 
 #endif

@@ -22,7 +22,8 @@ public:
       CHAR = 'C',
       BOOL = 'B',
       REAL = 'R',
-      MATRIX = 'M'
+      MATRIX = 'M',
+      POINTER = 'P'
    };
    CSymbol ();
    CSymbol (const std::string &name, const char &type, const char &category,
@@ -34,10 +35,6 @@ public:
    std::string getName() const
    {
       return _name;
-   }
-   CBinString getBinary() const
-   {
-      return _data;
    }
    int getTypeSize() const;
    char getType() const
@@ -65,8 +62,6 @@ public:
    {
       return _parameters;
    }
-protected:
-   CBinString           _data;
 private:
    std::string          _name;
    char                 _type;

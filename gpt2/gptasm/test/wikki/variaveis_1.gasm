@@ -19,13 +19,13 @@ proc main
     isum t2, t1, 4
     push t2
     push_int
-    push "x*y+4"
+    push "x*y+4="
     push_string
-    push_2
+    push 2
     pcall imprima
     pop_sp
 	
-    exit_0
+    exit 0
 endproc
 
 endprogram

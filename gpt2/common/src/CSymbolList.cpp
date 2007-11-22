@@ -1,7 +1,7 @@
 #include "CSymbolList.hpp"
 
 
-CSymbolList::CSymbolList() //: _size(0)
+CSymbolList::CSymbolList()
 {
 }
 
@@ -15,7 +15,10 @@ CSymbol* CSymbolList::add(CSymbol* symbol)
 {
    _symbols.push_back(symbol);
 
-   _data += symbol->getBinary();
+//   Este metodo esta sendo utilizado durante a leitura do binario. Mas durante a leitura nao eh
+//   mais necessario popular "_data". Com isso symbol->getBinary pode ser descartado junto com
+//   varios outros metodos/propriedades
+//   (*this) += symbol->getBinary();
    return symbol;
 }
 

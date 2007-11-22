@@ -2,6 +2,19 @@
 
 #include "CBinString.hpp"
 
+// TODO: versoes BEM mais otimizadas :-)
+//int CData::getInt(const int &address)
+//{
+//   int *ret = (int*)&(_data[address]);
+//   return *ret;
+//}
+//void CData::setInt(const int &address, const int &value)
+//{
+//   int *targetAddress = (int*)&(_data[address]);
+//
+//   *targetAddress = value;
+//}
+
 
 void CBinString::writeInt(const int &value)
 {
@@ -67,6 +80,28 @@ void CBinString::readByte(char &value)
 }
 
 
+char CBinString::getByte(const int &pos)
+{
+   return (*this)[pos];
+}
+
+void CBinString::getByte(const int &pos, char &value)
+{
+   value = getByte(pos);
+}
+
+int CBinString::getInt(int pos)
+{
+   int result = 0;
+   char *byte = (char*)&result;
+
+   for( size_t i = 0; i < sizeof(int); i++) {
+      *byte++ = (*this)[pos++];
+   }
+   return result;
+}
+
+
 void CBinString::readString(std::string &value)
 {
    int size;
@@ -77,6 +112,17 @@ void CBinString::readString(std::string &value)
 }
 
 
+std::string CBinString::readString()
+{
+   std::string result;
+   int size;
+   readInt(size);
+   result=substr(0, size);
+   erase(0, size);
+   return result;
+}
+
+
 void CBinString::readBool(bool &value)
 {
    char byte;
@@ -84,6 +130,19 @@ void CBinString::readBool(bool &value)
    erase(0,1);
    value=byte;
 //   std::cout << "readBool:" << value << std::endl;
+}
+
+
+void CBinString::setInt(int pos, const int &value)
+{
+   char *byte = (char*)&value;
+
+   for( size_t i = 0; i < sizeof(int); i++) {
+      (*this)[pos++] = *byte++;
+   }
+   // TODO: BEM mais eficiente...
+   // int *targetAddress = (int*)&(_data[address]);
+   //*targetAddress = value;
 }
 
 

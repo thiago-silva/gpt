@@ -91,13 +91,13 @@ options {
 //--------------------------------
   primitive_type returns [char ret]
 //--------------------------------
-  : "int"     {ret=CSymbol::INT;}
-  | "real"    {ret=CSymbol::REAL;}
-  | "char"    {ret=CSymbol::CHAR;}
-  | "string"  {ret=CSymbol::STRING;}
-  | "bool"    {ret=CSymbol::BOOL;}
-//  | "pointer" {ret=CSymbol::POINTER;}
-  | "matrix"  {ret=CSymbol::MATRIX;}
+  : "int"     {ret=CSymbol::INT;    }
+  | "real"    {ret=CSymbol::REAL;   }
+  | "char"    {ret=CSymbol::CHAR;   }
+  | "string"  {ret=CSymbol::STRING; }
+  | "bool"    {ret=CSymbol::BOOL;   }
+  | "pointer" {ret=CSymbol::POINTER;}
+  | "matrix"  {ret=CSymbol::MATRIX; }
   ;
 
 //#################################
@@ -107,10 +107,13 @@ options {
 //---------------------
   procedure_declaration
 //---------------------
+{
+   std::vector<CSymbol> parameters;
+}
   : "proc" 
    tk_id:T_ID
     { bytecode.initProcedure(tk_id->getText(), false, 0, std::vector<CSymbol>()); }
-    (parameter_declaration)*
+    (parameter_declaration[parameters])*
     (var_declaration)*
     code_block
     { bytecode.finishProcedure(); }
@@ -118,12 +121,14 @@ options {
   ;
 
 //---------------------
-  parameter_declaration
+  parameter_declaration [std::vector<CSymbol> &parameters]
 //---------------------
 {
   int tk_type;
 }
-  : "param" ("ref")? tk_id:T_ID tk_type=primitive_type { declareParameter( tk_id->getText(), tk_type ); }
+  : "param" ("ref")? tk_id:T_ID tk_type=primitive_type
+    { declareParameter( tk_id->getText(), tk_type ); }
+    { parameters.push_back(CSymbol(tk_id->getText(), tk_type, CSymbol::PARAM, 0)); } // TODO: nao eh zero...
   ;
 
 //#####################
@@ -163,7 +168,7 @@ options {
 //-----
   label
 //-----
-   : T_ID
+   : T_ID { bytecode.unsolvedLabel(getLastTokenText()); }
    ;
 
 //---------------------
@@ -189,7 +194,7 @@ options {
 //--------------------
    :  ("ineg"|"rneg"|"not"|"iinc"|"idec") 
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID T_COMMA element
+      identifier T_COMMA element
    ;
 
 //------------------
@@ -202,7 +207,7 @@ options {
       | "c2i"|"r2i"|"s2i"|"b2i"
       )
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID T_COMMA element
+      identifier T_COMMA element
    ;
 
 //----------------
@@ -220,23 +225,24 @@ options {
 //----------------------
    :  "geta"
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID T_COMMA T_ID
+      identifier T_COMMA identifier
    |  ("igetv"|"sgetv"|"rgetv")
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID T_COMMA element T_COLON element
+      identifier T_COMMA element T_COLON element
    |  ("isetv"|"ssetv"|"rsetv")
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID T_COLON element T_COMMA element
+      identifier T_COLON element T_COMMA element
    ;
 
 //--------
   mn_salto
 //--------
-   :  "jmp" label
+   :  "jmp"
       {bytecode.addOpcode(getLastTokenText());}
+      label
    |  ("if"|"ifnot")
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID T_COMMA label
+      identifier T_COMMA label
    ;
 
 //--------------------
@@ -247,7 +253,7 @@ options {
       element
    |  "pop"
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID
+      identifier
    |  ("incsp"|"decsp")
       {bytecode.addOpcode(getLastTokenText());}
       T_INT_VALUE
@@ -273,13 +279,13 @@ options {
 //----------------------
    :  ( "salloc"|"sfree" )
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID
+      identifier
    |  "ssetc"
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID T_COMMA element T_COMMA element
+      identifier T_COMMA element T_COMMA element
    |  "sgetc"
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID T_COMMA T_ID T_COMMA element
+      identifier T_COMMA identifier T_COMMA element
    ;
 
 //-----------------------
@@ -287,38 +293,44 @@ options {
 //-----------------------
    :  "m1alloc"
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID
-      T_COMMA 
+      identifier
+      T_COMMA
       T_INT_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
       T_COMMA 
       T_INT_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
    |  "m2alloc"
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID T_COMMA T_INT_VALUE T_COMMA T_INT_VALUE T_COMMA T_INT_VALUE
+      identifier
+      T_COMMA
+      T_INT_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
+      T_COMMA
+      T_INT_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
+      T_COMMA
+      T_INT_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
    |  "mfree"
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID
+      identifier
    |  "m1set"
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID T_COMMA element T_COMMA element
+      identifier T_COMMA element T_COMMA element
    |  "m1get"
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID T_COMMA T_ID T_COMMA element
+      identifier T_COMMA identifier T_COMMA element
    |  "m2set"
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID T_COMMA element T_COMMA element T_COMMA element
+      identifier T_COMMA element T_COMMA element T_COMMA element
    |  "m2get"
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID T_COMMA T_ID T_COMMA element T_COMMA element
+      identifier T_COMMA identifier T_COMMA element T_COMMA element
    |  "mcopy"
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID T_COMMA T_ID
+      identifier T_COMMA identifier
    |  "mgetsize1"
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID T_COMMA T_ID
+      identifier T_COMMA identifier
    |  "mgetsize2"
       {bytecode.addOpcode(getLastTokenText());}
-      T_ID T_COMMA T_ID
+      identifier T_COMMA identifier
    ;
 
 //-----------
@@ -329,11 +341,11 @@ options {
       {bytecode.addOpcode(getLastTokenText());}
    |   "exit"
       {bytecode.addOpcode(getLastTokenText());}
-       T_INT_VALUE
+       T_INT_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
   ;
 
 identifier
-  : id:T_ID { bytecode.addAddress(id->getText(),CSymbol::VAR, CSymbol::STRING); }
+  : id:T_ID { bytecode.addAddress(id->getText(), CSymbol::VAR, CSymbol::STRING); }
   ;
 
 
@@ -346,11 +358,11 @@ identifier
 //---------------------------------
   : ( 
         T_STRING_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::STRING); }
-      | T_INT_VALUE    { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
-      | T_REAL_VALUE   { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::REAL); }
-      | T_CHAR_VALUE   { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::CHAR); }
-      | "true"         { bytecode.addAddress("1",                CSymbol::CONST, CSymbol::INT); }
-      | "false"        { bytecode.addAddress("0",                CSymbol::CONST, CSymbol::INT); }
+      | T_INT_VALUE    { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT);    }
+      | T_REAL_VALUE   { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::REAL);   }
+      | T_CHAR_VALUE   { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::CHAR);   }
+      | "true"         { bytecode.addAddress("1",                CSymbol::CONST, CSymbol::INT);    }
+      | "false"        { bytecode.addAddress("0",                CSymbol::CONST, CSymbol::INT);    }
     ) 
   ;
 

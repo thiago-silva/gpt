@@ -109,7 +109,7 @@ enum opcode {
    OP_MCOPY = 104,
    OP_MGETSIZE1 = 105,
    OP_MGETSIZE2 = 106,
-   OPCODE_NUMBER  = 107 // TODO: Isso nao eh seguro...
+   OPCODE_NUMBER  = 107
 };
 
 #endif

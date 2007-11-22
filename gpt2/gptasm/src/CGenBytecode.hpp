@@ -3,8 +3,7 @@
 
 #include <map>
 #include <string>
-#include <vector>
-#include <fstream>
+#include <list>
 
 #include "CHeader.hpp"
 #include "CSymbolTable.hpp"
@@ -25,13 +24,19 @@ public:
    void addOpcode(const std::string &mn);
    void addAddress(const std::string &id, const int &category, const int &type);
    CBinString getBinary();
+   void unsolvedLabel(const std::string &label);
 private:
+   void translateLabelsToAddress();
+
    CHeader                    _header;
    CSymbolTable               _symbolTable;
    CData                      _data;
    CCode                      _code;
    std::map<std::string,char> _opcodes;
    std::string                _currentProcedure;
+   int                        _currentSP;
+   std::list<std::pair<std::string, int> > _unsolvedLabels;
+   std::map<std::string, int> _solvedLabels;
 };
 
 #endif
