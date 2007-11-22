@@ -7,7 +7,8 @@
 
 #include "CHeader.hpp"
 #include "CSymbolTable.hpp"
-#include "CData.hpp"
+//#include "CData.hpp"
+#include "CBinString.hpp"
 #include "CBytecode.hpp"
 #include "Common.hpp"
 #include "CDataStack.hpp"
@@ -157,7 +158,8 @@ private:
 
    CHeader       _header;
    CSymbolTable  _symbolTable;
-   CData         _data;
+   CBinString    _data;
+//   CData         _data;
    CBytecode     _code;
    OpcodePointer _opcodePointer[ OPCODE_NUMBER ];
    bool          _stop;

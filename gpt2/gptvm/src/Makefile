@@ -8,7 +8,7 @@ GPTASM=../gptasm/
 
 objects = main.o CGptVm.o CRunBytecode.o CDataStack.o CBytecode.o \
           $(COMMON_DIR)CSymbol.o $(COMMON_DIR)CSymbolTable.o \
-          $(COMMON_DIR)CHeader.o $(COMMON_DIR)CData.o       \
+          $(COMMON_DIR)CHeader.o \
           $(COMMON_DIR)CBinString.o $(COMMON_DIR)CSymbolList.o 
           
 

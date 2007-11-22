@@ -23,6 +23,7 @@ public:
    bool removeIfEqual(const int &value);
    bool removeIfEqual(const char &value);
    bool removeIfEqual(const std::string &value);
+   std::string getCString(const int &address);
    std::string::find;
 };
 

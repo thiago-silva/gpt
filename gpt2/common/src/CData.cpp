@@ -52,16 +52,4 @@ CSymbol* CData::addConstant (const std::string &name, const int &type, const int
 }
 
 
-std::string CData::getString(const int &address)
-{
-   int pos = 0;
-
-   pos = find('\0', address);
-
-   if (pos == -1) {
-      abort();
-   }
-
-   return substr(address, pos - address);
-}
 

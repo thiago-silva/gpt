@@ -172,3 +172,17 @@ bool CBinString::removeIfEqual(const std::string &value)
    return value == data;
 }
 
+
+std::string CBinString::getCString(const int &address)
+{
+   int pos = 0;
+
+   pos = find('\0', address);
+
+   if (pos == -1) {
+      abort();
+   }
+
+   return substr(address, pos - address);
+}
+

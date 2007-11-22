@@ -15,8 +15,6 @@ public:
    CSymbol* add(CSymbol *symbol);
    CSymbol* addVariable (const std::string &name, const int &type, const int &address);
    CSymbol* addConstant (const std::string &name, const int &type, const int &address);
-   bool readFromBinary(CBinString &bin);
-   std::string getString(const int &address);
 };
 
 #endif

@@ -213,7 +213,7 @@ void CRunBytecode::procImprima()
       int value;
       switch (type) {
          case CSymbol::STRING:
-            std::cout << _data.getString(address);
+            std::cout << _data.getCString(address);
             break;
          case CSymbol::INT:
             std::cout << _data.getInt(address);
@@ -288,9 +288,9 @@ void CRunBytecode::pcallOpcode()
 
    int address = _code.fetchInt();
 
-   std::string temp = _data.getString(address);
+//   std::string temp = _data.getCString(address);
 
-   if (_data.getString(address) == "imprima") {
+   if (_data.getCString(address) == "imprima") {
       procImprima();
    }
 }
