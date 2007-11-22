@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <stack>
 
 #include "CHeader.hpp"
 #include "CSymbolTable.hpp"
@@ -24,7 +25,7 @@ public:
    CRunBytecode();
    ~CRunBytecode();
    bool readFromFile(std::ifstream &in);
-   bool run();
+   int run();
 private:
    void trace(const std::string &message);
    void error(const std::string &message);
@@ -163,7 +164,9 @@ private:
    CBytecode     _code;
    OpcodePointer _opcodePointer[ OPCODE_NUMBER ];
    bool          _stop;
+   int           _returnCode;
    CDataStack    _dataStack;
+   std::stack<int> _executionStack;
 };
 
 #endif

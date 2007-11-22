@@ -8,7 +8,7 @@ proc main
     pcall soma
     pop_sp
 	
-    exit_0
+    exit 0
 endproc
 
 proc soma
@@ -20,7 +20,7 @@ proc soma
     push_sp
     push "A soma é: "
     push_string
-    push_1
+    push 1
     pcall imprima
     pop_sp
 
@@ -28,7 +28,7 @@ proc soma
     isum t1, x, y
     push t1
     push_int
-    push_1
+    push 1
     pcall imprima
     pop_sp
 

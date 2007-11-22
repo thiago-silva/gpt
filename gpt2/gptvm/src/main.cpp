@@ -42,14 +42,7 @@ int main (int argc, char *argv[])
 
    CGptVm gptvm( &options );
 
-   if (gptvm.run()) {
-//      cout << "Program " << options.sourcefile << " ok !!!" << endl << endl;
-   } else {
-//      cout << "Program " << options.sourcefile << " has errors..." << endl << endl;
-      exit( EXIT_FAILURE );
-   }
-
-   return EXIT_SUCCESS;
+   return gptvm.run();
 }
 
 

@@ -27,11 +27,11 @@ proc main
     push_sp
     push x
     push_int
-    push_1
+    push 1
     pcall imprima
     pop_sp
 
-    exit_0
+    exit 0
 endproc
 
 endprogram

@@ -4,17 +4,19 @@
 #include "CRunBytecode.hpp"
 
 
-CGptVm::CGptVm( COptions *options ) : _options( options )
+CGptVm::CGptVm(COptions *options) : _options(options)
 {
 }
 
 
-bool CGptVm::run( )
+int CGptVm::run()
 {
    ifstream in(_options->sourcefile.c_str(),ios::in | ios::binary);
 
    CRunBytecode bytecode;
 
-   return bytecode.readFromFile(in) && bytecode.run();
+   bytecode.readFromFile(in);
+
+   return bytecode.run();
 }
 

@@ -9,7 +9,7 @@ class CGptVm
 {
 public:
    CGptVm( COptions *options );
-   bool run( );
+   int run( );
 private:
    COptions *_options;
 };

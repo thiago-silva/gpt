@@ -5,6 +5,7 @@
 
 
 CRunBytecode::CRunBytecode()
+   : _returnCode(0)
 {
 }
 
@@ -161,7 +162,7 @@ void CRunBytecode::initOpcodePointer()
 }
 
 
-bool CRunBytecode::run()
+int CRunBytecode::run()
 {
 //   std::cout << "Code lido: [" << _code.getBinary() << "]" << " size=" << _code.getBinary().size() << std::endl;
 
@@ -173,7 +174,7 @@ bool CRunBytecode::run()
       step();
    }
 
-   return true;
+   return _returnCode;
 }
 
 
@@ -239,7 +240,9 @@ void CRunBytecode::procImprima()
    std::cout << std::endl;
 }
 
-// opcodes
+/////////////
+// opcodes //
+/////////////
 
 void CRunBytecode::invalidOpcode(const std::string &opcode)
 {
@@ -248,22 +251,22 @@ void CRunBytecode::invalidOpcode(const std::string &opcode)
 
 void CRunBytecode::nopOpcode()
 {
-//   trace ("nop opcode");
-   invalidOpcode(__FUNCTION__);
+   trace ("nop opcode");
 
-    //nothing to do
+   // nothing to do
 }
 
 void CRunBytecode::pushSpOpcode()
 {
    trace ("push_sp opcode");
-   // TODO
+   _executionStack.push(0); // TODO
 }
 
 void CRunBytecode::popSpOpcode()
 {
    trace ("pop_sp opcode");
-   // TODO
+   _executionStack.top(); // TODO
+   _executionStack.pop();
 }
 
 void CRunBytecode::pushOpcode()
@@ -300,7 +303,7 @@ void CRunBytecode::exitOpcode()
 {
    trace ("exit opcode");
 
-   int returnCode = _code.fetchInt();
+   _returnCode = _code.fetchInt();
 
    _stop = true;
 }
@@ -308,14 +311,16 @@ void CRunBytecode::exitOpcode()
 
 void CRunBytecode::hltOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("hlt opcode");
+
+   exit(0);
 }
 
 void CRunBytecode::isumOpcode()
 {
    trace ("isum opcode");
 
-   int varAddress = _code.fetchInt();
+   int varAddress  = _code.fetchInt();
    int val1Address = _code.fetchInt();
    int val2Address = _code.fetchInt();
 
@@ -334,7 +339,13 @@ void CRunBytecode::rsumOpcode()
 
 void CRunBytecode::isubOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("isub opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   _data.setInt(varAddress, _data.getInt(val1Address) - _data.getInt(val2Address));
 }
 
 void CRunBytecode::ssubOpcode()
@@ -351,7 +362,7 @@ void CRunBytecode::imulOpcode()
 {
    trace ("imul opcode");
 
-   int varAddress = _code.fetchInt();
+   int varAddress  = _code.fetchInt();
    int val1Address = _code.fetchInt();
    int val2Address = _code.fetchInt();
 
@@ -365,7 +376,13 @@ void CRunBytecode::rmulOpcode()
 
 void CRunBytecode::idivOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("idiv opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   _data.setInt(varAddress, _data.getInt(val1Address) / _data.getInt(val2Address));
 }
 
 void CRunBytecode::rdivOpcode()
@@ -375,7 +392,13 @@ void CRunBytecode::rdivOpcode()
 
 void CRunBytecode::imodOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("imod opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   _data.setInt(varAddress, _data.getInt(val1Address) % _data.getInt(val2Address));
 }
 
 void CRunBytecode::rmodOpcode()
@@ -385,7 +408,13 @@ void CRunBytecode::rmodOpcode()
 
 void CRunBytecode::igeOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("ige opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   _data.setInt(varAddress, _data.getInt(val1Address) >= _data.getInt(val2Address));
 }
 
 void CRunBytecode::sgeOpcode()
@@ -402,7 +431,7 @@ void CRunBytecode::ileOpcode()
 {
    trace ("ile opcode");
 
-   int varAddress = _code.fetchInt();
+   int varAddress  = _code.fetchInt();
    int val1Address = _code.fetchInt();
    int val2Address = _code.fetchInt();
 
@@ -421,7 +450,13 @@ void CRunBytecode::rleOpcode()
 
 void CRunBytecode::ineOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("ine opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   _data.setInt(varAddress, _data.getInt(val1Address) != _data.getInt(val2Address));
 }
 
 void CRunBytecode::sneOpcode()
@@ -436,7 +471,13 @@ void CRunBytecode::rneOpcode()
 
 void CRunBytecode::igtOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("igt opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   _data.setInt(varAddress, _data.getInt(val1Address) > _data.getInt(val2Address));
 }
 
 void CRunBytecode::sgtOpcode()
@@ -451,7 +492,13 @@ void CRunBytecode::rgtOpcode()
 
 void CRunBytecode::iltOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("ilt opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   _data.setInt(varAddress, _data.getInt(val1Address) < _data.getInt(val2Address));
 }
 
 void CRunBytecode::sltOpcode()
@@ -466,7 +513,13 @@ void CRunBytecode::rltOpcode()
 
 void CRunBytecode::ieqOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("ieq opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   _data.setInt(varAddress, _data.getInt(val1Address) == _data.getInt(val2Address));
 }
 
 void CRunBytecode::seqOpcode()
@@ -481,12 +534,24 @@ void CRunBytecode::reqOpcode()
 
 void CRunBytecode::orOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("or opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   _data.setInt(varAddress, _data.getInt(val1Address) || _data.getInt(val2Address));
 }
 
 void CRunBytecode::andOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("and opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   _data.setInt(varAddress, _data.getInt(val1Address) && _data.getInt(val2Address));
 }
 
 void CRunBytecode::xorOpcode()
@@ -516,12 +581,17 @@ void CRunBytecode::iincOpcode()
    int varAddress = _code.fetchInt();
    int valAddress = _code.fetchInt();
 
-   _data.setInt(varAddress, _data.getInt(varAddress)+_data.getInt(valAddress));
+   _data.setInt(varAddress, _data.getInt(varAddress) + _data.getInt(valAddress));
 }
 
 void CRunBytecode::idecOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("idec opcode");
+
+   int varAddress = _code.fetchInt();
+   int valAddress = _code.fetchInt();
+
+   _data.setInt(varAddress, _data.getInt(varAddress) - _data.getInt(valAddress));
 }
 
 void CRunBytecode::i2cOpcode()
@@ -695,7 +765,14 @@ void CRunBytecode::jmpOpcode()
 
 void CRunBytecode::ifOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("if opcode");
+
+   int varAddress = _code.fetchInt();
+   int labelAddress = _code.fetchInt();
+
+   if (_data.getInt(varAddress)) {
+      _code.setIP(labelAddress);
+   }
 }
 
 void CRunBytecode::ifnotOpcode()
@@ -845,5 +922,4 @@ void CRunBytecode::mgetSize2Opcode()
 {
    invalidOpcode(__FUNCTION__);
 }
-
 
