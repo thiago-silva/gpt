@@ -8,11 +8,11 @@
 
 #include "CHeader.hpp"
 #include "CSymbolTable.hpp"
-//#include "CData.hpp"
 #include "CBinString.hpp"
 #include "CBytecode.hpp"
 #include "Common.hpp"
 #include "CDataStack.hpp"
+#include "CExecutionStack.hpp"
 
 class CRunBytecode;
 
@@ -35,12 +35,13 @@ private:
    // opcodes
    void invalidOpcode(const std::string &opcode="");
    void nopOpcode();
-   void pushSpOpcode();
-   void popSpOpcode();
+   void pushSregOpcode();
+   void popSregOpcode();
    void pushOpcode();
    void pushStringOpcode();
 //   void push1Opcode();
    void pcallOpcode();
+   void libcallOpcode();
 //   void exit0Opcode();
    void exitOpcode();
 
@@ -166,7 +167,7 @@ private:
    bool          _stop;
    int           _returnCode;
    CDataStack    _dataStack;
-   std::stack<int> _executionStack;
+   CExecutionStack _executionStack;
 };
 
 #endif

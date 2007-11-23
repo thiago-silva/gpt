@@ -1,0 +1,33 @@
+program exemplo
+
+proc main
+   push_sreg
+   pcall soma
+   pop_sreg
+
+   push_sreg
+   push "Finalizando..."
+   push_string
+   push 1
+   libcall imprima
+   pop_sreg
+
+   exit 0
+endproc
+
+proc soma
+   var temp int
+
+   isum temp, 2, 4
+
+   push_sreg
+   push temp
+   push_int
+   push 1
+   libcall imprima
+   pop_sreg
+
+   ret
+endproc
+   
+endprogram

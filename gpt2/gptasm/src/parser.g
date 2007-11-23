@@ -64,6 +64,7 @@ options {
      "endprogram"
      EOF
      {
+        bytecode.translateLabelsToAddress();
         ret = bytecode.getBinary();
      }
      ;
@@ -262,11 +263,15 @@ options {
 //      {bytecode.addOpcode(getLastTokenText());}
    |  ("push_int"|"push_string"|"push_real"|"push_char"|"push_bool"|"push_matrix")
       {bytecode.addOpcode(getLastTokenText());}
-   |  ("push_sp"|"pop_sp")
+   |  ("push_sreg"|"pop_sreg")
       {bytecode.addOpcode(getLastTokenText());}
    |  ("incsp_4"|"incsp_8"|"decsp_4"|"decsp_8")
       {bytecode.addOpcode(getLastTokenText());}
    |  "pcall"
+      {bytecode.addOpcode(getLastTokenText());}
+      T_ID
+      { bytecode.unsolvedLabel(getLastTokenText());}
+   |  "libcall"
       {bytecode.addOpcode(getLastTokenText());}
       T_ID
       { bytecode.addAddress(getLastTokenText(),CSymbol::CONST, CSymbol::STRING); }

@@ -133,13 +133,14 @@ tokens {
    T_KW_PUSH_CHAR="push_char";
    T_KW_PUSH_BOOL="push_bool";
    T_KW_PUSH_MATRIX="push_matrix";
-   T_KW_PUSH_SP="push_sp";
-   T_KW_POP_SP="pop_sp";
+   T_KW_PUSH_SP="push_sreg";
+   T_KW_POP_SP="pop_sreg";
    T_KW_INCSP_4="incsp_4";
    T_KW_INCSP_8="incsp_8";
    T_KW_DECSP_4="decsp_4";
    T_KW_DECSP_8="decsp_8";
    T_KW_PCALL="pcall";
+   T_KW_LIBCALL="libcall";
    T_KW_RET="ret";
    T_KW_SALLOC="salloc";
    T_KW_SFREE="sfree";

@@ -32,3 +32,9 @@ void CBytecode::setIP(const int &IP)
    _IP = IP;
 }
 
+
+int CBytecode::getIP() const
+{
+   return _IP;
+}
+

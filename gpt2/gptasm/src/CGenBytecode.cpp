@@ -98,14 +98,15 @@ CGenBytecode::CGenBytecode()
    _opcodes[ "push_char"   ] = OP_PUSH_CHAR;
    _opcodes[ "push_bool"   ] = OP_PUSH_BOOL;
    _opcodes[ "push_matrix" ] = OP_PUSH_MATRIX;
-   _opcodes[ "push_sp"     ] = OP_PUSH_SP;
-   _opcodes[ "pop_sp"      ] = OP_POP_SP;
+   _opcodes[ "push_sreg"   ] = OP_PUSH_SREG;
+   _opcodes[ "pop_sreg"    ] = OP_POP_SREG;
    _opcodes[ "incsp_4"     ] = OP_INCSP_4;
    _opcodes[ "incsp_8"     ] = OP_INCSP_8;
    _opcodes[ "decsp_4"     ] = OP_DECSP_4;
    _opcodes[ "decsp_8"     ] = OP_DECSP_8;
    _opcodes[ "pcall"       ] = OP_PCALL;
    _opcodes[ "ret"         ] = OP_RET;
+   _opcodes[ "libcall"     ] = OP_LIBCALL;
    _opcodes[ "salloc"      ] = OP_SALLOC;
    _opcodes[ "sfree"       ] = OP_SFREE;
    _opcodes[ "ssetc"       ] = OP_SSETC;
@@ -140,14 +141,15 @@ void CGenBytecode::initProcedure(const std::string &procedureName, const bool &h
    _symbolTable.addProcedure (procedureName, CSymbol::NO_TYPE, _code.size(), hasVarArguments, staticParameters, parameters);
    _currentProcedure = procedureName;
    _currentSP = 0;
-   _unsolvedLabels.clear();
-   _solvedLabels.clear();
+//   _unsolvedLabels.clear();
+//   _solvedLabels.clear();
+    registryLabel(procedureName);
 }
 
 
 void CGenBytecode::finishProcedure()
 {
-   translateLabelsToAddress();
+//   translateLabelsToAddress();
    _currentProcedure.clear();
    // TODO: delete na procedure ???
 }
@@ -177,7 +179,7 @@ void CGenBytecode::registryLabel(const std::string &labelName)
       abort();
    }
    _solvedLabels[labelName] = _code.size();
-//   std::cout << "Registry label: " << labelName << " address: " << _code.size() << std::endl;
+   std::cout << "Registry label: " << labelName << " address: " << _code.size() << std::endl;
 }
 
 
@@ -223,7 +225,7 @@ CBinString CGenBytecode::getBinary()
 void CGenBytecode::unsolvedLabel(const std::string &label)
 {
    _unsolvedLabels.push_back(std::pair<std::string, int>(label, _code.size()));
-//   std::cout << "Unsolved label: " << label << " address: " << _code.size() << std::endl;
+   std::cout << "Unsolved label: " << label << " address: " << _code.size() << std::endl;
    _code.writeInt(0);
 }
 

@@ -14,7 +14,7 @@ proc main
     iset y, 20
 	
     // imprima( "x*y+4=", x*y+4 );
-    push_sp
+    push_sreg
     imul t1, x, y
     isum t2, t1, 4
     push t2
@@ -22,8 +22,8 @@ proc main
     push "x*y+4="
     push_string
     push 2
-    pcall imprima
-    pop_sp
+    libcall imprima
+    pop_sreg
 	
     exit 0
 endproc

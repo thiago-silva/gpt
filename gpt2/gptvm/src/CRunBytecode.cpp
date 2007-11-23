@@ -39,12 +39,13 @@ void CRunBytecode::initOpcodePointer()
    }
 
    _opcodePointer[OP_NOP        ] = &CRunBytecode::nopOpcode;
-   _opcodePointer[OP_PUSH_SP    ] = &CRunBytecode::pushSpOpcode;
-   _opcodePointer[OP_POP_SP     ] = &CRunBytecode::popSpOpcode;
+   _opcodePointer[OP_PUSH_SREG  ] = &CRunBytecode::pushSregOpcode;
+   _opcodePointer[OP_POP_SREG   ] = &CRunBytecode::popSregOpcode;
    _opcodePointer[OP_PUSH       ] = &CRunBytecode::pushOpcode;
    _opcodePointer[OP_PUSH_STRING] = &CRunBytecode::pushStringOpcode;
 //   _opcodePointer[OP_PUSH_1     ] = &CRunBytecode::push1Opcode;
    _opcodePointer[OP_PCALL      ] = &CRunBytecode::pcallOpcode;
+   _opcodePointer[OP_LIBCALL    ] = &CRunBytecode::libcallOpcode;
 //   _opcodePointer[OP_EXIT_0     ] = &CRunBytecode::exit0Opcode;
    _opcodePointer[OP_EXIT       ] = &CRunBytecode::exitOpcode;
 
@@ -256,17 +257,18 @@ void CRunBytecode::nopOpcode()
    // nothing to do
 }
 
-void CRunBytecode::pushSpOpcode()
+void CRunBytecode::pushSregOpcode()
 {
-   trace ("push_sp opcode");
-   _executionStack.push(0); // TODO
+   trace ("push_sreg opcode");
+
+   _executionStack.pushStackRegs();
 }
 
-void CRunBytecode::popSpOpcode()
+void CRunBytecode::popSregOpcode()
 {
-   trace ("pop_sp opcode");
-   _executionStack.top(); // TODO
-   _executionStack.pop();
+   trace ("pop_sreg opcode");
+
+   _executionStack.popStackRegs();
 }
 
 void CRunBytecode::pushOpcode()
@@ -291,10 +293,21 @@ void CRunBytecode::pcallOpcode()
 
    int address = _code.fetchInt();
 
-//   std::string temp = _data.getCString(address);
+   _executionStack.push(_code.getIP());
+   _code.setIP(address);
+}
+
+
+void CRunBytecode::libcallOpcode()
+{
+   trace ("libcall opcode");
+
+   int address = _code.fetchInt();
 
    if (_data.getCString(address) == "imprima") {
       procImprima();
+   } else {
+      error("libcall invocando subrotina desconhecida !!!");
    }
 }
 
@@ -850,7 +863,10 @@ void CRunBytecode::pushMatrixOpcode()
 
 void CRunBytecode::retOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("ret opcode");
+
+   _code.setIP(_executionStack.top());
+   _executionStack.pop();
 }
 
 void CRunBytecode::sallocOpcode()

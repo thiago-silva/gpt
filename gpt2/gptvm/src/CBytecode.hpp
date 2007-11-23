@@ -13,6 +13,7 @@ public:
    char fetchByte();
    int  fetchInt();
    void setIP(const int &IP);
+   int getIP() const;
    CBinString::readString;
 private:
    int _IP;

@@ -13,12 +13,12 @@ proc main
     ifnot t1, proximo
 
     // imprima( x );
-    push_sp
+    push_sreg
     push x
     push_int
     push 1
-    pcall imprima
-    pop_sp
+    libcall imprima
+    pop_sreg
 
     // fim-para
     iinc x, 1

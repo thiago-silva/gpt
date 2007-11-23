@@ -25,8 +25,8 @@ public:
    void addAddress(const std::string &id, const int &category, const int &type);
    CBinString getBinary();
    void unsolvedLabel(const std::string &label);
-private:
    void translateLabelsToAddress();
+private:
 
    CHeader                    _header;
    CSymbolTable               _symbolTable;
