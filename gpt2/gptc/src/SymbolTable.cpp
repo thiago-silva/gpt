@@ -10,41 +10,45 @@
 void SymbolTable::setScope(const std::string& scope) {
   _scope = scope;
 }
+
 void SymbolTable::setGlobalScope() {
   _scope = "@global";
 }
 
 Type* SymbolTable::getType(const std::string& name) {
-  Type* ret = _types.find(name);
+  TypeList::iterator ret = _types.find(name);
 
-  if (ret == 0) {
+  if (ret == _types.end()) {
     throw UndeclaredTypeException(name);
   }
 
-  return ret;
+  return *ret;
 }
 
 Type* SymbolTable::getType(int id) {
-  Type* ret = _types.find(id);
+  TypeList::iterator ret = _types.find(id);
 
-  if (ret == 0) {
+  if (ret == _types.end()) {
     throw UndeclaredTypeException(id);
   }
 
-  return ret;
+  return *ret;
 }
 
 Type* SymbolTable::retrieveMatrixType(Type *ofType, int dimensions) {
-  Type* t = _types.find(ofType, dimensions);
-  if (t == 0) {
-    t = new MatrixType(ofType, dimensions);
-    _types.push_back(t);
+  TypeList::iterator it = _types.find(ofType, dimensions);
+  Type* type;
+  if (it == _types.end()) {
+    type = new MatrixType(ofType, dimensions);
+    _types.push_back(type);
+  } else {
+    type = *it;
   }
-  return t;
+  return type;
 }
 
 Symbol SymbolTable::newSymbol(const std::string& name, Type* type,
-                int line, const std::string& scope,
+                const std::string& scope, int line,
                 bool isConst, bool isRef) {
   return Symbol(name, type, line, _unit, scope, isConst, isRef);
 }
@@ -62,11 +66,17 @@ void SymbolTable::defineStruct(const std::string& name,
     throw RedeclarationException(*dup);
   }
 
-  if (_types.find(name) != 0) {
+  if (_types.find(name) != _types.end()) {
     throw RedefinedTypeException(name);
   }
   _types.push_back(new StructType(name,
       symbolList.toStructFieldList(), _unit, line));
+}
+
+StructType* SymbolTable::createAnonymousStruct(const SymbolList& symbolList) {
+  StructType* ret = new StructType(symbolList.toStructFieldList());
+  _types.push_back(ret);
+  return ret;
 }
 
 bool SymbolTable::declared(const Symbol& s) {
@@ -81,9 +91,9 @@ void SymbolTable::declare(const Symbol& symbol) {
 }
 
 void SymbolTable::declare(const SymbolList& params,
-                          const std::string& scope) {
+                          const std::string& proc) {
   try {
-    setScope(scope);
+    setScope(proc);
     for (SymbolList::const_iterator it = params.begin(); it != params.end(); ++it) {
       declare(*it);
     }
@@ -111,13 +121,15 @@ SymbolTable* SymbolTable::create(const std::string& unit) {
 
 void SymbolTable::dump() {
 
-  std::cerr << "Ids...\n";
+  std::cerr << "=== SymbolTable ===\n";
+  std::cerr << "Identifiers ...\n";
   std::map<std::string, SymbolList>::iterator it;
   for (it = _table.begin(); it != _table.end(); ++it) {
     std::cerr << it->second.toString() << std::endl;
   }
   std::cerr << "Types ... " << std::endl;
   std::cerr << _types.toString() << std::endl;
+  std::cerr << "=== End SymbolTable ===\n\n";
 }
 
 

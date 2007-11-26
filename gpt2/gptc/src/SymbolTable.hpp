@@ -25,21 +25,23 @@ public:
   Type* retrieveMatrixType(Type *ofType, int dimensions);
 
   Symbol newSymbol(const std::string& name, Type* type,
-                   int line, const std::string& scope,
+                   const std::string& scope, int line = -1,
                    bool isConst = false, bool isRef = false);
 
   Symbol newSymbol(const std::string& name, Type* type,
-                   int line, bool isConst = false, bool isRef = false);
+                   int line = -1, bool isConst = false, bool isRef = false);
 
   void defineStruct(const std::string& name,
                    const SymbolList& symbolList,
                    int line);
 
+  StructType* createAnonymousStruct(const SymbolList& symbolList);
+
   bool declared(const Symbol& s);
 
   void declare(const Symbol& symbol);
 
-  void declare(const SymbolList& params, const std::string& scope);
+  void declare(const SymbolList& params, const std::string& proc);
 
   const Symbol& getSymbol(const std::string& lexeme);
 
