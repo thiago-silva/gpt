@@ -45,7 +45,7 @@ public:
 
   int count(const std::string& lexeme) const;
 
-  const_iterator find(const std::string& lexeme) const;
+  iterator find(const std::string& lexeme);
 
   std::string toString() const;
 };

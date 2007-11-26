@@ -32,14 +32,13 @@ std::string Symbol::toString() const {
   if (_type) {
     ret += _type->name();
   }
-  ret += " {";
+  ret += " - ";
   if (_isConst) {
     ret += "c";
   }
   if (_isRef) {
     ret += "r";
   }
-  ret += "}";
   return ret;
 }
 
@@ -48,7 +47,7 @@ std::string Symbol::toString() const {
 
 
 SymbolList::const_iterator SymbolList::duplicated() const {
-  for (SymbolList::const_iterator it = begin(); it != end(); ++it) {
+  for (const_iterator it = begin(); it != end(); ++it) {
     if (count((*it).lexeme()) > 1) {
       return it;
     }
@@ -59,7 +58,7 @@ SymbolList::const_iterator SymbolList::duplicated() const {
 std::list<StructType::Field> SymbolList::toStructFieldList() const {
   std::list<StructType::Field> fields;
 
-  for (SymbolList::const_iterator it = begin(); it != end(); ++it) {
+  for (const_iterator it = begin(); it != end(); ++it) {
     fields.push_back(StructType::Field((*it).lexeme(), (*it).type()));
   }
   return fields;
@@ -68,7 +67,7 @@ std::list<StructType::Field> SymbolList::toStructFieldList() const {
 TypeList SymbolList::toTypeList() const {
   TypeList list;
 
-  for (SymbolList::const_iterator it = begin(); it != end(); ++it) {
+  for (const_iterator it = begin(); it != end(); ++it) {
     list.push_back((*it).type());
   }
   return list;
@@ -76,7 +75,7 @@ TypeList SymbolList::toTypeList() const {
 
 int SymbolList::count(const std::string& lexeme) const {
   int ret = 0;
-  for (SymbolList::const_iterator it = begin(); it != end(); ++it) {
+  for (const_iterator it = begin(); it != end(); ++it) {
     if ((*it).lexeme() == lexeme) {
       ret++;
     }
@@ -84,8 +83,8 @@ int SymbolList::count(const std::string& lexeme) const {
   return ret;
 }
 
-SymbolList::const_iterator SymbolList::find(const std::string& lexeme) const {
-  for (SymbolList::const_iterator it = begin(); it != end(); ++it) {
+SymbolList::iterator SymbolList::find(const std::string& lexeme) {
+  for (iterator it = begin(); it != end(); ++it) {
     if ((*it).lexeme() == lexeme) {
       return it;
     }
@@ -95,9 +94,8 @@ SymbolList::const_iterator SymbolList::find(const std::string& lexeme) const {
 
 std::string SymbolList::toString() const {
   std::string ret = "";
-  for (SymbolList::const_iterator it = begin(); it != end(); ++it) {
+  for (const_iterator it = begin(); it != end(); ++it) {
     ret += (*it).toString() + "\n";
   }
   return ret;
 }
-
