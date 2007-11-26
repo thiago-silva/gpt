@@ -42,7 +42,10 @@ options {
 {
 public:
   SemanticWalker::SemanticWalker(SymbolTable* stable)
-	 : BaseSemanticWalker(stable) { }
+	 : BaseSemanticWalker(stable), _analisingInitializationList(false) { }
+
+private:
+  bool _analisingInitializationList;
 }
 
 
@@ -70,9 +73,6 @@ importacao
   : #(T_USE lib:T_TEXTO_LITERAL)                  {useLib(lib->getText());}
   ;
 
-//TODO: checar inicialização:
-//      ex: variável z : inteiro := f(); //erro!
-
 declaracoes_globais
   : declaracao_variavel  (declaracoes_globais)?
   | declaracao_constante (declaracoes_globais)?
@@ -90,7 +90,7 @@ declaracao_variavel
                                   Type *type;
                                 }
 
-  : #(T_VARIAVEL type=tipo ids=identificadores (valor_inicialiacao)?)
+  : #(T_VARIAVEL type=tipo ids=identificadores (valor_inicialiacao[type])?)
 
                                 {declare(ids, type, false);}
   ;
@@ -107,7 +107,7 @@ declaracao_constante
                                   Type *type;
                                 }
 
-  : #(T_CONSTANTE type=tipo ids=identificadores valor_inicialiacao)
+  : #(T_CONSTANTE type=tipo ids=identificadores valor_inicialiacao[type])
 
                                 {declare(ids, type, true);}
   ;
@@ -129,7 +129,7 @@ campos_estrutura returns [SymbolList symbols]
                                 }
 
   : (
-      #(T_VARIAVEL type=tipo ids=identificadores (valor_inicialiacao)?)
+      #(T_VARIAVEL type=tipo ids=identificadores (valor_inicialiacao[type])?)
 
                                 {
                                   for (IDList::iterator it = ids.begin();
@@ -143,15 +143,70 @@ campos_estrutura returns [SymbolList symbols]
     )+
   ;
 
-valor_inicialiacao
-  : #(T_VALOR valor)
+valor_inicialiacao[Type* ltype]
+
+                          {
+                            _analisingInitializationList = true;
+                          }
+
+  : #(T_VALOR valor[ltype])
+
+                          {
+                            _analisingInitializationList = false;
+                          }
   ;
 
-valor returns [Type *type]
-  : type=expressao
-  | #(T_VAL_MATRIZ    (valor)*)
-  | #(T_VAL_ESTRUTURA (valor)*)
+valor[Type *ltype]
+                          {
+                            Type *rtype;
+                            InitMatrixList         mtx;
+                            InitStructList         stc;
+                          }
+
+  : rtype=expressao       {evalAttribution(ltype, rtype);}
+
+  | #(T_VAL_MATRIZ  (valor_matriz[1,mtx])+)
+
+                          {evalAttribution(ltype, mtx);}
+
+  | #(T_VAL_ESTRUTURA (id:T_IDENTIFICADOR valor_estrutura[id->getText(),stc])+)
+
+                          {evalAttribution(ltype, stc);}
   ;
+
+valor_matriz [int dimension, InitMatrixList& mtx]
+
+                              {
+                                Type *type;
+                                InitStructList stc;
+                              }
+
+  : type=expressao     {mtx.push_back(std::pair<int,Type*>(dimension, type));}
+
+  | #(T_VAL_MATRIZ (valor_matriz[dimension+1, mtx])+)
+
+  | #(T_VAL_ESTRUTURA (id:T_IDENTIFICADOR valor_estrutura[id->getText(), stc])+)
+
+                       {mtx.push_back(std::pair<int,Type*>(dimension,
+                            createAnonymousStructFor(stc)));}
+  ;
+
+valor_estrutura [const string& field, InitStructList& stc]
+                              {
+                                Type *type;
+                                InitMatrixList mtx;
+                              }
+  : type=expressao     {stc.push_back(std::pair<std::string,Type*>(field, type));}
+
+  | #(T_VAL_MATRIZ (valor_matriz[1, mtx])+)
+                              {
+                                type = evalHomogeneity(mtx);
+                                stc.push_back(std::pair<std::string,Type*>(field,type));
+                              }
+
+  | #(T_VAL_ESTRUTURA (id:T_IDENTIFICADOR valor_estrutura[id->getText(),stc])+)
+  ;
+
 
 tipo returns [Type *type]
   : id:T_IDENTIFICADOR       {type = getType(id->getText());}
@@ -204,7 +259,7 @@ declaracao_procedimento
                                         _symtable->setScope(id->getText());
                                       }
 
-    (declaracao_variavel | declaracao_constante)*)
+      (declaracao_variavel | declaracao_constante)*)
 
                                       {_symtable->setGlobalScope();}
   ;
@@ -225,7 +280,7 @@ declaracao_funcao
                                         _symtable->setScope(id->getText());
                                       }
 
-    (declaracao_variavel | declaracao_constante)*)
+      (declaracao_variavel | declaracao_constante)*)
 
                                       {_symtable->setGlobalScope();}
   ;
@@ -244,8 +299,8 @@ lista_parametros[std::string scope] returns [SymbolList list]
                                     list.push_back(
                                         _symtable->newSymbol(
                                           id->getText(), type,
-                                          id->getLine(),
                                           scope,
+                                          id->getLine(),
                                           c != antlr::nullAST,
                                           r != antlr::nullAST));
 
@@ -301,75 +356,82 @@ en_atribuicao
   ;
 
 expressao returns [Type *type]
-                                                 {Type *l, *r;}
+                                      {
+                                        Type *l, *r;
+                                        RefPortugolAST op = _t;
+                                      }
+  : (
 
-  : #(T_OU              l=expressao r=expressao)
-                                    {type = evalExpr<T_OU>(l,r);}
+      #(T_OU              l=expressao r=expressao)
+                                      {type = evalExpr_OU(l,r);}
 
-  | #(T_E               l=expressao r=expressao)
-                                    {type = evalExpr<T_E>(l,r);}
+    | #(T_E               l=expressao r=expressao)
+                                      {type = evalExpr_E(l,r);}
 
-  | #(T_BIT_OU          l=expressao r=expressao)
-                                    {type = evalExpr<T_BIT_OU>(l,r);}
+    | #(T_BIT_OU          l=expressao r=expressao)
+                                      {type = evalExpr_BIT_OU(l,r);}
 
-  | #(T_BIT_OUX         l=expressao r=expressao)
-                                    {type = evalExpr<T_BIT_OUX>(l,r);}
+    | #(T_BIT_OUX         l=expressao r=expressao)
+                                      {type = evalExpr_BIT_OUX(l,r);}
 
-  | #(T_BIT_E           l=expressao r=expressao)
-                                    {type = evalExpr<T_BIT_E>(l,r);}
+    | #(T_BIT_E           l=expressao r=expressao)
+                                      {type = evalExpr_BIT_E(l,r);}
 
-  | #(T_IGUAL           l=expressao r=expressao)
-                                    {type = evalExpr<T_IGUAL>(l,r);}
+    | #(T_IGUAL           l=expressao r=expressao)
+                                      {type = evalExpr_IGUAL(l,r);}
 
-  | #(T_DIFERENTE       l=expressao r=expressao)
-                                    {type = evalExpr<T_DIFERENTE>(l,r);}
+    | #(T_DIFERENTE       l=expressao r=expressao)
+                                      {type = evalExpr_DIFERENTE(l,r);}
 
-  | #(T_MAIOR           l=expressao r=expressao)
-                                    {type = evalExpr<T_MAIOR>(l,r);}
+    | #(T_MAIOR           l=expressao r=expressao)
+                                      {type = evalExpr_MAIOR(l,r);}
 
-  | #(T_MENOR           l=expressao r=expressao)
-                                    {type = evalExpr<T_MENOR>(l,r);}
+    | #(T_MENOR           l=expressao r=expressao)
+                                      {type = evalExpr_MENOR(l,r);}
 
-  | #(T_MAIOR_EQ        l=expressao r=expressao)
-                                    {type = evalExpr<T_MAIOR_EQ>(l,r);}
+    | #(T_MAIOR_EQ        l=expressao r=expressao)
+                                      {type = evalExpr_MAIOR_EQ(l,r);}
 
-  | #(T_MENOR_EQ        l=expressao r=expressao)
-                                    {type = evalExpr<T_MENOR_EQ>(l,r);}
+    | #(T_MENOR_EQ        l=expressao r=expressao)
+                                      {type = evalExpr_MENOR_EQ(l,r);}
 
-  | #(T_BIT_SHIFT_LEFT  l=expressao r=expressao)
-                                    {type = evalExpr<T_BIT_SHIFT_LEFT>(l,r);}
+    | #(T_BIT_SHIFT_LEFT  l=expressao r=expressao)
+                                      {type = evalExpr_BIT_SHIFT_LEFT(l,r);}
 
-  | #(T_BIT_SHIFT_RIGHT l=expressao r=expressao)
-                                    {type = evalExpr<T_BIT_SHIFT_RIGHT>(l,r);}
+    | #(T_BIT_SHIFT_RIGHT l=expressao r=expressao)
+                                      {type = evalExpr_BIT_SHIFT_RIGHT(l,r);}
 
-  | #(T_MAIS            l=expressao r=expressao)
-                                    {type = evalExpr<T_MAIS>(l,r);}
+    | #(T_MAIS            l=expressao r=expressao)
+                                      {type = evalExpr_MAIS(l,r);}
 
-  | #(T_MENOS           l=expressao r=expressao)
-                                    {type = evalExpr<T_MENOS>(l,r);}
+    | #(T_MENOS           l=expressao r=expressao)
+                                      {type = evalExpr_MENOS(l,r);}
 
-  | #(T_DIV             l=expressao r=expressao)
-                                    {type = evalExpr<T_DIV>(l,r);}
+    | #(T_DIV             l=expressao r=expressao)
+                                      {type = evalExpr_DIV(l,r);}
 
-  | #(T_MULTIP          l=expressao r=expressao)
-                                    {type = evalExpr<T_MULTIP>(l,r);}
+    | #(T_MULTIP          l=expressao r=expressao)
+                                      {type = evalExpr_MULTIP(l,r);}
 
-  | #(T_MOD             l=expressao r=expressao)
-                                    {type = evalExpr<T_MOD>(l,r);}
+    | #(T_MOD             l=expressao r=expressao)
+                                      {type = evalExpr_MOD(l,r);}
 
-  | #(T_UN_NEGATIVO    l=elemento)
-                                    {type = evalExpr<T_UN_NEGATIVO>(l);}
+    | #(T_UN_NEGATIVO     l=elemento)
+                                      {type = evalExpr_UN_NEGATIVO(l);}
 
-  | #(T_UN_POSITIVO   l=elemento)
-                                    {type = evalExpr<T_UN_POSITIVO>(l);}
+    | #(T_UN_POSITIVO     l=elemento)
+                                      {type = evalExpr_UN_POSITIVO(l);}
 
-  | #(T_NAO            l=elemento)
-                                    {type = evalExpr<T_NAO>(l);}
+    | #(T_NAO             l=elemento)
+                                      {type = evalExpr_NAO(l);}
 
-  | #(T_BIT_NAO        l=elemento)
-                                    {type = evalExpr<T_BIT_NAO>(l);}
+    | #(T_BIT_NAO         l=elemento)
+                                      {type = evalExpr_BIT_NAO(l);}
 
-  | type=elemento
+    | type=elemento
+  )
+
+    {op->setEvalType(type);}
   ;
 
 
@@ -413,8 +475,12 @@ chamada_subrotina returns [Type *type]
   : #(T_CALL id:T_IDENTIFICADOR params=lista_argumentos)
 
                                   {
-                                    type = getSymbolType(id->getText());
-                                    evalFCall(id->getText(), params);
+                                    if (!_analisingInitializationList) {
+                                      type = evalFCall(id->getText(), params);
+                                    } else {
+                                      type = getType(T_NULO);
+                                      std:: cerr << "illegal fcall in initlist\n";
+                                    }
                                   }
   ;
 
