@@ -20,24 +20,25 @@
 
 
 #include "PortugolAST.hpp"
+#include "Types.hpp"
 #include <sstream>
 
 const char* const PortugolAST::TYPE_NAME = "PortugolAST";
 
 PortugolAST::PortugolAST()
-    : CommonAST(), line(-1) {
+    : CommonAST(), line(-1), type(0) {
 }
 
 PortugolAST::PortugolAST(RefToken t)
-    : CommonAST(t), line(t->getLine()) {
+    : CommonAST(t), line(t->getLine()), type(0) {
 }
 
 PortugolAST::PortugolAST( const CommonAST& other )
-    : CommonAST(other), line(-1) {
+    : CommonAST(other), line(-1), type(0) {
 }
 
 PortugolAST::PortugolAST( const PortugolAST& other )
-    : CommonAST(other), line(other.line) {
+    : CommonAST(other), line(other.line), type(0) {
 }
 
 PortugolAST::~PortugolAST() {
@@ -68,11 +69,23 @@ int PortugolAST::getLine() const {
   return line;
 }
 
-// std::string PortugolAST::toString() const {
-//   std::stringstream s;
-//   s << "(" << getLine() << ")" << getText();
-//   return s.str();
-// }
+void PortugolAST::setEvalType(Type* t) {
+  type = t;
+}
+
+Type* PortugolAST::getEvalType() {
+  return type;
+}
+
+
+std::string PortugolAST::toString() const {
+  std::stringstream s;
+  s << getText();
+  if (type) {
+    s << ":" << type->name();
+  }
+  return s.str();
+}
 
 RefAST PortugolAST::factory() {
   return RefAST(new PortugolAST);

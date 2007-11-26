@@ -27,6 +27,8 @@
 using namespace std;
 using namespace antlr;
 
+class Type;
+
 class PortugolAST : public CommonAST {
 public:
   PortugolAST();
@@ -39,18 +41,22 @@ public:
   void setLine(int line);
   int getLine() const;
 
+  void setEvalType(Type*);
+  Type* getEvalType();
+
   virtual RefAST clone( void ) const;
 
   virtual void initialize( RefToken t );
 
   virtual const char* typeName( void ) const;
 
-//   virtual std::string toString() const;
+  virtual std::string toString() const;
 
   static RefAST factory();
   static const char* const TYPE_NAME;
 protected:
-  int line;
+  int   line;
+  Type* type;
   int endLine;
   int eval_type; //evaluated type of expression
   string filename;
