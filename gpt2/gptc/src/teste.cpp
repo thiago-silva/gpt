@@ -52,6 +52,7 @@ RefPortugolAST dump_tree(char* fname, bool should_dump) {
   }
 
   if (should_dump) {
+    std::cerr << "parser.g AST:\n";
     std::cerr << cast->toStringList() << std::endl << std::endl;
   }
   return cast;
@@ -68,6 +69,9 @@ void semantic(char* fname) {
   semantic.programa(ast);
 
   symtable->dump();
+
+  std::cerr << "semantic.g AST:\n";
+  std::cerr << ast->toStringList() << std::endl << std::endl;
 }
 
 int main(int argc, char** argv) {
