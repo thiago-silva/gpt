@@ -146,32 +146,33 @@ campos_estrutura returns [SymbolList symbols]
 valor_inicialiacao[Type* ltype]
 
                           {
+                            Type* rtype;
                             _analisingInitializationList = true;
                           }
 
-  : #(T_VALOR valor[ltype])
+  : #(v:T_VALOR rtype=valor[ltype])
 
                           {
+                            v->setEvalType(rtype);
                             _analisingInitializationList = false;
                           }
   ;
 
-valor[Type *ltype]
+valor[Type *ltype] returns [Type* rtype]
                           {
-                            Type *rtype;
                             InitMatrixList         mtx;
                             InitStructList         stc;
                           }
 
-  : rtype=expressao       {evalAttribution(ltype, rtype);}
+  : rtype=expressao       {rtype = evalAttribution(ltype, rtype);}
 
   | #(T_VAL_MATRIZ  (valor_matriz[1,mtx])+)
 
-                          {evalAttribution(ltype, mtx);}
+                          {rtype = evalAttribution(ltype, mtx);}
 
   | #(T_VAL_ESTRUTURA (id:T_IDENTIFICADOR valor_estrutura[id->getText(),stc])+)
 
-                          {evalAttribution(ltype, stc);}
+                          {rtype = evalAttribution(ltype, stc);}
   ;
 
 valor_matriz [int dimension, InitMatrixList& mtx]
@@ -191,17 +192,24 @@ valor_matriz [int dimension, InitMatrixList& mtx]
                             createAnonymousStructFor(stc)));}
   ;
 
-valor_estrutura [const string& field, InitStructList& stc]
+valor_estrutura [const std::string& field, InitStructList& stc]
                               {
                                 Type *type;
                                 InitMatrixList mtx;
                               }
-  : type=expressao     {stc.push_back(std::pair<std::string,Type*>(field, type));}
+  : type=expressao
+                              {
+                                stc.push_back(
+                                  std::pair<std::string,Type*>(
+                                    field, type));
+                              }
 
   | #(T_VAL_MATRIZ (valor_matriz[1, mtx])+)
                               {
                                 type = evalHomogeneity(mtx);
-                                stc.push_back(std::pair<std::string,Type*>(field,type));
+                                stc.push_back(
+                                  std::pair<std::string,Type*>(
+                                    field,type));
                               }
 
   | #(T_VAL_ESTRUTURA (id:T_IDENTIFICADOR valor_estrutura[id->getText(),stc])+)
