@@ -106,28 +106,31 @@ void BaseSemanticWalker::evalMatrixSubscript(Type* type) {
   //TODO
   //-proibicao de consts como lvalues em expressoes
 
-void BaseSemanticWalker::evalAttribution(Type* ltype, Type* rtype) {
+Type* BaseSemanticWalker::evalAttribution(Type* ltype, Type* rtype) {
   if (!ltype->isLValueFor(rtype)) {
     std::cerr << "ilegal: "
               << ltype->name() << " := " << rtype->name() << endl;
   }
+  return rtype;
 }
 
-void BaseSemanticWalker::evalAttribution(Type* ltype, const InitMatrixList& mtx) {
+Type* BaseSemanticWalker::evalAttribution(Type* ltype, const InitMatrixList& mtx) {
   Type* rtype = evalHomogeneity(mtx);
   if (!ltype->isLValueFor(rtype)) {
     std::cerr << "ilegal: "
               << ltype->name() << " := " << rtype->name() << endl;
   }
+  return ltype;
 }
 
-void BaseSemanticWalker::evalAttribution(Type* ltype, const InitStructList& stc) {
+Type* BaseSemanticWalker::evalAttribution(Type* ltype, const InitStructList& stc) {
   StructType* rtype = createAnonymousStructFor(stc);
 
   if (!ltype->isLValueFor(rtype)) {
     std::cerr << "ilegal: "
               << ltype->name() << " := " << rtype->name() << endl;
   }
+  return ltype;
 }
 
 StructType* BaseSemanticWalker::createAnonymousStructFor(const InitStructList& stc) {
@@ -142,24 +145,27 @@ StructType* BaseSemanticWalker::createAnonymousStructFor(const InitStructList& s
 
 Type* BaseSemanticWalker::evalHomogeneity(const InitMatrixList& mtx) {
   InitMatrixList::const_iterator it;
+
+  Type *rtype = 0;
+  Type *tmptype = 0;
   int dim = 0;
-  Type* type = 0;
+
   for (it = mtx.begin(); it != mtx.end(); ++it) {
     if (dim == 0) {
       dim = it->first;
     } else if (dim != it->first) {
-      std::cerr << "err: Numero variavel de dimensoes na matriz!\n";
+      std::cerr << "ilegal: Numero variavel de dimensoes na matriz!\n";
     }
 
-    if (type == 0) {
-      type = it->second;
-    } else if (!type->equals(it->second)) {
-      std::cerr << "err: Numero variavel de tipos na matriz!\n";
+    if (rtype == 0) {
+      rtype = it->second;
+    } else if (!rtype->compatible(it->second)) {
+      std::cerr << "ilegal: Matriz heterogenea\n";
     }
   }
-  return _symtable->retrieveMatrixType(type, dim);
-}
 
+  return _symtable->retrieveMatrixType(rtype, dim);
+}
 
 Type*
 BaseSemanticWalker::evalExpr_OU(Type* left, Type* right) {
@@ -316,6 +322,12 @@ BaseSemanticWalker::evalExpr_BIT_SHIFT_RIGHT(Type* left, Type* right) {
 
 Type*
 BaseSemanticWalker::evalExpr_MAIS(Type* left, Type* right) {
+  if (!left->isPrimitive() || !right->isPrimitive()) {
+    std::cerr << "ilegal: "
+              << left->name() << " + " << right->name() << std::endl;
+    return _symtable->getType(PortugolTokenTypes::T_NULO);
+  }
+
   Type* ret;
   if (ret = left->numPromotionWith(right)) {
     return ret;
@@ -331,6 +343,12 @@ BaseSemanticWalker::evalExpr_MAIS(Type* left, Type* right) {
 
 Type*
 BaseSemanticWalker::evalExpr_MENOS(Type* left, Type* right) {
+  if (!left->isPrimitive() || !right->isPrimitive()) {
+    std::cerr << "ilegal: "
+              << left->name() << " + " << right->name() << std::endl;
+    return _symtable->getType(PortugolTokenTypes::T_NULO);
+  }
+
   Type* ret;
   if (ret = left->numPromotionWith(right)) {
     return ret;
@@ -344,6 +362,12 @@ BaseSemanticWalker::evalExpr_MENOS(Type* left, Type* right) {
 
 Type*
 BaseSemanticWalker::evalExpr_DIV(Type* left, Type* right) {
+  if (!left->isPrimitive() || !right->isPrimitive()) {
+    std::cerr << "ilegal: "
+              << left->name() << " + " << right->name() << std::endl;
+    return _symtable->getType(PortugolTokenTypes::T_NULO);
+  }
+
   Type* ret;
   if (ret = left->numPromotionWith(right)) {
     return ret;
@@ -357,6 +381,12 @@ BaseSemanticWalker::evalExpr_DIV(Type* left, Type* right) {
 
 Type*
 BaseSemanticWalker::evalExpr_MULTIP(Type* left, Type* right) {
+  if (!left->isPrimitive() || !right->isPrimitive()) {
+    std::cerr << "ilegal: "
+              << left->name() << " + " << right->name() << std::endl;
+    return _symtable->getType(PortugolTokenTypes::T_NULO);
+  }
+
   Type* ret;
   if (ret = left->numPromotionWith(right)) {
     return ret;

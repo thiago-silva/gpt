@@ -38,48 +38,6 @@ typedef std::list<RefPortugolAST> IDList;
 typedef std::list<std::pair<std::string,Type*> > InitStructList;
 typedef std::list<std::pair<int,Type*> >         InitMatrixList;
 
-/*struct InitValue {
-  enum { PRIMITIVE, MATRIX, STRUCT };
-  int id;
-  Type* primtype;
-  std::list<InitValue> mvalues;
-  std::list<pair<std::string, InitValue> > svalues;
-*/
-//   Type* calculatedType(const SymbolTable& symtable) {
-//     std::list<InitValue>::iterator it;
-//     Type *type = 0;
-//
-//     switch (id) {
-//       case PRIMITIVE:
-//         return primtype;
-//       case MATRIX:
-//         for (it = list.begin(); it != list.end(); ++it) {
-//           if (!type) {
-//             type = (*it).calculatedType(symtable);
-//           } else {
-//             type = type;
-//           }
-//         }
-//     }
-//
-//     TypeList types;
-//     Type *ret;
-//     std::list<InitValue>::iterator it;
-//     for (it = list.begin(); it != list.end(); ++it) {
-//       switch ((*it).id) {
-//         case PRIMITIVE:
-//           types.push_back((*it).primtype);
-//           break;
-//         case MATRIX:
-//           types.push_back(
-//       }
-//     }
-//   }
-// };
-
-
-
-
 class BaseSemanticWalker : public antlr::TreeParser {
 
 public:
@@ -105,13 +63,13 @@ protected:
 
   void evalMatrixSubscript(Type*);
 
-  void evalAttribution(Type*, Type*);
-  void evalAttribution(Type*, const InitMatrixList&);
-  void evalAttribution(Type*, const InitStructList&);
+  Type* evalAttribution(Type*, Type*);
+  Type* evalAttribution(Type*, const InitMatrixList&);
+  Type* evalAttribution(Type*, const InitStructList&);
 
   StructType* createAnonymousStructFor(const InitStructList&);
 
-  Type* evalHomogeneity(const InitMatrixList&);
+  Type* evalHomogeneity(const InitMatrixList& mtx);
 
   Type* evalExpr_OU(Type* left, Type* right);
   Type* evalExpr_E(Type* left, Type* right);
