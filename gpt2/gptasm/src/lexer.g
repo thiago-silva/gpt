@@ -1,12 +1,6 @@
 header {
    #include <string>
-  #include <sstream>
-//  #include <iostream>
-//  #include <ctype.h>
-//  #include <antlr/TokenStreamSelector.hpp>
-//
-//  using namespace antlr;
-//  using namespace std;
+   #include <sstream>
 }
 
 
@@ -117,7 +111,6 @@ tokens {
    T_KW_JMP="jmp";
    T_KW_IF="if";
    T_KW_IFNOT="ifnot";
-   T_KW_PUSH="push";
    T_KW_POP="pop";
    T_KW_INCSP="incsp";
    T_KW_DECSP="decsp";
@@ -133,6 +126,12 @@ tokens {
    T_KW_PUSH_CHAR="push_char";
    T_KW_PUSH_BOOL="push_bool";
    T_KW_PUSH_MATRIX="push_matrix";
+   T_KW_PUSH_ITYPE="push_itype";
+   T_KW_PUSH_STYPE="push_stype";
+   T_KW_PUSH_RTYPE="push_rtype";
+   T_KW_PUSH_CTYPE="push_ctype";
+   T_KW_PUSH_BTYPE="push_btype";
+   T_KW_PUSH_MTYPE="push_mtype";
    T_KW_PUSH_SP="push_sreg";
    T_KW_POP_SP="pop_sreg";
    T_KW_INCSP_4="incsp_4";
@@ -169,19 +168,8 @@ tokens {
 
 {
 public:  
-//  void setNextFilename(string str) {
-//    nextFilename = str;
-//  }
-
-//  string getNextFilename( )
-//  {
-//    return nextFilename;
-//  }
 
 private:
-//  string nextFilename;
-//  TokenStreamSelector* selector;  
-//  bool hasLatim;
 }
 
 

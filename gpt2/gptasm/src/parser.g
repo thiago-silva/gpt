@@ -108,13 +108,10 @@ options {
 //---------------------
   procedure_declaration
 //---------------------
-{
-   std::vector<CSymbol> parameters;
-}
   : "proc" 
    tk_id:T_ID
     { bytecode.initProcedure(tk_id->getText(), false, 0, std::vector<CSymbol>()); }
-    (parameter_declaration[parameters])*
+    (parameter_declaration)*
     (var_declaration)*
     code_block
     { bytecode.finishProcedure(); }
@@ -122,14 +119,13 @@ options {
   ;
 
 //---------------------
-  parameter_declaration [std::vector<CSymbol> &parameters]
+  parameter_declaration
 //---------------------
 {
   int tk_type;
 }
   : "param" ("ref")? tk_id:T_ID tk_type=primitive_type
     { declareParameter( tk_id->getText(), tk_type ); }
-    { parameters.push_back(CSymbol(tk_id->getText(), tk_type, CSymbol::PARAM, 0)); } // TODO: nao eh zero...
   ;
 
 //#####################
@@ -249,9 +245,11 @@ options {
 //--------------------
   mn_chamada_subrotina
 //--------------------
-   :  "push"
+   :  ("push_int"|"push_string"|"push_real"|"push_char"|"push_bool"|"push_matrix")
       {bytecode.addOpcode(getLastTokenText());}
       element
+   |  ("push_itype"|"push_stype"|"push_rtype"|"push_ctype"|"push_btype"|"push_mtype")
+      {bytecode.addOpcode(getLastTokenText());}
    |  "pop"
       {bytecode.addOpcode(getLastTokenText());}
       identifier
@@ -261,8 +259,6 @@ options {
       { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
 //   |  ("push_0"|"push_1"|"push_2"|"push_3"|"push_4"|"push_5")
 //      {bytecode.addOpcode(getLastTokenText());}
-   |  ("push_int"|"push_string"|"push_real"|"push_char"|"push_bool"|"push_matrix")
-      {bytecode.addOpcode(getLastTokenText());}
    |  ("push_sreg"|"pop_sreg")
       {bytecode.addOpcode(getLastTokenText());}
    |  ("incsp_4"|"incsp_8"|"decsp_4"|"decsp_8")
@@ -378,11 +374,10 @@ identifier
 //    )?
 //  ; 
 
-//---------------------------------
-  element //returns [std::string ret]
-//---------------------------------
+//-------
+  element
+//-------
   : identifier //{ bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::STRING); }
-//  | ret=literal
   | literal
   ;
 

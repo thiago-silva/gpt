@@ -20,6 +20,14 @@ public:
    std::string readString();
    void readBool(bool &value);
    void setInt(int pos, const int &value);
+   void setCString(int pos, const std::string &value);
+   void pushInt(const int &value);
+   int popInt();
+   int getLastInt() const;
+   void pushCString(const std::string &value);
+   std::string popCString();
+   void pushBytes(const int &number);
+   void popBytes(const int &number);
    bool removeIfEqual(const int &value);
    bool removeIfEqual(const char &value);
    bool removeIfEqual(const std::string &value);

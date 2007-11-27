@@ -9,8 +9,9 @@ CSymbol::CSymbol()
 }
 
 
-CSymbol::CSymbol (const std::string &name, const char &type, const char &category, const int &address)
-   : _name(name)
+CSymbol::CSymbol (const int &scope, const std::string &name, const char &type, const char &category, const int &address)
+   : _scope(scope)
+   , _name(name)
    , _type(type)
    , _category(category)
    , _address(address)
@@ -22,9 +23,10 @@ CSymbol::CSymbol (const std::string &name, const char &type,
                   const int &address, const bool &hasVarArguments, 
                   const int &staticParameters, 
                   std::vector<CSymbol> parameters)
-   : _name(name)
+   : _scope(GLOBAL)
+   , _name(name)
    , _type(type)
-   , _category(CSymbol::PROC)
+   , _category(PROC)
    , _address(address)
    , _hasVarArguments(hasVarArguments)
    , _staticParameters(staticParameters)
@@ -57,6 +59,7 @@ int CSymbol::getTypeSize() const
 
 bool CSymbol::readFromBinary(CBinString &bin)
 {
+   _scope = GLOBAL;
    bin.readInt(_address);
    bin.readByte(_category);
 

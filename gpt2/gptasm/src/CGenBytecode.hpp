@@ -8,7 +8,6 @@
 #include "CHeader.hpp"
 #include "CSymbolTable.hpp"
 #include "CData.hpp"
-#include "CCode.hpp"
 #include "CBinString.hpp"
 
 class CGenBytecode
@@ -31,7 +30,7 @@ private:
    CHeader                    _header;
    CSymbolTable               _symbolTable;
    CData                      _data;
-   CCode                      _code;
+   CBinString                 _code;
    std::map<std::string,char> _opcodes;
    std::string                _currentProcedure;
    int                        _currentSP;

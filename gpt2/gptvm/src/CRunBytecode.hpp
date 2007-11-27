@@ -12,7 +12,6 @@
 #include "CBytecode.hpp"
 #include "Common.hpp"
 #include "CDataStack.hpp"
-#include "CExecutionStack.hpp"
 
 class CRunBytecode;
 
@@ -32,13 +31,17 @@ private:
    void initOpcodePointer();
    void step();
    void procImprima();
+   void setIntData(const int &address, const int &value);
+   int  getIntData(const int &address);
+   void setStringData(const int &address, const std::string &value);
+   std::string getStringData(const int &address);
    // opcodes
    void invalidOpcode(const std::string &opcode="");
    void nopOpcode();
    void pushSregOpcode();
    void popSregOpcode();
-   void pushOpcode();
    void pushStringOpcode();
+   void pushSTypeOpcode();
 //   void push1Opcode();
    void pcallOpcode();
    void libcallOpcode();
@@ -136,9 +139,15 @@ private:
    void pushBoolOpcode();
    void pushMatrixOpcode();
 
-//   OP_INCSP_4,
+   void pushITypeOpcode();
+   void pushRTypeOpcode();
+   void pushCTypeOpcode();
+   void pushBTypeOpcode();
+   void pushMTypeOpcode();
+
+   void incsp4Opcode();
 //   OP_INCSP_8,
-//   OP_DECSP_4,
+   void decsp4Opcode();
 //   OP_DECSP_8,
 
    void retOpcode();
@@ -160,14 +169,13 @@ private:
 
    CHeader       _header;
    CSymbolTable  _symbolTable;
-   CBinString    _data;
-//   CData         _data;
+   CBinString    _globalData;
    CBytecode     _code;
    OpcodePointer _opcodePointer[ OPCODE_NUMBER ];
    bool          _stop;
    int           _returnCode;
    CDataStack    _dataStack;
-   CExecutionStack _executionStack;
+   std::stack<int>   _executionStack;
 };
 
 #endif

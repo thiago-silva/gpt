@@ -2,9 +2,9 @@ program exemplo
 
 proc main
     push_sreg
-    push "Olá mundo !!!"
-    push_string
-    push 1
+    push_string "Olá mundo !!!"
+    push_stype
+    push_int 1
     libcall imprima
     pop_sreg
 

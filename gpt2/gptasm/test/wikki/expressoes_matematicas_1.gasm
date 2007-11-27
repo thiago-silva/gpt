@@ -8,11 +8,11 @@ proc main
     push_sreg
     imul t1, 5, 3
     isum t2, 2, t1
-    push t2
-    push_int
-    push "2+5*3="
-    push_string
-    push 2
+    push_int t2
+    push_itype
+    push_string "2+5*3="
+    push_stype
+    push_int 2
     libcall imprima
     pop_sreg
 

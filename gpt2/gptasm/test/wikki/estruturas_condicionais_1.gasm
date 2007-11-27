@@ -25,9 +25,9 @@ proc main
 
     // imprima( x );
     push_sreg
-    push x
-    push_int
-    push 1
+    push_int x
+    push_itype
+    push_int 1
     libcall imprima
     pop_sreg
 

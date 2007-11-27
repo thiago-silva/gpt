@@ -6,9 +6,9 @@ proc main
    pop_sreg
 
    push_sreg
-   push "Finalizando..."
-   push_string
-   push 1
+   push_string "Finalizando..."
+   push_stype
+   push_int 1
    libcall imprima
    pop_sreg
 
@@ -21,9 +21,9 @@ proc soma
    isum temp, 2, 4
 
    push_sreg
-   push temp
-   push_int
-   push 1
+   push_int temp
+   push_itype
+   push_int 1
    libcall imprima
    pop_sreg
 
@@ -31,3 +31,4 @@ proc soma
 endproc
    
 endprogram
+

@@ -19,9 +19,9 @@ CSymbol* CData::add(CSymbol *symbol)
 }
 
 
-CSymbol* CData::addVariable (const std::string &name, const int &type, const int &address)
+CSymbol* CData::addVariable (const int &scope, const std::string &name, const int &type, const int &address)
 {
-   CSymbol *symbol = new CSymbol (name, type, CSymbol::VAR, address);
+   CSymbol *symbol = new CSymbol (scope, name, type, CSymbol::VAR, address);
 
    _symbols.push_back(symbol);
 
@@ -37,7 +37,7 @@ CSymbol* CData::addVariable (const std::string &name, const int &type, const int
 
 CSymbol* CData::addConstant (const std::string &name, const int &type, const int &address)
 {
-   CSymbol *symbol = new CSymbol (name, type, CSymbol::CONST, address);
+   CSymbol *symbol = new CSymbol (CSymbol::GLOBAL, name, type, CSymbol::CONST, address);
 
    _symbols.push_back(symbol);
 

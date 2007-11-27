@@ -42,7 +42,9 @@ int main (int argc, char *argv[])
 
    CGptVm gptvm( &options );
 
-   return gptvm.run();
+   int result = gptvm.run();
+
+   return result;
 }
 
 

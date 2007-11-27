@@ -2,19 +2,6 @@
 
 #include "CBinString.hpp"
 
-// TODO: versoes BEM mais otimizadas :-)
-//int CData::getInt(const int &address)
-//{
-//   int *ret = (int*)&(_data[address]);
-//   return *ret;
-//}
-//void CData::setInt(const int &address, const int &value)
-//{
-//   int *targetAddress = (int*)&(_data[address]);
-//
-//   *targetAddress = value;
-//}
-
 
 void CBinString::writeInt(const int &value)
 {
@@ -59,14 +46,8 @@ void CBinString::writeBool(const bool &value)
 
 void CBinString::readInt(int &value)
 {
-   int result = 0;
-   char *byte = (char*)&result;
-
-   for( size_t i = 0; i < sizeof(int); i++) {
-      *byte = (*this)[0]; // TODO
-      byte++;
-      erase(0,1);
-   }
+   int result = *((int*)data());
+   erase(0,sizeof(int));
    value = result;
 //   std::cout << "readInt:" << value << std::endl;
 }
@@ -92,12 +73,7 @@ void CBinString::getByte(const int &pos, char &value)
 
 int CBinString::getInt(int pos)
 {
-   int result = 0;
-   char *byte = (char*)&result;
-
-   for( size_t i = 0; i < sizeof(int); i++) {
-      *byte++ = (*this)[pos++];
-   }
+   int result = *((int*)(data()+pos));
    return result;
 }
 
@@ -135,14 +111,63 @@ void CBinString::readBool(bool &value)
 
 void CBinString::setInt(int pos, const int &value)
 {
-   char *byte = (char*)&value;
+   int *address = (int*)(data()+pos);
+   *address = value;
+}
 
-   for( size_t i = 0; i < sizeof(int); i++) {
-      (*this)[pos++] = *byte++;
+
+void CBinString::setCString(int pos, const std::string &value)
+{
+   replace(pos, value.length()+1, value + '\0');
+}
+
+
+void CBinString::pushInt(const int &value)
+{
+   writeInt(value);
+}
+
+
+int CBinString::popInt()
+{
+   int pos = size()-sizeof(int);
+   int result = *((int*)(data()+pos));
+
+   erase(pos,sizeof(int));
+
+   return result;
+//   std::cout << "readInt:" << value << std::endl;
+}
+
+
+int CBinString::getLastInt() const
+{
+   int pos = size()-sizeof(int);
+   int result = *((int*)(data()+pos));
+
+   return result;
+}
+
+
+void CBinString::pushCString(const std::string &value)
+{
+   (*this) += value;
+   (*this) += '\0';
+}
+
+
+void CBinString::pushBytes(const int &number)
+{
+   for (int i = 0; i < number; i++) {
+      writeByte(0);
    }
-   // TODO: BEM mais eficiente...
-   // int *targetAddress = (int*)&(_data[address]);
-   //*targetAddress = value;
+}
+
+
+void CBinString::popBytes(const int &number)
+{
+   int pos = size()-number;
+   erase(pos,number);
 }
 
 

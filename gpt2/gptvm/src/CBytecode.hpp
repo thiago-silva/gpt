@@ -9,7 +9,7 @@ class CBytecode : public CBinString
 {
 public:
    CBytecode();
-  ~CBytecode();
+//  ~CBytecode();
    char fetchByte();
    int  fetchInt();
    void setIP(const int &IP);

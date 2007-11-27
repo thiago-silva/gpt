@@ -9,29 +9,37 @@
 class CSymbol
 {
 public:
+   enum EScope {
+      GLOBAL = 'G',
+      LOCAL  = 'L'
+   };
    enum ECategory {
-      PROC = 'P',
+      PROC  = 'P',
       CONST = 'C',
-      VAR = 'V',
+      VAR   = 'V',
       PARAM = 'P'
    };
    enum EType {
       NO_TYPE = 'N',
-      STRING = 'S',
-      INT = 'I',
-      CHAR = 'C',
-      BOOL = 'B',
-      REAL = 'R',
-      MATRIX = 'M',
+      STRING  = 'S',
+      INT     = 'I',
+      CHAR    = 'C',
+      BOOL    = 'B',
+      REAL    = 'R',
+      MATRIX  = 'M',
       POINTER = 'P'
    };
    CSymbol ();
-   CSymbol (const std::string &name, const char &type, const char &category,
-            const int &address);
+   CSymbol (const int &scope, const std::string &name, const char &type, 
+            const char &category, const int &address);
    CSymbol (const std::string &name, const char &type, const int &address,
             const bool &hasVarArguments, const int &staticParameters,
             std::vector<CSymbol> parameters);
    virtual ~CSymbol();
+   int getScope() const
+   {
+      return _scope;
+   }
    std::string getName() const
    {
       return _name;
@@ -63,6 +71,7 @@ public:
       return _parameters;
    }
 private:
+   int                  _scope;
    std::string          _name;
    char                 _type;
    char                 _category;

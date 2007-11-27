@@ -5,6 +5,7 @@
 
 
 #include "Common.hpp"
+#include "Tools.hpp"
 
 
 CGenBytecode::CGenBytecode()
@@ -82,7 +83,7 @@ CGenBytecode::CGenBytecode()
    _opcodes[ "jmp"         ] = OP_JMP;
    _opcodes[ "if"          ] = OP_IF;
    _opcodes[ "ifnot"       ] = OP_IFNOT;
-   _opcodes[ "push"        ] = OP_PUSH;
+//   _opcodes[ "push"        ] = OP_PUSH;
    _opcodes[ "pop"         ] = OP_POP;
    _opcodes[ "incsp"       ] = OP_INCSP;
    _opcodes[ "decsp"       ] = OP_DECSP;
@@ -98,6 +99,12 @@ CGenBytecode::CGenBytecode()
    _opcodes[ "push_char"   ] = OP_PUSH_CHAR;
    _opcodes[ "push_bool"   ] = OP_PUSH_BOOL;
    _opcodes[ "push_matrix" ] = OP_PUSH_MATRIX;
+   _opcodes[ "push_itype"  ] = OP_PUSH_ITYPE;
+   _opcodes[ "push_stype"  ] = OP_PUSH_STYPE;
+   _opcodes[ "push_rtype"  ] = OP_PUSH_RTYPE;
+   _opcodes[ "push_ctype"  ] = OP_PUSH_CTYPE;
+   _opcodes[ "push_btype"  ] = OP_PUSH_BTYPE;
+   _opcodes[ "push_mtype"  ] = OP_PUSH_MTYPE;
    _opcodes[ "push_sreg"   ] = OP_PUSH_SREG;
    _opcodes[ "pop_sreg"    ] = OP_POP_SREG;
    _opcodes[ "incsp_4"     ] = OP_INCSP_4;
@@ -141,32 +148,42 @@ void CGenBytecode::initProcedure(const std::string &procedureName, const bool &h
    _symbolTable.addProcedure (procedureName, CSymbol::NO_TYPE, _code.size(), hasVarArguments, staticParameters, parameters);
    _currentProcedure = procedureName;
    _currentSP = 0;
-//   _unsolvedLabels.clear();
-//   _solvedLabels.clear();
     registryLabel(procedureName);
 }
 
 
 void CGenBytecode::finishProcedure()
 {
-//   translateLabelsToAddress();
    _currentProcedure.clear();
+   _currentSP = 0;
+   _symbolTable.clearLocalSymbols();
    // TODO: delete na procedure ???
 }
 
 
 void CGenBytecode::makeVarDefinition(const std::string &lexeme, const int &type)
 {
-   if (_currentProcedure.empty()) { // assumindo que sao dados globais...
-      _symbolTable.addVariable (lexeme, type, _data.getDataSize());
+   if (_currentProcedure.empty()) {
+      // variavel global
+      _symbolTable.addVariable (CSymbol::GLOBAL, lexeme, type, _data.getDataSize());
+      std::cout << "var global " << lexeme << " address " << _data.getDataSize() << std::endl;
+      _data.addVariable (CSymbol::GLOBAL, lexeme, type, _data.getDataSize());
+   } else {
+      // variavel local
+      CSymbol *symbol = _symbolTable.addVariable (CSymbol::LOCAL, lexeme, type, _currentSP);
+      std::cout << "var local " << lexeme << " address " << _currentSP << std::endl;
+      _currentSP += symbol->getTypeSize();
+      // gera incsp XXX
+      _code.writeByte(OP_INCSP);
+      addAddress(itoa(symbol->getTypeSize()), CSymbol::CONST, CSymbol::INT);
    }
-   _data.addVariable (lexeme, type, _data.getDataSize());
 }
 
 
 void CGenBytecode::makeParDefinition(const std::string &lexeme, const int &type)
 {
    CSymbol *symbol = _symbolTable.addParameter(lexeme, type, _currentSP);
+   std::cout << "par " << lexeme << " address " << _currentSP << std::endl;
    _currentSP += symbol->getTypeSize();
 }
 
@@ -192,12 +209,11 @@ void CGenBytecode::addOpcode(const std::string &mn)
 
 void CGenBytecode::addAddress(const std::string &id, const int &category, const int &type)
 {
-   int ref = _data.getAddress(id);
-   if (ref == -1) {
-      //ref = _data.add((new CSymbol())->setAsConstantData( id, type, _data.getDataSize()))->getAddress();
-      ref = _data.addConstant (id, type, _data.getDataSize())->getAddress();
+   int address = _symbolTable.getAddress(id);
+   if (address == -1) {
+      address = _data.addConstant (id, type, _data.getDataSize())->getAddress();
    }
-   _code.writeInt(ref);
+   _code.writeInt(address);
 }
 
 
@@ -207,15 +223,12 @@ CBinString CGenBytecode::getBinary()
 
    ret += _header.getBinary();
 
-//   std::cout << "symbolTable.getSymbolsCount()=" << _symbolTable.getSymbolsCount() << std::endl;
    ret.writeInt(_symbolTable.getSymbolsCount());
    ret += _symbolTable;
 
-//   std::cout << "data.size()=" << _data.getDataSize() << std::endl;
    ret.writeInt(_data.getDataSize());
    ret += _data;
 
-//   std::cout << "code.size()=" << _code.size() << std::endl;
    ret.writeInt(_code.size());
    ret += _code;
 
