@@ -66,6 +66,27 @@ std::string PrimitiveType::name() const {
   return _name;
 }
 
+bool PrimitiveType::compatible(Type* other) {
+  other->_compatible(this);
+}
+
+bool PrimitiveType::_compatible(PrimitiveType* other) {
+  return _equals(other) || numPromotionWith(other);
+}
+
+bool PrimitiveType::_compatible(MatrixType*) {
+  return false;
+}
+
+bool PrimitiveType::_compatible(StructType*) {
+  return false;
+}
+
+bool PrimitiveType::_compatible(SubprogramType*) {
+  return false;
+}
+
+
 bool PrimitiveType::equals(const Type* other) const {
   other->_equals(this);
 }
@@ -131,10 +152,10 @@ Type* PrimitiveType::litPromotionWith(Type* other) {
 }
 
 bool PrimitiveType::isLValueFor(Type* rtype) {
-  rtype->isRValueFor(this);
+  rtype->_isRValueFor(this);
 }
 
-bool PrimitiveType::isRValueFor(PrimitiveType* lvalue) {
+bool PrimitiveType::_isRValueFor(PrimitiveType* lvalue) {
   if (lvalue->equals(this)) {
     return true;
   }
@@ -146,15 +167,21 @@ bool PrimitiveType::isRValueFor(PrimitiveType* lvalue) {
   return false;
 }
 
-bool PrimitiveType::isRValueFor(MatrixType*) {
+bool PrimitiveType::_isRValueFor(MatrixType*) {
+  if (_id == PortugolTokenTypes::T_NULO) {
+    return true;
+  }
   return false;
 }
 
-bool PrimitiveType::isRValueFor(StructType*) {
+bool PrimitiveType::_isRValueFor(StructType*) {
+  if (_id == PortugolTokenTypes::T_NULO) {
+    return true;
+  }
   return false;
 }
 
-bool PrimitiveType::isRValueFor(SubprogramType*) {
+bool PrimitiveType::_isRValueFor(SubprogramType*) {
   return false;
 }
 
@@ -183,6 +210,27 @@ int MatrixType::dimensions() const {
   return _dimensions;
 }
 
+bool MatrixType::compatible(Type* other) {
+  other->_compatible(this);
+}
+
+bool MatrixType::_compatible(PrimitiveType*) {
+  return false;
+}
+
+bool MatrixType::_compatible(MatrixType* other) {
+  return _dimensions == other->_dimensions &&
+         _ofType->compatible(other->_ofType);
+}
+
+bool MatrixType::_compatible(StructType*) {
+  return false;
+}
+
+bool MatrixType::_compatible(SubprogramType*) {
+  return false;
+}
+
 bool MatrixType::equals(const Type* other) const {
   other->_equals(this);
 }
@@ -200,7 +248,7 @@ bool MatrixType::_equals(const PrimitiveType*) const {
 }
 
 bool MatrixType::_equals(const MatrixType* other) const {
-  return (other->_ofType == _ofType) && (other->_dimensions == _dimensions);
+  return (other->_ofType->equals(_ofType)) && (other->_dimensions == _dimensions);
 }
 
 bool MatrixType::_equals(const StructType*) const {
@@ -224,49 +272,44 @@ Type* MatrixType::litPromotionWith(Type*) {
 }
 
 bool MatrixType::isLValueFor(Type* rtype) {
-  rtype->isRValueFor(this);
+  rtype->_isRValueFor(this);
 }
 
-bool MatrixType::isRValueFor(PrimitiveType*) {
+bool MatrixType::_isRValueFor(PrimitiveType*) {
   return false;
 }
 
-bool MatrixType::isRValueFor(MatrixType* lvalue) {
-  if (_equals(lvalue)) {
-    return true;
-  }
-
-  if ((lvalue->dimensions() == dimensions()) &&
-      lvalue->ofType()->equals(PortugolTokenTypes::T_REAL) &&
-      _ofType->equals(PortugolTokenTypes::T_INTEIRO)) {
+bool MatrixType::_isRValueFor(MatrixType* lvalue) {
+  if ((lvalue->_dimensions == _dimensions) &&
+      lvalue->_ofType->isLValueFor(_ofType)) {
     return true;
   }
 
   return false;
 }
 
-bool MatrixType::isRValueFor(StructType*) {
+bool MatrixType::_isRValueFor(StructType*) {
   return false;
 }
 
-bool MatrixType::isRValueFor(SubprogramType*) {
+bool MatrixType::_isRValueFor(SubprogramType*) {
   return false;
 }
 
 //------------------------------------------------------------------
 
 
-StructType::StructType(const std::string& name, const std::list<Field>& fields,
+StructType::StructType(const std::string& name, const FieldList& fields,
                        const std::string& unit, int line)
-  : _name(name), _fields(fields), _unit(unit), _line(line) {
+  : _anonymous(false), _name(name), _fields(fields), _unit(unit), _line(line) {
 }
 
 
-StructType::StructType(const std::list<Field>& fields)
-  : _name("<anonymous>"), _fields(fields), _unit("<intern>"), _line(-1) {
+StructType::StructType(const FieldList& fields)
+  : _anonymous(true), _name("<anonymous>"), _fields(fields), _unit("<intern>"), _line(-1) {
 }
 
-const std::list<StructType::Field>& StructType::fields() const {
+const StructType::FieldList& StructType::fields() const {
   return _fields;
 }
 
@@ -274,8 +317,24 @@ std::string StructType::name() const {
   return _name;
 }
 
-bool StructType::equivalent(Type* other) {
+bool StructType::compatible(Type* other) {
+  other->_compatible(this);
+}
 
+bool StructType::_compatible(PrimitiveType*) {
+  return false;
+}
+
+bool StructType::_compatible(MatrixType*) {
+  return false;
+}
+
+bool StructType::_compatible(StructType* other) {
+  return _fields.compatible(other->_fields);
+}
+
+bool StructType::_compatible(SubprogramType*) {
+  return false;
 }
 
 bool StructType::equals(const Type* other) const {
@@ -299,7 +358,14 @@ bool StructType::_equals(const MatrixType*) const {
 }
 
 bool StructType::_equals(const StructType* other) const {
-  return _name == other->_name;
+  if ((_anonymous  && other->_anonymous) ||
+      (!_anonymous && !other->_anonymous)) {
+    //comparacao estrutural
+    return _fields == other->_fields;
+  } else {
+    //comparacao nominal
+    return _name == other->_name;
+  }
 }
 
 bool StructType::_equals(const SubprogramType*) const {
@@ -319,22 +385,27 @@ Type* StructType::litPromotionWith(Type*) {
 }
 
 bool StructType::isLValueFor(Type* rtype) {
-  rtype->isRValueFor(this);
+  rtype->_isRValueFor(this);
 }
 
-bool StructType::isRValueFor(PrimitiveType*) {
+bool StructType::_isRValueFor(PrimitiveType*) {
   return false;
 }
 
-bool StructType::isRValueFor(MatrixType*) {
+bool StructType::_isRValueFor(MatrixType*) {
   return false;
 }
 
-bool StructType::isRValueFor(StructType* other) {
-  return _equals(other);
+bool StructType::_isRValueFor(StructType* ltype) {
+  if (_anonymous || ltype->_anonymous) {
+    return ltype->_fields.isLValueFor(_fields);
+  } else {
+    //comparacao nominal
+    return _equals(ltype);
+  }
 }
 
-bool StructType::isRValueFor(SubprogramType*) {
+bool StructType::_isRValueFor(SubprogramType*) {
   return false;
 }
 
@@ -358,6 +429,28 @@ std::string SubprogramType::name() const {
   ret += " : " + _returnType->name();
   return ret;
 }
+
+
+bool SubprogramType::compatible(Type* other) {
+  other->_compatible(this);
+}
+
+bool SubprogramType::_compatible(PrimitiveType*) {
+  return false;
+}
+
+bool SubprogramType::_compatible(MatrixType*) {
+  return false;
+}
+
+bool SubprogramType::_compatible(StructType*) {
+  return false;
+}
+
+bool SubprogramType::_compatible(SubprogramType*) {
+  return false;
+}
+
 
 bool SubprogramType::equals(const Type* other) const {
   other->_equals(this);
@@ -404,18 +497,18 @@ bool SubprogramType::isLValueFor(Type*) {
   return false;
 }
 
-bool SubprogramType::isRValueFor(PrimitiveType*) {
+bool SubprogramType::_isRValueFor(PrimitiveType*) {
   return false;
 }
 
-bool SubprogramType::isRValueFor(MatrixType*) {
+bool SubprogramType::_isRValueFor(MatrixType*) {
   return false;
 }
 
-bool SubprogramType::isRValueFor(StructType*) {
+bool SubprogramType::_isRValueFor(StructType*) {
   return false;
 }
 
-bool SubprogramType::isRValueFor(SubprogramType*) {
+bool SubprogramType::_isRValueFor(SubprogramType*) {
   return false;
 }

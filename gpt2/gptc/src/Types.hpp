@@ -15,6 +15,12 @@ public:
   virtual ~Type();
   virtual std::string name() const = 0;
 
+  virtual bool compatible(Type*) = 0;
+  virtual bool _compatible(PrimitiveType*) = 0;
+  virtual bool _compatible(MatrixType*) = 0;
+  virtual bool _compatible(StructType*) = 0;
+  virtual bool _compatible(SubprogramType*) = 0;
+
   virtual bool equals(const Type*) const = 0;
   virtual bool equals(int id) const = 0;
   virtual bool equals(Type* ofType, int dimensions) const = 0;
@@ -31,10 +37,10 @@ public:
 
   virtual bool isLValueFor(Type*) = 0;
 
-  virtual bool isRValueFor(PrimitiveType*) = 0;
-  virtual bool isRValueFor(MatrixType*) = 0;
-  virtual bool isRValueFor(StructType*) = 0;
-  virtual bool isRValueFor(SubprogramType*) = 0;
+  virtual bool _isRValueFor(PrimitiveType*) = 0;
+  virtual bool _isRValueFor(MatrixType*) = 0;
+  virtual bool _isRValueFor(StructType*) = 0;
+  virtual bool _isRValueFor(SubprogramType*) = 0;
 };
 
 
@@ -60,6 +66,12 @@ public:
   int id();
   virtual std::string name() const;
 
+  virtual bool compatible(Type*);
+  virtual bool _compatible(PrimitiveType*);
+  virtual bool _compatible(MatrixType*);
+  virtual bool _compatible(StructType*);
+  virtual bool _compatible(SubprogramType*);
+
   virtual bool equals(const Type*) const;
   virtual bool equals(int id) const;
   virtual bool equals(Type* ofType, int dimensions) const;
@@ -74,10 +86,10 @@ public:
   virtual Type* litPromotionWith(Type*);
 
   virtual bool isLValueFor(Type*);
-  virtual bool isRValueFor(PrimitiveType*);
-  virtual bool isRValueFor(MatrixType*);
-  virtual bool isRValueFor(StructType*);
-  virtual bool isRValueFor(SubprogramType*);
+  virtual bool _isRValueFor(PrimitiveType*);
+  virtual bool _isRValueFor(MatrixType*);
+  virtual bool _isRValueFor(StructType*);
+  virtual bool _isRValueFor(SubprogramType*);
 private:
   int         _id;
   std::string _name;
@@ -95,6 +107,12 @@ public:
 
   virtual std::string name() const;
 
+  virtual bool compatible(Type*);
+  virtual bool _compatible(PrimitiveType*);
+  virtual bool _compatible(MatrixType*);
+  virtual bool _compatible(StructType*);
+  virtual bool _compatible(SubprogramType*);
+
   virtual bool equals(const Type*) const;
   virtual bool equals(int id) const;
   virtual bool equals(Type* ofType, int dimensions) const;
@@ -109,15 +127,14 @@ public:
   virtual Type* litPromotionWith(Type*);
 
   virtual bool isLValueFor(Type*);
-  virtual bool isRValueFor(PrimitiveType*);
-  virtual bool isRValueFor(MatrixType*);
-  virtual bool isRValueFor(StructType*);
-  virtual bool isRValueFor(SubprogramType*);
+  virtual bool _isRValueFor(PrimitiveType*);
+  virtual bool _isRValueFor(MatrixType*);
+  virtual bool _isRValueFor(StructType*);
+  virtual bool _isRValueFor(SubprogramType*);
 private:
   Type          *_ofType;
   int           _dimensions;
 };
-
 
 class StructType : public Type {
 public:
@@ -126,20 +143,100 @@ public:
     Field(const std::string& n, Type* t)
       : name(n), type(t) {}
 
+    bool isLValueFor(const Field& other) const {
+      return name == other.name && type->isLValueFor(other.type);
+    }
+
+    bool compatible(const Field& other) const {
+      return name == other.name && type->compatible(other.type);
+    }
+
+    bool operator==(const Field& other) const {
+      return name == other.name && type->equals(other.type);
+    }
+
     std::string name;
     Type* type;
   };
 
-  StructType(const std::string& name, const std::list<Field>& fields,
+  class FieldList : public std::list<Field> {
+    public:
+
+    bool compatible(const FieldList& other) const {
+      if (size() != other.size()) {
+        return false;
+      }
+      const_iterator it, jt;
+      bool found;
+      for (it = begin(); it != end(); ++it) {
+        found = false;
+        for (jt = other.begin(); jt != other.end(); ++jt) {
+          if ((*it).compatible(*jt)) {
+            found = true;
+          }
+        }
+        if (!found) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    bool isLValueFor(const FieldList& other) const {
+      if (size() != other.size()) {
+        return false;
+      }
+      const_iterator it, jt;
+      bool found;
+      for (it = begin(); it != end(); ++it) {
+        found = false;
+        for (jt = other.begin(); jt != other.end(); ++jt) {
+          if ((*it).isLValueFor(*jt)) {
+            found = true;
+          }
+        }
+        if (!found) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    bool operator==(const FieldList& other) const {
+      if (size() != other.size()) {
+        return false;
+      }
+      const_iterator it, jt;
+      bool found;
+      for (it = begin(); it != end(); ++it) {
+        found = false;
+        for (jt = other.begin(); jt != other.end(); ++jt) {
+          if ((*it) == (*jt)) {
+            found = true;
+          }
+        }
+        if (!found) {
+          return false;
+        }
+      }
+      return true;
+    }
+  };
+
+  StructType(const std::string& name, const FieldList& fields,
              const std::string& unit, int line);
 
-  StructType(const std::list<Field>& fields);
+  StructType(const FieldList& fields);
 
-  const std::list<Field>& fields() const;
-
-  bool equivalent(Type*);
+  const FieldList& fields() const;
 
   virtual std::string name() const;
+
+  virtual bool compatible(Type*);
+  virtual bool _compatible(PrimitiveType*);
+  virtual bool _compatible(MatrixType*);
+  virtual bool _compatible(StructType*);
+  virtual bool _compatible(SubprogramType*);
 
   virtual bool equals(const Type*) const;
   virtual bool equals(int id) const;
@@ -155,13 +252,14 @@ public:
   virtual Type* litPromotionWith(Type*);
 
   virtual bool isLValueFor(Type*);
-  virtual bool isRValueFor(PrimitiveType*);
-  virtual bool isRValueFor(MatrixType*);
-  virtual bool isRValueFor(StructType*);
-  virtual bool isRValueFor(SubprogramType*);
+  virtual bool _isRValueFor(PrimitiveType*);
+  virtual bool _isRValueFor(MatrixType*);
+  virtual bool _isRValueFor(StructType*);
+  virtual bool _isRValueFor(SubprogramType*);
 private:
+  bool             _anonymous;
   std::string      _name;
-  std::list<Field> _fields;
+  FieldList        _fields;
   std::string      _unit;
   int              _line;
 };
@@ -172,6 +270,12 @@ public:
   SubprogramType(const TypeList& paramTypes, Type* returnType);
 
   virtual std::string name() const;
+
+  virtual bool compatible(Type*);
+  virtual bool _compatible(PrimitiveType*);
+  virtual bool _compatible(MatrixType*);
+  virtual bool _compatible(StructType*);
+  virtual bool _compatible(SubprogramType*);
 
   virtual bool equals(const Type*) const;
   virtual bool equals(int id) const;
@@ -187,10 +291,10 @@ public:
   virtual Type* litPromotionWith(Type*);
 
   virtual bool isLValueFor(Type*);
-  virtual bool isRValueFor(PrimitiveType*);
-  virtual bool isRValueFor(MatrixType*);
-  virtual bool isRValueFor(StructType*);
-  virtual bool isRValueFor(SubprogramType*);
+  virtual bool _isRValueFor(PrimitiveType*);
+  virtual bool _isRValueFor(MatrixType*);
+  virtual bool _isRValueFor(StructType*);
+  virtual bool _isRValueFor(SubprogramType*);
 private:
   TypeList         _paramTypes;
   Type*            _returnType;
