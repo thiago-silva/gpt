@@ -39,7 +39,7 @@ class SymbolList : public std::list<Symbol> {
 public:
   const_iterator duplicated() const;
 
-  std::list<StructType::Field> toStructFieldList() const;
+  StructType::FieldList toStructFieldList() const;
 
   TypeList toTypeList() const;
 

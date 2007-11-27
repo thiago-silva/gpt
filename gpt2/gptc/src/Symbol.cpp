@@ -55,8 +55,8 @@ SymbolList::const_iterator SymbolList::duplicated() const {
   return end();
 }
 
-std::list<StructType::Field> SymbolList::toStructFieldList() const {
-  std::list<StructType::Field> fields;
+StructType::FieldList SymbolList::toStructFieldList() const {
+  StructType::FieldList fields;
 
   for (const_iterator it = begin(); it != end(); ++it) {
     fields.push_back(StructType::Field((*it).lexeme(), (*it).type()));
