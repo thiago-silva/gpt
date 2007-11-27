@@ -18,11 +18,11 @@ public:
   void setScope(const std::string& scope);
   void setGlobalScope();
 
+  //
   Type* getType(const std::string& name);
-
   Type* getType(int id);
-
-  Type* retrieveMatrixType(Type *ofType, int dimensions);
+  Type* getType(Type *ofType, int dimensions);
+//   Type* getType(const TypeList& paramTypes, Type* returnType);
 
   Symbol newSymbol(const std::string& name, Type* type,
                    const std::string& scope, int line = -1,
@@ -35,7 +35,7 @@ public:
                    const SymbolList& symbolList,
                    int line);
 
-  StructType* createAnonymousStruct(const SymbolList& symbolList);
+  Type* createAnonymousStruct(const SymbolList& symbolList);
 
   bool declared(const Symbol& s);
 

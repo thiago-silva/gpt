@@ -31,7 +31,6 @@ class SymbolTable;
 class SymbolList;
 class Type;
 class TypeList;
-class StructType;
 
 typedef std::list<RefPortugolAST> IDList;
 
@@ -67,7 +66,7 @@ protected:
   Type* evalAttribution(Type*, const InitMatrixList&);
   Type* evalAttribution(Type*, const InitStructList&);
 
-  StructType* createAnonymousStructFor(const InitStructList&);
+  Type* createAnonymousStructFor(const InitStructList&);
 
   Type* evalHomogeneity(const InitMatrixList& mtx);
 

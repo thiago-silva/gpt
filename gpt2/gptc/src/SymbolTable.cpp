@@ -35,17 +35,25 @@ Type* SymbolTable::getType(int id) {
   return *ret;
 }
 
-Type* SymbolTable::retrieveMatrixType(Type *ofType, int dimensions) {
+Type* SymbolTable::getType(Type *ofType, int dimensions) {
   TypeList::iterator it = _types.find(ofType, dimensions);
   Type* type;
   if (it == _types.end()) {
-    type = new MatrixType(ofType, dimensions);
+    type = new Type(ofType, dimensions);
     _types.push_back(type);
   } else {
     type = *it;
   }
   return type;
 }
+
+// Type* SymbolTable::getType(const TypeList& paramTypes, Type* returnType) {
+  //TODO
+  //Levar em consideracao o registro de funcoes polimorficas
+  //Type *type = new Type(paramTypes, returnType);
+//   throw;
+// }
+
 
 Symbol SymbolTable::newSymbol(const std::string& name, Type* type,
                 const std::string& scope, int line,
@@ -69,12 +77,12 @@ void SymbolTable::defineStruct(const std::string& name,
   if (_types.find(name) != _types.end()) {
     throw RedefinedTypeException(name);
   }
-  _types.push_back(new StructType(name,
+  _types.push_back(new Type(name,
       symbolList.toStructFieldList(), _unit, line));
 }
 
-StructType* SymbolTable::createAnonymousStruct(const SymbolList& symbolList) {
-  StructType* ret = new StructType(symbolList.toStructFieldList());
+Type* SymbolTable::createAnonymousStruct(const SymbolList& symbolList) {
+  Type* ret = new Type(symbolList.toStructFieldList());
   _types.push_back(ret);
   return ret;
 }
@@ -143,12 +151,12 @@ SymbolTable::~SymbolTable() {
 }
 
 void SymbolTable::initialize() {
-  _types.push_back(new PrimitiveType(PortugolTokenTypes::T_INTEIRO,"inteiro"));
-  _types.push_back(new PrimitiveType(PortugolTokenTypes::T_REAL,"real"));
-  _types.push_back(new PrimitiveType(PortugolTokenTypes::T_CARACTERE,"caractere"));
-  _types.push_back(new PrimitiveType(PortugolTokenTypes::T_LITERAL,"literal"));
-  _types.push_back(new PrimitiveType(PortugolTokenTypes::T_LOGICO,"lógico"));
-  _types.push_back(new PrimitiveType(PortugolTokenTypes::T_NULO,"nulo"));
-  _types.push_back(new PrimitiveType(PortugolTokenTypes::T_CORINGA,"coringa"));
-  _types.push_back(new PrimitiveType(PortugolTokenTypes::T_RETICENCIAS,"reticências"));
+  _types.push_back(new Type(PortugolTokenTypes::T_INTEIRO,"inteiro"));
+  _types.push_back(new Type(PortugolTokenTypes::T_REAL,"real"));
+  _types.push_back(new Type(PortugolTokenTypes::T_CARACTERE,"caractere"));
+  _types.push_back(new Type(PortugolTokenTypes::T_LITERAL,"literal"));
+  _types.push_back(new Type(PortugolTokenTypes::T_LOGICO,"lógico"));
+  _types.push_back(new Type(PortugolTokenTypes::T_NULO,"nulo"));
+  _types.push_back(new Type(PortugolTokenTypes::T_CORINGA,"coringa"));
+  _types.push_back(new Type(PortugolTokenTypes::T_RETICENCIAS,"reticências"));
 }

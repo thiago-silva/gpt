@@ -55,11 +55,11 @@ SymbolList::const_iterator SymbolList::duplicated() const {
   return end();
 }
 
-StructType::FieldList SymbolList::toStructFieldList() const {
-  StructType::FieldList fields;
+Type::StructFieldList SymbolList::toStructFieldList() const {
+  Type::StructFieldList fields;
 
   for (const_iterator it = begin(); it != end(); ++it) {
-    fields.push_back(StructType::Field((*it).lexeme(), (*it).type()));
+    fields.push_back(Type::StructField((*it).lexeme(), (*it).type()));
   }
   return fields;
 }

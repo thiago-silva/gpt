@@ -1,9 +1,409 @@
 #include "Types.hpp"
-#include "PortugolTokenTypes.hpp"
 
-Type::~Type() {}
 
-//------------------------------------------------------------------
+Type::StructField::StructField(const std::string& n, Type* t)
+      : name(n), type(t) {}
+
+bool
+Type::StructField::isLValueFor(const Type::StructField& other) const {
+  return name == other.name && type->isLValueFor(other.type);
+}
+
+// bool
+// Type::StructField::compatible(const Type::StructField& other) const {
+//   return name == other.name && type->compatible(other.type);
+// }
+
+bool
+Type::StructField::operator==(const Type::StructField& other) const {
+  return name == other.name && type->equals(other.type);
+}
+
+// bool
+// Type::StructFieldList::compatible(const Type::StructFieldList& other) const {
+//   if (size() != other.size()) {
+//     return false;
+//   }
+//   const_iterator it, jt;
+//   bool found;
+//   for (it = begin(); it != end(); ++it) {
+//     found = false;
+//     for (jt = other.begin(); jt != other.end(); ++jt) {
+//       if ((*it).compatible(*jt)) {
+//         found = true;
+//       }
+//     }
+//     if (!found) {
+//       return false;
+//     }
+//   }
+//   return true;
+// }
+
+bool
+Type::StructFieldList::isLValueFor(const Type::StructFieldList& other) const {
+  if (size() != other.size()) {
+    return false;
+  }
+  const_iterator it, jt;
+  bool found;
+  for (it = begin(); it != end(); ++it) {
+    found = false;
+    for (jt = other.begin(); jt != other.end(); ++jt) {
+      if ((*it).isLValueFor(*jt)) {
+        found = true;
+      }
+    }
+    if (!found) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool
+Type::StructFieldList::operator==(const Type::StructFieldList& other) const {
+  if (size() != other.size()) {
+    return false;
+  }
+  const_iterator it, jt;
+  bool found;
+  for (it = begin(); it != end(); ++it) {
+    found = false;
+    for (jt = other.begin(); jt != other.end(); ++jt) {
+      if ((*it) == (*jt)) {
+        found = true;
+      }
+    }
+    if (!found) {
+      return false;
+    }
+  }
+  return true;
+}
+
+
+
+//************* GENERAL *********************************/
+
+bool Type::isPrimitive() const {
+  return _typeId == PRIMITIVE;
+}
+
+bool Type::isMatrix() const {
+  return _typeId == MATRIX;
+}
+
+bool Type::isStruct() const {
+  return _typeId == STRUCT;
+}
+
+bool Type::isSubprogram() const {
+  return _typeId == SUBPROGRAM;
+}
+
+const std::string Type::name() const {
+  return _name;
+}
+
+bool Type::equals(int id) const {
+  return isPrimitive() && (_id == id);
+}
+
+bool Type::equals(Type* ofType, int dimensions) const {
+  return isMatrix() && (dimensions == _dimensions) &&
+          _ofType->equals(ofType);
+}
+
+/************* VIRTUAL *********************************/
+
+// bool Type::compatible(Type* other) {
+//   switch (_typeId) {
+//     case PRIMITIVE:
+//       return primitive_compatible(other);
+//     case MATRIX:
+//       return matrix_compatible(other);
+//     case STRUCT:
+//       return struct_compatible(other);
+//     case SUBPROGRAM:
+//       return subprogram_compatible(other);
+//     default:
+//       throw;
+//   }
+// }
+
+bool Type::equals(const Type* other) const {
+  switch (_typeId) {
+    case PRIMITIVE:
+      return primitive_equals(other);
+    case MATRIX:
+      return matrix_equals(other);
+    case STRUCT:
+      return struct_equals(other);
+    case SUBPROGRAM:
+      return subprogram_equals(other);
+    default:
+      throw;
+  }
+}
+
+Type* Type::numPromotionWith(Type* other) {
+  switch (_typeId) {
+    case PRIMITIVE:
+      return primitive_numPromotionWith(other);
+    case MATRIX:
+      return NULL;
+    case STRUCT:
+      return NULL;
+    case SUBPROGRAM:
+      return NULL;
+    default:
+      throw;
+  }
+}
+
+Type* Type::litPromotionWith(Type* other) {
+  switch (_typeId) {
+    case PRIMITIVE:
+      return primitive_litPromotionWith(other);
+    case MATRIX:
+      return NULL;
+    case STRUCT:
+      return NULL;
+    case SUBPROGRAM:
+      return NULL;
+    default:
+      throw;
+  }
+}
+
+
+bool Type::isLValueFor(Type* rtype) {
+  switch (_typeId) {
+    case PRIMITIVE:
+      return primitive_isLValueFor(rtype);
+    case MATRIX:
+      return matrix_isLValueFor(rtype);
+    case STRUCT:
+      return struct_isLValueFor(rtype);
+    case SUBPROGRAM:
+      return false;
+    default:
+      throw;
+  }
+}
+
+//************* PRIMITIVE *********************************/
+
+
+
+Type::Type(int id, const std::string& name)
+  : _typeId(PRIMITIVE), _name(name), _id(id) {
+}
+
+int Type::primitiveType() const {
+  return _id;
+}
+
+// bool Type::primitive_compatible(Type* other) {
+//   if (other->isPrimitive()) {
+//     return equals(other) || numPromotionWith(other);
+//   } else {
+//     return false;
+//   }
+// }
+
+bool Type::primitive_equals(const Type* other) const {
+  return other->isPrimitive() && (other->_id == _id);
+}
+
+Type* Type::primitive_numPromotionWith(Type* other) {
+  if ((_id == T_INTEIRO)
+       &&
+      (other->equals(T_INTEIRO) ||
+       other->equals(T_REAL))) {
+    return other;
+  } else if ((_id == T_REAL)
+              &&
+             (other->equals(T_INTEIRO) ||
+              other->equals(T_REAL))) {
+    return this;
+  }
+
+  return NULL;
+}
+
+Type* Type::primitive_litPromotionWith(Type* other) {
+  if ((_id == T_LITERAL)
+       &&
+      (other->equals(T_LITERAL) ||
+       other->equals(T_CARACTERE))) {
+    return this;
+  } else if (other->equals(T_LITERAL)
+              &&
+             ((_id == T_CARACTERE) ||
+              (_id == T_LITERAL))) {
+    return other;
+  }
+
+  return NULL;
+}
+
+bool Type::primitive_isLValueFor(Type* rvalue) {
+  if (equals(rvalue)) {
+    return true;
+  }
+
+  if ((_id == T_REAL) &&
+      rvalue->equals(T_INTEIRO)) {
+    return true;
+  }
+  return false;
+}
+
+/************* MATRIX *********************************/
+
+Type::Type(Type* type, int dimensions)
+  : _typeId(MATRIX), _ofType(type), _dimensions(dimensions) {
+
+  _name = "matriz";
+  for (int i = 0; i < _dimensions; i++) {
+    _name += "[]";
+  }
+  _name += " do tipo " + _ofType->name();
+}
+
+const Type* Type::ofType() const {
+  return _ofType;
+}
+
+int Type::dimensions() const {
+  return _dimensions;
+}
+
+// bool Type::matrix_compatible(Type* other) {
+//   if (other->isMatrix()) {
+//     return _dimensions == other->_dimensions &&
+//           _ofType->compatible(other->_ofType);
+//   } else {
+//     return false;
+//   }
+// }
+
+bool Type::matrix_equals(const Type* other) const {
+  return other->isMatrix() && equals(other->_ofType, other->_dimensions);
+}
+
+bool Type::matrix_isLValueFor(Type* rvalue) {
+  if (rvalue->isMatrix() &&
+      (rvalue->_dimensions == _dimensions) &&
+      rvalue->_ofType->isLValueFor(_ofType)) {
+    return true;
+  }
+
+  if (rvalue->isPrimitive() && rvalue->equals(T_NULO)) {
+    return true;
+  }
+
+  return false;
+}
+
+
+
+/******************** STRUCT *********************************/
+
+
+Type::Type(const std::string& name, const StructFieldList& fields,
+           const std::string& unit, int line)
+  : _typeId(STRUCT), _name(name), _anonymous(false), _fields(fields),
+    _unit(unit), _line(line) {
+}
+
+
+Type::Type(const StructFieldList& fields)
+  : _typeId(STRUCT), _name("<estrutura anônima>"), _anonymous(true),
+    _fields(fields), _unit("<interno>"), _line(-1) {
+}
+
+const Type::StructFieldList& Type::fields() const {
+  return _fields;
+}
+
+
+// bool Type::struct_compatible(Type* other) {
+//   return other->isStruct() && _fields.compatible(other->_fields);
+// }
+
+bool Type::struct_equals(const Type* other) const {
+  if (!other->isStruct()) {
+    return false;
+  }
+
+  if ((_anonymous  && other->_anonymous) ||
+      (!_anonymous && !other->_anonymous)) {
+    //comparacao estrutural
+    return _fields == other->_fields;
+  } else {
+    //comparacao nominal
+    return _name == other->_name;
+  }
+}
+
+
+bool Type::struct_isLValueFor(Type* rtype) {
+  if (rtype->isPrimitive()) {
+    return rtype->equals(T_NULO);
+  }
+
+  if (!rtype->isStruct()) {
+    return false;
+  }
+
+  if (_anonymous || rtype->_anonymous) {
+    return _fields.isLValueFor(rtype->_fields);
+  } else {
+    //comparacao nominal
+    return equals(rtype);
+  }
+}
+
+
+
+/******************** SUBPROGRAM *********************************/
+
+Type::Type(const TypeList& paramTypes,
+           Type* returnType)
+  : _typeId(SUBPROGRAM), _paramTypes(paramTypes), _returnType(returnType) {
+
+  if (_returnType->equals(T_NULO)) {
+    _name = "proc(";
+  } else {
+    _name = "func(";
+  }
+  _name += _paramTypes.toString();
+  _name += ")";
+  _name += " : " + _returnType->name();
+}
+
+
+// bool Type::subprogram_compatible(Type* other) {
+//   return equals(other);
+// }
+
+
+bool Type::subprogram_equals(const Type* other) const {
+  return other->isSubprogram() &&
+         (_paramTypes == other->_paramTypes) &&
+         (_returnType->equals(other->_returnType));
+}
+
+
+
+
+/******************** TYPELIST *********************************/
+
+
+
 
 
 TypeList::iterator TypeList::find(const std::string& lexeme) {
@@ -39,12 +439,6 @@ TypeList::iterator TypeList::find(int id) {
   return end();
 }
 
-// void TypeList::push_back(const TypeList& other) {
-//   for (iterator it = other.begin(); it != other.end(); ++it) {
-//     push_back(*it);
-//   }
-// }
-
 std::string TypeList::toString() const {
   std::string ret = "";
   const_iterator it;
@@ -54,461 +448,3 @@ std::string TypeList::toString() const {
   return ret;
 }
 
-
-//------------------------------------------------------------------
-
-
-PrimitiveType::PrimitiveType(int id, const std::string& name)
-  : _id(id), _name(name) {
-}
-
-std::string PrimitiveType::name() const {
-  return _name;
-}
-
-bool PrimitiveType::compatible(Type* other) {
-  other->_compatible(this);
-}
-
-bool PrimitiveType::_compatible(PrimitiveType* other) {
-  return _equals(other) || numPromotionWith(other);
-}
-
-bool PrimitiveType::_compatible(MatrixType*) {
-  return false;
-}
-
-bool PrimitiveType::_compatible(StructType*) {
-  return false;
-}
-
-bool PrimitiveType::_compatible(SubprogramType*) {
-  return false;
-}
-
-
-bool PrimitiveType::equals(const Type* other) const {
-  other->_equals(this);
-}
-
-bool PrimitiveType::equals(int id) const {
-  return _id == id;
-}
-
-bool PrimitiveType::equals(Type* ofType, int dimensions) const {
-  return false;
-}
-
-bool PrimitiveType::_equals(const PrimitiveType* other) const {
-  return other->_id == _id;
-}
-
-bool PrimitiveType::_equals(const MatrixType*) const {
-  return false;
-}
-
-bool PrimitiveType::_equals(const StructType*) const {
-  return false;
-}
-
-bool PrimitiveType::_equals(const SubprogramType*) const {
-  return false;
-}
-
-bool PrimitiveType::isPrimitive() const {
-  return true;
-}
-
-Type* PrimitiveType::numPromotionWith(Type* other) {
-  if ((_id == PortugolTokenTypes::T_INTEIRO)
-       &&
-      (other->equals(PortugolTokenTypes::T_INTEIRO) ||
-       other->equals(PortugolTokenTypes::T_REAL))) {
-    return other;
-  } else if ((_id == PortugolTokenTypes::T_REAL)
-              &&
-             (other->equals(PortugolTokenTypes::T_INTEIRO) ||
-              other->equals(PortugolTokenTypes::T_REAL))) {
-    return this;
-  }
-
-  return NULL;
-}
-
-Type* PrimitiveType::litPromotionWith(Type* other) {
-  if ((_id == PortugolTokenTypes::T_LITERAL)
-       &&
-      (other->equals(PortugolTokenTypes::T_LITERAL) ||
-       other->equals(PortugolTokenTypes::T_CARACTERE))) {
-    return this;
-  } else if (other->equals(PortugolTokenTypes::T_LITERAL)
-              &&
-             ((_id == PortugolTokenTypes::T_CARACTERE) ||
-              (_id == PortugolTokenTypes::T_LITERAL))) {
-    return other;
-  }
-
-  return NULL;
-}
-
-bool PrimitiveType::isLValueFor(Type* rtype) {
-  rtype->_isRValueFor(this);
-}
-
-bool PrimitiveType::_isRValueFor(PrimitiveType* lvalue) {
-  if (lvalue->equals(this)) {
-    return true;
-  }
-
-  if (lvalue->equals(PortugolTokenTypes::T_REAL) &&
-      _id == PortugolTokenTypes::T_INTEIRO) {
-    return true;
-  }
-  return false;
-}
-
-bool PrimitiveType::_isRValueFor(MatrixType*) {
-  if (_id == PortugolTokenTypes::T_NULO) {
-    return true;
-  }
-  return false;
-}
-
-bool PrimitiveType::_isRValueFor(StructType*) {
-  if (_id == PortugolTokenTypes::T_NULO) {
-    return true;
-  }
-  return false;
-}
-
-bool PrimitiveType::_isRValueFor(SubprogramType*) {
-  return false;
-}
-
-//------------------------------------------------------------------
-
-
-MatrixType::MatrixType(Type* type, int dimensions)
-  : _ofType(type), _dimensions(dimensions) {
-}
-
-std::string MatrixType::name() const {
-  std::string ret;
-  ret = "matriz";
-  for (int i = 0; i < _dimensions; i++) {
-    ret += "[]";
-  }
-  ret += " do tipo " + _ofType->name();
-  return ret;
-}
-
-const Type* MatrixType::ofType() const {
-  return _ofType;
-}
-
-int MatrixType::dimensions() const {
-  return _dimensions;
-}
-
-bool MatrixType::compatible(Type* other) {
-  other->_compatible(this);
-}
-
-bool MatrixType::_compatible(PrimitiveType*) {
-  return false;
-}
-
-bool MatrixType::_compatible(MatrixType* other) {
-  return _dimensions == other->_dimensions &&
-         _ofType->compatible(other->_ofType);
-}
-
-bool MatrixType::_compatible(StructType*) {
-  return false;
-}
-
-bool MatrixType::_compatible(SubprogramType*) {
-  return false;
-}
-
-bool MatrixType::equals(const Type* other) const {
-  other->_equals(this);
-}
-
-bool MatrixType::equals(int id) const {
-  return false;
-}
-
-bool MatrixType::equals(Type* ofType, int dimensions) const {
-  return (ofType == _ofType) && (dimensions == _dimensions);
-}
-
-bool MatrixType::_equals(const PrimitiveType*) const {
-  return false;
-}
-
-bool MatrixType::_equals(const MatrixType* other) const {
-  return (other->_ofType->equals(_ofType)) && (other->_dimensions == _dimensions);
-}
-
-bool MatrixType::_equals(const StructType*) const {
-  return false;
-}
-
-bool MatrixType::_equals(const SubprogramType*) const {
-  return false;
-}
-
-bool MatrixType::isPrimitive() const {
-  return false;
-}
-
-Type* MatrixType::numPromotionWith(Type*) {
-  return NULL;
-}
-
-Type* MatrixType::litPromotionWith(Type*) {
-  return NULL;
-}
-
-bool MatrixType::isLValueFor(Type* rtype) {
-  rtype->_isRValueFor(this);
-}
-
-bool MatrixType::_isRValueFor(PrimitiveType*) {
-  return false;
-}
-
-bool MatrixType::_isRValueFor(MatrixType* lvalue) {
-  if ((lvalue->_dimensions == _dimensions) &&
-      lvalue->_ofType->isLValueFor(_ofType)) {
-    return true;
-  }
-
-  return false;
-}
-
-bool MatrixType::_isRValueFor(StructType*) {
-  return false;
-}
-
-bool MatrixType::_isRValueFor(SubprogramType*) {
-  return false;
-}
-
-//------------------------------------------------------------------
-
-
-StructType::StructType(const std::string& name, const FieldList& fields,
-                       const std::string& unit, int line)
-  : _anonymous(false), _name(name), _fields(fields), _unit(unit), _line(line) {
-}
-
-
-StructType::StructType(const FieldList& fields)
-  : _anonymous(true), _name("<anonymous>"), _fields(fields), _unit("<intern>"), _line(-1) {
-}
-
-const StructType::FieldList& StructType::fields() const {
-  return _fields;
-}
-
-std::string StructType::name() const {
-  return _name;
-}
-
-bool StructType::compatible(Type* other) {
-  other->_compatible(this);
-}
-
-bool StructType::_compatible(PrimitiveType*) {
-  return false;
-}
-
-bool StructType::_compatible(MatrixType*) {
-  return false;
-}
-
-bool StructType::_compatible(StructType* other) {
-  return _fields.compatible(other->_fields);
-}
-
-bool StructType::_compatible(SubprogramType*) {
-  return false;
-}
-
-bool StructType::equals(const Type* other) const {
-  other->_equals(this);
-}
-
-bool StructType::equals(int id) const {
-  return false;
-}
-
-bool StructType::equals(Type* ofType, int dimensions) const {
-  return false;
-}
-
-bool StructType::_equals(const PrimitiveType*) const {
-  return false;
-}
-
-bool StructType::_equals(const MatrixType*) const {
-  return false;
-}
-
-bool StructType::_equals(const StructType* other) const {
-  if ((_anonymous  && other->_anonymous) ||
-      (!_anonymous && !other->_anonymous)) {
-    //comparacao estrutural
-    return _fields == other->_fields;
-  } else {
-    //comparacao nominal
-    return _name == other->_name;
-  }
-}
-
-bool StructType::_equals(const SubprogramType*) const {
-  return false;
-}
-
-bool StructType::isPrimitive() const {
-  return false;
-}
-
-Type* StructType::numPromotionWith(Type*) {
-  return NULL;
-}
-
-Type* StructType::litPromotionWith(Type*) {
-  return NULL;
-}
-
-bool StructType::isLValueFor(Type* rtype) {
-  rtype->_isRValueFor(this);
-}
-
-bool StructType::_isRValueFor(PrimitiveType*) {
-  return false;
-}
-
-bool StructType::_isRValueFor(MatrixType*) {
-  return false;
-}
-
-bool StructType::_isRValueFor(StructType* ltype) {
-  if (_anonymous || ltype->_anonymous) {
-    return ltype->_fields.isLValueFor(_fields);
-  } else {
-    //comparacao nominal
-    return _equals(ltype);
-  }
-}
-
-bool StructType::_isRValueFor(SubprogramType*) {
-  return false;
-}
-
-//------------------------------------------------------------------
-
-
-SubprogramType::SubprogramType(const TypeList& paramTypes,
-                               Type* returnType)
-  : _paramTypes(paramTypes), _returnType(returnType) {
-}
-
-std::string SubprogramType::name() const {
-  std::string ret;
-  if (_returnType->equals(PortugolTokenTypes::T_NULO)) {
-    ret = "proc(";
-  } else {
-    ret = "func(";
-  }
-  ret += _paramTypes.toString();
-  ret += ")";
-  ret += " : " + _returnType->name();
-  return ret;
-}
-
-
-bool SubprogramType::compatible(Type* other) {
-  other->_compatible(this);
-}
-
-bool SubprogramType::_compatible(PrimitiveType*) {
-  return false;
-}
-
-bool SubprogramType::_compatible(MatrixType*) {
-  return false;
-}
-
-bool SubprogramType::_compatible(StructType*) {
-  return false;
-}
-
-bool SubprogramType::_compatible(SubprogramType*) {
-  return false;
-}
-
-
-bool SubprogramType::equals(const Type* other) const {
-  other->_equals(this);
-}
-
-bool SubprogramType::equals(int id) const {
-  return false;
-}
-
-bool SubprogramType::equals(Type*, int) const {
-  return false;
-}
-
-bool SubprogramType::_equals(const PrimitiveType*) const {
-  return false;
-}
-
-bool SubprogramType::_equals(const MatrixType*) const {
-  return false;
-}
-
-bool SubprogramType::_equals(const StructType*) const {
-  return false;
-}
-
-bool SubprogramType::_equals(const SubprogramType* other) const {
-  return (_paramTypes == other->_paramTypes) &&
-         (_returnType == other->_returnType);
-}
-
-bool SubprogramType::isPrimitive() const {
-  return false;
-}
-
-Type* SubprogramType::numPromotionWith(Type*) {
-  return NULL;
-}
-
-Type* SubprogramType::litPromotionWith(Type*) {
-  return NULL;
-}
-
-bool SubprogramType::isLValueFor(Type*) {
-  return false;
-}
-
-bool SubprogramType::_isRValueFor(PrimitiveType*) {
-  return false;
-}
-
-bool SubprogramType::_isRValueFor(MatrixType*) {
-  return false;
-}
-
-bool SubprogramType::_isRValueFor(StructType*) {
-  return false;
-}
-
-bool SubprogramType::_isRValueFor(SubprogramType*) {
-  return false;
-}

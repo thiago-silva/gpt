@@ -13,7 +13,6 @@ BaseSemanticWalker::BaseSemanticWalker(SymbolTable* symtable)
 
 void BaseSemanticWalker::useLib(const  std::string& lib) {
   //TODO: sanitize lib: "bla\ bla" -> "bla bla"
-
   std::cerr << "Using lib:" << lib << std::endl;
 }
 
@@ -50,17 +49,17 @@ void BaseSemanticWalker::declareProc(const std::string& name,
                                      int line,
                                      Type* ret) {
 
-  SubprogramType* type = new SubprogramType(
-        params.toTypeList(),
-        (ret == 0) ? _symtable->getType(PortugolTokenTypes::T_NULO) : ret);
+  //TODO: Levar em consideracao o registro de funcoes polimorficas
+//   Type* type = _symtable->getType(params.toTypeList(),
+//           (ret == 0) ? _symtable->getType(PortugolTokenTypes::T_NULO) : ret);
 
-  try {
-    _symtable->declare(_symtable->newSymbol(name, type,line));
-    _symtable->declare(params, name);
-  } catch (RedeclarationException e) {
-    cerr << "catched! Redeclaration: " << e.symbol().toString() << std::endl;
-    delete type;
-  }
+//   try {
+//     _symtable->declare(_symtable->newSymbol(name, type,line));
+//     _symtable->declare(params, name);
+//   } catch (RedeclarationException e) {
+//     cerr << "catched! Redeclaration: " << e.symbol().toString() << std::endl;
+//     delete type;
+//   }
 }
 
 Type* BaseSemanticWalker::getType(const std::string& name) {
@@ -124,7 +123,7 @@ Type* BaseSemanticWalker::evalAttribution(Type* ltype, const InitMatrixList& mtx
 }
 
 Type* BaseSemanticWalker::evalAttribution(Type* ltype, const InitStructList& stc) {
-  StructType* rtype = createAnonymousStructFor(stc);
+  Type* rtype = createAnonymousStructFor(stc);
 
   if (!ltype->isLValueFor(rtype)) {
     std::cerr << "ilegal: "
@@ -133,7 +132,7 @@ Type* BaseSemanticWalker::evalAttribution(Type* ltype, const InitStructList& stc
   return ltype;
 }
 
-StructType* BaseSemanticWalker::createAnonymousStructFor(const InitStructList& stc) {
+Type* BaseSemanticWalker::createAnonymousStructFor(const InitStructList& stc) {
   SymbolList slist;
   InitStructList::const_iterator it;
   for (it = stc.begin(); it != stc.end(); ++it) {
@@ -159,12 +158,12 @@ Type* BaseSemanticWalker::evalHomogeneity(const InitMatrixList& mtx) {
 
     if (rtype == 0) {
       rtype = it->second;
-    } else if (!rtype->compatible(it->second)) {
+    } else if (!rtype->equals(it->second)) {
       std::cerr << "ilegal: Matriz heterogenea\n";
     }
   }
 
-  return _symtable->retrieveMatrixType(rtype, dim);
+  return _symtable->getType(rtype, dim);
 }
 
 Type*

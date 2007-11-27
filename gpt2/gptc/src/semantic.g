@@ -240,7 +240,7 @@ tipo_matriz returns [Type *type]
 
   : #(T_MATRIZ ofType=tipo (dimensao {d++;})*)
 
-                            {type = _symtable->retrieveMatrixType(ofType,d);}
+                            {type = _symtable->getType(ofType,d);}
   ;
 
 dimensao
