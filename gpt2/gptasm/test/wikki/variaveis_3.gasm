@@ -13,12 +13,12 @@ proc main
     pushrv v
     pushrt
     pushrv 1
-    libcall imprima
+    lcall imprima
 
     pushrv 10.0
     pushrt
     pushrv 1
-    libcall imprima
+    lcall imprima
 
     exit 0
 endproc

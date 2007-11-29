@@ -15,12 +15,12 @@ proc main
     pushsv v
     pushst
     pushiv 1
-    libcall imprima
+    lcall imprima
 	
     pushsv "10"
     pushst
     pushiv 1
-    libcall imprima
+    lcall imprima
 	
     sfree v
 

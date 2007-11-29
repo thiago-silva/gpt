@@ -14,8 +14,8 @@ proc main
     // imprima( x );
     pushiv x
     pushit
-    push1
-    libcall imprima
+    push_1
+    lcall imprima
 
     // fim-para
     iinc x, 1
@@ -23,7 +23,7 @@ proc main
 
     proximo:
 
-    exit0
+    exit_0
 endproc
 
 endprogram

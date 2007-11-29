@@ -251,17 +251,15 @@ options {
       {bytecode.addOpcode(getLastTokenText());}
       T_INT_VALUE
       { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
-   |  ("push0"|"push1"|"push2"|"push3"|"push4"|"push5")
+   |  ("push_0"|"push_1"|"push_2"|"push_3"|"push_4"|"push_5")
       {bytecode.addOpcode(getLastTokenText());}
-//   |  ("pushsreg"|"popsreg")
-//      {bytecode.addOpcode(getLastTokenText());}
-   |  ("incsp4"|"incsp8"|"decsp4"|"decsp8")
+   |  ("incsp_4"|"incsp_8"|"decsp_4"|"decsp_8")
       {bytecode.addOpcode(getLastTokenText());}
    |  "pcall"
       {bytecode.addOpcode(getLastTokenText());}
       T_ID
       { bytecode.unsolvedLabel(getLastTokenText());}
-   |  "libcall"
+   |  "lcall"
       {bytecode.addOpcode(getLastTokenText());}
       T_ID
       { bytecode.addAddress(getLastTokenText(),CSymbol::CONST, CSymbol::STRING); }
@@ -331,7 +329,7 @@ options {
 //-----------
   mn_execucao
 //-----------
-   :   ("nop"|"hlt"|"exit0"|"exit1")
+   :   ("nop"|"hlt"|"exit_0"|"exit_1")
       {bytecode.addOpcode(getLastTokenText());}
    |   "exit"
       {bytecode.addOpcode(getLastTokenText());}

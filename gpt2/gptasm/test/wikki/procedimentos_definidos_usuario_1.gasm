@@ -10,7 +10,7 @@ proc main
     pushiv 20
     pcall soma
 
-    exit 0
+    exit_0
 endproc
 
 proc soma
@@ -21,14 +21,14 @@ proc soma
 
     pushsv "A soma é: "
     pushst
-    pushiv 1
-    libcall imprima
+    push_1
+    lcall imprima
 
     isum t1, x, y
     pushiv t1
     pushit
-    pushiv 1
-    libcall imprima
+    push_1
+    lcall imprima
 
     decsp 12
     ret	

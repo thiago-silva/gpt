@@ -39,15 +39,11 @@ private:
    // opcodes
    void invalidOpcode(const std::string &opcode="");
    void nopOpcode();
-//   void pushsregOpcode();
-//   void popsregOpcode();
-//   void push1Opcode();
    void pcallOpcode();
-   void libcallOpcode();
-//   void exit0Opcode();
+   void lcallOpcode();
    void exitOpcode();
-   void exit0Opcode();
-   void exit1Opcode();
+   void exit_0Opcode();
+   void exit_1Opcode();
    void hltOpcode();
 
    void isumOpcode();
@@ -128,12 +124,12 @@ private:
    void popmvOpcode();
    void incspOpcode();
    void decspOpcode();
-   void push0Opcode();
-   void push1Opcode();
-   void push2Opcode();
-   void push3Opcode();
-   void push4Opcode();
-   void push5Opcode();
+   void push_0Opcode();
+   void push_1Opcode();
+   void push_2Opcode();
+   void push_3Opcode();
+   void push_4Opcode();
+   void push_5Opcode();
    void pushsvOpcode();
    void pushivOpcode();
    void pushrvOpcode();
@@ -146,10 +142,10 @@ private:
    void pushbtOpcode();
    void pushmtOpcode();
 
-   void incsp4Opcode();
-   void incsp8Opcode();
-   void decsp4Opcode();
-   void decsp8Opcode();
+   void incsp_4Opcode();
+   void incsp_8Opcode();
+   void decsp_4Opcode();
+   void decsp_8Opcode();
 
    void retOpcode();
    void sallocOpcode();

@@ -17,8 +17,8 @@ proc main
     pushit
     pushsv "c.x="
     pushst
-    pushiv 2
-    libcall imprima
+    push_2
+    lcall imprima
 
     // imprima( "c.y=", c.y );
     igetv t1, c:4 // t1 := *(c + 4)
@@ -26,10 +26,10 @@ proc main
     pushit
     pushsv "c.y="
     pushst
-    pushiv 2
-    libcall imprima
+    push_2
+    lcall imprima
 
-    exit 0
+    exit_0
 endproc
 
 endprogram

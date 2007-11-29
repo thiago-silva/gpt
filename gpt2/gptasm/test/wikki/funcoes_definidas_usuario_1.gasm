@@ -3,7 +3,7 @@ program exemplo
 proc main
     var t1 int
     // imprima( "A soma é: ", soma( 2, 7 ) );
-    pushiv 0 // resultado da função
+    push_0 // resultado da função
     pushiv 2 // empilha 2
     pushiv 7 // empilha 7
     pcall soma
@@ -12,10 +12,10 @@ proc main
     pushit
     pushsv "A soma é: "
     pushst
-    pushiv 2
-    libcall imprima
+    push_2
+    lcall imprima
 
-    exit 0
+    exit_0
 endproc
 
 proc soma
@@ -25,7 +25,7 @@ proc soma
 
     isum __result, x, y
 
-    decsp 8 // tamanho dos parametros + variaveis locais - retorno da funcao
+    decsp_8 // tamanho dos parametros + variaveis locais - retorno da funcao
     ret
 endproc
 

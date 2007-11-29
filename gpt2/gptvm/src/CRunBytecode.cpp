@@ -39,13 +39,11 @@ void CRunBytecode::initOpcodePointer()
    }
 
    _opcodePointer[OP_NOP        ] = &CRunBytecode::nopOpcode;
-//   _opcodePointer[OP_PUSHSREG   ] = &CRunBytecode::pushsregOpcode;
-//   _opcodePointer[OP_POPSREG    ] = &CRunBytecode::popsregOpcode;
    _opcodePointer[OP_PCALL      ] = &CRunBytecode::pcallOpcode;
-   _opcodePointer[OP_LIBCALL    ] = &CRunBytecode::libcallOpcode;
+   _opcodePointer[OP_LCALL      ] = &CRunBytecode::lcallOpcode;
    _opcodePointer[OP_EXIT       ] = &CRunBytecode::exitOpcode;
-   _opcodePointer[OP_EXIT0      ] = &CRunBytecode::exit0Opcode;
-   _opcodePointer[OP_EXIT1      ] = &CRunBytecode::exit1Opcode;
+   _opcodePointer[OP_EXIT_0     ] = &CRunBytecode::exit_0Opcode;
+   _opcodePointer[OP_EXIT_1     ] = &CRunBytecode::exit_1Opcode;
 
    _opcodePointer[OP_HLT        ] = &CRunBytecode::hltOpcode;
 
@@ -127,12 +125,12 @@ void CRunBytecode::initOpcodePointer()
    _opcodePointer[OP_POPMV      ] = &CRunBytecode::popmvOpcode;
    _opcodePointer[OP_INCSP      ] = &CRunBytecode::incspOpcode;
    _opcodePointer[OP_DECSP      ] = &CRunBytecode::decspOpcode;
-   _opcodePointer[OP_PUSH0      ] = &CRunBytecode::push0Opcode;
-   _opcodePointer[OP_PUSH1      ] = &CRunBytecode::push1Opcode;
-   _opcodePointer[OP_PUSH2      ] = &CRunBytecode::push2Opcode;
-   _opcodePointer[OP_PUSH3      ] = &CRunBytecode::push3Opcode;
-   _opcodePointer[OP_PUSH4      ] = &CRunBytecode::push4Opcode;
-   _opcodePointer[OP_PUSH5      ] = &CRunBytecode::push5Opcode;
+   _opcodePointer[OP_PUSH_0     ] = &CRunBytecode::push_0Opcode;
+   _opcodePointer[OP_PUSH_1     ] = &CRunBytecode::push_1Opcode;
+   _opcodePointer[OP_PUSH_2     ] = &CRunBytecode::push_2Opcode;
+   _opcodePointer[OP_PUSH_3     ] = &CRunBytecode::push_3Opcode;
+   _opcodePointer[OP_PUSH_4     ] = &CRunBytecode::push_4Opcode;
+   _opcodePointer[OP_PUSH_5     ] = &CRunBytecode::push_5Opcode;
    _opcodePointer[OP_PUSHSV     ] = &CRunBytecode::pushsvOpcode;
    _opcodePointer[OP_PUSHIV     ] = &CRunBytecode::pushivOpcode;
    _opcodePointer[OP_PUSHRV     ] = &CRunBytecode::pushrvOpcode;
@@ -145,10 +143,10 @@ void CRunBytecode::initOpcodePointer()
    _opcodePointer[OP_PUSHBT     ] = &CRunBytecode::pushbtOpcode;
    _opcodePointer[OP_PUSHMT     ] = &CRunBytecode::pushmtOpcode;
 
-   _opcodePointer[OP_INCSP4     ] = &CRunBytecode::incsp4Opcode;
-   _opcodePointer[OP_INCSP8     ] = &CRunBytecode::incsp8Opcode;
-   _opcodePointer[OP_DECSP4     ] = &CRunBytecode::decsp4Opcode;
-   _opcodePointer[OP_DECSP8     ] = &CRunBytecode::decsp8Opcode;
+   _opcodePointer[OP_INCSP_4     ] = &CRunBytecode::incsp_4Opcode;
+   _opcodePointer[OP_INCSP_8     ] = &CRunBytecode::incsp_8Opcode;
+   _opcodePointer[OP_DECSP_4     ] = &CRunBytecode::decsp_4Opcode;
+   _opcodePointer[OP_DECSP_8     ] = &CRunBytecode::decsp_8Opcode;
 
    _opcodePointer[OP_RET        ] = &CRunBytecode::retOpcode;
    _opcodePointer[OP_SALLOC     ] = &CRunBytecode::sallocOpcode;
@@ -334,7 +332,7 @@ void CRunBytecode::pcallOpcode()
 }
 
 
-void CRunBytecode::libcallOpcode()
+void CRunBytecode::lcallOpcode()
 {
    trace ("libcall opcode");
 
@@ -360,7 +358,7 @@ void CRunBytecode::exitOpcode()
 }
 
 
-void CRunBytecode::exit0Opcode()
+void CRunBytecode::exit_0Opcode()
 {
    trace ("exit0 opcode");
 
@@ -370,7 +368,7 @@ void CRunBytecode::exit0Opcode()
 }
 
 
-void CRunBytecode::exit1Opcode()
+void CRunBytecode::exit_1Opcode()
 {
    trace ("exit1 opcode");
 
@@ -947,49 +945,49 @@ void CRunBytecode::decspOpcode()
 }
 
 
-void CRunBytecode::push0Opcode()
+void CRunBytecode::push_0Opcode()
 {
-   trace ("push0 opcode");
+   trace ("pus_h0 opcode");
 
    _dataStack.pushInt(0);
 }
 
 
-void CRunBytecode::push1Opcode()
+void CRunBytecode::push_1Opcode()
 {
-   trace ("push1 opcode");
+   trace ("push_1 opcode");
 
    _dataStack.pushInt(1);
 }
 
 
-void CRunBytecode::push2Opcode()
+void CRunBytecode::push_2Opcode()
 {
-   trace ("push2 opcode");
+   trace ("push_2 opcode");
 
    _dataStack.pushInt(2);
 }
 
 
-void CRunBytecode::push3Opcode()
+void CRunBytecode::push_3Opcode()
 {
-   trace ("push3 opcode");
+   trace ("push_3 opcode");
 
    _dataStack.pushInt(3);
 }
 
 
-void CRunBytecode::push4Opcode()
+void CRunBytecode::push_4Opcode()
 {
-   trace ("push4 opcode");
+   trace ("push_4 opcode");
 
    _dataStack.pushInt(4);
 }
 
 
-void CRunBytecode::push5Opcode()
+void CRunBytecode::push_5Opcode()
 {
-   trace ("push5 opcode");
+   trace ("push_5 opcode");
 
    _dataStack.pushInt(5);
 }
@@ -1067,31 +1065,31 @@ void CRunBytecode::pushmtOpcode()
 }
 
 
-void CRunBytecode::incsp4Opcode()
+void CRunBytecode::incsp_4Opcode()
 {
-   trace ("incsp4 opcode");
+   trace ("incsp_4 opcode");
 
    _dataStack.pushInt(0);
 }
 
-void CRunBytecode::incsp8Opcode()
+void CRunBytecode::incsp_8Opcode()
 {
-   trace ("incsp8 opcode");
+   trace ("incsp_8 opcode");
 
    _dataStack.pushInt(0);
    _dataStack.pushInt(0);
 }
 
-void CRunBytecode::decsp4Opcode()
+void CRunBytecode::decsp_4Opcode()
 {
-   trace ("decsp4 opcode");
+   trace ("decsp_4 opcode");
 
    _dataStack.popInt();
 }
 
-void CRunBytecode::decsp8Opcode()
+void CRunBytecode::decsp_8Opcode()
 {
-   trace ("decsp8 opcode");
+   trace ("decsp_8 opcode");
 
    _dataStack.popInt();
    _dataStack.popInt();

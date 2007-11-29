@@ -12,10 +12,10 @@ proc main
     // imprima( s );
     pushiv s
     pushit
-    pushiv 1
-    libcall imprima
+    push_1
+    lcall imprima
 	
-    exit 0
+    exit_0
 endproc
 
 proc soma

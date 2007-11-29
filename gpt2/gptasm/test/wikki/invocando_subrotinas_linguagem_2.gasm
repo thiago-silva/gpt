@@ -6,21 +6,21 @@ proc main
     // imprima( "Digite um número: " );
     pushsv "Digite um número: "
     pushst
-    pushiv 1
-    libcall imprima
+    push_1
+    lcall imprima
     // x := leia( );
     pushit
-    libcall leia
+    lcall leia
     popiv x
     // imprima( "O número digitado foi ", x );
     pushiv x
     pushit
     pushsv "O número digitado foi "
     pushst
-    pushiv 2
-    libcall imprima
+    push_2
+    lcall imprima
 
-    exit 0
+    exit_0
 endproc
 
 endprogram
