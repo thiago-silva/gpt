@@ -1,16 +1,12 @@
 program exemplo
 
 proc main
-   push_sreg
    pcall soma
-   pop_sreg
 
-   push_sreg
-   push_string "Finalizando..."
-   push_stype
-   push_int 1
+   pushsv "Finalizando..."
+   pushst
+   pushiv 1
    libcall imprima
-   pop_sreg
 
    exit 0
 endproc
@@ -20,13 +16,12 @@ proc soma
 
    isum temp, 2, 4
 
-   push_sreg
-   push_int temp
-   push_itype
-   push_int 1
+   pushiv temp
+   pushit
+   pushiv 1
    libcall imprima
-   pop_sreg
 
+   decsp 4
    ret
 endproc
    

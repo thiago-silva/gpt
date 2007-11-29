@@ -3,9 +3,6 @@ program exemplo
 var x int
 var y int
 
-//    var t1 int
-//    var t2 int
-
 proc main
     var t1 int
     var t2 int
@@ -17,16 +14,14 @@ proc main
     iset y, 20
 	
     // imprima( "x*y+4=", x*y+4 );
-    push_sreg
     imul t1, x, y
     isum t2, t1, 4
-    push_int t2
-    push_itype
-    push_string "x*y+4="
-    push_stype
-    push_int 2
+    pushiv t2
+    pushit
+    pushsv "x*y+4="
+    pushst
+    pushiv 2
     libcall imprima
-    pop_sreg
 	
     exit 0
 endproc

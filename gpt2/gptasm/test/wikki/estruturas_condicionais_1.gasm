@@ -24,14 +24,12 @@ proc main
     proximo:
 
     // imprima( x );
-    push_sreg
-    push_int x
-    push_itype
-    push_int 1
+    pushiv x
+    pushit
+    push1
     libcall imprima
-    pop_sreg
 
-    exit 0
+    exit0
 endproc
 
 endprogram

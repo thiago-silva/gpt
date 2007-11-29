@@ -2,6 +2,7 @@
 
 
 #include "CSymbol.hpp"
+#include "Tools.hpp"
 
 
 CSymbol::CSymbol()
@@ -42,18 +43,7 @@ CSymbol::~CSymbol()
 
 int CSymbol::getTypeSize() const
 {
-   switch(_type) {
-   case INT:
-   case CHAR:
-   case BOOL:
-      return sizeof(int);
-   case REAL:
-      return sizeof(double);
-   case STRING:
-   case MATRIX:
-      return sizeof(void*);
-   }
-   return 0;
+   return ::getTypeSize(_type);
 }
 
 

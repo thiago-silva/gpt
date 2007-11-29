@@ -12,28 +12,24 @@ proc main
     isetv c:4, 20 // *(c + 4 ) := 20
 
     // imprima( "c.x=", c.x );
-    push_sp
     igetv t1, c:0 // t1 := *( c + 0)
-    push t1
-    push_int
-    push "c.x="
-    push_string
-    push_2
-    pcall imprima
-    pop_sp
+    pushiv t1
+    pushit
+    pushsv "c.x="
+    pushst
+    pushiv 2
+    libcall imprima
 
     // imprima( "c.y=", c.y );
-    push_sp
     igetv t1, c:4 // t1 := *(c + 4)
-    push t1
-    push_int
-    push "c.y="
-    push_string
-    push_2
-    pcall imprima
-    pop_sp
+    pushiv t1
+    pushit
+    pushsv "c.y="
+    pushst
+    pushiv 2
+    libcall imprima
 
-    exit_0
+    exit 0
 endproc
 
 endprogram

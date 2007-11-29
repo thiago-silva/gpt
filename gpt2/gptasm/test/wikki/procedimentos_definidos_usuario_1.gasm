@@ -2,11 +2,13 @@ program exemplo
 
 proc main
     // soma( 2, 7 );
-    push_sreg
-    push_int 2
-    push_int 7
+    pushiv 2
+    pushiv 7
     pcall soma
-    pop_sreg
+
+    pushiv 10
+    pushiv 20
+    pcall soma
 
     exit 0
 endproc
@@ -17,21 +19,18 @@ proc soma
 
     var t1 int
 
-//    push_sreg
-//    push_string "A soma é: "
-//    push_stype
-//    push_int 1
-//    libcall imprima
-//    pop_sreg
+    pushsv "A soma é: "
+    pushst
+    pushiv 1
+    libcall imprima
 
     isum t1, x, y
-//    push_sreg
-    push_int t1
-    push_itype
-    push_int 1
+    pushiv t1
+    pushit
+    pushiv 1
     libcall imprima
-//    pop_sreg
 
+    decsp 12
     ret	
 endproc
 

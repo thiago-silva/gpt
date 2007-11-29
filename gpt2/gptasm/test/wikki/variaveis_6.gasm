@@ -7,28 +7,22 @@ proc main
     iset v, false
     iset v, v
 
-    push_sp
-    push true
-    push_bool
-    push_1
-    pcall imprima
-    pop_sp
+    pushiv true
+    pushbt
+    pushiv 1
+    libcall imprima
 
-    push_sp
-    push false
-    push_bool
-    push_1
-    pcall imprima
-    pop_sp
+    pushiv false
+    pushbt
+    pushiv 1
+    libcall imprima
 
-    push_sp
-    push v
-    push_bool
-    push_1
-    pcall imprima
-    pop_sp
+    pushiv v
+    pushbt
+    pushiv 1
+    libcall imprima
 
-    exit_0
+    exit 0
 endproc
 
 endprogram

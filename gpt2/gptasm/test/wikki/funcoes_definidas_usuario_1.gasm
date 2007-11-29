@@ -1,20 +1,21 @@
 program exemplo
 
 proc main
+    var t1 int
     // imprima( "A soma é: ", soma( 2, 7 ) );
-    push_sp
-    push_0 // resultado da função
-    push 7 // empilha 7
-    push 2 // empilha 2
+    pushiv 0 // resultado da função
+    pushiv 2 // empilha 2
+    pushiv 7 // empilha 7
     pcall soma
-    push_int
-    push "A soma é: "
-    push_string
-    push_2
-    pcall imprima
-    pop_sp
-	
-    exit_0
+    popiv t1
+    pushiv t1
+    pushit
+    pushsv "A soma é: "
+    pushst
+    pushiv 2
+    libcall imprima
+
+    exit 0
 endproc
 
 proc soma
@@ -24,6 +25,7 @@ proc soma
 
     isum __result, x, y
 
+    decsp 8 // tamanho dos parametros + variaveis locais - retorno da funcao
     ret
 endproc
 

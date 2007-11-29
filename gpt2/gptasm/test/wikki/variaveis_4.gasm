@@ -12,23 +12,19 @@ proc main
     ssum v, v, "10"
     ssum v, "10", v
 
-    push_sp
-    push v
-    push_string
-    push_1
-    pcall imprima
-    pop_sp
+    pushsv v
+    pushst
+    pushiv 1
+    libcall imprima
 	
-    push_sp
-    push "10"
-    push_string
-    push_1
-    pcall imprima
-    pop_sp
+    pushsv "10"
+    pushst
+    pushiv 1
+    libcall imprima
 	
     sfree v
 
-    exit_0
+    exit 0
 endproc
 
 endprogram

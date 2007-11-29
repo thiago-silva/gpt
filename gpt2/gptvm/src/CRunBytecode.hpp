@@ -31,6 +31,7 @@ private:
    void initOpcodePointer();
    void step();
    void procImprima();
+   void procLeia();
    void setIntData(const int &address, const int &value);
    int  getIntData(const int &address);
    void setStringData(const int &address, const std::string &value);
@@ -38,17 +39,15 @@ private:
    // opcodes
    void invalidOpcode(const std::string &opcode="");
    void nopOpcode();
-   void pushSregOpcode();
-   void popSregOpcode();
-   void pushStringOpcode();
-   void pushSTypeOpcode();
+//   void pushsregOpcode();
+//   void popsregOpcode();
 //   void push1Opcode();
    void pcallOpcode();
    void libcallOpcode();
 //   void exit0Opcode();
    void exitOpcode();
-
-//   OP_EXIT_1,
+   void exit0Opcode();
+   void exit1Opcode();
    void hltOpcode();
 
    void isumOpcode();
@@ -123,32 +122,34 @@ private:
    void jmpOpcode();
    void ifOpcode();
    void ifnotOpcode();
-   void popOpcode();
+   void popsvOpcode();
+   void popivOpcode();
+   void poprvOpcode();
+   void popmvOpcode();
    void incspOpcode();
    void decspOpcode();
+   void push0Opcode();
+   void push1Opcode();
+   void push2Opcode();
+   void push3Opcode();
+   void push4Opcode();
+   void push5Opcode();
+   void pushsvOpcode();
+   void pushivOpcode();
+   void pushrvOpcode();
+   void pushmvOpcode();
 
-//   OP_PUSH_0,
-//   OP_PUSH_2,
-//   OP_PUSH_3,
-//   OP_PUSH_4,
-//   OP_PUSH_5,
-
-   void pushIntOpcode();
-   void pushRealOpcode();
-   void pushCharOpcode();
-   void pushBoolOpcode();
-   void pushMatrixOpcode();
-
-   void pushITypeOpcode();
-   void pushRTypeOpcode();
-   void pushCTypeOpcode();
-   void pushBTypeOpcode();
-   void pushMTypeOpcode();
+   void pushstOpcode();
+   void pushitOpcode();
+   void pushrtOpcode();
+   void pushctOpcode();
+   void pushbtOpcode();
+   void pushmtOpcode();
 
    void incsp4Opcode();
-//   OP_INCSP_8,
+   void incsp8Opcode();
    void decsp4Opcode();
-//   OP_DECSP_8,
+   void decsp8Opcode();
 
    void retOpcode();
    void sallocOpcode();
@@ -171,7 +172,7 @@ private:
    CSymbolTable  _symbolTable;
    CBinString    _globalData;
    CBytecode     _code;
-   OpcodePointer _opcodePointer[ OPCODE_NUMBER ];
+   OpcodePointer _opcodePointer[OPCODE_NUMBER];
    bool          _stop;
    int           _returnCode;
    CDataStack    _dataStack;

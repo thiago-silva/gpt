@@ -1,5 +1,10 @@
 #include "CDataStack.hpp"
 
+#include "Common.hpp"
+
+#include "Tools.hpp"
+
+
 
 #include <iostream>
 
@@ -15,13 +20,12 @@ CDataStack::~CDataStack()
 {
 }
 
-
 void CDataStack::setInt(const int &address, const int &value)
 {
 //   std::cout << "setInt ";
-   if (address & 0x80000000) {
-//      std::cout << "local address sem bit ligado: " << (address & 0x7FFFFFFF) << std::endl;
-      CBinString::setInt(_BS + (address & 0x7FFFFFFF), value);
+   if (IS_LOCAL_ADDRESS(address)) {
+//      std::cout << "local address sem bit ligado: " << ((unsigned int)address & UNSET_BIT_LOCAL) << std::endl;
+      CBinString::setInt(_BS + realAddress(address), value);
    } else {
       std::cout << "ERRO !!! Invocando setInt com global address: " << address << std::endl;
    }
@@ -31,9 +35,9 @@ void CDataStack::setInt(const int &address, const int &value)
 int CDataStack::getInt(const int &address)
 {
 //   std::cout << "getInt ";
-   if (address & 0x80000000) {
-//      std::cout << "local address sem bit ligado: " << (address & 0x7FFFFFFF) << std::endl;
-      return CBinString::getInt(_BS + (address & 0x7FFFFFFF));
+   if (IS_LOCAL_ADDRESS(address)) {
+//      std::cout << "local address sem bit ligado: " << ((unsigned int)address & UNSET_BIT_LOCAL) << std::endl;
+      return CBinString::getInt(_BS + realAddress(address));
    } else {
       std::cout << "ERRO !!! Invocando getInt com global address: " << address << std::endl;
       return -1;

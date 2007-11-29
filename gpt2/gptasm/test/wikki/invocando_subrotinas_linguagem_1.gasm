@@ -1,12 +1,10 @@
 program exemplo
 
 proc main
-    push_sreg
-    push_string "Olá mundo !!!"
-    push_stype
-    push_int 1
+    pushsv "Olá mundo !!!"
+    pushst
+    pushiv 1
     libcall imprima
-    pop_sreg
 
     exit 0
 endproc

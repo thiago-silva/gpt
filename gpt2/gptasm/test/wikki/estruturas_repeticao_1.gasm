@@ -1,10 +1,9 @@
 program exemplo
 
 var x int
-var t1 int
 
 proc main
-//    var t1 int
+    var t1 int
 
     // para x de 1 até 10 faça
     iset x, 1
@@ -13,12 +12,10 @@ proc main
     ifnot t1, proximo
 
     // imprima( x );
-    push_sreg
-    push_int x
-    push_itype
-    push_int 1
+    pushiv x
+    pushit
+    push1
     libcall imprima
-    pop_sreg
 
     // fim-para
     iinc x, 1
@@ -26,7 +23,7 @@ proc main
 
     proximo:
 
-    exit 0
+    exit0
 endproc
 
 endprogram

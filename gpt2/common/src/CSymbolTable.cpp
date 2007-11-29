@@ -1,5 +1,9 @@
 #include "CSymbolTable.hpp"
 
+#include "Common.hpp"
+
+#include "Tools.hpp"
+
 
 CSymbolTable::CSymbolTable()
 {
@@ -34,7 +38,7 @@ CSymbol* CSymbolTable::addProcedure (const std::string &name, const int &type, c
 
 CSymbol* CSymbolTable::addParameter (const std::string &name, const int &type, const int &address)
 {
-   CSymbol *symbol = new CSymbol(CSymbol::LOCAL, name, type, CSymbol::PARAM, address | 0x80000000);
+   CSymbol *symbol = new CSymbol(CSymbol::LOCAL, name, type, CSymbol::PARAM, address|SET_LOCAL_BIT|SET_NEG_BIT);
 
    _symbols.push_back(symbol);
 
@@ -68,7 +72,7 @@ CSymbol* CSymbolTable::addVariable (const int &scope, const std::string &name, c
    if (scope == CSymbol::GLOBAL) {
       symbol = new CSymbol(scope, name, type, CSymbol::VAR, address);
    } else {
-      symbol = new CSymbol(scope, name, type, CSymbol::VAR, address | 0x80000000 );
+      symbol = new CSymbol(scope, name, type, CSymbol::VAR, address | SET_LOCAL_BIT);
    }
 
    _symbols.push_back(symbol);

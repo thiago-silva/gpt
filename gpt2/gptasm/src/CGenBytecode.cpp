@@ -10,6 +10,7 @@
 
 CGenBytecode::CGenBytecode()
    : _currentSP(0)
+//   , _parametersSize(0)
 {
    _opcodes[ "isum"        ] = OP_ISUM;
    _opcodes[ "ssum"        ] = OP_SSUM;
@@ -84,33 +85,33 @@ CGenBytecode::CGenBytecode()
    _opcodes[ "if"          ] = OP_IF;
    _opcodes[ "ifnot"       ] = OP_IFNOT;
 //   _opcodes[ "push"        ] = OP_PUSH;
-   _opcodes[ "pop"         ] = OP_POP;
+   _opcodes[ "popiv"         ] = OP_POPIV;
+   _opcodes[ "poprv"         ] = OP_POPRV;
+   _opcodes[ "popmv"         ] = OP_POPMV;
    _opcodes[ "incsp"       ] = OP_INCSP;
    _opcodes[ "decsp"       ] = OP_DECSP;
-//   _opcodes[ "push_0"      ] = OP_PUSH_0;
-//   _opcodes[ "push_1"      ] = OP_PUSH_1;
-//   _opcodes[ "push_2"      ] = OP_PUSH_2;
-//   _opcodes[ "push_3"      ] = OP_PUSH_3;
-//   _opcodes[ "push_4"      ] = OP_PUSH_4;
-//   _opcodes[ "push_5"      ] = OP_PUSH_5;
-   _opcodes[ "push_int"    ] = OP_PUSH_INT;
-   _opcodes[ "push_string" ] = OP_PUSH_STRING;
-   _opcodes[ "push_real"   ] = OP_PUSH_REAL;
-   _opcodes[ "push_char"   ] = OP_PUSH_CHAR;
-   _opcodes[ "push_bool"   ] = OP_PUSH_BOOL;
-   _opcodes[ "push_matrix" ] = OP_PUSH_MATRIX;
-   _opcodes[ "push_itype"  ] = OP_PUSH_ITYPE;
-   _opcodes[ "push_stype"  ] = OP_PUSH_STYPE;
-   _opcodes[ "push_rtype"  ] = OP_PUSH_RTYPE;
-   _opcodes[ "push_ctype"  ] = OP_PUSH_CTYPE;
-   _opcodes[ "push_btype"  ] = OP_PUSH_BTYPE;
-   _opcodes[ "push_mtype"  ] = OP_PUSH_MTYPE;
-   _opcodes[ "push_sreg"   ] = OP_PUSH_SREG;
-   _opcodes[ "pop_sreg"    ] = OP_POP_SREG;
-   _opcodes[ "incsp_4"     ] = OP_INCSP_4;
-   _opcodes[ "incsp_8"     ] = OP_INCSP_8;
-   _opcodes[ "decsp_4"     ] = OP_DECSP_4;
-   _opcodes[ "decsp_8"     ] = OP_DECSP_8;
+   _opcodes[ "push0"       ] = OP_PUSH0;
+   _opcodes[ "push1"       ] = OP_PUSH1;
+   _opcodes[ "push2"       ] = OP_PUSH2;
+   _opcodes[ "push3"       ] = OP_PUSH3;
+   _opcodes[ "push4"       ] = OP_PUSH4;
+   _opcodes[ "push5"       ] = OP_PUSH5;
+   _opcodes[ "pushiv"      ] = OP_PUSHIV;
+   _opcodes[ "pushsv"      ] = OP_PUSHSV;
+   _opcodes[ "pushrv"      ] = OP_PUSHRV;
+   _opcodes[ "pushmv"      ] = OP_PUSHMV;
+   _opcodes[ "pushit"      ] = OP_PUSHIT;
+   _opcodes[ "pushst"      ] = OP_PUSHST;
+   _opcodes[ "pushrt"      ] = OP_PUSHRT;
+   _opcodes[ "pushct"      ] = OP_PUSHCT;
+   _opcodes[ "pushbt"      ] = OP_PUSHBT;
+   _opcodes[ "pushmt"      ] = OP_PUSHMT;
+   _opcodes[ "pushsreg"    ] = OP_PUSHSREG;
+   _opcodes[ "popsreg"     ] = OP_POPSREG;
+   _opcodes[ "incsp4"      ] = OP_INCSP4;
+   _opcodes[ "incsp8"      ] = OP_INCSP8;
+   _opcodes[ "decsp4"      ] = OP_DECSP4;
+   _opcodes[ "decsp8"      ] = OP_DECSP8;
    _opcodes[ "pcall"       ] = OP_PCALL;
    _opcodes[ "ret"         ] = OP_RET;
    _opcodes[ "libcall"     ] = OP_LIBCALL;
@@ -129,8 +130,8 @@ CGenBytecode::CGenBytecode()
    _opcodes[ "mgetsize1"   ] = OP_MGETSIZE1;
    _opcodes[ "mgetsize2"   ] = OP_MGETSIZE2;
    _opcodes[ "nop"         ] = OP_NOP;
-//   _opcodes[ "exit_0"      ] = OP_EXIT_0;
-//   _opcodes[ "exit_1"      ] = OP_EXIT_1;
+   _opcodes[ "exit0"       ] = OP_EXIT0;
+   _opcodes[ "exit1"       ] = OP_EXIT1;
    _opcodes[ "hlt"         ] = OP_HLT;
    _opcodes[ "exit"        ] = OP_EXIT;
 }
@@ -149,6 +150,8 @@ void CGenBytecode::initProcedure(const std::string &procedureName, const bool &h
    _currentProcedure = procedureName;
    _currentSP = 0;
     registryLabel(procedureName);
+   _parameters.clear();
+//   _parametersSize = 0;
 }
 
 
@@ -156,6 +159,7 @@ void CGenBytecode::finishProcedure()
 {
    _currentProcedure.clear();
    _currentSP = 0;
+//   _parametersSize = 0;
    _symbolTable.clearLocalSymbols();
    // TODO: delete na procedure ???
 }
@@ -182,10 +186,41 @@ void CGenBytecode::makeVarDefinition(const std::string &lexeme, const int &type)
 
 void CGenBytecode::makeParDefinition(const std::string &lexeme, const int &type)
 {
-   CSymbol *symbol = _symbolTable.addParameter(lexeme, type, _currentSP);
-   std::cout << "par " << lexeme << " address " << _currentSP << std::endl;
-   _currentSP += symbol->getTypeSize();
+   _parameters.push_back(std::pair<std::string,int>(lexeme, type));
+//   _parametersSize += getTypeSize(type);
+//   CSymbol *symbol = _symbolTable.addParameter(lexeme, type, _currentSP);
+//   std::cout << "par " << lexeme << " address " << _currentSP << std::endl;
+//   _currentSP += symbol->getTypeSize();
 }
+
+
+void CGenBytecode::finishParDefinition()
+{
+   _currentSP = 0;
+   for (std::list<std::pair<std::string,int> >::reverse_iterator par = _parameters.rbegin();
+         par != _parameters.rend(); par++) {
+      _currentSP -= getTypeSize(par->second);
+      CSymbol *symbol = _symbolTable.addParameter(par->first, par->second, abs(_currentSP));
+//      std::cout << "par " << par->first << " address " << _currentSP << std::endl;
+      std::cout << "param=" << symbol->getName() << " address=" << symbol->getAddress() << std::endl;
+      std::cout << "\t" << realAddressString(symbol->getAddress()) << std::endl;
+   }
+
+   _currentSP = 0;
+
+//   if (_parametersSize != 0) {
+//      std::cout << "_parametersSize != 0 !!!" << std::endl;
+//      abort();
+//   }
+}
+
+
+//void CGenBytecode::makeParDefinition(const std::string &lexeme, const int &type)
+//{
+//   CSymbol *symbol = _symbolTable.addParameter(lexeme, type, _currentSP);
+//   std::cout << "par " << lexeme << " address " << _currentSP << std::endl;
+//   _currentSP += symbol->getTypeSize();
+//}
 
 
 void CGenBytecode::registryLabel(const std::string &labelName)

@@ -39,17 +39,14 @@ void CRunBytecode::initOpcodePointer()
    }
 
    _opcodePointer[OP_NOP        ] = &CRunBytecode::nopOpcode;
-   _opcodePointer[OP_PUSH_SREG  ] = &CRunBytecode::pushSregOpcode;
-   _opcodePointer[OP_POP_SREG   ] = &CRunBytecode::popSregOpcode;
-//   _opcodePointer[OP_PUSH       ] = &CRunBytecode::pushOpcode;
-   _opcodePointer[OP_PUSH_STRING] = &CRunBytecode::pushStringOpcode;
-//   _opcodePointer[OP_PUSH_1     ] = &CRunBytecode::push1Opcode;
+//   _opcodePointer[OP_PUSHSREG   ] = &CRunBytecode::pushsregOpcode;
+//   _opcodePointer[OP_POPSREG    ] = &CRunBytecode::popsregOpcode;
    _opcodePointer[OP_PCALL      ] = &CRunBytecode::pcallOpcode;
    _opcodePointer[OP_LIBCALL    ] = &CRunBytecode::libcallOpcode;
-//   _opcodePointer[OP_EXIT_0     ] = &CRunBytecode::exit0Opcode;
    _opcodePointer[OP_EXIT       ] = &CRunBytecode::exitOpcode;
+   _opcodePointer[OP_EXIT0      ] = &CRunBytecode::exit0Opcode;
+   _opcodePointer[OP_EXIT1      ] = &CRunBytecode::exit1Opcode;
 
-//   OP_EXIT_1,
    _opcodePointer[OP_HLT        ] = &CRunBytecode::hltOpcode;
 
    _opcodePointer[OP_ISUM       ] = &CRunBytecode::isumOpcode;
@@ -124,33 +121,34 @@ void CRunBytecode::initOpcodePointer()
    _opcodePointer[OP_JMP        ] = &CRunBytecode::jmpOpcode;
    _opcodePointer[OP_IF         ] = &CRunBytecode::ifOpcode;
    _opcodePointer[OP_IFNOT      ] = &CRunBytecode::ifnotOpcode;
-   _opcodePointer[OP_POP        ] = &CRunBytecode::popOpcode;
+   _opcodePointer[OP_POPSV      ] = &CRunBytecode::popsvOpcode;
+   _opcodePointer[OP_POPIV      ] = &CRunBytecode::popivOpcode;
+   _opcodePointer[OP_POPRV      ] = &CRunBytecode::poprvOpcode;
+   _opcodePointer[OP_POPMV      ] = &CRunBytecode::popmvOpcode;
    _opcodePointer[OP_INCSP      ] = &CRunBytecode::incspOpcode;
    _opcodePointer[OP_DECSP      ] = &CRunBytecode::decspOpcode;
+   _opcodePointer[OP_PUSH0      ] = &CRunBytecode::push0Opcode;
+   _opcodePointer[OP_PUSH1      ] = &CRunBytecode::push1Opcode;
+   _opcodePointer[OP_PUSH2      ] = &CRunBytecode::push2Opcode;
+   _opcodePointer[OP_PUSH3      ] = &CRunBytecode::push3Opcode;
+   _opcodePointer[OP_PUSH4      ] = &CRunBytecode::push4Opcode;
+   _opcodePointer[OP_PUSH5      ] = &CRunBytecode::push5Opcode;
+   _opcodePointer[OP_PUSHSV     ] = &CRunBytecode::pushsvOpcode;
+   _opcodePointer[OP_PUSHIV     ] = &CRunBytecode::pushivOpcode;
+   _opcodePointer[OP_PUSHRV     ] = &CRunBytecode::pushrvOpcode;
+   _opcodePointer[OP_PUSHMV     ] = &CRunBytecode::pushmvOpcode;
 
-//   OP_PUSH_0,
-//   OP_PUSH_2,
-//   OP_PUSH_3,
-//   OP_PUSH_4,
-//   OP_PUSH_5,
+   _opcodePointer[OP_PUSHST     ] = &CRunBytecode::pushstOpcode;
+   _opcodePointer[OP_PUSHIT     ] = &CRunBytecode::pushitOpcode;
+   _opcodePointer[OP_PUSHRT     ] = &CRunBytecode::pushrtOpcode;
+   _opcodePointer[OP_PUSHCT     ] = &CRunBytecode::pushctOpcode;
+   _opcodePointer[OP_PUSHBT     ] = &CRunBytecode::pushbtOpcode;
+   _opcodePointer[OP_PUSHMT     ] = &CRunBytecode::pushmtOpcode;
 
-   _opcodePointer[OP_PUSH_INT   ] = &CRunBytecode::pushIntOpcode;
-   _opcodePointer[OP_PUSH_REAL  ] = &CRunBytecode::pushRealOpcode;
-   _opcodePointer[OP_PUSH_CHAR  ] = &CRunBytecode::pushCharOpcode;
-   _opcodePointer[OP_PUSH_BOOL  ] = &CRunBytecode::pushBoolOpcode;
-   _opcodePointer[OP_PUSH_MATRIX] = &CRunBytecode::pushMatrixOpcode;
-
-   _opcodePointer[OP_PUSH_STYPE ] = &CRunBytecode::pushSTypeOpcode;
-   _opcodePointer[OP_PUSH_ITYPE ] = &CRunBytecode::pushITypeOpcode;
-   _opcodePointer[OP_PUSH_RTYPE ] = &CRunBytecode::pushRTypeOpcode;
-   _opcodePointer[OP_PUSH_CTYPE ] = &CRunBytecode::pushCTypeOpcode;
-   _opcodePointer[OP_PUSH_BTYPE ] = &CRunBytecode::pushBTypeOpcode;
-   _opcodePointer[OP_PUSH_MTYPE ] = &CRunBytecode::pushMTypeOpcode;
-
-   _opcodePointer[OP_INCSP_4    ] = &CRunBytecode::incsp4Opcode;
-//   OP_INCSP_8,
-   _opcodePointer[OP_DECSP_4    ] = &CRunBytecode::decsp4Opcode;
-//   OP_DECSP_8,
+   _opcodePointer[OP_INCSP4     ] = &CRunBytecode::incsp4Opcode;
+   _opcodePointer[OP_INCSP8     ] = &CRunBytecode::incsp8Opcode;
+   _opcodePointer[OP_DECSP4     ] = &CRunBytecode::decsp4Opcode;
+   _opcodePointer[OP_DECSP8     ] = &CRunBytecode::decsp8Opcode;
 
    _opcodePointer[OP_RET        ] = &CRunBytecode::retOpcode;
    _opcodePointer[OP_SALLOC     ] = &CRunBytecode::sallocOpcode;
@@ -225,7 +223,8 @@ void CRunBytecode::procImprima()
             std::cout << _dataStack.popInt();
             break;
          case CSymbol::CHAR:
-            std::cout << (char)_dataStack.popInt();
+//            std::cout << (char)_dataStack.popInt();
+            std::cout << "char [" << (int)_dataStack.popInt() << "]";
             break;
          case CSymbol::BOOL:
             boolValue = _dataStack.popInt();
@@ -241,6 +240,39 @@ void CRunBytecode::procImprima()
             std::cout << "Tipo ainda nao suportado !!!" << std::endl;
             abort();
       }
+   }
+   std::cout << std::endl;
+}
+
+
+void CRunBytecode::procLeia()
+{
+   int type = _dataStack.popInt();
+   int iValue = 0;
+   switch (type) {
+//      case CSymbol::STRING:
+//         _dataStack.pushString(std::cin);
+//         break;
+      case CSymbol::INT:
+         std::cin >> iValue;
+         _dataStack.pushInt(iValue);
+         break;
+//      case CSymbol::CHAR:
+//         std::cout << (char)_dataStack.popInt();
+//         break;
+//      case CSymbol::BOOL:
+//         boolValue = _dataStack.popInt();
+//         if (boolValue == 0) {
+//            std::cout << "false";
+//         } else {
+//            std::cout << "true";
+//         }
+//         break;
+      case CSymbol::REAL:
+      case CSymbol::MATRIX:
+      default:
+         std::cout << "Tipo ainda nao suportado !!!" << std::endl;
+         abort();
    }
    std::cout << std::endl;
 }
@@ -261,48 +293,39 @@ void CRunBytecode::nopOpcode()
    // nothing to do
 }
 
-void CRunBytecode::pushSregOpcode()
-{
-   trace ("push_sreg opcode");
+//void CRunBytecode::pushsregOpcode()
+//{
+//   invalidOpcode(__FUNCTION__);
+//   trace ("pushsreg opcode");
+//
+//   _executionStack.push(_dataStack.getBS());
+//   _executionStack.push(_dataStack.getSP());
+//}
 
-   _executionStack.push(_dataStack.getBS());
-   _executionStack.push(_dataStack.getSP());
-}
-
-void CRunBytecode::popSregOpcode()
-{
-   trace ("pop_sreg opcode");
-
-   _dataStack.setSP(_executionStack.top());
-   _executionStack.pop();
-
-   _dataStack.setBS(_executionStack.top());
-   _executionStack.pop();
-}
-
-
-void CRunBytecode::pushStringOpcode()
-{
-   trace ("push_string opcode");
-
-   int address = _code.fetchInt();
-
-   _dataStack.pushInt(address);
-}
-
-void CRunBytecode::pushSTypeOpcode()
-{
-   trace ("push_stype opcode");
-
-   _dataStack.pushInt(CSymbol::STRING);
-}
+//void CRunBytecode::popsregOpcode()
+//{
+//   invalidOpcode(__FUNCTION__);
+//   trace ("popsreg opcode");
+//
+//   _dataStack.setSP(_executionStack.top());
+//   _executionStack.pop();
+//
+//   _dataStack.setBS(_executionStack.top());
+//   _executionStack.pop();
+//
+//   // Ajusta o tamanho correto de _dataStack
+//   _dataStack.resize(_dataStack.getSP());
+//}
 
 
 void CRunBytecode::pcallOpcode()
 {
    trace ("pcall opcode");
 
-   _dataStack.setBS(_executionStack.top()); // TODO: verificar melhor isso...
+   _executionStack.push(_dataStack.getBS());
+//   _executionStack.push(_dataStack.getSP());
+
+   _dataStack.setBS(_dataStack.getSP());
 
    int address = _code.fetchInt();
 
@@ -319,6 +342,8 @@ void CRunBytecode::libcallOpcode()
 
    if (_globalData.getCString(address) == "imprima") {
       procImprima();
+   } else if (_globalData.getCString(address) == "leia") {
+      procLeia();
    } else {
       error("libcall invocando subrotina desconhecida !!!");
    }
@@ -330,6 +355,26 @@ void CRunBytecode::exitOpcode()
    trace ("exit opcode");
 
    _returnCode = getIntData(_code.fetchInt());
+
+   _stop = true;
+}
+
+
+void CRunBytecode::exit0Opcode()
+{
+   trace ("exit0 opcode");
+
+   _returnCode = 0;
+
+   _stop = true;
+}
+
+
+void CRunBytecode::exit1Opcode()
+{
+   trace ("exit1 opcode");
+
+   _returnCode = 1;
 
    _stop = true;
 }
@@ -738,7 +783,7 @@ void CRunBytecode::isetOpcode()
 
 void CRunBytecode::setIntData(const int &address, const int &value)
 {
-   if (address & 0x80000000) {
+   if (IS_LOCAL_ADDRESS(address)) {
       _dataStack.setInt(address, value);
    } else {
 //      std::cout << "setIntData global address: " << address << std::endl;
@@ -749,7 +794,7 @@ void CRunBytecode::setIntData(const int &address, const int &value)
 
 int CRunBytecode::getIntData(const int &address)
 {
-   if (address & 0x80000000) {
+   if (IS_LOCAL_ADDRESS(address)) {
       return _dataStack.getInt(address);
    } else {
 //      std::cout << "global address: " << address << std::endl;
@@ -760,7 +805,7 @@ int CRunBytecode::getIntData(const int &address)
 
 void CRunBytecode::setStringData(const int &address, const std::string &value)
 {
-   if (address & 0x80000000) {
+   if (IS_LOCAL_ADDRESS(address)) {
       _dataStack.setCString(address, value);
    } else {
 //      std::cout << "setCStringData global address: " << address << std::endl;
@@ -771,7 +816,7 @@ void CRunBytecode::setStringData(const int &address, const std::string &value)
 
 std::string CRunBytecode::getStringData(const int &address)
 {
-   if (address & 0x80000000) {
+   if (IS_LOCAL_ADDRESS(address)) {
       return _dataStack.getCString(address);
    } else {
 //      std::cout << "global address: " << address << std::endl;
@@ -858,7 +903,26 @@ void CRunBytecode::ifnotOpcode()
    }
 }
 
-void CRunBytecode::popOpcode()
+void CRunBytecode::popsvOpcode()
+{
+   invalidOpcode(__FUNCTION__);
+}
+
+void CRunBytecode::popivOpcode()
+{
+   trace ("popiv opcode");
+
+   int address = _code.fetchInt();
+
+   setIntData(address, _dataStack.popInt());
+}
+
+void CRunBytecode::poprvOpcode()
+{
+   invalidOpcode(__FUNCTION__);
+}
+
+void CRunBytecode::popmvOpcode()
 {
    invalidOpcode(__FUNCTION__);
 }
@@ -883,76 +947,121 @@ void CRunBytecode::decspOpcode()
 }
 
 
-//   OP_PUSH_0,
-//   OP_PUSH_2,
-//   OP_PUSH_3,
-//   OP_PUSH_4,
-//   OP_PUSH_5,
-
-void CRunBytecode::pushIntOpcode()
+void CRunBytecode::push0Opcode()
 {
-   trace ("push_int opcode");
+   trace ("push0 opcode");
+
+   _dataStack.pushInt(0);
+}
+
+
+void CRunBytecode::push1Opcode()
+{
+   trace ("push1 opcode");
+
+   _dataStack.pushInt(1);
+}
+
+
+void CRunBytecode::push2Opcode()
+{
+   trace ("push2 opcode");
+
+   _dataStack.pushInt(2);
+}
+
+
+void CRunBytecode::push3Opcode()
+{
+   trace ("push3 opcode");
+
+   _dataStack.pushInt(3);
+}
+
+
+void CRunBytecode::push4Opcode()
+{
+   trace ("push4 opcode");
+
+   _dataStack.pushInt(4);
+}
+
+
+void CRunBytecode::push5Opcode()
+{
+   trace ("push5 opcode");
+
+   _dataStack.pushInt(5);
+}
+
+
+void CRunBytecode::pushsvOpcode()
+{
+   trace ("pushsv opcode");
+
+   int address = _code.fetchInt();
+
+   _dataStack.pushInt(address);
+}
+
+
+void CRunBytecode::pushivOpcode()
+{
+   trace ("pushiv opcode");
 
    int address = _code.fetchInt();
 
    _dataStack.pushInt(getIntData(address));
 }
 
-void CRunBytecode::pushRealOpcode()
+void CRunBytecode::pushrvOpcode()
 {
-   trace ("push_real opcode");
+   trace ("pushrv opcode");
 
    invalidOpcode(__FUNCTION__);
 }
 
-void CRunBytecode::pushCharOpcode()
-{
-   trace ("push_char opcode");
-
-   invalidOpcode(__FUNCTION__);
-}
-
-void CRunBytecode::pushBoolOpcode()
-{
-   trace ("push_bool opcode");
-
-   invalidOpcode(__FUNCTION__);
-}
-
-void CRunBytecode::pushMatrixOpcode()
+void CRunBytecode::pushmvOpcode()
 {
    invalidOpcode(__FUNCTION__);
 }
 
-void CRunBytecode::pushITypeOpcode()
+void CRunBytecode::pushstOpcode()
 {
-   trace ("push_itype opcode");
+   trace ("pushst opcode");
+
+   _dataStack.pushInt(CSymbol::STRING);
+}
+
+void CRunBytecode::pushitOpcode()
+{
+   trace ("pushit opcode");
 
    _dataStack.pushInt(CSymbol::INT);
 }
 
-void CRunBytecode::pushRTypeOpcode()
+void CRunBytecode::pushrtOpcode()
 {
-   trace ("push_rtype opcode");
+   trace ("pushrt opcode");
 
    _dataStack.pushInt(CSymbol::REAL);
 }
 
-void CRunBytecode::pushCTypeOpcode()
+void CRunBytecode::pushctOpcode()
 {
-   trace ("push_ctype opcode");
+   trace ("pushct opcode");
 
    _dataStack.pushInt(CSymbol::CHAR);
 }
 
-void CRunBytecode::pushBTypeOpcode()
+void CRunBytecode::pushbtOpcode()
 {
-   trace ("push_btype opcode");
+   trace ("pushbt opcode");
 
    _dataStack.pushInt(CSymbol::BOOL);
 }
 
-void CRunBytecode::pushMTypeOpcode()
+void CRunBytecode::pushmtOpcode()
 {
    invalidOpcode(__FUNCTION__);
 }
@@ -960,21 +1069,33 @@ void CRunBytecode::pushMTypeOpcode()
 
 void CRunBytecode::incsp4Opcode()
 {
-   trace ("incsp_4 opcode");
+   trace ("incsp4 opcode");
 
    _dataStack.pushInt(0);
 }
 
-//   OP_INCSP_8,
+void CRunBytecode::incsp8Opcode()
+{
+   trace ("incsp8 opcode");
+
+   _dataStack.pushInt(0);
+   _dataStack.pushInt(0);
+}
 
 void CRunBytecode::decsp4Opcode()
 {
-   trace ("decsp_4 opcode");
+   trace ("decsp4 opcode");
 
    _dataStack.popInt();
 }
 
-//   OP_DECSP_8,
+void CRunBytecode::decsp8Opcode()
+{
+   trace ("decsp8 opcode");
+
+   _dataStack.popInt();
+   _dataStack.popInt();
+}
 
 void CRunBytecode::retOpcode()
 {
@@ -982,6 +1103,15 @@ void CRunBytecode::retOpcode()
 
    _code.setIP(_executionStack.top());
    _executionStack.pop();
+
+//   _dataStack.setSP(_executionStack.top());
+//   _executionStack.pop();
+
+   _dataStack.setBS(_executionStack.top());
+   _executionStack.pop();
+
+//   // Ajusta o tamanho correto de _dataStack
+//   _dataStack.resize(_dataStack.getSP());
 }
 
 void CRunBytecode::sallocOpcode()

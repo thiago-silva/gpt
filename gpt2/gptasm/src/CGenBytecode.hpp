@@ -19,6 +19,7 @@ public:
    void finishProcedure();
    void makeVarDefinition(const std::string &lexeme, const int &type);
    void makeParDefinition(const std::string &lexeme, const int &type);
+   void finishParDefinition();
    void registryLabel(const std::string &labelName);
    void addOpcode(const std::string &mn);
    void addAddress(const std::string &id, const int &category, const int &type);
@@ -34,8 +35,10 @@ private:
    std::map<std::string,char> _opcodes;
    std::string                _currentProcedure;
    int                        _currentSP;
+//   int                        _parametersSize;
    std::list<std::pair<std::string, int> > _unsolvedLabels;
    std::map<std::string, int> _solvedLabels;
+   std::list<std::pair<std::string, int> > _parameters;
 };
 
 #endif

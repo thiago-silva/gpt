@@ -27,14 +27,6 @@ options {
 {  
    public:
       CGenBytecode bytecode;
-      void declareVar(const std::string& lexeme, int type)
-      {
-         bytecode.makeVarDefinition( lexeme, type );
-      }
-      void declareParameter(const std::string& lexeme, int type)
-      {
-         bytecode.makeParDefinition( lexeme, type );
-      }
       antlr::RefToken getLastToken()
       {
          return LT(0);
@@ -86,7 +78,7 @@ options {
   char tk_type;
 }
   : "var" tk_id:T_ID tk_type=primitive_type
-    { declareVar(tk_id->getText(), tk_type); }
+    { bytecode.makeVarDefinition(tk_id->getText(), tk_type); }
   ;
 
 //--------------------------------
@@ -112,6 +104,7 @@ options {
    tk_id:T_ID
     { bytecode.initProcedure(tk_id->getText(), false, 0, std::vector<CSymbol>()); }
     (parameter_declaration)*
+    { bytecode.finishParDefinition(); }
     (var_declaration)*
     code_block
     { bytecode.finishProcedure(); }
@@ -125,7 +118,7 @@ options {
   int tk_type;
 }
   : "param" ("ref")? tk_id:T_ID tk_type=primitive_type
-    { declareParameter( tk_id->getText(), tk_type ); }
+    { bytecode.makeParDefinition(tk_id->getText(), tk_type); }
   ;
 
 //#####################
@@ -245,23 +238,24 @@ options {
 //--------------------
   mn_chamada_subrotina
 //--------------------
-   :  ("push_int"|"push_string"|"push_real"|"push_char"|"push_bool"|"push_matrix")
+   :  ("pushiv"|"pushsv"|"pushrv"|"pushmv")
       {bytecode.addOpcode(getLastTokenText());}
       element
-   |  ("push_itype"|"push_stype"|"push_rtype"|"push_ctype"|"push_btype"|"push_mtype")
+   |  ("pushit"|"pushst"|"pushrt"|"pushct"|"pushbt"|"pushmt")
       {bytecode.addOpcode(getLastTokenText());}
-   |  "pop"
+//   |  "pop"
+   |  ("popiv"|"popsv"|"poprv"|"popmv")
       {bytecode.addOpcode(getLastTokenText());}
       identifier
    |  ("incsp"|"decsp")
       {bytecode.addOpcode(getLastTokenText());}
       T_INT_VALUE
       { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
-//   |  ("push_0"|"push_1"|"push_2"|"push_3"|"push_4"|"push_5")
-//      {bytecode.addOpcode(getLastTokenText());}
-   |  ("push_sreg"|"pop_sreg")
+   |  ("push0"|"push1"|"push2"|"push3"|"push4"|"push5")
       {bytecode.addOpcode(getLastTokenText());}
-   |  ("incsp_4"|"incsp_8"|"decsp_4"|"decsp_8")
+//   |  ("pushsreg"|"popsreg")
+//      {bytecode.addOpcode(getLastTokenText());}
+   |  ("incsp4"|"incsp8"|"decsp4"|"decsp8")
       {bytecode.addOpcode(getLastTokenText());}
    |  "pcall"
       {bytecode.addOpcode(getLastTokenText());}
@@ -337,8 +331,7 @@ options {
 //-----------
   mn_execucao
 //-----------
-//   :   ("nop"|"exit_0"|"exit_1"|"hlt")
-   :   ("nop"|"hlt")
+   :   ("nop"|"hlt"|"exit0"|"exit1")
       {bytecode.addOpcode(getLastTokenText());}
    |   "exit"
       {bytecode.addOpcode(getLastTokenText());}

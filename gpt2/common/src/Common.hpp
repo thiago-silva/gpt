@@ -1,5 +1,28 @@
-#ifndef GPT_COMMON
-#define GPT_COMMON
+#ifndef GPT_COMMON_HPP
+#define GPT_COMMON_HPP
+
+/*
+Mapa de bits para o endereco:
+31: Nao utilizado :-)
+30: Ligado indica endereco local, desligado indica endereco global
+29: Ligado indica endereco negativo, desligado indica endereco positivo
+28..0: valor do endereco
+*/
+
+//const int SET_LOCAL_BIT   = 0x80000000;
+//const int UNSET_LOCAL_BIT = 0x3FFFFFFF;
+
+const int SET_LOCAL_BIT   = 0x40000000; // 01000000 (binario)
+const int UNSET_LOCAL_BIT = 0xBFFFFFFF; // 10111111 (binario)
+
+const int SET_NEG_BIT     = 0x20000000; // 00100000 (binario)
+const int UNSET_NEG_BIT   = 0xDFFFFFFF; // 11011111 (binario)
+
+#define IS_LOCAL_ADDRESS(address) \
+   (address) & SET_LOCAL_BIT
+
+#define IS_NEG_ADDRESS(address) \
+   (address) & SET_NEG_BIT
 
 enum opcode {
    OP_NOP         = 0,
@@ -77,22 +100,18 @@ enum opcode {
    OP_JMP         = 72,
    OP_IF          = 73,
    OP_IFNOT       = 74,
-//   OP_PUSH = 75,
-   OP_POP         = 76,
    OP_INCSP       = 77,
    OP_DECSP       = 78,
-   OP_PUSH_INT    = 79,
-   OP_PUSH_STRING = 80,
-   OP_PUSH_REAL   = 81,
-   OP_PUSH_CHAR   = 82,
-   OP_PUSH_BOOL   = 83,
-   OP_PUSH_MATRIX = 84,
-   OP_PUSH_SREG   = 85,
-   OP_POP_SREG    = 86,
-   OP_INCSP_4     = 87,
-   OP_INCSP_8     = 88,
-   OP_DECSP_4     = 89,
-   OP_DECSP_8     = 90,
+   OP_PUSHIV      = 79,
+   OP_PUSHSV      = 80,
+   OP_PUSHRV      = 81,
+   OP_PUSHMV      = 84,
+   OP_PUSHSREG    = 85,
+   OP_POPSREG     = 86,
+   OP_INCSP4      = 87,
+   OP_INCSP8      = 88,
+   OP_DECSP4      = 89,
+   OP_DECSP8      = 90,
    OP_PCALL       = 91,
    OP_RET         = 92,
    OP_LIBCALL     = 93,
@@ -110,13 +129,25 @@ enum opcode {
    OP_MCOPY       = 105,
    OP_MGETSIZE1   = 106,
    OP_MGETSIZE2   = 107,
-   OP_PUSH_ITYPE  = 108,
-   OP_PUSH_STYPE  = 109,
-   OP_PUSH_RTYPE  = 110,
-   OP_PUSH_CTYPE  = 111,
-   OP_PUSH_BTYPE  = 112,
-   OP_PUSH_MTYPE  = 113,
-   OPCODE_NUMBER  = 113
+   OP_PUSHIT      = 108,
+   OP_PUSHST      = 109,
+   OP_PUSHRT      = 110,
+   OP_PUSHCT      = 111,
+   OP_PUSHBT      = 112,
+   OP_PUSHMT      = 113,
+   OP_POPIV       = 114,
+   OP_POPRV       = 115,
+   OP_POPSV       = 116,
+   OP_POPMV       = 117,
+   OP_PUSH0       = 118,
+   OP_PUSH1       = 119,
+   OP_PUSH2       = 120,
+   OP_PUSH3       = 121,
+   OP_PUSH4       = 122,
+   OP_PUSH5       = 123,
+   OP_EXIT0       = 124,
+   OP_EXIT1       = 125,
+   OPCODE_NUMBER  = 125
 };
 
 #endif
