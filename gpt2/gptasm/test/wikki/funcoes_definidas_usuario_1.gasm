@@ -4,8 +4,8 @@ proc main
     var t1 int
     // imprima( "A soma é: ", soma( 2, 7 ) );
     push_0 // resultado da função
-    pushiv 2 // empilha 2
     pushiv 7 // empilha 7
+    pushiv 2 // empilha 2
     pcall soma
     popiv t1
     pushiv t1

@@ -2,12 +2,12 @@ program exemplo
 
 proc main
     // soma( 2, 7 );
-    pushiv 2
     pushiv 7
+    pushiv 2
     pcall soma
 
-    pushiv 10
     pushiv 20
+    pushiv 10
     pcall soma
 
     exit_0
@@ -19,15 +19,12 @@ proc soma
 
     var t1 int
 
-    pushsv "A soma é: "
-    pushst
-    push_1
-    lcall imprima
-
     isum t1, x, y
     pushiv t1
     pushit
-    push_1
+    pushsv "A soma é: "
+    pushst
+    push_2
     lcall imprima
 
     decsp 12

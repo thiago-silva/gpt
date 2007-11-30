@@ -1,0 +1,69 @@
+program exemplo
+
+var x int
+
+proc main
+    // imprima( "Digite o número para calcular o fatorial:" );
+    pushsv "Digite o número para calcular o fatorial:"
+    pushst
+    push_1
+    lcall imprima
+
+    // x := leia( );
+    pushit
+    lcall leia
+    popiv x
+
+    // imprima( "Fatorial de ", x, " é ", fatorial( x ) );
+    push_0 // retorno da função
+    pushiv x
+    pcall fatorial
+    pushit
+    pushsv " é "
+    pushst
+    pushiv x
+    pushit
+    pushsv "Fatorial de "
+    pushst
+    push_4
+    lcall imprima
+
+    exit_0
+endproc
+
+proc fatorial
+    param __result int
+    param z int
+	
+    var t1 int
+    var t2 int
+
+//    se z = 1 então
+    ieq t1, z, 1
+    ifnot t1, senao
+        // retorne 1;
+        iset __result, 1
+        decsp 12
+        ret
+        jmp proximo
+    // senão
+    senao:
+        // retorne z * fatorial( z - 1 );
+        isub t1, z, 1
+        push_0 // retorno da função
+        pushiv t1
+        pcall fatorial
+        popiv t1
+        imul t2, z, t1
+        iset __result, t2
+        decsp 12
+        ret
+    // fim-se
+    proximo:
+
+    decsp 12
+    ret
+endproc
+
+endprogram
+

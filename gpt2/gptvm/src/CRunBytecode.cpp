@@ -208,24 +208,30 @@ void CRunBytecode::error(const std::string &message)
 
 void CRunBytecode::procImprima()
 {
-   int argNumber = _dataStack.popInt();
+   int address = sizeof(int);
+   int argNumber = _dataStack.getInt(address|SET_LOCAL_BIT|SET_NEG_BIT);
 
    for (int arg=0; arg < argNumber; arg++) {
-      int type = _dataStack.popInt();
+      address += sizeof(int);
+      int type = _dataStack.getInt(address|SET_LOCAL_BIT|SET_NEG_BIT);
       int boolValue;
       switch (type) {
          case CSymbol::STRING:
-            std::cout << getStringData(_dataStack.popInt());
+            address += sizeof(int);
+            std::cout << getStringData(_dataStack.getInt(address|SET_LOCAL_BIT|SET_NEG_BIT));
             break;
          case CSymbol::INT:
-            std::cout << _dataStack.popInt();
+            address += sizeof(int);
+            std::cout << _dataStack.getInt(address|SET_LOCAL_BIT|SET_NEG_BIT);
             break;
          case CSymbol::CHAR:
 //            std::cout << (char)_dataStack.popInt();
-            std::cout << "char [" << (int)_dataStack.popInt() << "]";
+            address += sizeof(int);
+            std::cout << "char [" << (int)_dataStack.getInt(address|SET_LOCAL_BIT|SET_NEG_BIT) << "]";
             break;
          case CSymbol::BOOL:
-            boolValue = _dataStack.popInt();
+            address += sizeof(int);
+            boolValue = _dataStack.getInt(address|SET_LOCAL_BIT|SET_NEG_BIT);
             if (boolValue == 0) {
                std::cout << "false";
             } else {
@@ -240,7 +246,45 @@ void CRunBytecode::procImprima()
       }
    }
    std::cout << std::endl;
+   _dataStack.popBytes(address);
 }
+
+
+//void CRunBytecode::procImprima()
+//{
+//   int argNumber = _dataStack.popInt();
+//
+//   for (int arg=0; arg < argNumber; arg++) {
+//      int type = _dataStack.popInt();
+//      int boolValue;
+//      switch (type) {
+//         case CSymbol::STRING:
+//            std::cout << getStringData(_dataStack.popInt());
+//            break;
+//         case CSymbol::INT:
+//            std::cout << _dataStack.popInt();
+//            break;
+//         case CSymbol::CHAR:
+////            std::cout << (char)_dataStack.popInt();
+//            std::cout << "char [" << (int)_dataStack.popInt() << "]";
+//            break;
+//         case CSymbol::BOOL:
+//            boolValue = _dataStack.popInt();
+//            if (boolValue == 0) {
+//               std::cout << "false";
+//            } else {
+//               std::cout << "true";
+//            }
+//            break;
+//         case CSymbol::REAL:
+//         case CSymbol::MATRIX:
+//         default:
+//            std::cout << "Tipo ainda nao suportado !!!" << std::endl;
+//            abort();
+//      }
+//   }
+//   std::cout << std::endl;
+//}
 
 
 void CRunBytecode::procLeia()
@@ -334,7 +378,10 @@ void CRunBytecode::pcallOpcode()
 
 void CRunBytecode::lcallOpcode()
 {
-   trace ("libcall opcode");
+   trace ("lcall opcode");
+
+   _executionStack.push(_dataStack.getBS());
+   _dataStack.setBS(_dataStack.getSP());
 
    int address = _code.fetchInt();
 
@@ -343,8 +390,11 @@ void CRunBytecode::lcallOpcode()
    } else if (_globalData.getCString(address) == "leia") {
       procLeia();
    } else {
-      error("libcall invocando subrotina desconhecida !!!");
+      error("lcall invocando subrotina desconhecida !!!");
    }
+
+   _dataStack.setBS(_executionStack.top());
+   _executionStack.pop();
 }
 
 
@@ -947,7 +997,7 @@ void CRunBytecode::decspOpcode()
 
 void CRunBytecode::push_0Opcode()
 {
-   trace ("pus_h0 opcode");
+   trace ("push_0 opcode");
 
    _dataStack.pushInt(0);
 }

@@ -4,9 +4,9 @@ var s int
 
 proc main
     // soma( s, 2, 7 );
-    pushiv s
-    pushiv 2
     pushiv 7
+    pushiv 2
+    pushiv s
     pcall soma
 	
     // imprima( s );
