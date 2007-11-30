@@ -5,20 +5,15 @@
 
 void CBinString::writeInt(const int &value)
 {
-   char *byte = (char*)&value;
-
-   for( size_t i = 0; i < sizeof(int); i++) {
-      push_back(*byte);
-      byte++;
-   }
-//   std::cout << "writeInt:" << value << std::endl;
+   resize(size()+sizeof(int));
+   int *result = ((int*)(data()+size()))-1;
+   *result = value;
 }
 
 
 void CBinString::writeByte(const char &value)
 {
-   (*this) += value;
-//   std::cout << "writeByte:" << value << "(" << (int)value << ")" << std::endl;
+   push_back(value);
 }
 
 
@@ -37,29 +32,22 @@ void CBinString::writeString(const std::string &value, const bool &writeSize)
 
 void CBinString::writeBool(const bool &value)
 {
-   char byte = (char)value;
-
-   (*this) += byte;
-//   std::cout << "writeBool:" << value << std::endl;
+   push_back(value);
 }
 
 
 void CBinString::writeReal(const double &value)
 {
-   char *byte = (char*)&value;
-
-   for( size_t i = 0; i < sizeof(double); i++) {
-      push_back(*byte);
-      byte++;
-   }
+   resize(size()+sizeof(double));
+   double *result = ((double*)(data()+size()))-1;
+   *result = value;
 }
-
 
 
 void CBinString::readInt(int &value)
 {
    int result = *((int*)data());
-   erase(0,sizeof(int));
+   erase(0, sizeof(int));
    value = result;
 //   std::cout << "readInt:" << value << std::endl;
 }
@@ -76,7 +64,7 @@ void CBinString::readByte(char &value)
 void CBinString::readReal(double &value)
 {
    double result = *((double*)data());
-   erase(0,sizeof(double));
+   erase(0, sizeof(double));
    value = result;
 }
 
@@ -269,5 +257,16 @@ std::string CBinString::getCString(const int &address)
    }
 
    return substr(address, pos - address);
+}
+
+
+void CBinString::writeData(const void *value, const size_t &size)
+{
+   const char *byte = (const char*)value;
+
+   for( size_t i = 0; i < size; i++) {
+      push_back(*byte);
+      byte++;
+   }
 }
 

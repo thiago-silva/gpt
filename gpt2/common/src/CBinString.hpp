@@ -41,6 +41,8 @@ public:
    bool removeIfEqual(const std::string &value);
    std::string getCString(const int &address);
    std::string::find;
+private:
+   void writeData(const void *value, const size_t &size);
 };
 
 #endif
