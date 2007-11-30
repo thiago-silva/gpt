@@ -60,6 +60,42 @@ int CDataStack::popInt()
 }
 
 
+void CDataStack::setReal(const int &address, const double &value)
+{
+   if (IS_LOCAL_ADDRESS(address)) {
+      CBinString::setReal(_BS + realAddress(address), value);
+   } else {
+      std::cout << "ERRO !!! Invocando setReal com global address: " << address << std::endl;
+   }
+}
+
+
+double CDataStack::getReal(const int &address)
+{
+   if (IS_LOCAL_ADDRESS(address)) {
+      return CBinString::getReal(_BS + realAddress(address));
+   } else {
+      std::cout << "ERRO !!! Invocando getReal com global address: " << address << std::endl;
+      return -1;
+   }
+}
+
+
+void CDataStack::pushReal(const double &value)
+{
+   CBinString::pushReal(value);
+   _SP+=sizeof(double);
+}
+
+
+double CDataStack::popReal()
+{
+   double result = CBinString::popReal();
+   _SP-=sizeof(double);
+   return result;
+}
+
+
 void CDataStack::pushBytes(const int &number)
 {
    CBinString::pushBytes(number);

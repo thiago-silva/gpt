@@ -23,7 +23,6 @@ CGenBytecode::CGenBytecode()
    _opcodes[ "idiv"        ] = OP_IDIV;
    _opcodes[ "rdiv"        ] = OP_RDIV;
    _opcodes[ "imod"        ] = OP_IMOD;
-   _opcodes[ "rmod"        ] = OP_RMOD;
    _opcodes[ "ige"         ] = OP_IGE;
    _opcodes[ "sge"         ] = OP_SGE;
    _opcodes[ "rge"         ] = OP_RGE;

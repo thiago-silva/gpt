@@ -39,7 +39,6 @@ enum opcode {
    OP_IDIV        = 11,
    OP_RDIV        = 12,
    OP_IMOD        = 13,
-   OP_RMOD        = 14,
    OP_IGE         = 15,
    OP_SGE         = 16,
    OP_RGE         = 17,

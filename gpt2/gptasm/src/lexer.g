@@ -50,7 +50,6 @@ tokens {
    T_KW_IDIV="idiv";
    T_KW_RDIV="rdiv";
    T_KW_IMOD="imod";
-   T_KW_RMOD="rmod";
    T_KW_IGE="ige";
    T_KW_SGE="sge";
    T_KW_RGE="rge";

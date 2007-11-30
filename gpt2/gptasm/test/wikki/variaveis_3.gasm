@@ -5,19 +5,19 @@ var v real
 proc main
     rset v, 0.0
     rset v, v
-    rsum v, 10.0, 10.0
+    rsum v, 10.2, 10.2
     rsum v, v, v
-    rsum v, v, 10.0
-    rsum v, 10.0, v
+    rsum v, v, 10.2
+    rsum v, 10.2, v
 
     pushrv v
     pushrt
-    pushrv 1
+    push_1
     lcall imprima
 
-    pushrv 10.0
+    pushrv 10.8
     pushrt
-    pushrv 1
+    push_1
     lcall imprima
 
     exit 0

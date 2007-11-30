@@ -34,6 +34,8 @@ private:
    void procLeia();
    void setIntData(const int &address, const int &value);
    int  getIntData(const int &address);
+   void setRealData(const int &address, const double &value);
+   double getRealData(const int &address);
    void setStringData(const int &address, const std::string &value);
    std::string getStringData(const int &address);
    // opcodes
@@ -57,7 +59,6 @@ private:
    void idivOpcode();
    void rdivOpcode();
    void imodOpcode();
-   void rmodOpcode();
    void igeOpcode();
    void sgeOpcode();
    void rgeOpcode();

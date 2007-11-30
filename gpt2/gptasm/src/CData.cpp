@@ -46,10 +46,10 @@ CSymbol* CData::addConstant (const std::string &name, const int &type, const int
       writeString(name, false);
    } else if (type == CSymbol::INT) {
       writeInt(atoi(name.c_str()));
+   } else if (type == CSymbol::REAL) {
+      writeReal(atof(name.c_str()));
    }
 
    return symbol;
 }
-
-
 

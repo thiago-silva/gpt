@@ -167,7 +167,7 @@ options {
    :  ( "isum"|"ssum"|"rsum"
       | "isub"|"ssub"|"rsub"
       | "imul"|"rmul"|"idiv"|"rdiv"
-      | "imod"|"rmod"
+      | "imod"
       | "ige" |"sge" |"rge" |"ile"|"sle"|"rle"
       | "ine" |"sne" |"rne"
       | "igt" |"sgt" |"rgt"

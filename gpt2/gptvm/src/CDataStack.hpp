@@ -14,6 +14,10 @@ public:
    int getInt(const int &address);
    void pushInt(const int &value);
    int popInt();
+   void setReal(const int &address, const double &value);
+   double getReal(const int &address);
+   void pushReal(const double &value);
+   double popReal();
    void pushBytes(const int &number);
    void popBytes(const int &number);
    void setBS(const int &value);

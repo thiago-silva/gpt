@@ -44,6 +44,18 @@ void CBinString::writeBool(const bool &value)
 }
 
 
+void CBinString::writeReal(const double &value)
+{
+   char *byte = (char*)&value;
+
+   for( size_t i = 0; i < sizeof(double); i++) {
+      push_back(*byte);
+      byte++;
+   }
+}
+
+
+
 void CBinString::readInt(int &value)
 {
    int result = *((int*)data());
@@ -61,6 +73,14 @@ void CBinString::readByte(char &value)
 }
 
 
+void CBinString::readReal(double &value)
+{
+   double result = *((double*)data());
+   erase(0,sizeof(double));
+   value = result;
+}
+
+
 char CBinString::getByte(const int &pos)
 {
    return (*this)[pos];
@@ -74,6 +94,13 @@ void CBinString::getByte(const int &pos, char &value)
 int CBinString::getInt(int pos)
 {
    int result = *((int*)(data()+pos));
+   return result;
+}
+
+
+double CBinString::getReal(int pos)
+{
+   double result = *((double*)(data()+pos));
    return result;
 }
 
@@ -122,6 +149,13 @@ void CBinString::setCString(int pos, const std::string &value)
 }
 
 
+void CBinString::setReal(int pos, const double &value)
+{
+   double *address = (double*)(data()+pos);
+   *address = value;
+}
+
+
 void CBinString::pushInt(const int &value)
 {
    writeInt(value);
@@ -140,10 +174,36 @@ int CBinString::popInt()
 }
 
 
+void CBinString::pushReal(const double &value)
+{
+   writeReal(value);
+}
+
+
+double CBinString::popReal()
+{
+   int pos = size()-sizeof(double);
+   double result = *((double*)(data()+pos));
+
+   erase(pos,sizeof(double));
+
+   return result;
+}
+
+
 int CBinString::getLastInt() const
 {
    int pos = size()-sizeof(int);
    int result = *((int*)(data()+pos));
+
+   return result;
+}
+
+
+double CBinString::getLastReal() const
+{
+   int pos = size()-sizeof(double);
+   double result = *((double*)(data()+pos));
 
    return result;
 }
