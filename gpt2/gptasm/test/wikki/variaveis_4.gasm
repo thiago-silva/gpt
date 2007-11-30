@@ -6,12 +6,36 @@ proc main
     salloc v
 
     sset v, "0"
-    sset v, v
-    ssum v, "10", "10"
-    ssum v, v, v
-    ssum v, v, "10"
-    ssum v, "10", v
+    pushsv v
+    pushst
+    pushiv 1
+    lcall imprima
 
+    sset v, v
+    pushsv v
+    pushst
+    pushiv 1
+    lcall imprima
+
+    ssum v, "12", "34"
+    pushsv v
+    pushst
+    pushiv 1
+    lcall imprima
+
+    ssum v, v, v
+    pushsv v
+    pushst
+    pushiv 1
+    lcall imprima
+
+    ssum v, v, "10"
+    pushsv v
+    pushst
+    pushiv 1
+    lcall imprima
+
+    ssum v, "10", v
     pushsv v
     pushst
     pushiv 1

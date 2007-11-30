@@ -371,10 +371,21 @@ double CRunBytecode::getRealData(const int &address)
 void CRunBytecode::setStringData(const int &address, const std::string &value)
 {
    if (IS_LOCAL_ADDRESS(address)) {
-      _dataStack.setCString(address, value);
+      char type = _dataStack.getByte(address);
+
+      if (type == CSymbol::CONST) {
+         _dataStack.setCString(address+1, value);
+      } else {
+         *((std::string*)_dataStack.getInt(address+1)) = value;
+      }
    } else {
-//      std::cout << "setCStringData global address: " << address << std::endl;
-      _globalData.setCString(address, value);
+      char type = _globalData.getByte(address);
+
+      if (type == CSymbol::CONST) {
+         _globalData.setCString(address+1, value);
+      } else {
+         *((std::string*)_globalData.getInt(address+1)) = value;
+      }
    }
 }
 
@@ -382,12 +393,33 @@ void CRunBytecode::setStringData(const int &address, const std::string &value)
 std::string CRunBytecode::getStringData(const int &address)
 {
    if (IS_LOCAL_ADDRESS(address)) {
-      return _dataStack.getCString(address);
+      char type = _dataStack.getByte(address);
+
+      if (type == CSymbol::CONST) {
+         return _dataStack.getCString(address+1);
+      } else {
+         return *((std::string*)_dataStack.getInt(address+1));
+      }
    } else {
-//      std::cout << "global address: " << address << std::endl;
-      return _globalData.getCString(address);
+      char type = _globalData.getByte(address);
+
+      if (type == CSymbol::CONST) {
+         return _globalData.getCString(address+1);
+      } else {
+         return *((std::string*)_globalData.getInt(address+1));
+      }
    }
 }
+
+//std::string CRunBytecode::getStringData(const int &address)
+//{
+//   if (IS_LOCAL_ADDRESS(address)) {
+//      return _dataStack.getCString(address);
+//   } else {
+////      std::cout << "global address: " << address << std::endl;
+//      return _globalData.getCString(address);
+//   }
+//}
 
 
 /////////////
@@ -431,6 +463,12 @@ void CRunBytecode::lcallOpcode()
    _dataStack.setBS(_dataStack.getSP());
 
    int address = _code.fetchInt();
+
+   if (_globalData[address] != CSymbol::CONST) {
+      error( "Endereco para lcall deve conter uma string constante !!!" );
+   }
+
+   address++;
 
    if (_globalData.getCString(address) == "imprima") {
       procImprima();
@@ -492,7 +530,13 @@ void CRunBytecode::isumOpcode()
 
 void CRunBytecode::ssumOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("ssum opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   setStringData(varAddress, getStringData(val1Address) + getStringData(val2Address));
 }
 
 void CRunBytecode::rsumOpcode()
@@ -602,7 +646,13 @@ void CRunBytecode::igeOpcode()
 
 void CRunBytecode::sgeOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("sge opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   setIntData(varAddress, getStringData(val1Address) >= getStringData(val2Address));
 }
 
 void CRunBytecode::rgeOpcode()
@@ -613,7 +663,7 @@ void CRunBytecode::rgeOpcode()
    int val1Address = _code.fetchInt();
    int val2Address = _code.fetchInt();
 
-   setRealData(varAddress, getRealData(val1Address) >= getRealData(val2Address));
+   setIntData(varAddress, getRealData(val1Address) >= getRealData(val2Address));
 }
 
 void CRunBytecode::ileOpcode()
@@ -629,7 +679,13 @@ void CRunBytecode::ileOpcode()
 
 void CRunBytecode::sleOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("ile opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   setIntData(varAddress, getStringData(val1Address) <= getStringData(val2Address));
 }
 
 void CRunBytecode::rleOpcode()
@@ -640,7 +696,7 @@ void CRunBytecode::rleOpcode()
    int val1Address = _code.fetchInt();
    int val2Address = _code.fetchInt();
 
-   setRealData(varAddress, getRealData(val1Address) <= getRealData(val2Address));
+   setIntData(varAddress, getRealData(val1Address) <= getRealData(val2Address));
 }
 
 void CRunBytecode::ineOpcode()
@@ -656,7 +712,13 @@ void CRunBytecode::ineOpcode()
 
 void CRunBytecode::sneOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("sne opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   setIntData(varAddress, getStringData(val1Address) != getStringData(val2Address));
 }
 
 void CRunBytecode::rneOpcode()
@@ -667,7 +729,7 @@ void CRunBytecode::rneOpcode()
    int val1Address = _code.fetchInt();
    int val2Address = _code.fetchInt();
 
-   setRealData(varAddress, getRealData(val1Address) != getRealData(val2Address));
+   setIntData(varAddress, getRealData(val1Address) != getRealData(val2Address));
 }
 
 void CRunBytecode::igtOpcode()
@@ -683,7 +745,13 @@ void CRunBytecode::igtOpcode()
 
 void CRunBytecode::sgtOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("sgt opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   setIntData(varAddress, getStringData(val1Address) > getStringData(val2Address));
 }
 
 void CRunBytecode::rgtOpcode()
@@ -694,7 +762,7 @@ void CRunBytecode::rgtOpcode()
    int val1Address = _code.fetchInt();
    int val2Address = _code.fetchInt();
 
-   setRealData(varAddress, getRealData(val1Address) > getRealData(val2Address));
+   setIntData(varAddress, getRealData(val1Address) > getRealData(val2Address));
 }
 
 void CRunBytecode::iltOpcode()
@@ -710,7 +778,13 @@ void CRunBytecode::iltOpcode()
 
 void CRunBytecode::sltOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("slt opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   setIntData(varAddress, getStringData(val1Address) < getStringData(val2Address));
 }
 
 void CRunBytecode::rltOpcode()
@@ -721,7 +795,7 @@ void CRunBytecode::rltOpcode()
    int val1Address = _code.fetchInt();
    int val2Address = _code.fetchInt();
 
-   setRealData(varAddress, getRealData(val1Address) < getRealData(val2Address));
+   setIntData(varAddress, getRealData(val1Address) < getRealData(val2Address));
 }
 
 void CRunBytecode::ieqOpcode()
@@ -737,7 +811,13 @@ void CRunBytecode::ieqOpcode()
 
 void CRunBytecode::seqOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("seq opcode");
+
+   int varAddress  = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+   int val2Address = _code.fetchInt();
+
+   setIntData(varAddress, getStringData(val1Address) == getStringData(val2Address));
 }
 
 void CRunBytecode::reqOpcode()
@@ -748,7 +828,7 @@ void CRunBytecode::reqOpcode()
    int val1Address = _code.fetchInt();
    int val2Address = _code.fetchInt();
 
-   setRealData(varAddress, getRealData(val1Address) == getRealData(val2Address));
+   setIntData(varAddress, getRealData(val1Address) == getRealData(val2Address));
 }
 
 void CRunBytecode::orOpcode()
@@ -941,7 +1021,12 @@ void CRunBytecode::isetOpcode()
 
 void CRunBytecode::ssetOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("sset opcode");
+
+   int varAddress = _code.fetchInt();
+   int valAddress = _code.fetchInt();
+
+   setStringData(varAddress, getStringData(valAddress));
 }
 
 void CRunBytecode::rsetOpcode()
@@ -1239,14 +1324,80 @@ void CRunBytecode::retOpcode()
 //   _dataStack.resize(_dataStack.getSP());
 }
 
+// TODO: ao inves de termos global e local, quem sabe as globais nao poderiam estar no inicio do que hj sao as locais ?
+// Isso simplificaria e muito a implementacao...
+
 void CRunBytecode::sallocOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("salloc opcode");
+
+   int address = _code.fetchInt();
+
+   if (IS_LOCAL_ADDRESS(address)) {
+      char type = _dataStack.getByte(address);
+
+      if (type != CSymbol::VAR) {
+         error( "salloc apenas com variaveis !!!" );
+      }
+
+//      std::string *vvv = new std::string();
+      std::string *value = new std::string();
+      _dataStack.setInt(address+1, (int)value);
+
+
+//      (std::string*)(_dataStack.data()+address+1) = "aaa";
+//      (std::string*)(_dataStack.data()+address+1) = new std::string;
+//      value =  (std::string*)_dataStack.data()+address+1;
+//      *value = "aaa";
+//      *value = new std::string;
+//
+//
+//      std::string *v = new std::string;
+
+//      int x = 1;
+//      (std::string*)x = v;
+//      *(std::string*)(_dataStack.getInt(address+1)) = v;
+//      *((std::string*)_dataStack.getInt(address+1)) = new std::string("");
+   } else {
+      char type = _globalData.getByte(address);
+
+      if (type != CSymbol::VAR) {
+         error( "salloc apenas com variaveis !!!" );
+      }
+
+      std::string *value = new std::string();
+      _globalData.setInt(address+1, (int)value);
+      //*((std::string*)_globalData.getInt(address+1)) = new std::string("");
+   }
 }
 
 void CRunBytecode::sfreeOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("sfree opcode");
+
+   int address = _code.fetchInt();
+
+   if (IS_LOCAL_ADDRESS(address)) {
+      char type = _dataStack.getByte(address);
+
+      if (type != CSymbol::VAR) {
+         error( "sfree apenas com variaveis !!!" );
+      }
+
+      std::string *value = (std::string*)_dataStack.getInt(address+1);
+      delete value;
+      _dataStack.setInt(address+1, 0);
+   } else {
+      char type = _globalData.getByte(address);
+
+      if (type != CSymbol::VAR) {
+         error( "sfree apenas com variaveis !!!" );
+      }
+
+      std::string *value = (std::string*)_globalData.getInt(address+1);
+      delete value;
+      _globalData.setInt(address+1, 0);
+   }
 }
 
 void CRunBytecode::ssetcOpcode()

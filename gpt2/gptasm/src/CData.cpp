@@ -25,6 +25,11 @@ CSymbol* CData::addVariable (const int &scope, const std::string &name, const in
 
    _symbols.push_back(symbol);
 
+   if (type == CSymbol::STRING) {
+      // Para strings constantes e variaveis eh necessario indicar a categoria
+      writeByte(CSymbol::VAR);
+   }
+
    //_data += symbol->getBinary();
    for (int i=0; i < symbol->getTypeSize(); i++) {
       // TODO: horrivel :-)
@@ -43,6 +48,9 @@ CSymbol* CData::addConstant (const std::string &name, const int &type, const int
 
    //_data += symbol->getBinary();
    if (type == CSymbol::STRING) {
+      // Para strings constantes e variaveis eh necessario indicar a categoria
+      std::cout << "String constante [" << name << "] indicado o tipo..." << std::endl;
+      writeByte(CSymbol::CONST);
       writeString(name, false);
    } else if (type == CSymbol::INT) {
       writeInt(atoi(name.c_str()));

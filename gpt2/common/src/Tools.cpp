@@ -290,6 +290,7 @@ int getTypeSize(const int &type)
    case CSymbol::REAL:
       return sizeof(double);
    case CSymbol::STRING:
+      return sizeof(char)+sizeof(void*);
    case CSymbol::MATRIX:
       return sizeof(void*);
    }
