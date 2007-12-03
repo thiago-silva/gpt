@@ -24,6 +24,13 @@ public:
    void setSP(const int &value);
    int getBS() const;
    int getSP() const;
+   void readString(std::string &value);
+   std::string getString(int address);
+   void setString(int address, const std::string &value);
+   void setByte(const int &address, const char &value);
+   char getByte(const int &address);
+   void pushByte(const char &value);
+   char popByte();
 private:
    int _BS;
    int _SP; // TODO: SP eh equivalente a size() ???

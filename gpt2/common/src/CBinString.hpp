@@ -18,6 +18,7 @@ public:
    void readReal(double &value);
    char getByte(const int &pos);
    void getByte(const int &pos, char &value);
+   void setByte(const int &pos, const char &value);
    int getInt(int pos);
    double getReal(int pos);
    void readString(std::string &value);
@@ -41,6 +42,8 @@ public:
    bool removeIfEqual(const std::string &value);
    std::string getCString(const int &address);
    std::string::find;
+   void pushByte(const char &value);
+   char popByte();
 private:
    void writeData(const void *value, const size_t &size);
 };

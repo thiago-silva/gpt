@@ -32,8 +32,8 @@ private:
    void step();
    void procImprima();
    void procLeia();
-   void setIntData(const int &address, const int &value);
-   int  getIntData(const int &address);
+//   void setIntData(const int &address, const int &value);
+//   int  getIntData(const int &address);
    void setRealData(const int &address, const double &value);
    double getRealData(const int &address);
    void setStringData(const int &address, const std::string &value);
@@ -165,15 +165,15 @@ private:
    void mgetSize2Opcode();
 
 
-   CHeader       _header;
-   CSymbolTable  _symbolTable;
-   CBinString    _globalData;
-   CBytecode     _code;
-   OpcodePointer _opcodePointer[OPCODE_NUMBER];
-   bool          _stop;
-   int           _returnCode;
-   CDataStack    _dataStack;
-   std::stack<int>   _executionStack;
+   CHeader         _header;
+   CSymbolTable    _symbolTable;
+//   CBinString      _globalData;
+   CBytecode       _code;
+   OpcodePointer   _opcodePointer[OPCODE_NUMBER];
+   bool            _stop;
+   int             _returnCode;
+   CDataStack      _dataStack;
+   std::stack<int> _executionStack;
 };
 
 #endif

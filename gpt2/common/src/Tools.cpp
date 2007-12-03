@@ -177,47 +177,6 @@ string wo_ctrl_chrs(string str, char chr_to_put) {
     return str;
 }
 
-/* CRAP!  --felipek
-string& getStringWithTab(string _data, string _tab) {
-	cout << "begin getStringWithTab" << endl;
-	cout << "tab=\"" << _tab << "\"" << endl;
-	cout << "begin datae" << endl;
-	cout << _data << endl;
-	cout << "end datae" << endl;
-	int pos = -1;
- 
-	// test too another new line sequences
-	while( ( pos = _data.find( "\n", pos + 1 ) ) != -1 ) {
-		_data.insert( pos + 1, _tab );
-	}
- 
-	cout << "begin datas" << endl;
-	cout << _data << endl;
-	cout << "end datas" << endl;
-	return( _data );
-}
-*/
-
-bool streamtoken(istringstream& stream, string& key, string& val) {
-     /* FIXME: leak, --felipek */
-     char buffer[8192];
-     unsigned int delim;
-     string entry;
-//     bool ret;
-
-     /* FIXME: ret type, -- felipek */
-     stream.getline(buffer, 8192 - 1);
-     entry = string(buffer);
-     delim = entry.find(' ', 0);
-
-     if (delim != entry.npos) {
-         key = entry.substr(0, delim);
-         val = entry.substr(delim + 1);
-     }
-
-     return !stream.eof();
-}
-
 
 /*const string typeToText(const int &type)
 {
@@ -297,20 +256,6 @@ int getTypeSize(const int &type)
    return 0;
 }
 
-//struct SBits {
-//   int signal : 1;
-//   int localbit : 1;
-//   int others : 30;
-//}
-
-//int setLocalBit(const int &value, const bool &state)
-//{
-//   SBits result;
-//   memcpy(result, value, sizeof(int));
-//  result.localbit = state;
-//
-//   return (int) result;
-//}
 
 int realAddress(int address)
 {
@@ -342,4 +287,30 @@ std::string realAddressString(int address)
 
    return result;
 }
+
+/*
+int sumAddress(int address, int value)
+{
+   bool localAddress = false;
+   bool negAddress = false;
+
+   if (IS_LOCAL_ADDRESS(address)) {
+      address = address & UNSET_LOCAL_BIT;
+      localAddress = true;
+   }
+   if (IS_NEG_ADDRESS(address)) {
+      address = address & UNSET_NEG_BIT;
+      address *= -1;
+      negAddress = true;
+   }
+   address += value;
+   if (localAddress) {
+      address |= SET_LOCAL_BIT;
+   }
+   if (negAddress) {
+      address |= SET_NEG_BIT;
+   }
+   return address;
+}
+*/
 

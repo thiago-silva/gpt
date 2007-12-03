@@ -3,6 +3,7 @@
 #include "Common.hpp"
 
 #include "Tools.hpp"
+#include "CSymbol.hpp"
 
 
 
@@ -22,27 +23,51 @@ CDataStack::~CDataStack()
 
 void CDataStack::setInt(const int &address, const int &value)
 {
-//   std::cout << "setInt ";
    if (IS_LOCAL_ADDRESS(address)) {
-//      std::cout << "local address sem bit ligado: " << ((unsigned int)address & UNSET_BIT_LOCAL) << std::endl;
       CBinString::setInt(_BS + realAddress(address), value);
    } else {
-      std::cout << "ERRO !!! Invocando setInt com global address: " << address << std::endl;
+      CBinString::setInt(realAddress(address), value);
    }
+//   CBinString::setInt(_BS * IS_LOCAL_ADDRESS(address) + realAddress(address), value);
 }
+
 
 
 int CDataStack::getInt(const int &address)
 {
-//   std::cout << "getInt ";
    if (IS_LOCAL_ADDRESS(address)) {
-//      std::cout << "local address sem bit ligado: " << ((unsigned int)address & UNSET_BIT_LOCAL) << std::endl;
       return CBinString::getInt(_BS + realAddress(address));
    } else {
-      std::cout << "ERRO !!! Invocando getInt com global address: " << address << std::endl;
-      return -1;
+      return CBinString::getInt(realAddress(address));
    }
+//   return CBinString::getInt(_BS * IS_LOCAL_ADDRESS(address) + realAddress(address));
 }
+
+
+//void CDataStack::setInt(const int &address, const int &value)
+//{
+////   std::cout << "setInt ";
+//   if (IS_LOCAL_ADDRESS(address)) {
+////      std::cout << "local address sem bit ligado: " << ((unsigned int)address & UNSET_BIT_LOCAL) << std::endl;
+//      CBinString::setInt(_BS + realAddress(address), value);
+//   } else {
+//      std::cout << "ERRO !!! Invocando setInt com global address: " << address << std::endl;
+//   }
+//}
+
+
+
+//int CDataStack::getInt(const int &address)
+//{
+////   std::cout << "getInt ";
+//   if (IS_LOCAL_ADDRESS(address)) {
+////      std::cout << "local address sem bit ligado: " << ((unsigned int)address & UNSET_BIT_LOCAL) << std::endl;
+//      return CBinString::getInt(_BS + realAddress(address));
+//   } else {
+//      std::cout << "ERRO !!! Invocando getInt com global address: " << address << std::endl;
+//      return -1;
+//   }
+//}
 
 
 void CDataStack::pushInt(const int &value)
@@ -60,12 +85,27 @@ int CDataStack::popInt()
 }
 
 
+void CDataStack::pushByte(const char &value)
+{
+   CBinString::pushByte(value);
+   _SP+=sizeof(char);
+}
+
+
+char CDataStack::popByte()
+{
+   char result = CBinString::popByte();
+   _SP-=sizeof(char);
+   return result;
+}
+
+
 void CDataStack::setReal(const int &address, const double &value)
 {
    if (IS_LOCAL_ADDRESS(address)) {
       CBinString::setReal(_BS + realAddress(address), value);
    } else {
-      std::cout << "ERRO !!! Invocando setReal com global address: " << address << std::endl;
+      CBinString::setReal(realAddress(address), value);
    }
 }
 
@@ -75,8 +115,7 @@ double CDataStack::getReal(const int &address)
    if (IS_LOCAL_ADDRESS(address)) {
       return CBinString::getReal(_BS + realAddress(address));
    } else {
-      std::cout << "ERRO !!! Invocando getReal com global address: " << address << std::endl;
-      return -1;
+      return CBinString::getReal(realAddress(address));
    }
 }
 
@@ -93,6 +132,45 @@ double CDataStack::popReal()
    double result = CBinString::popReal();
    _SP-=sizeof(double);
    return result;
+}
+
+
+void CDataStack::setString(int address, const std::string &value)
+{
+   if (IS_LOCAL_ADDRESS(address)) {
+      address = _BS + realAddress(address);
+   } else {
+      address = realAddress(address);
+   }
+
+   char type = getByte(address);
+   address++;
+
+   if (type == CSymbol::CONST) {
+      CBinString::setCString(address, value);
+   } else {
+      *((std::string*)(CBinString::getInt(address))) = value;
+   }
+}
+
+
+std::string CDataStack::getString(int address)
+{
+   if (IS_LOCAL_ADDRESS(address)) {
+      address = _BS + realAddress(address);
+   } else {
+      address = realAddress(address);
+   }
+
+   char type = CBinString::getByte(address);
+   address++;
+
+   if (type == CSymbol::CONST) {
+      return CBinString::getCString(address);
+//      return CBinString::getCString(CBinString::getInt(address)+1);
+   } else {
+      return *((std::string*)CBinString::getInt(address));
+   }
 }
 
 
@@ -133,3 +211,28 @@ int CDataStack::getSP() const
    return _SP;
 }
 
+void CDataStack::readString(std::string &value)
+{
+   CBinString::readString(value);
+   setBS(size());
+}
+
+
+void CDataStack::setByte(const int &address, const char &value)
+{
+   if (IS_LOCAL_ADDRESS(address)) {
+      CBinString::setByte(_BS + realAddress(address), value);
+   } else {
+      CBinString::setByte(realAddress(address), value);
+   }
+}
+
+
+char CDataStack::getByte(const int &address)
+{
+   if (IS_LOCAL_ADDRESS(address)) {
+      return CBinString::getByte(_BS + realAddress(address));
+   } else {
+      return CBinString::getByte(realAddress(address));
+   }
+}

@@ -38,5 +38,6 @@ const int typeToLiteral( const int &type );
 int getTypeSize(const int &type);
 int realAddress(int address);
 std::string realAddressString(int address);
+//int sumAddress(int address, int value);
 
 #endif

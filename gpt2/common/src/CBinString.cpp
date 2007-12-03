@@ -79,6 +79,12 @@ void CBinString::getByte(const int &pos, char &value)
    value = getByte(pos);
 }
 
+void CBinString::setByte(const int &pos, const char &value)
+{
+   (*this)[pos] = value;
+}
+
+
 int CBinString::getInt(int pos)
 {
    int result = *((int*)(data()+pos));
@@ -159,6 +165,23 @@ int CBinString::popInt()
 
    return result;
 //   std::cout << "readInt:" << value << std::endl;
+}
+
+
+void CBinString::pushByte(const char &value)
+{
+   writeByte(value);
+}
+
+
+char CBinString::popByte()
+{
+   int pos = size()-sizeof(char);
+   char result = *((char*)(data()+pos));
+
+   erase(pos,sizeof(char));
+
+   return result;
 }
 
 

@@ -15,7 +15,7 @@ CBytecode::CBytecode()
 
 char CBytecode::fetchByte()
 {
-   if (_IP >= size()) {
+   if ((size_t)_IP >= size()) {
       std::cout << "Erro limite em fetchByte()" << std::endl;
       abort();
    }

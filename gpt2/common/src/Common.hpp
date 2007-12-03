@@ -19,10 +19,10 @@ const int SET_NEG_BIT     = 0x20000000; // 00100000 (binario)
 const int UNSET_NEG_BIT   = 0xDFFFFFFF; // 11011111 (binario)
 
 #define IS_LOCAL_ADDRESS(address) \
-   (address) & SET_LOCAL_BIT
+   ( (address) & SET_LOCAL_BIT )
 
 #define IS_NEG_ADDRESS(address) \
-   (address) & SET_NEG_BIT
+   ( (address) & SET_NEG_BIT )
 
 enum opcode {
    OP_NOP         = 0,

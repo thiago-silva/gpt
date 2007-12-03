@@ -15,7 +15,7 @@ int main (int argc, char *argv[])
    int i;
    COptions options;
 
-   cout << "GptVM, release 0.1.0 (development release)" << endl;
+   cout << "GptVM - GEPETO - Release 0.1.0 (development release)" << endl;
 
    while ((i = getopt(argc, argv, "h")) != -1) {
       switch (i) {
