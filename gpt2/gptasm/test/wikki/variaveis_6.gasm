@@ -8,17 +8,17 @@ proc main
     iset v, v
 
     pushiv true
-    pushbt
+    pushlt
     pushiv 1
     lcall imprima
 
     pushiv false
-    pushbt
+    pushlt
     pushiv 1
     lcall imprima
 
     pushiv v
-    pushbt
+    pushlt
     pushiv 1
     lcall imprima
 

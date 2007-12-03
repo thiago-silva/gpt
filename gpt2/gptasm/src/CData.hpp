@@ -13,8 +13,8 @@ public:
    CData();
    ~CData();
    CSymbol* add(CSymbol *symbol);
-   CSymbol* addVariable (const int &scope, const std::string &name, const int &type, const int &address);
-   CSymbol* addConstant (const std::string &name, const int &type, const int &address);
+   CSymbol* addVariable (const int &scope, const std::string &name, const int &type, int size, const int &address);
+   CSymbol* addConstant (const std::string &name, const int &type, int size, const int &address);
 };
 
 #endif

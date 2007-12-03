@@ -235,7 +235,7 @@ void CBinString::pushBytes(const int &number)
 }
 
 
-void CBinString::popBytes(const int &number)
+void CBinString::discardBytes(const int &number)
 {
    int pos = size()-number;
    erase(pos,number);
@@ -291,5 +291,31 @@ void CBinString::writeData(const void *value, const size_t &size)
       push_back(*byte);
       byte++;
    }
+}
+
+
+void CBinString::setBytes(const int &address, const std::string &value)
+{
+   replace(address, value.size(), value);
+}
+
+
+std::string CBinString::getBytes(const int &address, const int &size)
+{
+   return substr(address, size);
+}
+
+
+void CBinString::pushBytes(const std::string &value)
+{
+   append(value);
+}
+
+
+std::string CBinString::popBytes(const int &sizeToPop)
+{
+   std::string result = substr(size()-sizeToPop, sizeToPop);
+   erase(size()-sizeToPop, sizeToPop);
+   return result;
 }
 

@@ -1,4 +1,5 @@
 #include "CData.hpp"
+#include "Tools.hpp"
 
 
 CData::CData()
@@ -19,9 +20,13 @@ CSymbol* CData::add(CSymbol *symbol)
 }
 
 
-CSymbol* CData::addVariable (const int &scope, const std::string &name, const int &type, const int &address)
+CSymbol* CData::addVariable (const int &scope, const std::string &name, const int &type, int size, const int &address)
 {
-   CSymbol *symbol = new CSymbol (scope, name, type, CSymbol::VAR, address);
+   if (size == 0) {
+      size = getTypeSize(type);
+   }
+
+   CSymbol *symbol = new CSymbol (scope, name, type, size, CSymbol::VAR, address);
 
    _symbols.push_back(symbol);
 
@@ -40,9 +45,13 @@ CSymbol* CData::addVariable (const int &scope, const std::string &name, const in
 }
 
 
-CSymbol* CData::addConstant (const std::string &name, const int &type, const int &address)
+CSymbol* CData::addConstant (const std::string &name, const int &type, int size, const int &address)
 {
-   CSymbol *symbol = new CSymbol (CSymbol::GLOBAL, name, type, CSymbol::CONST, address);
+   if (size == 0) {
+      size = getTypeSize(type);
+   }
+
+   CSymbol *symbol = new CSymbol (CSymbol::GLOBAL, name, type, size, CSymbol::CONST, address);
 
    _symbols.push_back(symbol);
 

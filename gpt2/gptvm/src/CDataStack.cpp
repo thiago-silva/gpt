@@ -135,6 +135,41 @@ double CDataStack::popReal()
 }
 
 
+void CDataStack::setBytes(const int &address, const std::string &value)
+{
+   if (IS_LOCAL_ADDRESS(address)) {
+      CBinString::setBytes(_BS + realAddress(address), value);
+   } else {
+      CBinString::setBytes(realAddress(address), value);
+   }
+}
+
+
+void CDataStack::pushBytes(const std::string &value)
+{
+   CBinString::pushBytes(value);
+   _SP+=value.size();
+}
+
+
+std::string CDataStack::popBytes(const int &size)
+{
+   std::string result = CBinString::popBytes(size);
+   _SP-=size;
+   return result;
+}
+
+
+std::string CDataStack::getBytes(const int &address, const int &size)
+{
+   if (IS_LOCAL_ADDRESS(address)) {
+      return CBinString::getBytes(_BS + realAddress(address), size);
+   } else {
+      return CBinString::getBytes(realAddress(address), size);
+   }
+}
+
+
 void CDataStack::setString(int address, const std::string &value)
 {
    if (IS_LOCAL_ADDRESS(address)) {
@@ -181,7 +216,7 @@ void CDataStack::pushBytes(const int &number)
 }
 
 
-void CDataStack::popBytes(const int &number)
+void CDataStack::discardBytes(const int &number)
 {
    CBinString::popBytes(number);
    _SP -= number;

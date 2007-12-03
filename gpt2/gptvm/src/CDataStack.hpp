@@ -18,8 +18,12 @@ public:
    double getReal(const int &address);
    void pushReal(const double &value);
    double popReal();
+   void setBytes(const int &address, const std::string &value);
+   std::string getBytes(const int &address, const int &size);
+   void pushBytes(const std::string &value);
+   std::string popBytes(const int &size);
    void pushBytes(const int &number);
-   void popBytes(const int &number);
+   void discardBytes(const int &number);
    void setBS(const int &value);
    void setSP(const int &value);
    int getBS() const;

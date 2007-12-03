@@ -27,6 +27,7 @@ CSymbol* CSymbolTable::addProcedure (const std::string &name, const int &type, c
    writeInt( address );
    writeByte( CSymbol::PROC ); // procedure
    writeByte( type ); // tipo do retorno // TODO: em asm proc tem retorno ???
+   writeInt( 0 ); // size
    writeString( name ); // nome da procedure
    writeBool( hasVarArguments );
    writeByte( staticParameters );
@@ -36,9 +37,13 @@ CSymbol* CSymbolTable::addProcedure (const std::string &name, const int &type, c
 }
 
 
-CSymbol* CSymbolTable::addParameter (const std::string &name, const int &type, const int &address)
+CSymbol* CSymbolTable::addParameter (const std::string &name, const int &type, int size, const int &address)
 {
-   CSymbol *symbol = new CSymbol(CSymbol::LOCAL, name, type, CSymbol::PARAM, address|SET_LOCAL_BIT|SET_NEG_BIT);
+   if (size == 0) {
+      size = getTypeSize(type);
+   }
+
+   CSymbol *symbol = new CSymbol(CSymbol::LOCAL, name, type, size, CSymbol::PARAM, address|SET_LOCAL_BIT|SET_NEG_BIT);
 
    _symbols.push_back(symbol);
 
@@ -48,9 +53,13 @@ CSymbol* CSymbolTable::addParameter (const std::string &name, const int &type, c
 }
 
 
-CSymbol* CSymbolTable::addConstant (const std::string &name, const int &type, const int &address)
+CSymbol* CSymbolTable::addConstant (const std::string &name, const int &type, int size, const int &address)
 {
-   CSymbol *symbol = new CSymbol(CSymbol::GLOBAL, name, type, CSymbol::CONST, address);
+   if (size == 0) {
+      size = getTypeSize(type);
+   }
+
+   CSymbol *symbol = new CSymbol(CSymbol::GLOBAL, name, type, size, CSymbol::CONST, address);
 
    _symbols.push_back(symbol);
 
@@ -59,20 +68,25 @@ CSymbol* CSymbolTable::addConstant (const std::string &name, const int &type, co
    writeInt( address );
    writeByte( CSymbol::CONST ); // categoria: constante
    writeByte( type );           // tipo
+   writeInt( size );            // tamanho
    writeString( name );         // nome da constante
 
    return symbol;
 }
 
 
-CSymbol* CSymbolTable::addVariable (const int &scope, const std::string &name, const int &type, const int &address)
+CSymbol* CSymbolTable::addVariable (const int &scope, const std::string &name, const int &type, int size, const int &address)
 {
    CSymbol *symbol = NULL;
 
+   if (size == 0) {
+      size = getTypeSize(type);
+   }
+
    if (scope == CSymbol::GLOBAL) {
-      symbol = new CSymbol(scope, name, type, CSymbol::VAR, address);
+      symbol = new CSymbol(scope, name, type, size, CSymbol::VAR, address);
    } else {
-      symbol = new CSymbol(scope, name, type, CSymbol::VAR, address | SET_LOCAL_BIT);
+      symbol = new CSymbol(scope, name, type, size, CSymbol::VAR, address | SET_LOCAL_BIT);
    }
 
    _symbols.push_back(symbol);
@@ -83,6 +97,7 @@ CSymbol* CSymbolTable::addVariable (const int &scope, const std::string &name, c
       writeInt( address );
       writeByte( CSymbol::VAR ); // categoria: variavel
       writeByte( type );         // tipo
+      writeInt( size );          // tamanho
       writeString( name );       // nome da variavel
    }
 

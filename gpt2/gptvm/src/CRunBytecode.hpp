@@ -122,6 +122,7 @@ private:
    void popsvOpcode();
    void popivOpcode();
    void poprvOpcode();
+   void popbvOpcode();
    void popmvOpcode();
    void incspOpcode();
    void decspOpcode();
@@ -134,12 +135,14 @@ private:
    void pushsvOpcode();
    void pushivOpcode();
    void pushrvOpcode();
+   void pushbvOpcode();
    void pushmvOpcode();
 
    void pushstOpcode();
    void pushitOpcode();
    void pushrtOpcode();
    void pushctOpcode();
+   void pushltOpcode();
    void pushbtOpcode();
    void pushmtOpcode();
 

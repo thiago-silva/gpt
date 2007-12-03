@@ -85,6 +85,8 @@ CGenBytecode::CGenBytecode()
    _opcodes[ "ifnot"       ] = OP_IFNOT;
    _opcodes[ "popiv"       ] = OP_POPIV;
    _opcodes[ "poprv"       ] = OP_POPRV;
+   _opcodes[ "popsv"       ] = OP_POPSV;
+   _opcodes[ "popbv"       ] = OP_POPBV;
    _opcodes[ "popmv"       ] = OP_POPMV;
    _opcodes[ "incsp"       ] = OP_INCSP;
    _opcodes[ "decsp"       ] = OP_DECSP;
@@ -97,11 +99,13 @@ CGenBytecode::CGenBytecode()
    _opcodes[ "pushiv"      ] = OP_PUSHIV;
    _opcodes[ "pushsv"      ] = OP_PUSHSV;
    _opcodes[ "pushrv"      ] = OP_PUSHRV;
+   _opcodes[ "pushbv"      ] = OP_PUSHBV;
    _opcodes[ "pushmv"      ] = OP_PUSHMV;
    _opcodes[ "pushit"      ] = OP_PUSHIT;
    _opcodes[ "pushst"      ] = OP_PUSHST;
    _opcodes[ "pushrt"      ] = OP_PUSHRT;
    _opcodes[ "pushct"      ] = OP_PUSHCT;
+   _opcodes[ "pushlt"      ] = OP_PUSHLT;
    _opcodes[ "pushbt"      ] = OP_PUSHBT;
    _opcodes[ "pushmt"      ] = OP_PUSHMT;
    _opcodes[ "incsp_4"     ] = OP_INCSP_4;
@@ -161,28 +165,35 @@ void CGenBytecode::finishProcedure()
 }
 
 
-void CGenBytecode::makeVarDefinition(const std::string &lexeme, const int &type)
+void CGenBytecode::makeVarDefinition(const std::string &lexeme, const int &type, int size)
 {
+   if (size == 0) {
+      size = getTypeSize(type);
+   }
+
    if (_currentProcedure.empty()) {
       // variavel global
-      _symbolTable.addVariable (CSymbol::GLOBAL, lexeme, type, _data.getDataSize());
-      std::cout << "var global " << lexeme << " address " << _data.getDataSize() << std::endl;
-      _data.addVariable (CSymbol::GLOBAL, lexeme, type, _data.getDataSize());
+      _symbolTable.addVariable (CSymbol::GLOBAL, lexeme, type, size, _data.getDataSize());
+      std::cout << "var global " << lexeme << " size " << size << " address " << _data.getDataSize() << std::endl;
+      _data.addVariable (CSymbol::GLOBAL, lexeme, type, size, _data.getDataSize());
    } else {
       // variavel local
-      CSymbol *symbol = _symbolTable.addVariable (CSymbol::LOCAL, lexeme, type, _currentSP);
-      std::cout << "var local " << lexeme << " address " << _currentSP << std::endl;
+      CSymbol *symbol = _symbolTable.addVariable (CSymbol::LOCAL, lexeme, type, size,  _currentSP);
+      std::cout << "var local " << lexeme << " size " << size << " address " << _currentSP << std::endl;
       _currentSP += symbol->getTypeSize();
       // gera incsp XXX
       _code.writeByte(OP_INCSP);
-      addAddress(itoa(symbol->getTypeSize()), CSymbol::CONST, CSymbol::INT);
+      addAddress(itoa(symbol->getTypeSize()), CSymbol::CONST, CSymbol::INT, size);
    }
 }
 
 
-void CGenBytecode::makeParDefinition(const std::string &lexeme, const int &type)
+void CGenBytecode::makeParDefinition(const std::string &lexeme, const int &type, int size)
 {
-   _parameters.push_back(std::pair<std::string,int>(lexeme, type));
+   if (size == 0) {
+      size = getTypeSize(type);
+   }
+   _parameters.push_back(SParameter(lexeme, type, size));
 //   _parametersSize += getTypeSize(type);
 //   CSymbol *symbol = _symbolTable.addParameter(lexeme, type, _currentSP);
 //   std::cout << "par " << lexeme << " address " << _currentSP << std::endl;
@@ -193,10 +204,11 @@ void CGenBytecode::makeParDefinition(const std::string &lexeme, const int &type)
 void CGenBytecode::finishParDefinition()
 {
    _currentSP = 0;
-   for (std::list<std::pair<std::string,int> >::reverse_iterator par = _parameters.rbegin();
+   for (std::list<SParameter>::reverse_iterator par = _parameters.rbegin();
          par != _parameters.rend(); par++) {
-      _currentSP -= getTypeSize(par->second);
-      CSymbol *symbol = _symbolTable.addParameter(par->first, par->second, abs(_currentSP));
+      _currentSP -= par->_size;
+//      _currentSP -= getTypeSize(par->second);
+      CSymbol *symbol = _symbolTable.addParameter(par->_name, par->_type, par->_size, abs(_currentSP));
 //      std::cout << "par " << par->first << " address " << _currentSP << std::endl;
       std::cout << "param=" << symbol->getName() << " address=" << symbol->getAddress() << std::endl;
       std::cout << "\t" << realAddressString(symbol->getAddress()) << std::endl;
@@ -238,11 +250,14 @@ void CGenBytecode::addOpcode(const std::string &mn)
 }
 
 
-void CGenBytecode::addAddress(const std::string &id, const int &category, const int &type)
+void CGenBytecode::addAddress(const std::string &id, const int &category, const int &type, int size)
 {
+   if (size == 0) {
+      size = getTypeSize(type);
+   }
    int address = _symbolTable.getAddress(id);
    if (address == -1) {
-      address = _data.addConstant (id, type, _data.getDataSize())->getAddress();
+      address = _data.addConstant (id, type, size, _data.getDataSize())->getAddress();
    }
    _code.writeInt(address);
 }

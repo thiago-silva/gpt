@@ -24,13 +24,14 @@ public:
       STRING  = 'S',
       INT     = 'I',
       CHAR    = 'C',
-      BOOL    = 'B',
+      LOGICAL = 'L',
       REAL    = 'R',
       MATRIX  = 'M',
-      POINTER = 'P'
+      POINTER = 'P',
+      BYTE    = 'B'
    };
    CSymbol ();
-   CSymbol (const int &scope, const std::string &name, const char &type, 
+   CSymbol (const int &scope, const std::string &name, const char &type, int size,
             const char &category, const int &address);
    CSymbol (const std::string &name, const char &type, const int &address,
             const bool &hasVarArguments, const int &staticParameters,
@@ -74,6 +75,7 @@ private:
    int                  _scope;
    std::string          _name;
    char                 _type;
+   int                  _size;
    char                 _category;
    int                  _address;
    bool                 _hasVarArguments;

@@ -128,6 +128,7 @@ void CRunBytecode::initOpcodePointer()
    _opcodePointer[OP_POPSV      ] = &CRunBytecode::popsvOpcode;
    _opcodePointer[OP_POPIV      ] = &CRunBytecode::popivOpcode;
    _opcodePointer[OP_POPRV      ] = &CRunBytecode::poprvOpcode;
+   _opcodePointer[OP_POPBV      ] = &CRunBytecode::popbvOpcode;
    _opcodePointer[OP_POPMV      ] = &CRunBytecode::popmvOpcode;
    _opcodePointer[OP_INCSP      ] = &CRunBytecode::incspOpcode;
    _opcodePointer[OP_DECSP      ] = &CRunBytecode::decspOpcode;
@@ -140,12 +141,14 @@ void CRunBytecode::initOpcodePointer()
    _opcodePointer[OP_PUSHSV     ] = &CRunBytecode::pushsvOpcode;
    _opcodePointer[OP_PUSHIV     ] = &CRunBytecode::pushivOpcode;
    _opcodePointer[OP_PUSHRV     ] = &CRunBytecode::pushrvOpcode;
+   _opcodePointer[OP_PUSHBV     ] = &CRunBytecode::pushbvOpcode;
    _opcodePointer[OP_PUSHMV     ] = &CRunBytecode::pushmvOpcode;
 
    _opcodePointer[OP_PUSHST     ] = &CRunBytecode::pushstOpcode;
    _opcodePointer[OP_PUSHIT     ] = &CRunBytecode::pushitOpcode;
    _opcodePointer[OP_PUSHRT     ] = &CRunBytecode::pushrtOpcode;
    _opcodePointer[OP_PUSHCT     ] = &CRunBytecode::pushctOpcode;
+   _opcodePointer[OP_PUSHLT     ] = &CRunBytecode::pushltOpcode;
    _opcodePointer[OP_PUSHBT     ] = &CRunBytecode::pushbtOpcode;
    _opcodePointer[OP_PUSHMT     ] = &CRunBytecode::pushmtOpcode;
 
@@ -235,7 +238,7 @@ void CRunBytecode::procImprima()
             address += sizeof(int);
             std::cout << "char [" << (int)_dataStack.getInt(address|SET_LOCAL_BIT|SET_NEG_BIT) << "]";
             break;
-         case CSymbol::BOOL:
+         case CSymbol::LOGICAL:
             address += sizeof(int);
             boolValue = _dataStack.getInt(address|SET_LOCAL_BIT|SET_NEG_BIT);
             if (boolValue == 0) {
@@ -255,7 +258,7 @@ void CRunBytecode::procImprima()
       }
    }
    std::cout << std::endl;
-   _dataStack.popBytes(address);
+   _dataStack.discardBytes(address);
 }
 
 
@@ -342,7 +345,7 @@ void CRunBytecode::lcallOpcode()
       error( "Endereco para lcall deve conter uma string constante !!!" );
    }
 
-   address++;
+   address=sumAddress(address,1);
 
    if (_dataStack.getCString(address) == "imprima") {
       procImprima();
@@ -920,7 +923,13 @@ void CRunBytecode::getaOpcode()
 
 void CRunBytecode::igetvOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("igetv opcode");
+
+   int resultAddress = _code.fetchInt();
+   int varAddress    = _code.fetchInt();
+   int offset        = _dataStack.getInt(_code.fetchInt());
+
+   _dataStack.setInt(resultAddress, _dataStack.getInt(sumAddress(varAddress,offset)));
 }
 
 void CRunBytecode::sgetvOpcode()
@@ -935,7 +944,13 @@ void CRunBytecode::rgetvOpcode()
 
 void CRunBytecode::isetvOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("isetv opcode");
+
+   int varAddress    = _code.fetchInt();
+   int offset        = _dataStack.getInt(_code.fetchInt());
+   int value         = _dataStack.getInt(_code.fetchInt());
+
+   _dataStack.setInt(sumAddress(varAddress,offset), value);
 }
 
 void CRunBytecode::ssetvOpcode()
@@ -1004,6 +1019,16 @@ void CRunBytecode::poprvOpcode()
    _dataStack.setReal(address, _dataStack.popReal());
 }
 
+void CRunBytecode::popbvOpcode()
+{
+   trace ("popbv opcode");
+
+   int varAddress  = _code.fetchInt();
+   int sizeAddress = _code.fetchInt();
+
+   _dataStack.setBytes(varAddress, _dataStack.popBytes(_dataStack.getInt(sizeAddress)));
+}
+
 void CRunBytecode::popmvOpcode()
 {
    invalidOpcode(__FUNCTION__);
@@ -1025,7 +1050,7 @@ void CRunBytecode::decspOpcode()
 
    int size = _dataStack.getInt(_code.fetchInt());
 
-   _dataStack.popBytes(size);
+   _dataStack.discardBytes(size);
 }
 
 
@@ -1139,6 +1164,16 @@ void CRunBytecode::pushrvOpcode()
    _dataStack.pushReal(_dataStack.getReal(address));
 }
 
+void CRunBytecode::pushbvOpcode()
+{
+   trace ("pushbv opcode");
+
+   int varAddress  = _code.fetchInt();
+   int sizeAddress = _code.fetchInt();
+
+   _dataStack.pushBytes(_dataStack.getBytes(varAddress, _dataStack.getInt(sizeAddress)));
+}
+
 void CRunBytecode::pushmvOpcode()
 {
    invalidOpcode(__FUNCTION__);
@@ -1172,11 +1207,18 @@ void CRunBytecode::pushctOpcode()
    _dataStack.pushInt(CSymbol::CHAR);
 }
 
+void CRunBytecode::pushltOpcode()
+{
+   trace ("pushlt opcode");
+
+   _dataStack.pushInt(CSymbol::LOGICAL);
+}
+
 void CRunBytecode::pushbtOpcode()
 {
    trace ("pushbt opcode");
 
-   _dataStack.pushInt(CSymbol::BOOL);
+   _dataStack.pushInt(CSymbol::BYTE);
 }
 
 void CRunBytecode::pushmtOpcode()
@@ -1240,7 +1282,7 @@ void CRunBytecode::sallocOpcode()
    }
 
    std::string *value = new std::string();
-   _dataStack.setInt(address+1, (int)value);
+   _dataStack.setInt(sumAddress(address,1), (int)value);
 }
 
 void CRunBytecode::sfreeOpcode()
@@ -1250,14 +1292,15 @@ void CRunBytecode::sfreeOpcode()
    int address = _code.fetchInt();
 
    char type = _dataStack.getByte(address);
+   address=sumAddress(address,1);
 
    if (type != CSymbol::VAR) {
       error( "sfree apenas com variaveis !!!" );
    }
 
-   std::string *value = (std::string*)_dataStack.getInt(address+1);
+   std::string *value = (std::string*)_dataStack.getInt(address);
    delete value;
-   _dataStack.setInt(address+1, 0);
+   _dataStack.setInt(address, 0);
 }
 
 void CRunBytecode::ssetcOpcode()

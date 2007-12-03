@@ -3,33 +3,43 @@ program exemplo
 var c byte[8] // sizeof c
 
 proc main
-    var t1 int
-
     // c.x := 10;
     isetv c:0, 10 // *( c + 0 ) := 10
 
     // c.y := 20;
     isetv c:4, 20 // *(c + 4 ) := 20
 
-    // imprima( "c.x=", c.x );
-    igetv t1, c:0 // t1 := *( c + 0)
-    pushiv t1
-    pushit
-    pushsv "c.x="
-    pushst
-    push_2
-    lcall imprima
-
-    // imprima( "c.y=", c.y );
-    igetv t1, c:4 // t1 := *(c + 4)
-    pushiv t1
-    pushit
-    pushsv "c.y="
-    pushst
-    push_2
-    lcall imprima
+    pushbv c, 8
+    pcall exibe
 
     exit_0
+endproc
+
+proc exibe
+    param est byte[8]
+
+    var t1 int
+
+    // imprima( "est.x=", est.x );
+    igetv t1, est:0 // t1 := *( est + 0)
+    pushiv t1
+    pushit
+    pushsv "est.x="
+    pushst
+    push_2
+    lcall imprima
+
+    // imprima( "est.y=", est.y );
+    igetv t1, est:4 // t1 := *(est + 4)
+    pushiv t1
+    pushit
+    pushsv "est.y="
+    pushst
+    push_2
+    lcall imprima
+
+    decsp 12
+    ret
 endproc
 
 endprogram

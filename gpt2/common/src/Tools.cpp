@@ -244,7 +244,7 @@ int getTypeSize(const int &type)
    switch(type) {
    case CSymbol::INT:
    case CSymbol::CHAR:
-   case CSymbol::BOOL:
+   case CSymbol::LOGICAL:
       return sizeof(int);
    case CSymbol::REAL:
       return sizeof(double);
@@ -288,7 +288,6 @@ std::string realAddressString(int address)
    return result;
 }
 
-/*
 int sumAddress(int address, int value)
 {
    bool localAddress = false;
@@ -305,12 +304,11 @@ int sumAddress(int address, int value)
    }
    address += value;
    if (localAddress) {
-      address |= SET_LOCAL_BIT;
+      address = abs(address) | SET_LOCAL_BIT;
    }
    if (negAddress) {
-      address |= SET_NEG_BIT;
+      address = abs(address) | SET_NEG_BIT;
    }
    return address;
 }
-*/
 

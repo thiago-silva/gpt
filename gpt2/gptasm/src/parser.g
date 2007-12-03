@@ -76,21 +76,23 @@ options {
 //---------------
 {
   char tk_type;
+  int byteSize = 0;
 }
-  : "var" tk_id:T_ID tk_type=primitive_type
-    { bytecode.makeVarDefinition(tk_id->getText(), tk_type); }
+  : "var" tk_id:T_ID tk_type=primitive_type[byteSize]
+    { bytecode.makeVarDefinition(tk_id->getText(), tk_type, byteSize); }
   ;
 
 //--------------------------------
-  primitive_type returns [char ret]
+  primitive_type [int &byteSize] returns [char ret]
 //--------------------------------
   : "int"     {ret=CSymbol::INT;    }
   | "real"    {ret=CSymbol::REAL;   }
   | "char"    {ret=CSymbol::CHAR;   }
   | "string"  {ret=CSymbol::STRING; }
-  | "bool"    {ret=CSymbol::BOOL;   }
+  | "bool"    {ret=CSymbol::LOGICAL;   }
   | "pointer" {ret=CSymbol::POINTER;}
   | "matrix"  {ret=CSymbol::MATRIX; }
+  | "byte"    T_ABREC T_INT_VALUE {byteSize = atoi(getLastTokenText().c_str());} T_FECHAC {ret=CSymbol::BYTE; }
   ;
 
 //#################################
@@ -116,9 +118,10 @@ options {
 //---------------------
 {
   int tk_type;
+  int byteSize = 0;
 }
-  : "param" ("ref")? tk_id:T_ID tk_type=primitive_type
-    { bytecode.makeParDefinition(tk_id->getText(), tk_type); }
+  : "param" ("ref")? tk_id:T_ID tk_type=primitive_type[byteSize]
+    { bytecode.makeParDefinition(tk_id->getText(), tk_type, byteSize); }
   ;
 
 //#####################
@@ -218,7 +221,7 @@ options {
       identifier T_COMMA identifier
    |  ("igetv"|"sgetv"|"rgetv")
       {bytecode.addOpcode(getLastTokenText());}
-      identifier T_COMMA element T_COLON element
+      identifier T_COMMA identifier T_COLON element
    |  ("isetv"|"ssetv"|"rsetv")
       {bytecode.addOpcode(getLastTokenText());}
       identifier T_COLON element T_COMMA element
@@ -241,12 +244,24 @@ options {
    :  ("pushiv"|"pushsv"|"pushrv"|"pushmv")
       {bytecode.addOpcode(getLastTokenText());}
       element
-   |  ("pushit"|"pushst"|"pushrt"|"pushct"|"pushbt"|"pushmt")
+   |  "pushbv"
       {bytecode.addOpcode(getLastTokenText());}
-//   |  "pop"
+      element
+      T_COMMA
+      T_INT_VALUE
+      { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
+      // TODO: muitos opcodes poderiam ter o valor inteiro diretamente ao inves de um enderecamento...
+   |  ("pushit"|"pushst"|"pushrt"|"pushct"|"pushlt"|"pushbt"|"pushmt")
+      {bytecode.addOpcode(getLastTokenText());}
    |  ("popiv"|"popsv"|"poprv"|"popmv")
       {bytecode.addOpcode(getLastTokenText());}
       identifier
+   |  "popbv"
+      {bytecode.addOpcode(getLastTokenText());}
+      identifier
+      T_COMMA
+      T_INT_VALUE
+      { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
    |  ("incsp"|"decsp")
       {bytecode.addOpcode(getLastTokenText());}
       T_INT_VALUE

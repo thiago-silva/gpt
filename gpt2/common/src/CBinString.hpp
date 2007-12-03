@@ -36,7 +36,7 @@ public:
    void pushCString(const std::string &value);
    std::string popCString();
    void pushBytes(const int &number);
-   void popBytes(const int &number);
+   void discardBytes(const int &number);
    bool removeIfEqual(const int &value);
    bool removeIfEqual(const char &value);
    bool removeIfEqual(const std::string &value);
@@ -44,6 +44,10 @@ public:
    std::string::find;
    void pushByte(const char &value);
    char popByte();
+   void setBytes(const int &address, const std::string &value);
+   std::string getBytes(const int &address, const int &size);
+   void pushBytes(const std::string &value);
+   std::string popBytes(const int &size);
 private:
    void writeData(const void *value, const size_t &size);
 };
