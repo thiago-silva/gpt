@@ -935,12 +935,24 @@ void CRunBytecode::igetvOpcode()
 
 void CRunBytecode::sgetvOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("sgetv opcode");
+
+   int resultAddress = _code.fetchInt();
+   int varAddress    = _code.fetchInt();
+   int offset        = _dataStack.getInt(_code.fetchInt());
+
+   _dataStack.setBytes(resultAddress, _dataStack.getBytes(sumAddress(varAddress,offset), 5));
 }
 
 void CRunBytecode::rgetvOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("rgetv opcode");
+
+   int resultAddress = _code.fetchInt();
+   int varAddress    = _code.fetchInt();
+   int offset        = _dataStack.getInt(_code.fetchInt());
+
+   _dataStack.setReal(resultAddress, _dataStack.getReal(sumAddress(varAddress,offset)));
 }
 
 void CRunBytecode::isetvOpcode()
@@ -956,12 +968,24 @@ void CRunBytecode::isetvOpcode()
 
 void CRunBytecode::ssetvOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("ssetv opcode");
+
+   int varAddress    = _code.fetchInt();
+   int offset        = _dataStack.getInt(_code.fetchInt());
+   int valueAddress  = _code.fetchInt();
+
+   _dataStack.setBytes(sumAddress(varAddress,offset), _dataStack.getBytes(valueAddress, 5));
 }
 
 void CRunBytecode::rsetvOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("rsetv opcode");
+
+   int varAddress = _code.fetchInt();
+   int offset     = _dataStack.getInt(_code.fetchInt());
+   double value   = _dataStack.getReal(_code.fetchInt());
+
+   _dataStack.setReal(sumAddress(varAddress,offset), value);
 }
 
 void CRunBytecode::jmpOpcode()

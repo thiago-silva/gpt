@@ -1,0 +1,47 @@
+program exemplo
+
+var c data[12] // sizeof real + sizeof int
+
+proc main
+    // c.x := 10.2;
+    rsetv c:0, 10.2 // *( c + 0 ) := 10.2
+
+    // c.y := 20;
+    isetv c:8, 20 // *(c + 4 ) := 20
+
+    pushdv c, 12
+    pcall exibe
+
+    exit_0
+endproc
+
+proc exibe
+    param est data[12]
+
+    var t1 real
+    var t2 int
+
+    // imprima( "est.x=", est.x );
+    rgetv t1, est:0 // t1 := *( est + 0)
+    pushrv t1
+    pushrt
+    pushsv "est.x="
+    pushst
+    push_2
+    lcall imprima
+
+    // imprima( "est.y=", est.y );
+    igetv t2, est:8 // t2 := *(est + 8)
+    pushiv t2
+    pushit
+    pushsv "est.y="
+    pushst
+    push_2
+    lcall imprima
+
+    decsp 20
+    ret
+endproc
+
+endprogram
+
