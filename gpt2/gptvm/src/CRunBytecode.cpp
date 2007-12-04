@@ -128,7 +128,7 @@ void CRunBytecode::initOpcodePointer()
    _opcodePointer[OP_POPSV      ] = &CRunBytecode::popsvOpcode;
    _opcodePointer[OP_POPIV      ] = &CRunBytecode::popivOpcode;
    _opcodePointer[OP_POPRV      ] = &CRunBytecode::poprvOpcode;
-   _opcodePointer[OP_POPBV      ] = &CRunBytecode::popbvOpcode;
+   _opcodePointer[OP_POPDV      ] = &CRunBytecode::popdvOpcode;
    _opcodePointer[OP_POPMV      ] = &CRunBytecode::popmvOpcode;
    _opcodePointer[OP_INCSP      ] = &CRunBytecode::incspOpcode;
    _opcodePointer[OP_DECSP      ] = &CRunBytecode::decspOpcode;
@@ -141,15 +141,15 @@ void CRunBytecode::initOpcodePointer()
    _opcodePointer[OP_PUSHSV     ] = &CRunBytecode::pushsvOpcode;
    _opcodePointer[OP_PUSHIV     ] = &CRunBytecode::pushivOpcode;
    _opcodePointer[OP_PUSHRV     ] = &CRunBytecode::pushrvOpcode;
-   _opcodePointer[OP_PUSHBV     ] = &CRunBytecode::pushbvOpcode;
+   _opcodePointer[OP_PUSHDV     ] = &CRunBytecode::pushdvOpcode;
    _opcodePointer[OP_PUSHMV     ] = &CRunBytecode::pushmvOpcode;
 
    _opcodePointer[OP_PUSHST     ] = &CRunBytecode::pushstOpcode;
    _opcodePointer[OP_PUSHIT     ] = &CRunBytecode::pushitOpcode;
    _opcodePointer[OP_PUSHRT     ] = &CRunBytecode::pushrtOpcode;
    _opcodePointer[OP_PUSHCT     ] = &CRunBytecode::pushctOpcode;
-   _opcodePointer[OP_PUSHLT     ] = &CRunBytecode::pushltOpcode;
    _opcodePointer[OP_PUSHBT     ] = &CRunBytecode::pushbtOpcode;
+   _opcodePointer[OP_PUSHDT     ] = &CRunBytecode::pushdtOpcode;
    _opcodePointer[OP_PUSHMT     ] = &CRunBytecode::pushmtOpcode;
 
    _opcodePointer[OP_INCSP_4     ] = &CRunBytecode::incsp_4Opcode;
@@ -238,7 +238,7 @@ void CRunBytecode::procImprima()
             address += sizeof(int);
             std::cout << "char [" << (int)_dataStack.getInt(address|SET_LOCAL_BIT|SET_NEG_BIT) << "]";
             break;
-         case CSymbol::LOGICAL:
+         case CSymbol::BOOL:
             address += sizeof(int);
             boolValue = _dataStack.getInt(address|SET_LOCAL_BIT|SET_NEG_BIT);
             if (boolValue == 0) {
@@ -251,6 +251,7 @@ void CRunBytecode::procImprima()
             address += sizeof(double);
             std::cout << _dataStack.getReal(address|SET_LOCAL_BIT|SET_NEG_BIT);
             break;
+         case CSymbol::DATA:
          case CSymbol::MATRIX:
          default:
             std::cout << "Tipo ainda nao suportado !!!" << std::endl;
@@ -1019,9 +1020,9 @@ void CRunBytecode::poprvOpcode()
    _dataStack.setReal(address, _dataStack.popReal());
 }
 
-void CRunBytecode::popbvOpcode()
+void CRunBytecode::popdvOpcode()
 {
-   trace ("popbv opcode");
+   trace ("popdv opcode");
 
    int varAddress  = _code.fetchInt();
    int sizeAddress = _code.fetchInt();
@@ -1164,9 +1165,9 @@ void CRunBytecode::pushrvOpcode()
    _dataStack.pushReal(_dataStack.getReal(address));
 }
 
-void CRunBytecode::pushbvOpcode()
+void CRunBytecode::pushdvOpcode()
 {
-   trace ("pushbv opcode");
+   trace ("pushdv opcode");
 
    int varAddress  = _code.fetchInt();
    int sizeAddress = _code.fetchInt();
@@ -1207,18 +1208,18 @@ void CRunBytecode::pushctOpcode()
    _dataStack.pushInt(CSymbol::CHAR);
 }
 
-void CRunBytecode::pushltOpcode()
-{
-   trace ("pushlt opcode");
-
-   _dataStack.pushInt(CSymbol::LOGICAL);
-}
-
 void CRunBytecode::pushbtOpcode()
 {
    trace ("pushbt opcode");
 
-   _dataStack.pushInt(CSymbol::BYTE);
+   _dataStack.pushInt(CSymbol::BOOL);
+}
+
+void CRunBytecode::pushdtOpcode()
+{
+   trace ("pushdt opcode");
+
+   _dataStack.pushInt(CSymbol::DATA);
 }
 
 void CRunBytecode::pushmtOpcode()

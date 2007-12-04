@@ -35,7 +35,7 @@ tokens {
    T_KW_BOOL="bool";
    T_KW_POINTER="pointer";
    T_KW_MATRIX="matrix";
-   T_KW_BYTE="byte";
+   T_KW_DATA="data";
    T_KW_PROC="proc";
    T_KW_ENDPROC="endproc";
    T_KW_PARAM="param";
@@ -114,7 +114,7 @@ tokens {
    T_KW_POPIV="popiv";
    T_KW_POPSV="popsv";
    T_KW_POPRV="poprv";
-   T_KW_POPBV="popbv";
+   T_KW_POPDV="popdv";
    T_KW_POPMV="popmv";
    T_KW_INCSP="incsp";
    T_KW_DECSP="decsp";
@@ -127,14 +127,14 @@ tokens {
    T_KW_PUSHIV="pushiv";
    T_KW_PUSHSV="pushsv";
    T_KW_PUSHRV="pushrv";
-   T_KW_PUSHBV="pushbv";
+   T_KW_PUSHDV="pushdv";
    T_KW_PUSHMV="pushmv";
    T_KW_PUSHIT="pushit";
    T_KW_PUSHST="pushst";
    T_KW_PUSHRT="pushrt";
    T_KW_PUSHCT="pushct";
-   T_KW_PUSHLT="pushlt";
    T_KW_PUSHBT="pushbt";
+   T_KW_PUSHDT="pushdt";
    T_KW_PUSHMT="pushmt";
    T_KW_INCSP_4="incsp_4";
    T_KW_INCSP_8="incsp_8";

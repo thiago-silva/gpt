@@ -1,6 +1,6 @@
 program exemplo
 
-var c byte[8] // sizeof c
+var c data[8] // sizeof c
 
 proc main
     // c.x := 10;
@@ -9,14 +9,14 @@ proc main
     // c.y := 20;
     isetv c:4, 20 // *(c + 4 ) := 20
 
-    pushbv c, 8
+    pushdv c, 8
     pcall exibe
 
     exit_0
 endproc
 
 proc exibe
-    param est byte[8]
+    param est data[8]
 
     var t1 int
 

@@ -24,11 +24,11 @@ public:
       STRING  = 'S',
       INT     = 'I',
       CHAR    = 'C',
-      LOGICAL = 'L',
+      BOOL    = 'B',
       REAL    = 'R',
+      DATA    = 'D',
       MATRIX  = 'M',
-      POINTER = 'P',
-      BYTE    = 'B'
+      POINTER = 'P'
    };
    CSymbol ();
    CSymbol (const int &scope, const std::string &name, const char &type, int size,

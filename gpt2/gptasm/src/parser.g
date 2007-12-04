@@ -89,10 +89,10 @@ options {
   | "real"    {ret=CSymbol::REAL;   }
   | "char"    {ret=CSymbol::CHAR;   }
   | "string"  {ret=CSymbol::STRING; }
-  | "bool"    {ret=CSymbol::LOGICAL;   }
+  | "bool"    {ret=CSymbol::BOOL;   }
   | "pointer" {ret=CSymbol::POINTER;}
   | "matrix"  {ret=CSymbol::MATRIX; }
-  | "byte"    T_ABREC T_INT_VALUE {byteSize = atoi(getLastTokenText().c_str());} T_FECHAC {ret=CSymbol::BYTE; }
+  | "data"    T_ABREC T_INT_VALUE {byteSize = atoi(getLastTokenText().c_str());} T_FECHAC {ret=CSymbol::DATA; }
   ;
 
 //#################################
@@ -244,19 +244,19 @@ options {
    :  ("pushiv"|"pushsv"|"pushrv"|"pushmv")
       {bytecode.addOpcode(getLastTokenText());}
       element
-   |  "pushbv"
+   |  "pushdv"
       {bytecode.addOpcode(getLastTokenText());}
       element
       T_COMMA
       T_INT_VALUE
       { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
       // TODO: muitos opcodes poderiam ter o valor inteiro diretamente ao inves de um enderecamento...
-   |  ("pushit"|"pushst"|"pushrt"|"pushct"|"pushlt"|"pushbt"|"pushmt")
+   |  ("pushit"|"pushst"|"pushrt"|"pushct"|"pushbt"|"pushdt"|"pushmt")
       {bytecode.addOpcode(getLastTokenText());}
    |  ("popiv"|"popsv"|"poprv"|"popmv")
       {bytecode.addOpcode(getLastTokenText());}
       identifier
-   |  "popbv"
+   |  "popdv"
       {bytecode.addOpcode(getLastTokenText());}
       identifier
       T_COMMA

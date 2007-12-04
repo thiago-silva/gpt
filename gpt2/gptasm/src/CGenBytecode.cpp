@@ -86,7 +86,7 @@ CGenBytecode::CGenBytecode()
    _opcodes[ "popiv"       ] = OP_POPIV;
    _opcodes[ "poprv"       ] = OP_POPRV;
    _opcodes[ "popsv"       ] = OP_POPSV;
-   _opcodes[ "popbv"       ] = OP_POPBV;
+   _opcodes[ "popdv"       ] = OP_POPDV;
    _opcodes[ "popmv"       ] = OP_POPMV;
    _opcodes[ "incsp"       ] = OP_INCSP;
    _opcodes[ "decsp"       ] = OP_DECSP;
@@ -99,14 +99,14 @@ CGenBytecode::CGenBytecode()
    _opcodes[ "pushiv"      ] = OP_PUSHIV;
    _opcodes[ "pushsv"      ] = OP_PUSHSV;
    _opcodes[ "pushrv"      ] = OP_PUSHRV;
-   _opcodes[ "pushbv"      ] = OP_PUSHBV;
+   _opcodes[ "pushdv"      ] = OP_PUSHDV;
    _opcodes[ "pushmv"      ] = OP_PUSHMV;
    _opcodes[ "pushit"      ] = OP_PUSHIT;
    _opcodes[ "pushst"      ] = OP_PUSHST;
    _opcodes[ "pushrt"      ] = OP_PUSHRT;
    _opcodes[ "pushct"      ] = OP_PUSHCT;
-   _opcodes[ "pushlt"      ] = OP_PUSHLT;
    _opcodes[ "pushbt"      ] = OP_PUSHBT;
+   _opcodes[ "pushdt"      ] = OP_PUSHDT;
    _opcodes[ "pushmt"      ] = OP_PUSHMT;
    _opcodes[ "incsp_4"     ] = OP_INCSP_4;
    _opcodes[ "incsp_8"     ] = OP_INCSP_8;

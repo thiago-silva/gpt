@@ -1,6 +1,6 @@
 program exemplo
 
-var c byte[8] // sizeof c
+var c data[8] // sizeof c
 
 proc main
     var t1 int

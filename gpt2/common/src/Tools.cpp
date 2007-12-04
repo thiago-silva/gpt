@@ -239,12 +239,12 @@ const int typeToLiteral( const int &type )
 }
 */
 
-int getTypeSize(const int &type)
+int getTypeSize(const int &type) // TODO: para o tipo DATA essa funcao deveria receber o size tambem...
 {
    switch(type) {
    case CSymbol::INT:
    case CSymbol::CHAR:
-   case CSymbol::LOGICAL:
+   case CSymbol::BOOL:
       return sizeof(int);
    case CSymbol::REAL:
       return sizeof(double);
