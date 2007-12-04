@@ -1058,19 +1058,22 @@ void CRunBytecode::popmvOpcode()
 {
    trace ("popmv opcode");
 
-   char *matrix    = (char*) _dataStack.getInt(_code.fetchInt());
+   int matrixAddress = _code.fetchInt();
 
    char *retMatrix = (char*) _dataStack.popInt();
    int elementSize = *((int*)(retMatrix+0));
    int elements    = *((int*)(retMatrix+sizeof(int)));
 
    int size = sizeof(int) + sizeof(int) + elements*elementSize;
+   char *matrix = (char*) _dataStack.getInt(matrixAddress);
+
    if (matrix) {
       delete []matrix;
    }
    matrix = new char[size];
    memcpy(matrix, retMatrix, size);
    delete []retMatrix;
+   _dataStack.setInt(matrixAddress, (int)matrix);
 }
 
 void CRunBytecode::incspOpcode()

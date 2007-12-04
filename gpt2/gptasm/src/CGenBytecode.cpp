@@ -297,7 +297,7 @@ void CGenBytecode::translateLabelsToAddress()
       std::map<std::string,int>::const_iterator solvedLabel;
       solvedLabel = _solvedLabels.find(unsolvedLabel->first);
       if (solvedLabel == _solvedLabels.end()) {
-         std::cout << "Label nao encontrado: " << unsolvedLabel->second << std::endl;
+         std::cout << "Label nao encontrado: " << unsolvedLabel->first << std::endl;
          abort();
       }
       _code.setInt(unsolvedLabel->second, solvedLabel->second);

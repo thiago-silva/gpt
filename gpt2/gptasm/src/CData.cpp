@@ -38,7 +38,7 @@ CSymbol* CData::addVariable (const int &scope, const std::string &name, const in
    //_data += symbol->getBinary();
    for (int i=0; i < symbol->getTypeSize(); i++) {
       // TODO: horrivel :-)
-      writeByte (' ');
+      writeByte ('\0');
    }
 
    return symbol;
