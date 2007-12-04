@@ -1,0 +1,69 @@
+program exemplo
+
+var m matrix
+var i int
+
+proc main
+    var t1 int
+
+    // aloca espaço para a matriz m
+    // m armazena dados de 4 bytes e tem 10 elementos iniciais
+    m1alloc m, 4, 10
+
+    // para i de 0 até 9 faça
+    iset i, 0
+    teste:
+    ile t1, i, 9
+    ifnot t1, proximo
+
+    // m[i] := i * 10;
+    imul t1, i, 10
+    m1set m, i, t1
+
+    // fim-para
+    iinc i, 1
+    jmp teste
+    proximo:
+
+    pushmv m
+    pcall mostra
+
+    // desaloca espaço da matriz m
+    mfree m
+
+    exit_0
+endproc
+
+proc mostra
+    param mat matrix
+    var t1 int
+
+    // imprima( "Valores armazenados:" );
+    pushsv "Valores armazenados:"
+    pushst
+    push_1
+    lcall imprima
+
+    // para i de 0 até 9 faça
+    iset i, 0
+    teste2:
+    ile t1, i, 9
+    ifnot t1, proximo2
+
+    // imprima( mat[i] );
+    m1get t1, mat, i
+    pushiv t1
+    pushit
+    push_1
+    lcall imprima
+
+    // fim-para
+    iinc i, 1
+    jmp teste2
+    proximo2:
+
+    ret
+endproc
+
+endprogram
+

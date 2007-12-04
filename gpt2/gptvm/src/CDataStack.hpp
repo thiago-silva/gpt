@@ -35,6 +35,7 @@ public:
    char getByte(const int &address);
    void pushByte(const char &value);
    char popByte();
+   void *getPointer(const int &address);
 private:
    int _BS;
    int _SP; // TODO: SP eh equivalente a size() ???

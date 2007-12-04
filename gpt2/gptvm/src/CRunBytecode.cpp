@@ -1056,7 +1056,21 @@ void CRunBytecode::popdvOpcode()
 
 void CRunBytecode::popmvOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("popmv opcode");
+
+   char *matrix    = (char*) _dataStack.getInt(_code.fetchInt());
+
+   char *retMatrix = (char*) _dataStack.popInt();
+   int elementSize = *((int*)(retMatrix+0));
+   int elements    = *((int*)(retMatrix+sizeof(int)));
+
+   int size = sizeof(int) + sizeof(int) + elements*elementSize;
+   if (matrix) {
+      delete []matrix;
+   }
+   matrix = new char[size];
+   memcpy(matrix, retMatrix, size);
+   delete []retMatrix;
 }
 
 void CRunBytecode::incspOpcode()
@@ -1201,7 +1215,16 @@ void CRunBytecode::pushdvOpcode()
 
 void CRunBytecode::pushmvOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("pushmv opcode");
+
+   char *matrix    = (char*) _dataStack.getInt(_code.fetchInt());
+   int elementSize = *((int*)(matrix+0));
+   int elements    = *((int*)(matrix+sizeof(int)));
+
+   int size = sizeof(int) + sizeof(int) + elements*elementSize;
+   char *newMatrix = new char[size]; // TODO: memory leak
+   memcpy(newMatrix, matrix, size);
+   _dataStack.pushInt((int)newMatrix);
 }
 
 void CRunBytecode::pushstOpcode()
@@ -1340,7 +1363,21 @@ void CRunBytecode::sgetcOpcode()
 
 void CRunBytecode::m1allocOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("m1alloc opcode");
+
+   // Header dos dados de uma matriz de uma linha:
+   // int (tamanho de cada elemento armazenado)
+   // int (numero de elementos)
+   // bytes (area sequencial para armazenar os dados)
+
+   int matrixAddress = _code.fetchInt();
+   int elementSize   = _dataStack.getInt(_code.fetchInt());
+   int elements      = _dataStack.getInt(_code.fetchInt());
+
+   char *matrix = new char[sizeof(int)+sizeof(int)+elementSize*elements];
+   *((int*)(matrix+0))           = elementSize;
+   *((int*)(matrix+sizeof(int))) = elements;
+   _dataStack.setInt(matrixAddress, (int)matrix);
 }
 
 void CRunBytecode::m2allocOpcode()
@@ -1350,17 +1387,44 @@ void CRunBytecode::m2allocOpcode()
 
 void CRunBytecode::mfreeOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("mfree opcode");
+
+   int matrixAddress = _code.fetchInt();
+
+   char *matrix = (char*) _dataStack.getInt(matrixAddress);
+
+   delete []matrix;
+   _dataStack.setInt(matrixAddress, 0);
 }
 
 void CRunBytecode::m1setOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("m1set opcode");
+
+   char *matrix     = (char*) _dataStack.getInt(_code.fetchInt());
+   int offset       = _dataStack.getInt(_code.fetchInt());
+   int valueAddress = _code.fetchInt();
+
+   int elementSize = *((int*)(matrix+0));
+//   int elements    = *((int*)(matrix+sizeof(int)));
+   char *data      = matrix + sizeof(int) + sizeof(int);
+   data += offset * elementSize;
+   memcpy(data, _dataStack.getPointer(valueAddress), elementSize);
 }
 
 void CRunBytecode::m1getOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("m1get opcode");
+
+   int resultAddress = _code.fetchInt();
+   char *matrix      = (char*) _dataStack.getInt(_code.fetchInt());
+   int offset        = _dataStack.getInt(_code.fetchInt());
+
+   int elementSize = *((int*)(matrix+0));
+//   int elements    = *((int*)(matrix+sizeof(int)));
+   char *data      = matrix + sizeof(int) + sizeof(int);
+   data += offset * elementSize;
+   memcpy(_dataStack.getPointer(resultAddress), data, elementSize);
 }
 
 void CRunBytecode::m2setOpcode()

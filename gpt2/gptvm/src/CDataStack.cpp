@@ -271,3 +271,14 @@ char CDataStack::getByte(const int &address)
       return CBinString::getByte(realAddress(address));
    }
 }
+
+
+void *CDataStack::getPointer(const int &address)
+{
+   if (IS_LOCAL_ADDRESS(address)) {
+      return (void*)(data() + _BS + realAddress(address));
+   } else {
+      return (void*)(data() + realAddress(address));
+   }
+}
+
