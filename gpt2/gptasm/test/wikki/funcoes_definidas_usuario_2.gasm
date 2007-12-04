@@ -15,7 +15,7 @@ proc main
     popiv x
 
     // imprima( "Fatorial de ", x, " é ", fatorial( x ) );
-    push_0 // retorno da função
+    pushir // retorno da função
     pushiv x
     pcall fatorial
     pushit
@@ -50,7 +50,7 @@ proc fatorial
     senao:
         // retorne z * fatorial( z - 1 );
         isub t1, z, 1
-        push_0 // retorno da função
+        pushir // retorno da função
         pushiv t1
         pcall fatorial
         popiv t1

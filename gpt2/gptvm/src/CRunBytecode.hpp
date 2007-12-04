@@ -138,6 +138,12 @@ private:
    void pushdvOpcode();
    void pushmvOpcode();
 
+   void pushsrOpcode();
+   void pushirOpcode();
+   void pushrrOpcode();
+   void pushdrOpcode();
+   void pushmrOpcode();
+
    void pushstOpcode();
    void pushitOpcode();
    void pushrtOpcode();

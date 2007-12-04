@@ -101,6 +101,11 @@ CGenBytecode::CGenBytecode()
    _opcodes[ "pushrv"      ] = OP_PUSHRV;
    _opcodes[ "pushdv"      ] = OP_PUSHDV;
    _opcodes[ "pushmv"      ] = OP_PUSHMV;
+   _opcodes[ "pushir"      ] = OP_PUSHIR;
+   _opcodes[ "pushsr"      ] = OP_PUSHSR;
+   _opcodes[ "pushrr"      ] = OP_PUSHRR;
+   _opcodes[ "pushdr"      ] = OP_PUSHDR;
+   _opcodes[ "pushmr"      ] = OP_PUSHMR;
    _opcodes[ "pushit"      ] = OP_PUSHIT;
    _opcodes[ "pushst"      ] = OP_PUSHST;
    _opcodes[ "pushrt"      ] = OP_PUSHRT;

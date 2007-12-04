@@ -5,7 +5,7 @@ var i int
 var t1 int
 
 proc main
-    push_0 // funciona pq sizeof(int) e de matrix sao iguais... mas e para real ???
+    pushmr
     pcall insere_dados
     popmv m
 

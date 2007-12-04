@@ -36,6 +36,7 @@ public:
    void pushByte(const char &value);
    char popByte();
    void *getPointer(const int &address);
+   void pushBytes(const void* data, const int &size);
 private:
    int _BS;
    int _SP; // TODO: SP eh equivalente a size() ???

@@ -290,6 +290,7 @@ std::string realAddressString(int address)
 
 int sumAddress(int address, int value)
 {
+// TODO: ao somar dados em address os limites deveriam ser testados
    bool localAddress = false;
    bool negAddress = false;
 

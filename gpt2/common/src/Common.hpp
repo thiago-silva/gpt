@@ -147,7 +147,12 @@ enum opcode {
    OP_PUSH_5      = 119,
    OP_EXIT_0      = 120,
    OP_EXIT_1      = 121,
-   OPCODE_NUMBER  = 121
+   OP_PUSHIR      = 122,
+   OP_PUSHSR      = 123,
+   OP_PUSHRR      = 124,
+   OP_PUSHDR      = 125,
+   OP_PUSHMR      = 126,
+   OPCODE_NUMBER  = 126
 };
 
 #endif

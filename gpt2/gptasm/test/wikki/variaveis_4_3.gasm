@@ -1,0 +1,30 @@
+program exemplo
+
+proc main
+    var v string
+
+//    salloc v
+    pushsr
+    pcall ajusta
+    popsv v
+
+    pushsv v
+    pushst
+    pushiv 1
+    lcall imprima
+
+    sfree v
+
+    exit 0
+endproc
+
+proc ajusta
+    param __result string
+
+    salloc __result
+    sset __result, "Hello !!!"
+    ret
+endproc
+
+endprogram
+

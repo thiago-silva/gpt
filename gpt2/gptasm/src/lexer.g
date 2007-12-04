@@ -136,6 +136,11 @@ tokens {
    T_KW_PUSHBT="pushbt";
    T_KW_PUSHDT="pushdt";
    T_KW_PUSHMT="pushmt";
+   T_KW_PUSHIR="pushir";
+   T_KW_PUSHRR="pushrr";
+   T_KW_PUSHSR="pushsr";
+   T_KW_PUSHDR="pushdr";
+   T_KW_PUSHMR="pushmr";
    T_KW_INCSP_4="incsp_4";
    T_KW_INCSP_8="incsp_8";
    T_KW_DECSP_4="decsp_4";

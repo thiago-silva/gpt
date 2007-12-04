@@ -251,6 +251,8 @@ options {
       T_INT_VALUE
       { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
       // TODO: muitos opcodes poderiam ter o valor inteiro diretamente ao inves de um enderecamento...
+   |  ("pushir"|"pushsr"|"pushrr"|"pushdr"|"pushmr")
+      {bytecode.addOpcode(getLastTokenText());}
    |  ("pushit"|"pushst"|"pushrt"|"pushct"|"pushbt"|"pushdt"|"pushmt")
       {bytecode.addOpcode(getLastTokenText());}
    |  ("popiv"|"popsv"|"poprv"|"popmv")

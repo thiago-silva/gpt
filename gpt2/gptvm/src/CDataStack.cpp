@@ -282,3 +282,16 @@ void *CDataStack::getPointer(const int &address)
    }
 }
 
+
+void CDataStack::pushBytes(const void* data, const int &size)
+{
+   const char* bytes = (const char*) data;
+   for(int i=0; i<size; i++) {
+      CBinString::pushByte(*bytes);
+      bytes++;
+   }
+
+   _SP+=size;
+}
+
+

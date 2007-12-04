@@ -5,9 +5,49 @@
 
 #include "Tools.hpp"
 
-
-// TODO: ao somar dados em address os limites deveriam ser testados
 // TODO: Armazenar todas as strings em memoria com o tamanho na frente ???
+
+struct SStringType {
+   char _type;
+   union UStringTypeValue {
+      std::string *_strValue;
+      int         _addressValue;
+   };
+   UStringTypeValue _value;
+   SStringType()
+   : _type(0)
+   {
+      _value._addressValue = 0;
+   }
+};
+
+struct SMatrixType {
+   int _elementSize;
+   int _elements;
+   char* _data;
+   SMatrixType()
+   : _elementSize(0)
+   , _elements(0)
+   , _data(NULL)
+   { }
+};
+
+struct SIntType {
+   int _value;
+
+   SIntType()
+   : _value(0)
+   { }
+};
+
+struct SRealType {
+   double _value;
+
+   SRealType()
+   : _value(0)
+   { }
+};
+
 
 CRunBytecode::CRunBytecode()
    : _returnCode(0)
@@ -144,6 +184,12 @@ void CRunBytecode::initOpcodePointer()
    _opcodePointer[OP_PUSHDV     ] = &CRunBytecode::pushdvOpcode;
    _opcodePointer[OP_PUSHMV     ] = &CRunBytecode::pushmvOpcode;
 
+   _opcodePointer[OP_PUSHSR     ] = &CRunBytecode::pushsrOpcode;
+   _opcodePointer[OP_PUSHIR     ] = &CRunBytecode::pushirOpcode;
+   _opcodePointer[OP_PUSHRR     ] = &CRunBytecode::pushrrOpcode;
+   _opcodePointer[OP_PUSHDR     ] = &CRunBytecode::pushdrOpcode;
+   _opcodePointer[OP_PUSHMR     ] = &CRunBytecode::pushmrOpcode;
+
    _opcodePointer[OP_PUSHST     ] = &CRunBytecode::pushstOpcode;
    _opcodePointer[OP_PUSHIT     ] = &CRunBytecode::pushitOpcode;
    _opcodePointer[OP_PUSHRT     ] = &CRunBytecode::pushrtOpcode;
@@ -152,10 +198,10 @@ void CRunBytecode::initOpcodePointer()
    _opcodePointer[OP_PUSHDT     ] = &CRunBytecode::pushdtOpcode;
    _opcodePointer[OP_PUSHMT     ] = &CRunBytecode::pushmtOpcode;
 
-   _opcodePointer[OP_INCSP_4     ] = &CRunBytecode::incsp_4Opcode;
-   _opcodePointer[OP_INCSP_8     ] = &CRunBytecode::incsp_8Opcode;
-   _opcodePointer[OP_DECSP_4     ] = &CRunBytecode::decsp_4Opcode;
-   _opcodePointer[OP_DECSP_8     ] = &CRunBytecode::decsp_8Opcode;
+   _opcodePointer[OP_INCSP_4    ] = &CRunBytecode::incsp_4Opcode;
+   _opcodePointer[OP_INCSP_8    ] = &CRunBytecode::incsp_8Opcode;
+   _opcodePointer[OP_DECSP_4    ] = &CRunBytecode::decsp_4Opcode;
+   _opcodePointer[OP_DECSP_8    ] = &CRunBytecode::decsp_8Opcode;
 
    _opcodePointer[OP_RET        ] = &CRunBytecode::retOpcode;
    _opcodePointer[OP_SALLOC     ] = &CRunBytecode::sallocOpcode;
@@ -346,7 +392,7 @@ void CRunBytecode::lcallOpcode()
       error( "Endereco para lcall deve conter uma string constante !!!" );
    }
 
-   address=sumAddress(address,1);
+   address=sumAddress(address, 1);
 
    if (_dataStack.getCString(address) == "imprima") {
       procImprima();
@@ -392,18 +438,18 @@ void CRunBytecode::hltOpcode()
 {
    trace ("hlt opcode");
 
-   exit(0);
+   exit(1);
 }
 
 void CRunBytecode::isumOpcode()
 {
    trace ("isum opcode");
 
-   int varAddress  = _code.fetchInt();
-   int val1Address = _code.fetchInt();
-   int val2Address = _code.fetchInt();
+   int varAddress = _code.fetchInt();
+   int val1       = _dataStack.getInt(_code.fetchInt());
+   int val2       = _dataStack.getInt(_code.fetchInt());
 
-   _dataStack.setInt(varAddress, _dataStack.getInt(val1Address) + _dataStack.getInt(val2Address));
+   _dataStack.setInt(varAddress, val1 + val2);
 }
 
 void CRunBytecode::ssumOpcode()
@@ -1023,7 +1069,30 @@ void CRunBytecode::ifnotOpcode()
 
 void CRunBytecode::popsvOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("popsv opcode");
+
+   int address = _code.fetchInt();
+
+//   if (_dataStack.getByte(address) != CSymbol::VAR) {
+//      error( "popsvOpcode apenas com variaveis !!!" );
+//   }
+
+   std::string* result = (std::string*) _dataStack.getInt(sumAddress(address,1));
+   if (result == NULL) {
+      _dataStack.setByte(address, CSymbol::VAR);
+      result = new std::string;
+      _dataStack.setInt(sumAddress(address,1), (int) result);
+   }
+
+   int value = _dataStack.popInt();
+   char type = _dataStack.popByte();
+
+   if (type == CSymbol::VAR) {
+      std::string* retValue = (std::string*) value;
+      *result = *retValue;
+   } else {
+      *result = _dataStack.getCString(value);
+   }
 }
 
 void CRunBytecode::popivOpcode()
@@ -1081,7 +1150,7 @@ void CRunBytecode::incspOpcode()
    trace ("incsp opcode");
 
    int valAddress = _code.fetchInt();
-   int size = _dataStack.getInt(valAddress);
+   int size       = _dataStack.getInt(valAddress);
 
    _dataStack.pushBytes(size);
 }
@@ -1144,19 +1213,25 @@ void CRunBytecode::push_5Opcode()
 }
 
 
-
 void CRunBytecode::pushsvOpcode()
 {
    trace ("pushsv opcode");
 
    int address = _code.fetchInt();
 
-   _dataStack.pushByte(CSymbol::VAR);
-
-   std::string *value = new std::string(); // TODO: quando eh desalocado ??? 
-   _dataStack.pushInt((int)value);
-
+   std::string *value = new std::string(); // TODO: quando eh desalocado ??? No popsv ?
    *value = _dataStack.getString(address);
+
+   SStringType type;
+   type._type                = CSymbol::VAR;
+   type._value._addressValue = (int)value;
+
+//   std::cout << "sizeof(type)=" << sizeof(type) << std::endl;
+//   _dataStack.pushBytes(&type, sizeof(type));
+//   TODO: problemas de alinhamento nas estruturas... nao consegui desativar com pragmas...
+
+   _dataStack.pushByte(CSymbol::VAR);
+   _dataStack.pushInt((int)value);
 }
 
 
@@ -1191,10 +1266,10 @@ void CRunBytecode::pushivOpcode()
 {
    trace ("pushiv opcode");
 
-   int address = _code.fetchInt();
+   int value = _dataStack.getInt(_code.fetchInt());
 
    // Empilha o conteudo para que o formato dos dados globais e locais sejam o mesmo
-   _dataStack.pushInt(_dataStack.getInt(address));
+   _dataStack.pushInt(value);
 }
 
 void CRunBytecode::pushrvOpcode()
@@ -1229,6 +1304,50 @@ void CRunBytecode::pushmvOpcode()
    memcpy(newMatrix, matrix, size);
    _dataStack.pushInt((int)newMatrix);
 }
+
+
+void CRunBytecode::pushsrOpcode()
+{
+   trace ("pushsr opcode");
+
+   SStringType type;
+
+   _dataStack.pushBytes((char*)&type, sizeof(type));
+}
+
+
+void CRunBytecode::pushirOpcode()
+{
+   trace ("pushir opcode");
+
+   _dataStack.pushInt(0);
+}
+
+void CRunBytecode::pushrrOpcode()
+{
+   trace ("pushrr opcode");
+
+   _dataStack.pushReal(0);
+}
+
+void CRunBytecode::pushdrOpcode()
+{
+   trace ("pushdr opcode");
+
+   int size = _dataStack.getInt(_code.fetchInt());
+
+   _dataStack.pushBytes(size);
+}
+
+void CRunBytecode::pushmrOpcode()
+{
+   trace ("pushmr opcode");
+
+   SMatrixType type;
+
+   _dataStack.pushBytes((char*)&type, sizeof(type));
+}
+
 
 void CRunBytecode::pushstOpcode()
 {
