@@ -2,6 +2,7 @@
 #define SYMBOLTABLEEXCEPTIONS_HPP
 
 #include "Symbol.hpp"
+#include "Types.hpp"
 
 #include <string>
 
@@ -39,11 +40,20 @@ private:
 
 class RedeclarationException {
 public:
-  RedeclarationException(const Symbol& s);
+  RedeclarationException(const Symbol&);
 
   const Symbol& symbol() const;
 private:
   Symbol _symbol;
+};
+
+class UnmatchedException {
+public:
+  UnmatchedException(const std::string&);
+
+  const std::string& lexeme();
+private:
+  std::string _lexeme;
 };
 
 #endif

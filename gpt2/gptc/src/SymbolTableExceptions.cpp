@@ -49,3 +49,15 @@ RedeclarationException::RedeclarationException(const Symbol& s)
 const Symbol& RedeclarationException::symbol() const {
   return _symbol;
 }
+
+//--------------------------------------------------------
+
+
+UnmatchedException::UnmatchedException(const std::string& l)
+  : _lexeme(l) {
+
+}
+
+const std::string& UnmatchedException::lexeme() {
+  return _lexeme;
+}

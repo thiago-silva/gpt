@@ -26,16 +26,27 @@
 #include <string>
 
 #include "PortugolAST.hpp"
+#include "Symbol.hpp"
 
 class SymbolTable;
-class SymbolList;
 class Type;
 class TypeList;
+class TypeBuilder;
 
-typedef std::list<RefPortugolAST> IDList;
+typedef std::list<RefPortugolAST>                IDList;
 
-typedef std::list<std::pair<std::string,Type*> > InitStructList;
-typedef std::list<std::pair<int,Type*> >         InitMatrixList;
+//list<pair<field, type>>
+typedef std::list<std::pair<RefPortugolAST,Type*> > InitStructList;
+
+//list<pair<dimsize,type>>
+class InitMatrixList : public std::list<std::pair<int,Type*> > {
+public:
+  bool              hasUniformDimensions() const;
+  Type*             elementsDivergeFrom(Type*) const;
+  Type*             evaluatedElementType(Type* from) const;
+  int               divergentDimensionFrom(int) const;
+  int               dimensions() const;
+};
 
 class BaseSemanticWalker : public antlr::TreeParser {
 
@@ -45,55 +56,65 @@ public:
 protected:
   void useLib(const std::string&);
 
-  void declare(const IDList&, Type*, bool);
+  Type* getStructType(RefPortugolAST);
 
-  void defineStruct(const std::string&, const SymbolList&, int);
+  Type* getSymbolType(RefPortugolAST);
 
-  void declareProc(const std::string&, const SymbolList&, int, Type* = 0);
+  Type* getSymbolType(RefPortugolAST,Type*, RefPortugolAST);
 
-  Type* getType(const std::string&);
-  Type* getType(int);
+  void setCurrentScope(RefPortugolAST id, const SymbolList& params);
 
-  Type* createAnonymousStructFor();
+  void declare(const IDList&, Type*);
 
-  Type* getSymbolType(const std::string&);
+  void declareProc(RefPortugolAST, SymbolList&);
+  void declareProc(RefPortugolAST, SymbolList&, Type*);
+  void declareProc(const Symbol&,  SymbolList&);
 
-  Type* evalFCall(const std::string&, const TypeList&);
+//   void defineStruct(RefPortugolAST, const SymbolList&);
+  void declareStruct(RefPortugolAST, const SymbolList& );
 
-  void evalMatrixSubscript(Type*);
 
-  Type* evalAttribution(Type*, Type*);
-  Type* evalAttribution(Type*, const InitMatrixList&);
-  Type* evalAttribution(Type*, const InitStructList&);
+  Type* evalInitStruct(const InitStructList& stc);
+  Type* evalInitMatrix(int, const InitMatrixList& mtx);
 
-  Type* createAnonymousStructFor(const InitStructList&);
+  Type* evalMatrixSubscript(RefPortugolAST, Type*, int);
 
-  Type* evalHomogeneity(const InitMatrixList& mtx);
+  void evalAttribution(int,Type*, Type*);
 
-  Type* evalExpr_OU(Type* left, Type* right);
-  Type* evalExpr_E(Type* left, Type* right);
-  Type* evalExpr_BIT_OU(Type* left, Type* right);
-  Type* evalExpr_BIT_OUX(Type* left, Type* right);
-  Type* evalExpr_BIT_E(Type* left, Type* right);
-  Type* evalExpr_IGUAL(Type* left, Type* right);
-  Type* evalExpr_DIFERENTE(Type* left, Type* right);
-  Type* evalExpr_MAIOR(Type* left, Type* right);
-  Type* evalExpr_MENOR(Type* left, Type* right);
-  Type* evalExpr_MAIOR_EQ(Type* left, Type* right);
-  Type* evalExpr_MENOR_EQ(Type* left, Type* right);
-  Type* evalExpr_BIT_SHIFT_LEFT(Type* left, Type* right);
-  Type* evalExpr_BIT_SHIFT_RIGHT(Type* left, Type* right);
-  Type* evalExpr_MAIS(Type* left, Type* right);
-  Type* evalExpr_MENOS(Type* left, Type* right);
-  Type* evalExpr_DIV(Type* left, Type* right);
-  Type* evalExpr_MULTIP(Type* left, Type* right);
-  Type* evalExpr_MOD(Type* left, Type* right);
-  Type* evalExpr_UN_NEGATIVO(Type*);
-  Type* evalExpr_UN_POSITIVO(Type*);
-  Type* evalExpr_NAO(Type*);
-  Type* evalExpr_BIT_NAO(Type*);
+  Type* evalCall(RefPortugolAST id, const TypeList& paramTypes);
+
+  void evalRetorne(int,Type*);
+
+  void evalCondicional(int, Type*);
+
+  Type* evalExpr_OU(int,Type* left, Type* right);
+  Type* evalExpr_E(int,Type* left, Type* right);
+  Type* evalExpr_BIT_OU(int,Type* left, Type* right);
+  Type* evalExpr_BIT_OUX(int,Type* left, Type* right);
+  Type* evalExpr_BIT_E(int,Type* left, Type* right);
+  Type* evalExpr_IGUAL(int,Type* left, Type* right);
+  Type* evalExpr_DIFERENTE(int,Type* left, Type* right);
+  Type* evalExpr_MAIOR(int,Type* left, Type* right);
+  Type* evalExpr_MENOR(int,Type* left, Type* right);
+  Type* evalExpr_MAIOR_EQ(int,Type* left, Type* right);
+  Type* evalExpr_MENOR_EQ(int,Type* left, Type* right);
+  Type* evalExpr_BIT_SHIFT_LEFT(int,Type* left, Type* right);
+  Type* evalExpr_BIT_SHIFT_RIGHT(int,Type* left, Type* right);
+  Type* evalExpr_MAIS(int,Type* left, Type* right);
+  Type* evalExpr_MENOS(int,Type* left, Type* right);
+  Type* evalExpr_DIV(int,Type* left, Type* right);
+  Type* evalExpr_MULTIP(int,Type* left, Type* right);
+  Type* evalExpr_MOD(int,Type* left, Type* right);
+  Type* evalExpr_UN_NEGATIVO(int,Type*);
+  Type* evalExpr_UN_POSITIVO(int,Type*);
+  Type* evalExpr_NAO(int,Type*);
+  Type* evalExpr_BIT_NAO(int,Type*);
+
+  void report(int, const std::string&);
 
   SymbolTable* _symtable;
+  TypeBuilder* _typeBuilder;
+  Symbol       _currentScopeSymbol;
 };
 
 #endif
