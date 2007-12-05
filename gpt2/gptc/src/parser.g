@@ -201,17 +201,24 @@ lista_inicializacao
   ;
 
 inicializacao_composta!
-  : T_ABRE_CHAVE!
+  : ch:T_ABRE_CHAVE!
       idx:inicializacao_indices
     T_FECHA_CHAVE!
 
-                 {#inicializacao_composta = #([T_VAL_MATRIZ, "&vmatriz"],idx);}
+                 {
+                   #inicializacao_composta = #([T_VAL_MATRIZ, "&vmatriz"],idx);
+                   #inicializacao_composta->setLine(ch->getLine());
+                 }
 
-  | T_ABRE_COLCHETE!
+  | co:T_ABRE_COLCHETE!
       mem:inicializacao_membros
     T_FECHA_COLCHETE!
 
-                 {#inicializacao_composta = #([T_VAL_ESTRUTURA, "&vestr"],mem);}
+                 {
+                   #inicializacao_composta =
+                       #([T_VAL_ESTRUTURA, "&vestr"],mem);
+                   #inicializacao_composta->setLine(co->getLine());
+                 }
   ;
 
 inicializacao_indices
@@ -425,10 +432,8 @@ en_caso
       (caso_senao)? T_FIM_CASO!
   ;
 
-teste_caso!
-  : l:literal T_FACA! en:lista_enunciados T_FIM_FACA!
-
-                                {#teste_caso = #(l, en);}
+teste_caso
+  : literal T_FACA^ lista_enunciados T_FIM_FACA!
   ;
 
 caso_senao
@@ -554,5 +559,4 @@ literal
   | T_CARACTERE_LITERAL
   | T_VERDADEIRO
   | T_FALSO
-  | T_NULO
   ;
