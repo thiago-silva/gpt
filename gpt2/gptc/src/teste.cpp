@@ -33,6 +33,11 @@ void dump_tokens(char* fname) {
 RefPortugolAST dump_tree(char* fname, bool should_dump) {
 
   std::ifstream fi(fname);
+  if (!fi) {
+    std::cerr << "nao foi possivel abrir o arquivo " << fname << std::endl;
+    exit(1);
+  }
+
   PortugolLexer lexer(fi, true);
   PortugolParser parser(lexer);
 
@@ -63,7 +68,7 @@ void semantic(char* fname) {
 
   ast = dump_tree(fname, true);
 
-  SymbolTable* symtable = SymbolTable::create(fname);
+  SymbolTable* symtable = new SymbolTable(fname);
 
   SemanticWalker semantic(symtable);
   semantic.programa(ast);
