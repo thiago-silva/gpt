@@ -7,125 +7,191 @@
 
 #include <iostream>
 
-void SymbolTable::setScope(const std::string& scope) {
-  _scope = scope;
+SymbolTable::SymbolTable(const std::string& unit)
+  : _unit(unit), _typeBuilder(new TypeBuilder) {
+
+  setGlobalScope();
 }
 
 void SymbolTable::setGlobalScope() {
-  _scope = "@global";
+  _scope = globalScope();
 }
 
-Type* SymbolTable::getType(const std::string& name) {
-  TypeList::iterator ret = _types.find(name);
+bool SymbolTable::isInGlobalScope() {
+  return globalScope() == _scope;
+}
 
-  if (ret == _types.end()) {
+void SymbolTable::setIgnoreScope() {
+  static char r = 1;
+  _scope = "internal" + (r++);
+}
+
+const std::string SymbolTable::globalScope() {
+  return "@global";
+}
+
+void SymbolTable::setScope(const Symbol& scopeSymbol) {  
+  _scope = scopeSymbol.identifier();
+}
+
+const std::string& SymbolTable::currentScope() {
+  return _scope;
+}
+
+const std::string& SymbolTable::unit() {
+  return _unit;
+}
+
+void SymbolTable::insertType(const std::string& name,
+                             const SymbolList& fields,
+                             int line) {
+  
+  //checando por campos duplicados na estrutura
+  SymbolList::const_iterator dup = fields.duplicated();
+  if (dup != fields.end()) {
+    throw RedeclarationException(*dup);
+  }
+
+  //checando por redefinicao da estrutura
+  if (_typeBuilder->typeList().find(name) != _typeBuilder->typeList().end()) {
+    throw RedefinedTypeException(name);
+  }
+
+  _typeBuilder->typeList().push_back(
+    new Type(_typeBuilder, name, fields, _unit, line));
+}
+
+
+// void SymbolTable::insertType(const std::string& name,
+//                              const SymbolList& symbolList,
+//                              int line) {
+// 
+//   //checando por campos duplicados na estrutura
+//   SymbolList::const_iterator dup = symbolList.duplicated();
+//   if (dup != symbolList.end()) {
+//     throw RedeclarationException(*dup);
+//   }
+// 
+//   //checando por redefinicao da estrutura
+//   if (_typeBuilder->typeList().find(name) != _typeBuilder->typeList().end()) {
+//     throw RedefinedTypeException(name);
+//   }
+// 
+//   _typeBuilder->typeList().push_back(
+//     new Type(_typeBuilder, name,
+//              symbolList.toStructFieldList(), _unit, line));
+// }
+
+Type* SymbolTable::getType(const std::string& name) {
+  TypeList::iterator ret = _typeBuilder->typeList().find(name);
+
+  if (ret == _typeBuilder->typeList().end()) {
     throw UndeclaredTypeException(name);
   }
 
   return *ret;
 }
 
-Type* SymbolTable::getType(int id) {
-  TypeList::iterator ret = _types.find(id);
 
-  if (ret == _types.end()) {
-    throw UndeclaredTypeException(id);
-  }
-
-  return *ret;
-}
-
-Type* SymbolTable::getType(Type *ofType, int dimensions) {
-  TypeList::iterator it = _types.find(ofType, dimensions);
-  Type* type;
-  if (it == _types.end()) {
-    type = new Type(ofType, dimensions);
-    _types.push_back(type);
-  } else {
-    type = *it;
-  }
-  return type;
-}
-
-// Type* SymbolTable::getType(const TypeList& paramTypes, Type* returnType) {
-  //TODO
-  //Levar em consideracao o registro de funcoes polimorficas
-  //Type *type = new Type(paramTypes, returnType);
-//   throw;
-// }
-
-
-Symbol SymbolTable::newSymbol(const std::string& name, Type* type,
-                const std::string& scope, int line,
-                bool isConst, bool isRef) {
-  return Symbol(name, type, line, _unit, scope, isConst, isRef);
-}
-
-Symbol SymbolTable::newSymbol(const std::string& name, Type* type,
-                int line, bool isConst, bool isRef) {
-  return Symbol(name, type, line, _unit, _scope, isConst, isRef);
-}
-
-void SymbolTable::defineStruct(const std::string& name,
-                               const SymbolList& symbolList,
-                               int line) {
-  SymbolList::const_iterator dup = symbolList.duplicated();
-  if (dup != symbolList.end()) {
-    throw RedeclarationException(*dup);
-  }
-
-  if (_types.find(name) != _types.end()) {
-    throw RedefinedTypeException(name);
-  }
-  _types.push_back(new Type(name,
-      symbolList.toStructFieldList(), _unit, line));
-}
-
-Type* SymbolTable::createAnonymousStruct(const SymbolList& symbolList) {
-  Type* ret = new Type(symbolList.toStructFieldList());
-  _types.push_back(ret);
-  return ret;
-}
-
-bool SymbolTable::declared(const Symbol& s) {
-  return _table[_scope].count(s.lexeme()) >= 1;
-}
-
-void SymbolTable::declare(const Symbol& symbol) {
-  if (declared(symbol)) {
+void SymbolTable::insertSymbol(const Symbol& symbol) {
+  if (symbolExists(symbol)) {
     throw RedeclarationException(symbol);
   }
-  _table[_scope].push_back(symbol);
+  _table[symbol.scope()].push_back(symbol);
 }
 
-void SymbolTable::declare(const SymbolList& params,
-                          const std::string& proc) {
-  try {
-    setScope(proc);
-    for (SymbolList::const_iterator it = params.begin(); it != params.end(); ++it) {
-      declare(*it);
-    }
-  } catch( ... ) {
-    setGlobalScope();
-    throw;
+void SymbolTable::insertSymbols(const SymbolList& symbols) {
+  for (SymbolList::const_iterator it = symbols.begin();
+       it != symbols.end();
+       ++it) {
+    insertSymbol(*it);
   }
 }
 
-
-const Symbol& SymbolTable::getSymbol(const std::string& lexeme) {
-  SymbolList::const_iterator it = _table[_scope].find(lexeme);
-  if (it == _table[_scope].end()) {
+const Symbol& SymbolTable::getSymbol(const std::string& lexeme,
+                                     const std::string& scope) {
+  SymbolList::const_iterator it = _table[scope].findFirstByLexeme(lexeme);
+  if (it == _table[scope].end()) {
     throw UndeclaredSymbolException(lexeme);
   }
   return (*it);
 }
 
+const Symbol& 
+SymbolTable::getSymbol(const std::string& lexeme, const TypeList& params) {
+  //deve considerar promocao de tipos
+  //    função f(a:real) ...
+  //    f(1);                //resolve para a função "f_real"
 
-SymbolTable* SymbolTable::create(const std::string& unit) {
-  SymbolTable* s = new SymbolTable(unit);
-  s->initialize();
-  return s;
+
+  SymbolList list = _table[globalScope()].findAllByLexeme(lexeme);
+
+  if (list.size() == 0) {
+    throw UndeclaredSymbolException(lexeme);
+  }
+
+  //try exact version
+  for (SymbolList::iterator it = list.begin(); it != list.end(); ++it) {
+    if ((*it).type()->isSubprogram() &&
+        (*it).type()->paramTypes().equals(params)) {
+      return (*it);
+    }
+  }
+
+  //tentando promocoes...
+  for (SymbolList::iterator it = list.begin(); it != list.end(); ++it) {
+    if ((*it).type()->isSubprogram() &&
+        (*it).type()->paramTypes().isLValueFor(params)) {
+      return (*it);
+    }
+  }
+
+  throw UnmatchedException(lexeme);
+
+//   std::string id = Symbol::buildIdentifier(lexeme, params);
+//   SymbolList::const_iterator it = _table[globalScope()].findByIdentifier(id);
+//   if (it == _table[globalScope()].end()) {
+//     throw UndeclaredSymbolException(id);
+//   }
+//   return (*it);
 }
+
+const Symbol& SymbolTable::getSymbol(const std::string& lexeme) {
+  //buscar primeiro no escopo atual, depois no global
+
+  if (isInGlobalScope()) {
+    return getSymbol(lexeme, _scope);
+  } else {
+    try {
+      return getSymbol(lexeme, _scope);
+    } catch( ... ) {
+      return getSymbol(lexeme, globalScope());
+    }
+  }
+}
+
+bool SymbolTable::symbolExists(const Symbol& s) {
+  SymbolList::const_iterator it = 
+    _table[s.scope()].findByIdentifier(s.identifier());
+
+  if (it == _table[s.scope()].end()) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+
+// bool SymbolTable::symbolExists(const std::string& id) {
+//   return symbolExists(id, _scope);
+// }
+// 
+// bool SymbolTable::symbolExists(const std::string& id,
+//                                const std::string& scope) {
+// 
+//   return _table[scope].findByIdentifier(id) != _table[scope].end();
+// }
+
 
 void SymbolTable::dump() {
 
@@ -136,27 +202,10 @@ void SymbolTable::dump() {
     std::cerr << it->second.toString() << std::endl;
   }
   std::cerr << "Types ... " << std::endl;
-  std::cerr << _types.toString() << std::endl;
+  std::cerr << _typeBuilder->typeList().toString() << std::endl;
   std::cerr << "=== End SymbolTable ===\n\n";
 }
 
-
-SymbolTable::SymbolTable(const std::string& unit)
-  : _unit(unit) {
-  setGlobalScope();
-}
-
-SymbolTable::~SymbolTable() {
-  //TODO: delete tables, types, etc...
-}
-
-void SymbolTable::initialize() {
-  _types.push_back(new Type(PortugolTokenTypes::T_INTEIRO,"inteiro"));
-  _types.push_back(new Type(PortugolTokenTypes::T_REAL,"real"));
-  _types.push_back(new Type(PortugolTokenTypes::T_CARACTERE,"caractere"));
-  _types.push_back(new Type(PortugolTokenTypes::T_LITERAL,"literal"));
-  _types.push_back(new Type(PortugolTokenTypes::T_LOGICO,"lógico"));
-  _types.push_back(new Type(PortugolTokenTypes::T_NULO,"nulo"));
-  _types.push_back(new Type(PortugolTokenTypes::T_CORINGA,"coringa"));
-  _types.push_back(new Type(PortugolTokenTypes::T_RETICENCIAS,"reticências"));
+TypeBuilder* SymbolTable::typeBuilder() {
+  return _typeBuilder;
 }

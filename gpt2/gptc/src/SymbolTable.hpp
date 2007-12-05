@@ -9,58 +9,54 @@
 
 class Symbol;
 class SymbolList;
+class TypeBuilder;
 
 class SymbolTable {
 public:
-  //void setCurrentUnit(string file)
-  //void loadSymbolTable(other) //load stable from other units
+  SymbolTable(const std::string& unit);
 
-  void setScope(const std::string& scope);
   void setGlobalScope();
+  bool isInGlobalScope();
+  void setIgnoreScope();
+  void setScope(const Symbol&);
+  const std::string& currentScope();
+  const std::string globalScope();
 
-  //
+  const std::string& unit();
+
+  void insertType(const std::string& name,
+                  const SymbolList&,
+                  int line);
+
+  /* recuperar tipo por nome (ex. esruturas) */
   Type* getType(const std::string& name);
-  Type* getType(int id);
-  Type* getType(Type *ofType, int dimensions);
-//   Type* getType(const TypeList& paramTypes, Type* returnType);
 
-  Symbol newSymbol(const std::string& name, Type* type,
-                   const std::string& scope, int line = -1,
-                   bool isConst = false, bool isRef = false);
+  void insertSymbol(const Symbol& symbol);
+  void insertSymbols(const SymbolList& symbols);
 
-  Symbol newSymbol(const std::string& name, Type* type,
-                   int line = -1, bool isConst = false, bool isRef = false);
+  //(lexeme, scope)
+  const Symbol& getSymbol(const std::string&, const std::string&);
 
-  void defineStruct(const std::string& name,
-                   const SymbolList& symbolList,
-                   int line);
-
-  Type* createAnonymousStruct(const SymbolList& symbolList);
-
-  bool declared(const Symbol& s);
-
-  void declare(const Symbol& symbol);
-
-  void declare(const SymbolList& params, const std::string& proc);
-
-  const Symbol& getSymbol(const std::string& lexeme);
+  //(lexeme, params)
+  const Symbol& getSymbol(const std::string&, const TypeList&);
 
 
-  static SymbolTable* create(const std::string& unit);
+  //(lexeme) -> todos os escopos, iniciando pelo atual
+  const Symbol& getSymbol(const std::string&);
 
   void dump();
 
+  TypeBuilder* typeBuilder();
 private:
-  SymbolTable(const std::string& unit);
-  ~SymbolTable();
+/*  bool symbolExists(const std::string&);
+  bool symbolExists(const std::string&, const std::string&);*/
+  bool symbolExists(const Symbol& s);
 
-  void initialize();
-
-  std::string                        _scope;
   std::string                        _unit;
+  std::string                        _scope;
 
+  TypeBuilder                        *_typeBuilder;
   std::map<std::string, SymbolList>  _table;
-  TypeList                           _types;
 };
 
 #endif
