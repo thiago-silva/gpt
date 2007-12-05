@@ -41,6 +41,9 @@ public:
   void setLine(int line);
   int getLine() const;
 
+  void setColumn(int);
+  int getColumn() const;
+
   void setEvalType(Type*);
   Type* getEvalType();
 
@@ -56,6 +59,7 @@ public:
   static const char* const TYPE_NAME;
 protected:
   int   line;
+  int   column;
   Type* type;
   int endLine;
   int eval_type; //evaluated type of expression

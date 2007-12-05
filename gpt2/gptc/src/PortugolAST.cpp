@@ -15,7 +15,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   59 Temple Place - Suite 330, Boston, MA  021110307, USA.             *
  ***************************************************************************/
 
 
@@ -26,19 +26,19 @@
 const char* const PortugolAST::TYPE_NAME = "PortugolAST";
 
 PortugolAST::PortugolAST()
-    : CommonAST(), line(-1), type(0) {
+    : CommonAST(), line(0), column(0), type(0) {
 }
 
 PortugolAST::PortugolAST(RefToken t)
-    : CommonAST(t), line(t->getLine()), type(0) {
+    : CommonAST(t), line(t->getLine()), column(t->getColumn()), type(0) {
 }
 
 PortugolAST::PortugolAST( const CommonAST& other )
-    : CommonAST(other), line(-1), type(0) {
+    : CommonAST(other), line(0), column(0), type(0) {
 }
 
 PortugolAST::PortugolAST( const PortugolAST& other )
-    : CommonAST(other), line(other.line), type(0) {
+    : CommonAST(other), line(other.line), column(other.column), type(0) {
 }
 
 PortugolAST::~PortugolAST() {
@@ -59,6 +59,7 @@ void PortugolAST::initialize(RefToken t)
 {
   CommonAST::initialize(t);
   setLine(t->getLine());
+  setColumn(t->getColumn());
 }
 
 void PortugolAST::setLine(int line_) {
@@ -66,7 +67,31 @@ void PortugolAST::setLine(int line_) {
 }
 
 int PortugolAST::getLine() const {
-  return line;
+    // most of the time the line number is not set if the node is a
+    // imaginary one. Usually this means it has a child. Refer to the
+    // child line number. Of course this could be extended a bit.
+    // based on an example by Peter Morling.
+    if ( line != 0 )
+        return line;
+    if( getFirstChild() )
+        return ( RefPortugolAST(getFirstChild())->getLine() );
+    return 0;
+}
+
+void PortugolAST::setColumn(int c) {
+  column = c;
+}
+
+int PortugolAST::getColumn() const {
+    // most of the time the line number is not set if the node is a
+    // imaginary one. Usually this means it has a child. Refer to the
+    // child line number. Of course this could be extended a bit.
+    // based on an example by Peter Morling.
+    if ( column != 0 )
+        return column;
+    if( getFirstChild() )
+        return ( RefPortugolAST(getFirstChild())->getColumn() );
+    return 0;
 }
 
 void PortugolAST::setEvalType(Type* t) {
@@ -81,6 +106,7 @@ Type* PortugolAST::getEvalType() {
 std::string PortugolAST::toString() const {
   std::stringstream s;
   s << getText();
+//   s << "(" << getLine() << ":" << getColumn() << ")" << getText();
   if (type) {
     s << ":" << type->name();
   }

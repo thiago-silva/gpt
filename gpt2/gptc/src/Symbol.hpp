@@ -18,12 +18,14 @@ public:
          Type* type,
          const std::string& scope,
          const std::string& unit,
-         int line);
+         int line,
+         int column);
 
   Symbol(const std::string& lexeme,
          Type* type,
          const std::string& unit,
-         int line);
+         int line,
+         int column);
 
   Symbol(const std::string& lexeme,
          Type* type);
@@ -38,6 +40,7 @@ public:
   const std::string& unit() const;
 
   int line() const;
+  int column() const;
 
   std::string toString() const;
 
@@ -51,6 +54,7 @@ private:
   std::string      _scope;
   std::string      _unit;
   int              _line;
+  int              _column;
 };
 
 

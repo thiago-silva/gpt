@@ -11,12 +11,14 @@ Symbol::Symbol(const std::string& lexeme,
                Type* type,
                const std::string& scope,
                const std::string& unit,
-               int line)
+               int line,
+               int column)
   :   _lexeme(lexeme),
       _type(type),
       _scope(scope),
       _unit(unit),
-      _line(line) {
+      _line(line),
+      _column(column) {
 
   _identifier = buildIdentifier(lexeme, _type);
 
@@ -25,11 +27,13 @@ Symbol::Symbol(const std::string& lexeme,
 Symbol::Symbol(const std::string& lexeme,
                Type* type,
                const std::string& unit,
-               int line)
+               int line,
+               int column)
   :   _lexeme(lexeme),
       _type(type),
       _unit(unit),
-      _line(line) {
+      _line(line),
+      _column(column) {
 
   _identifier = buildIdentifier(lexeme, _type);
 }
@@ -37,7 +41,8 @@ Symbol::Symbol(const std::string& lexeme,
 
 
 Symbol::Symbol(const std::string& lexeme, Type* type) 
-  : _lexeme(lexeme), _type(type), _scope("?"), _unit("?"), _line(-1) {
+  : _lexeme(lexeme), _type(type), _scope("?"), _unit("?"), 
+    _line(0), _column(0) {
 
   _identifier = buildIdentifier(lexeme, _type);
 }
@@ -65,6 +70,10 @@ const std::string& Symbol::unit() const {
 
 int Symbol::line() const {
   return _line;
+}
+
+int Symbol::column() const {
+  return _column;
 }
 
 std::string Symbol::toString() const {
