@@ -1,53 +1,78 @@
 #ifndef SYMBOL_HPP
 #define SYMBOL_HPP
 
-#include "Types.hpp"
-
 #include <string>
+#include <list>
+
+class Type;
+class TypeList;
 
 class Symbol {
 public:
+  static std::string buildIdentifier(const std::string&, Type*);
+  static std::string buildIdentifier(const std::string&, const TypeList&);
+
   Symbol();
 
-  Symbol(const std::string& lexeme, Type* type, int line,
-         const std::string& unit, const std::string& scope,
-         bool isConst = false, bool isRef = false);
+  Symbol(const std::string& lexeme,
+         Type* type,
+         const std::string& scope,
+         const std::string& unit,
+         int line);
+
+  Symbol(const std::string& lexeme,
+         Type* type,
+         const std::string& unit,
+         int line);
+
+  Symbol(const std::string& lexeme,
+         Type* type);
 
   const std::string& lexeme() const;
 
   Type* type() const;
 
-  bool isConst() const;
+  void setScope(const std::string&);
+  const std::string& scope() const;
 
-  bool isRef() const;
+  const std::string& unit() const;
+
+  int line() const;
 
   std::string toString() const;
 
+  std::string identifier() const;
+
+  bool equivalent(const Symbol&) const;
 private:
   std::string      _lexeme;
+  std::string      _identifier;
   Type*            _type;
-  bool             _isConst;
-  bool             _isRef;
-
-  std::string _unit;
-  std::string _scope;
-  int         _line;
+  std::string      _scope;
+  std::string      _unit;
+  int              _line;
 };
 
 
 class SymbolList : public std::list<Symbol> {
 public:
+
   const_iterator duplicated() const;
 
-  Type::StructFieldList toStructFieldList() const;
+  TypeList typeList() const;
 
-  TypeList toTypeList() const;
+  SymbolList     findAllByLexeme(const std::string&) const;
+  const_iterator findFirstByLexeme(const std::string&) const;
+  const_iterator findByIdentifier(const std::string&) const;
+  
 
-  int count(const std::string& lexeme) const;
+  int count(const std::string&) const;
 
-  iterator find(const std::string& lexeme);
+  void setScope(const std::string&);
 
   std::string toString() const;
+
+  bool equivalent(const SymbolList&) const;
 };
 
 #endif
