@@ -12,7 +12,8 @@ BUILT_SOURCES = PortugolLexer.hpp \
                 PortugolParser.cpp \
                 SemanticWalker.hpp \
                 SemanticWalker.cpp \
-                TokenNames.hpp
+                TokenNames.hpp \
+                TokenLabels.hpp
 
 
 gptc_SOURCES = BaseSemanticWalker.hpp \
@@ -49,7 +50,8 @@ CLEANFILES = PortugolLexer.cpp \
              SemanticWalker.cpp \
              SemanticWalkerTokenTypes.hpp \
              SemanticWalkerTokenTypes.txt \
-             TokenNames.hpp
+             TokenNames.hpp \
+             TokenLabels.hpp
 
 PortugolLexer.cpp PortugolLexer.hpp: $(srcdir)/lexer.g Makefile
 	$(ANTLR_BIN) $(srcdir)/lexer.g
@@ -72,3 +74,14 @@ TokenNames.hpp: Makefile
 	sed -i -e 's/\([A-Z][^=( ]*\)[=(].*/"\1",/' $@
 	sed -i -e '$$s/,/};/' $@
 	@echo "#endif" >> $@
+
+TokenLabels.hpp: Makefile
+	@echo "#ifndef TOKENLABELS_H" > $@
+	@echo "#define TOKENLABELS_H"  >> $@
+	@echo "static char* g_tokenLabels[] = " >> $@
+	@echo '{"", "EOF", "", "",'   >> $@
+	grep '"' PortugolTokenTypes.txt >> $@
+	sed -i -e 's/^T.*\("[^"]*"\).*/\1,/' $@
+	sed -i -e '$$s/,/};/' $@
+	@echo "#endif" >> $@
+
