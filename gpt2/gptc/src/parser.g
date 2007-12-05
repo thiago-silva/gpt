@@ -451,8 +451,11 @@ en_asm!
 //##            Expressões          ##
 //####################################
 
+expressao!
+  : ou:expr_ou {#expressao = #([T_EXPRESSAO,"&expr"], ou);}
+  ;
 
-expressao
+expr_ou
   : expr_e (T_OU^ expr_e)*
   ;
 
@@ -538,7 +541,7 @@ expr_elemento
   :  (T_IDENTIFICADOR T_ABRE_PAREN)=> chamada_subrotina
   |  lvalue
   |  literal
-  | T_ABRE_PAREN^ expressao T_FECHA_PAREN!
+  | T_ABRE_PAREN! expressao T_FECHA_PAREN!
   ;
 
 

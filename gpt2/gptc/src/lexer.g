@@ -109,6 +109,8 @@ tokens {
   T_VAL_MATRIZ;    //valor da matriz    (literal [])
   T_VAL_ESTRUTURA; //valor da estrutura (literal {})
 
+  T_EXPRESSAO;
+
 //   T_DIMENSOES;
   T_SUBSCRITO;
   T_MEMBRO;
