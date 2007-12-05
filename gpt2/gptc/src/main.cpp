@@ -70,7 +70,7 @@ void semantic(char* fname) {
 
   SymbolTable* symtable = new SymbolTable(fname);
 
-  SemanticWalker semantic(symtable);
+  SemanticWalker semantic(symtable, fname);
   semantic.programa(ast);
 
   symtable->dump();

@@ -30,7 +30,7 @@ gptc_SOURCES = BaseSemanticWalker.hpp \
                SymbolTable.cpp \
                SymbolTableExceptions.hpp \
                SymbolTableExceptions.cpp \
-               teste.cpp \
+               main.cpp \
                Types.hpp \
                Types.cpp \
                UnicodeCharBuffer.hpp \
