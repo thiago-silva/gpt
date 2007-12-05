@@ -91,14 +91,16 @@ tokens {
   T_NAO="não";
   T_VERDADEIRO="verdadeiro";
   T_FALSO="falso";
-  T_NULO="nulo";
   T_ASM="asm";
-  T_FIMASM="fim-asm";
+  T_FIMASM="fim-asm";  
 
   T_REAL_LITERAL="número real"; //a regra T_INTEIRO_LITERAL lida com reais
-
-
+  
   //imaginários para a AST
+
+  T_NULO="nulo";
+
+  
 
   T_PARAM;
   T_TIPO_RETORNO;
