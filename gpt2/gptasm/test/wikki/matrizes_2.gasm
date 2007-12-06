@@ -16,8 +16,8 @@ proc main
     ile t1, i, 9
     ifnot t1, proximo
 
-    // m[i] := i * 10;
-    imul t1, i, 10
+    // m[i] := i * 100;
+    imul t1, i, 100
     m1set m, i, t1
 
     // fim-para

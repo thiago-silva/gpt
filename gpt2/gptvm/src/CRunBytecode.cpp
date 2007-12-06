@@ -21,15 +21,35 @@ struct SStringType {
    }
 };
 
-struct SMatrixType {
+struct SMatrix1TypeHeader {
+   int _dimNumber;
    int _elementSize;
-   int _elements;
-   char* _data;
-   SMatrixType()
-   : _elementSize(0)
-   , _elements(0)
-   , _data(NULL)
+   int _elements[1];
+   SMatrix1TypeHeader()
+   : _dimNumber(1)
+   , _elementSize(0)
+   {
+      memset(_elements, 0, sizeof(_elements));
+   }
+};
+
+struct SMatrix1TypeData {
+   char *_data;
+   SMatrix1TypeData()
+   : _data(NULL)
    { }
+};
+
+struct SMatrix2Type {
+   int _dimNumber;
+   int _elementSize;
+   int _elements[2];
+   SMatrix2Type()
+   : _dimNumber(2)
+   , _elementSize(0)
+   {
+      memset(_elements, 0, sizeof(_elements));
+   }
 };
 
 struct SIntType {
@@ -1129,11 +1149,9 @@ void CRunBytecode::popmvOpcode()
 
    int matrixAddress = _code.fetchInt();
 
-   char *retMatrix = (char*) _dataStack.popInt();
-   int elementSize = *((int*)(retMatrix+0));
-   int elements    = *((int*)(retMatrix+sizeof(int)));
+   SMatrix1TypeHeader *retMatrix = (SMatrix1TypeHeader*) _dataStack.popInt();
 
-   int size = sizeof(int) + sizeof(int) + elements*elementSize;
+   int size = sizeof(SMatrix1TypeHeader) + retMatrix->_elements[0]*retMatrix->_elementSize;
    char *matrix = (char*) _dataStack.getInt(matrixAddress);
 
    if (matrix) {
@@ -1295,11 +1313,9 @@ void CRunBytecode::pushmvOpcode()
 {
    trace ("pushmv opcode");
 
-   char *matrix    = (char*) _dataStack.getInt(_code.fetchInt());
-   int elementSize = *((int*)(matrix+0));
-   int elements    = *((int*)(matrix+sizeof(int)));
+   SMatrix1TypeHeader *matrix = (SMatrix1TypeHeader*) _dataStack.getInt(_code.fetchInt());
 
-   int size = sizeof(int) + sizeof(int) + elements*elementSize;
+   int size = sizeof(SMatrix1TypeHeader) + matrix->_elements[0]*matrix->_elementSize;
    char *newMatrix = new char[size]; // TODO: memory leak
    memcpy(newMatrix, matrix, size);
    _dataStack.pushInt((int)newMatrix);
@@ -1343,10 +1359,19 @@ void CRunBytecode::pushmrOpcode()
 {
    trace ("pushmr opcode");
 
-   SMatrixType type;
-
-   _dataStack.pushBytes((char*)&type, sizeof(type));
+   _dataStack.pushBytes(getTypeSize(CSymbol::MATRIX));
 }
+
+//void CRunBytecode::pushmrOpcode()
+//{
+//   trace ("pushmr opcode");
+//
+//   SMatrix1TypeHeader header;
+//   SMatrix1TypeData   data;
+//
+//   _dataStack.pushBytes((char*)&header, sizeof(header));
+//   _dataStack.pushBytes((char*)&data,   sizeof(data));
+//}
 
 
 void CRunBytecode::pushstOpcode()
@@ -1488,18 +1513,21 @@ void CRunBytecode::m1allocOpcode()
    trace ("m1alloc opcode");
 
    // Header dos dados de uma matriz de uma linha:
+   // int (numero de dimensoes)
    // int (tamanho de cada elemento armazenado)
-   // int (numero de elementos)
+   // int (numero de elementos da dimensao 1)
    // bytes (area sequencial para armazenar os dados)
 
    int matrixAddress = _code.fetchInt();
    int elementSize   = _dataStack.getInt(_code.fetchInt());
    int elements      = _dataStack.getInt(_code.fetchInt());
 
-   char *matrix = new char[sizeof(int)+sizeof(int)+elementSize*elements];
-   *((int*)(matrix+0))           = elementSize;
-   *((int*)(matrix+sizeof(int))) = elements;
-   _dataStack.setInt(matrixAddress, (int)matrix);
+   char *matrixPointer = new char[sizeof(SMatrix1TypeHeader)+elementSize*elements];
+   SMatrix1TypeHeader *matrixHeader = (SMatrix1TypeHeader*) matrixPointer;
+   matrixHeader->_dimNumber   = 1;
+   matrixHeader->_elementSize = elementSize;
+   matrixHeader->_elements[0] = elements;
+   _dataStack.setInt(matrixAddress, (int)matrixPointer);
 }
 
 void CRunBytecode::m2allocOpcode()
@@ -1523,29 +1551,42 @@ void CRunBytecode::m1setOpcode()
 {
    trace ("m1set opcode");
 
-   char *matrix     = (char*) _dataStack.getInt(_code.fetchInt());
+   SMatrix1TypeHeader *matrix = (SMatrix1TypeHeader*) _dataStack.getInt(_code.fetchInt());
    int offset       = _dataStack.getInt(_code.fetchInt());
    int valueAddress = _code.fetchInt();
 
-   int elementSize = *((int*)(matrix+0));
-//   int elements    = *((int*)(matrix+sizeof(int)));
-   char *data      = matrix + sizeof(int) + sizeof(int);
+   int elementSize = matrix->_elementSize;
+   char *data      = ((char*)matrix) + sizeof(SMatrix1TypeHeader);
    data += offset * elementSize;
    memcpy(data, _dataStack.getPointer(valueAddress), elementSize);
 }
+
+//void CRunBytecode::m1setOpcode()
+//{
+//   trace ("m1set opcode");
+//
+//   char *matrix     = (char*) _dataStack.getInt(_code.fetchInt());
+//   int offset       = _dataStack.getInt(_code.fetchInt());
+//   int valueAddress = _code.fetchInt();
+//
+//   int elementSize = *((int*)(matrix+0));
+////   int elements    = *((int*)(matrix+sizeof(int)));
+//   char *data      = matrix + sizeof(int) + sizeof(int);
+//   data += offset * elementSize;
+//   memcpy(data, _dataStack.getPointer(valueAddress), elementSize);
+//}
 
 void CRunBytecode::m1getOpcode()
 {
    trace ("m1get opcode");
 
    int resultAddress = _code.fetchInt();
-   char *matrix      = (char*) _dataStack.getInt(_code.fetchInt());
+   SMatrix1TypeHeader *matrix = (SMatrix1TypeHeader*) _dataStack.getInt(_code.fetchInt());
    int offset        = _dataStack.getInt(_code.fetchInt());
 
-   int elementSize = *((int*)(matrix+0));
-//   int elements    = *((int*)(matrix+sizeof(int)));
-   char *data      = matrix + sizeof(int) + sizeof(int);
-   data += offset * elementSize;
+   int elementSize = matrix->_elementSize;
+   char *data      = ((char*)matrix) + sizeof(SMatrix1TypeHeader);
+   data           += offset * elementSize;
    memcpy(_dataStack.getPointer(resultAddress), data, elementSize);
 }
 

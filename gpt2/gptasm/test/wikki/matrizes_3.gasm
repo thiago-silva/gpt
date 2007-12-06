@@ -32,8 +32,8 @@ proc insere_dados
     ile t1, i, 9
     ifnot t1, proximo
 
-    // d1[i] := i * 10;
-    imul t1, i, 10
+    // d1[i] := i * 1000;
+    imul t1, i, 1000
     m1set d1, i, t1
 
     // fim-para

@@ -152,7 +152,7 @@ enum opcode {
    OP_PUSHRR      = 124,
    OP_PUSHDR      = 125,
    OP_PUSHMR      = 126,
-   OPCODE_NUMBER  = 126
+   OPCODE_NUMBER  = 127
 };
 
 #endif
