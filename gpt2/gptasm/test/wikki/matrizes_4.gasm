@@ -1,0 +1,40 @@
+program exemplo
+
+var m matrix
+
+proc main
+    var t1 int
+
+    // aloca espaço para a matriz m
+    // m armazena dados de 4 bytes e tem 4 linhas e 5 colunas
+    m2alloc m, 4, 5, 10
+
+    m2set m, 0, 0, 1
+    m2set m, 0, 1, 2
+
+    // imprima( "Valores armazenados:" );
+    pushsv "Valores armazenados:"
+    pushst
+    push_1
+    lcall imprima
+
+    m2get t1, m, 0, 0
+    pushiv t1
+    pushit
+    push_1
+    lcall imprima
+
+    m2get t1, m, 0, 1
+    pushiv t1
+    pushit
+    push_1
+    lcall imprima
+
+    // desaloca espaço da matriz m
+    mfree m
+
+    exit_0
+endproc
+
+endprogram
+

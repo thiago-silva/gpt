@@ -33,18 +33,18 @@ struct SMatrix1TypeHeader {
    }
 };
 
-struct SMatrix1TypeData {
-   char *_data;
-   SMatrix1TypeData()
-   : _data(NULL)
-   { }
-};
+//struct SMatrix1TypeData {
+//   char *_data;
+//   SMatrix1TypeData()
+//   : _data(NULL)
+//   { }
+//};
 
-struct SMatrix2Type {
+struct SMatrix2TypeHeader {
    int _dimNumber;
    int _elementSize;
    int _elements[2];
-   SMatrix2Type()
+   SMatrix2TypeHeader()
    : _dimNumber(2)
    , _elementSize(0)
    {
@@ -1532,7 +1532,20 @@ void CRunBytecode::m1allocOpcode()
 
 void CRunBytecode::m2allocOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("m2alloc opcode");
+
+   int matrixAddress = _code.fetchInt();
+   int elementSize   = _dataStack.getInt(_code.fetchInt());
+   int elements1     = _dataStack.getInt(_code.fetchInt());
+   int elements2     = _dataStack.getInt(_code.fetchInt());
+
+   char *matrixPointer = new char[sizeof(SMatrix2TypeHeader)+elementSize*elements1*elements2];
+   SMatrix2TypeHeader *matrixHeader = (SMatrix2TypeHeader*) matrixPointer;
+   matrixHeader->_dimNumber   = 2;
+   matrixHeader->_elementSize = elementSize;
+   matrixHeader->_elements[0] = elements1;
+   matrixHeader->_elements[1] = elements2;
+   _dataStack.setInt(matrixAddress, (int)matrixPointer);
 }
 
 void CRunBytecode::mfreeOpcode()
@@ -1554,6 +1567,10 @@ void CRunBytecode::m1setOpcode()
    SMatrix1TypeHeader *matrix = (SMatrix1TypeHeader*) _dataStack.getInt(_code.fetchInt());
    int offset       = _dataStack.getInt(_code.fetchInt());
    int valueAddress = _code.fetchInt();
+
+   if (matrix->_dimNumber != 1) {
+      error( "m1set em matrix de dimensao <> 1" );
+   }
 
    int elementSize = matrix->_elementSize;
    char *data      = ((char*)matrix) + sizeof(SMatrix1TypeHeader);
@@ -1584,6 +1601,10 @@ void CRunBytecode::m1getOpcode()
    SMatrix1TypeHeader *matrix = (SMatrix1TypeHeader*) _dataStack.getInt(_code.fetchInt());
    int offset        = _dataStack.getInt(_code.fetchInt());
 
+   if (matrix->_dimNumber != 1) {
+      error( "m1get em matrix de dimensao <> 1" );
+   }
+
    int elementSize = matrix->_elementSize;
    char *data      = ((char*)matrix) + sizeof(SMatrix1TypeHeader);
    data           += offset * elementSize;
@@ -1592,12 +1613,38 @@ void CRunBytecode::m1getOpcode()
 
 void CRunBytecode::m2setOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("m2set opcode");
+
+   SMatrix2TypeHeader *matrix = (SMatrix2TypeHeader*) _dataStack.getInt(_code.fetchInt());
+   int offset1                = _dataStack.getInt(_code.fetchInt());
+   int offset2                = _dataStack.getInt(_code.fetchInt());
+   int valueAddress           = _code.fetchInt();
+
+   if (matrix->_dimNumber != 2) {
+      error( "m2set em matrix de dimensao <> 2" );
+   }
+
+   char *data      = ((char*)matrix) + sizeof(SMatrix2TypeHeader);
+   data           += (offset1 * matrix->_elements[1] + offset2) * matrix->_elementSize;
+   memcpy(data, _dataStack.getPointer(valueAddress), matrix->_elementSize);
 }
 
 void CRunBytecode::m2getOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("m2get opcode");
+
+   int resultAddress = _code.fetchInt();
+   SMatrix2TypeHeader *matrix = (SMatrix2TypeHeader*) _dataStack.getInt(_code.fetchInt());
+   int offset1        = _dataStack.getInt(_code.fetchInt());
+   int offset2        = _dataStack.getInt(_code.fetchInt());
+
+   if (matrix->_dimNumber != 2) {
+      error( "m2set em matrix de dimensao <> 2" );
+   }
+
+   char *data      = ((char*)matrix) + sizeof(SMatrix2TypeHeader);
+   data           += (offset1 * matrix->_elements[1] + offset2) * matrix->_elementSize;
+   memcpy(_dataStack.getPointer(resultAddress), data, matrix->_elementSize);
 }
 
 void CRunBytecode::mcopyOpcode()
@@ -1607,11 +1654,25 @@ void CRunBytecode::mcopyOpcode()
 
 void CRunBytecode::mgetSize1Opcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("mgetSize1 opcode");
+
+   int resultAddress = _code.fetchInt();
+   SMatrix1TypeHeader *matrix = (SMatrix1TypeHeader*) _dataStack.getInt(_code.fetchInt());
+
+   _dataStack.setInt(resultAddress, matrix->_elements[0]);
 }
 
 void CRunBytecode::mgetSize2Opcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("mgetSize2 opcode");
+
+   int resultAddress = _code.fetchInt();
+   SMatrix1TypeHeader *matrix = (SMatrix1TypeHeader*) _dataStack.getInt(_code.fetchInt());
+
+   if (matrix->_dimNumber == 1) {
+      error( "mgetsize2 em matrix de dimensao 1" );
+   }
+
+   _dataStack.setInt(resultAddress, matrix->_elements[1]);
 }
 

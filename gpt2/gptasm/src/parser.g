@@ -248,8 +248,7 @@ options {
       {bytecode.addOpcode(getLastTokenText());}
       element
       T_COMMA
-      T_INT_VALUE
-      { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
+      intvalue
       // TODO: muitos opcodes poderiam ter o valor inteiro diretamente ao inves de um enderecamento...
    |  ("pushir"|"pushsr"|"pushrr"|"pushdr"|"pushmr")
       {bytecode.addOpcode(getLastTokenText());}
@@ -262,12 +261,10 @@ options {
       {bytecode.addOpcode(getLastTokenText());}
       identifier
       T_COMMA
-      T_INT_VALUE
-      { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
+      intvalue
    |  ("incsp"|"decsp")
       {bytecode.addOpcode(getLastTokenText());}
-      T_INT_VALUE
-      { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
+      intvalue
    |  ("push_0"|"push_1"|"push_2"|"push_3"|"push_4"|"push_5")
       {bytecode.addOpcode(getLastTokenText());}
    |  ("incsp_4"|"incsp_8"|"decsp_4"|"decsp_8")
@@ -305,18 +302,18 @@ options {
       {bytecode.addOpcode(getLastTokenText());}
       identifier
       T_COMMA
-      T_INT_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
+      intvalue
       T_COMMA 
-      T_INT_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
+      intvalue
    |  "m2alloc"
       {bytecode.addOpcode(getLastTokenText());}
       identifier
       T_COMMA
-      T_INT_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
+      intvalue
       T_COMMA
-      T_INT_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
+      intvalue
       T_COMMA
-      T_INT_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
+      intvalue
    |  "mfree"
       {bytecode.addOpcode(getLastTokenText());}
       identifier
@@ -350,7 +347,7 @@ options {
       {bytecode.addOpcode(getLastTokenText());}
    |   "exit"
       {bytecode.addOpcode(getLastTokenText());}
-       T_INT_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
+      intvalue
   ;
 
 identifier
@@ -389,3 +386,6 @@ identifier
   | literal
   ;
 
+intvalue
+  : T_INT_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
+  ;

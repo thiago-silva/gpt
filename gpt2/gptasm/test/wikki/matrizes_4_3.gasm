@@ -1,0 +1,63 @@
+program exemplo
+
+var m1 matrix
+var m2 matrix
+var m3 matrix
+var m4 matrix
+
+proc main
+    var t1 int
+
+    m1alloc m1, 4, 100
+    m1alloc m2, 10, 1000
+    m2alloc m3, 2, 10, 20
+    m2alloc m4, 1, 15, 25
+
+    mgetsize1 t1, m1
+    pushiv t1
+    pushit
+    pushsv "Tamanho de m1 deve ser 100: "
+    pushst
+    push_2
+    lcall imprima
+
+    mgetsize1 t1, m2
+    pushiv t1
+    pushit
+    pushsv "Tamanho de m2 deve ser 1000: "
+    pushst
+    push_2
+    lcall imprima
+
+    mgetsize2 t1, m3
+    pushiv t1
+    pushit
+    mgetsize1 t1, m3
+    pushiv t1
+    pushit
+    pushsv "Tamanho de m3 deve ser 10 e 20: "
+    pushst
+    push_3
+    lcall imprima
+
+    mgetsize2 t1, m4
+    pushiv t1
+    pushit
+    mgetsize1 t1, m4
+    pushiv t1
+    pushit
+    pushsv "Tamanho de m4 deve ser 15 e 25: "
+    pushst
+    push_3
+    lcall imprima
+
+    mfree m1
+    mfree m2
+    mfree m3
+    mfree m4
+
+    exit_0
+endproc
+
+endprogram
+
