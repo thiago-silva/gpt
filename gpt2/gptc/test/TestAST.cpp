@@ -1,5 +1,6 @@
 #include "TestAST.hpp"
 #include <iostream>
+#include "TokenNames.hpp"
 
 #include <map>
 #include <string>
@@ -62,16 +63,15 @@ bool TestAST::equals(RefAST other) const
 		return false;
   }
 
-  #include "tokenNames.hpp"
 
   int token = -1;
-  std::map<int, std::string >::iterator it;
-  for (it = tokenNames.begin(); it != tokenNames.end(); it++) {
-    if (it->second == getText()) {
-      token = it->first;
+  for (int i = 0; i < g_tokenNamesSize; i++) {
+    if (g_tokenNames[i] == getText()) {
+      token = i;
+      break;
     }
   }
-
+  
   if (token == -1) {
     cerr << "\n\n[TestAST::equals] ops: token não encontrado: "
          << getText() << endl << endl;

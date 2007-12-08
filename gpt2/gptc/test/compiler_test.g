@@ -109,7 +109,6 @@ COMENTARIO_CPP
   ;
 
 COMENTARIO_C
-{int line = getLine();}
   : "/*"
     (
       options { generateAmbigWarnings=false; } :
