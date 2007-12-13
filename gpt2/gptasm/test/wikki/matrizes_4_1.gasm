@@ -78,6 +78,8 @@ proc main
     // desaloca espaço da matriz m
     mfree m
 
+//    decsp_4
+
     exit_0
 endproc
 

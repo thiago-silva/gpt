@@ -262,13 +262,13 @@ options {
       identifier
       T_COMMA
       intvalue
-   |  ("incsp"|"decsp")
-      {bytecode.addOpcode(getLastTokenText());}
-      intvalue
+//   |  ("incsp"|"decsp")
+//      {bytecode.addOpcode(getLastTokenText());}
+//      intvalue
    |  ("push_0"|"push_1"|"push_2"|"push_3"|"push_4"|"push_5")
       {bytecode.addOpcode(getLastTokenText());}
-   |  ("incsp_4"|"incsp_8"|"decsp_4"|"decsp_8")
-      {bytecode.addOpcode(getLastTokenText());}
+//   |  ("incsp_4"|"incsp_8"|"decsp_4"|"decsp_8")
+//      {bytecode.addOpcode(getLastTokenText());}
    |  "pcall"
       {bytecode.addOpcode(getLastTokenText());}
       T_ID
@@ -279,6 +279,12 @@ options {
       { bytecode.addAddress(getLastTokenText(),CSymbol::CONST, CSymbol::STRING); }
    |  "ret"
       {bytecode.addOpcode(getLastTokenText());}
+      intvalue
+   |  ("iret"|"rret"|"sret"|"dret"|"mret")
+      {bytecode.addOpcode(getLastTokenText());}
+      intvalue
+      T_COMMA
+      identifier
    ;
 
 //----------------------

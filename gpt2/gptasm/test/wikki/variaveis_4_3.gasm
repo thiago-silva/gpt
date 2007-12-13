@@ -4,7 +4,6 @@ proc main
     var v string
 
 //    salloc v
-    pushsr
     pcall ajusta
     popsv v
 
@@ -19,11 +18,12 @@ proc main
 endproc
 
 proc ajusta
-    param __result string
+    var __result string
 
     salloc __result
     sset __result, "Hello !!!"
-    ret
+//    decsp 4
+    sret 5,__result
 endproc
 
 endprogram

@@ -231,7 +231,15 @@ void CDataStack::setBS(const int &value)
 
 void CDataStack::setSP(const int &value)
 {
+   CBinString::resize(value);
    _SP = value;
+}
+
+
+void CDataStack::decSP(const int &value)
+{
+   CBinString::popBytes(value);
+   _SP -= value;
 }
 
 

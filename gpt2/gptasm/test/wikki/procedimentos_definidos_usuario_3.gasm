@@ -21,8 +21,8 @@ proc soma
    pushiv 1
    lcall imprima
 
-   decsp 4
-   ret
+//   decsp 4
+   ret 4
 endproc
    
 endprogram

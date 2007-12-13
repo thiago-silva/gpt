@@ -26,6 +26,7 @@ public:
    void discardBytes(const int &number);
    void setBS(const int &value);
    void setSP(const int &value);
+   void decSP(const int &value);
    int getBS() const;
    int getSP() const;
    void readString(std::string &value);

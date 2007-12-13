@@ -7,6 +7,8 @@
 
 // TODO: Armazenar todas as strings em memoria com o tamanho na frente ???
 
+#pragma pack(1)
+
 struct SStringType {
    char _type;
    union UStringTypeValue {
@@ -68,6 +70,7 @@ struct SRealType {
    { }
 };
 
+#pragma pack()
 
 CRunBytecode::CRunBytecode()
    : _returnCode(0)
@@ -204,11 +207,11 @@ void CRunBytecode::initOpcodePointer()
    _opcodePointer[OP_PUSHDV     ] = &CRunBytecode::pushdvOpcode;
    _opcodePointer[OP_PUSHMV     ] = &CRunBytecode::pushmvOpcode;
 
-   _opcodePointer[OP_PUSHSR     ] = &CRunBytecode::pushsrOpcode;
-   _opcodePointer[OP_PUSHIR     ] = &CRunBytecode::pushirOpcode;
-   _opcodePointer[OP_PUSHRR     ] = &CRunBytecode::pushrrOpcode;
-   _opcodePointer[OP_PUSHDR     ] = &CRunBytecode::pushdrOpcode;
-   _opcodePointer[OP_PUSHMR     ] = &CRunBytecode::pushmrOpcode;
+//   _opcodePointer[OP_PUSHSR     ] = &CRunBytecode::pushsrOpcode;
+//   _opcodePointer[OP_PUSHIR     ] = &CRunBytecode::pushirOpcode;
+//   _opcodePointer[OP_PUSHRR     ] = &CRunBytecode::pushrrOpcode;
+//   _opcodePointer[OP_PUSHDR     ] = &CRunBytecode::pushdrOpcode;
+//   _opcodePointer[OP_PUSHMR     ] = &CRunBytecode::pushmrOpcode;
 
    _opcodePointer[OP_PUSHST     ] = &CRunBytecode::pushstOpcode;
    _opcodePointer[OP_PUSHIT     ] = &CRunBytecode::pushitOpcode;
@@ -224,6 +227,11 @@ void CRunBytecode::initOpcodePointer()
    _opcodePointer[OP_DECSP_8    ] = &CRunBytecode::decsp_8Opcode;
 
    _opcodePointer[OP_RET        ] = &CRunBytecode::retOpcode;
+   _opcodePointer[OP_IRET       ] = &CRunBytecode::iretOpcode;
+   _opcodePointer[OP_RRET       ] = &CRunBytecode::rretOpcode;
+   _opcodePointer[OP_SRET       ] = &CRunBytecode::sretOpcode;
+   _opcodePointer[OP_DRET       ] = &CRunBytecode::dretOpcode;
+   _opcodePointer[OP_MRET       ] = &CRunBytecode::mretOpcode;
    _opcodePointer[OP_SALLOC     ] = &CRunBytecode::sallocOpcode;
    _opcodePointer[OP_SFREE      ] = &CRunBytecode::sfreeOpcode;
    _opcodePointer[OP_SSETC      ] = &CRunBytecode::ssetcOpcode;
@@ -260,7 +268,7 @@ int CRunBytecode::run()
 
 void CRunBytecode::step()
 {
-    char opcode;
+    unsigned char opcode;
     opcode = _code.fetchByte();
 
    if (opcode >= OPCODE_NUMBER) {
@@ -363,6 +371,18 @@ void CRunBytecode::procLeia()
          abort();
    }
    std::cout << std::endl;
+}
+
+void CRunBytecode::popRA()
+{
+   _code.setIP(_executionStack.top());
+   _executionStack.pop();
+
+//   _dataStack.setSP(_executionStack.top());
+//   _executionStack.pop();
+
+   _dataStack.setBS(_executionStack.top());
+   _executionStack.pop();
 }
 
 
@@ -1244,10 +1264,6 @@ void CRunBytecode::pushsvOpcode()
    type._type                = CSymbol::VAR;
    type._value._addressValue = (int)value;
 
-//   std::cout << "sizeof(type)=" << sizeof(type) << std::endl;
-//   _dataStack.pushBytes(&type, sizeof(type));
-//   TODO: problemas de alinhamento nas estruturas... nao consegui desativar com pragmas...
-
    _dataStack.pushByte(CSymbol::VAR);
    _dataStack.pushInt((int)value);
 }
@@ -1322,45 +1338,45 @@ void CRunBytecode::pushmvOpcode()
 }
 
 
-void CRunBytecode::pushsrOpcode()
-{
-   trace ("pushsr opcode");
+//void CRunBytecode::pushsrOpcode()
+//{
+//   trace ("pushsr opcode");
+//
+//   SStringType type;
+//
+//   _dataStack.pushBytes((char*)&type, sizeof(type));
+//}
 
-   SStringType type;
 
-   _dataStack.pushBytes((char*)&type, sizeof(type));
-}
+//void CRunBytecode::pushirOpcode()
+//{
+//   trace ("pushir opcode");
+//
+//   _dataStack.pushInt(0);
+//}
 
+//void CRunBytecode::pushrrOpcode()
+//{
+//   trace ("pushrr opcode");
+//
+//   _dataStack.pushReal(0);
+//}
 
-void CRunBytecode::pushirOpcode()
-{
-   trace ("pushir opcode");
+//void CRunBytecode::pushdrOpcode()
+//{
+//   trace ("pushdr opcode");
+//
+//   int size = _dataStack.getInt(_code.fetchInt());
+//
+//   _dataStack.pushBytes(size);
+//}
 
-   _dataStack.pushInt(0);
-}
-
-void CRunBytecode::pushrrOpcode()
-{
-   trace ("pushrr opcode");
-
-   _dataStack.pushReal(0);
-}
-
-void CRunBytecode::pushdrOpcode()
-{
-   trace ("pushdr opcode");
-
-   int size = _dataStack.getInt(_code.fetchInt());
-
-   _dataStack.pushBytes(size);
-}
-
-void CRunBytecode::pushmrOpcode()
-{
-   trace ("pushmr opcode");
-
-   _dataStack.pushBytes(getTypeSize(CSymbol::MATRIX));
-}
+//void CRunBytecode::pushmrOpcode()
+//{
+//   trace ("pushmr opcode");
+//
+//   _dataStack.pushBytes(getTypeSize(CSymbol::MATRIX));
+//}
 
 //void CRunBytecode::pushmrOpcode()
 //{
@@ -1452,15 +1468,84 @@ void CRunBytecode::decsp_8Opcode()
    _dataStack.popInt();
 }
 
+
 void CRunBytecode::retOpcode()
 {
    trace ("ret opcode");
 
-   _code.setIP(_executionStack.top());
-   _executionStack.pop();
+   int raSize  = _dataStack.getInt(_code.fetchInt());
 
-   _dataStack.setBS(_executionStack.top());
-   _executionStack.pop();
+   _dataStack.decSP(raSize);
+
+   popRA();
+}
+
+void CRunBytecode::iretOpcode()
+{
+   trace ("iret opcode");
+
+   int raSize  = _dataStack.getInt(_code.fetchInt());
+   int result = _dataStack.getInt(_code.fetchInt());
+
+   _dataStack.decSP(raSize);
+
+   popRA();
+
+   // Empilha o resultado
+   _dataStack.pushInt(result);
+}
+
+void CRunBytecode::rretOpcode()
+{
+   invalidOpcode(__FUNCTION__);
+}
+
+void CRunBytecode::sretOpcode()
+{
+   trace ("sret opcode");
+
+   int raSize  = _dataStack.getInt(_code.fetchInt());
+   int address = _code.fetchInt();
+
+   std::string *value = new std::string(); // TODO: quando eh desalocado ?
+   *value = _dataStack.getString(address);
+
+   SStringType type;
+   type._type                = CSymbol::VAR;
+   type._value._addressValue = (int)value;
+
+   _dataStack.decSP(raSize);
+
+   popRA();
+
+   _dataStack.pushBytes((char*)&type, sizeof(type));
+
+//   _dataStack.pushByte(CSymbol::VAR);
+//   _dataStack.pushInt((int)value);
+}
+
+void CRunBytecode::dretOpcode()
+{
+   invalidOpcode(__FUNCTION__);
+}
+
+void CRunBytecode::mretOpcode()
+{
+   trace ("mret opcode");
+
+   int raSize  = _dataStack.getInt(_code.fetchInt());
+   SMatrix1TypeHeader *matrix = (SMatrix1TypeHeader*) _dataStack.getInt(_code.fetchInt());
+
+   int size = sizeof(SMatrix1TypeHeader) + matrix->_elements[0]*matrix->_elementSize;
+   char *newMatrix = new char[size]; // TODO: memory leak
+   memcpy(newMatrix, matrix, size);
+
+
+   _dataStack.decSP(raSize);
+
+   popRA();
+
+   _dataStack.pushInt((int)newMatrix);
 }
 
 void CRunBytecode::sallocOpcode()

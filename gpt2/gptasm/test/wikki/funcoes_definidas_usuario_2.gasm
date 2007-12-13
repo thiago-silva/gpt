@@ -15,7 +15,6 @@ proc main
     popiv x
 
     // imprima( "Fatorial de ", x, " é ", fatorial( x ) );
-    pushir // retorno da função
     pushiv x
     pcall fatorial
     pushit
@@ -32,8 +31,8 @@ proc main
 endproc
 
 proc fatorial
-    param __result int
     param z int
+    var __result int
 	
     var t1 int
     var t2 int
@@ -43,26 +42,25 @@ proc fatorial
     ifnot t1, senao
         // retorne 1;
         iset __result, 1
-        decsp 12
-        ret
+//        decsp 16
+        iret 16, __result
         jmp proximo
     // senão
     senao:
         // retorne z * fatorial( z - 1 );
         isub t1, z, 1
-        pushir // retorno da função
         pushiv t1
         pcall fatorial
         popiv t1
         imul t2, z, t1
         iset __result, t2
-        decsp 12
-        ret
+//        decsp 16
+        iret 16, __result
     // fim-se
     proximo:
 
-    decsp 12
-    ret
+//    decsp 16
+    iret 16, __result
 endproc
 
 endprogram

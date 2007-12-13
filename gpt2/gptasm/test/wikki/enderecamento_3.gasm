@@ -39,8 +39,9 @@ proc exibe
     push_2
     lcall imprima
 
-    decsp 20
-    ret
+//    descp 20
+
+    ret 20
 endproc
 
 endprogram

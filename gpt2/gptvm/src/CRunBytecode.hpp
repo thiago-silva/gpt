@@ -38,6 +38,7 @@ private:
    double getRealData(const int &address);
    void setStringData(const int &address, const std::string &value);
    std::string getStringData(const int &address);
+   void popRA();
    // opcodes
    void invalidOpcode(const std::string &opcode="");
    void nopOpcode();
@@ -138,11 +139,11 @@ private:
    void pushdvOpcode();
    void pushmvOpcode();
 
-   void pushsrOpcode();
-   void pushirOpcode();
-   void pushrrOpcode();
-   void pushdrOpcode();
-   void pushmrOpcode();
+//   void pushsrOpcode();
+//   void pushirOpcode();
+//   void pushrrOpcode();
+//   void pushdrOpcode();
+//   void pushmrOpcode();
 
    void pushstOpcode();
    void pushitOpcode();
@@ -158,6 +159,11 @@ private:
    void decsp_8Opcode();
 
    void retOpcode();
+   void iretOpcode();
+   void rretOpcode();
+   void sretOpcode();
+   void dretOpcode();
+   void mretOpcode();
    void sallocOpcode();
    void sfreeOpcode();
    void ssetcOpcode();

@@ -3,7 +3,6 @@ program exemplo
 proc main
     var t1 int
     // imprima( "A soma é: ", soma( 2, 7 ) );
-    pushir // resultado da função
     pushiv 7 // empilha 7
     pushiv 2 // empilha 2
     pcall soma
@@ -19,14 +18,14 @@ proc main
 endproc
 
 proc soma
-    param __result int
     param x int
     param y int
+    var __result int
 
     isum __result, x, y
 
-    decsp_8 // tamanho dos parametros + variaveis locais - retorno da funcao
-    ret
+//    decsp 12 // tamanho dos parametros + variaveis locais - retorno da funcao
+    iret 12, __result
 endproc
 
 endprogram
