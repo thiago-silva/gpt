@@ -4,10 +4,11 @@
 #include <antlr/TokenBuffer.hpp>
 #include <antlr/CommonAST.hpp>
 
+#include "PortugolTokenTypes.hpp"
 #include "PortugolLexer.hpp"
 #include "PortugolParser.hpp"
 #include "SemanticWalker.hpp"
-#include "PortugolTokenTypes.hpp"
+#include "GptAsmWalker.hpp"
 #include "SymbolTable.hpp"
 
 #include "TokenNames.hpp"
@@ -79,7 +80,25 @@ void semantic(char* fname) {
   std::cerr << ast->toStringList() << std::endl << std::endl;
 }
 
+void all(char* fname) {
+  RefPortugolAST ast;
+
+  ast = dump_tree(fname, true);
+
+  SymbolTable* symtable = new SymbolTable(fname);
+
+  SemanticWalker semantic(symtable, fname);
+  semantic.programa(ast);
+
+  GptAsmWalker code(symtable, fname);
+  code.programa(ast);
+}
+
 int main(int argc, char** argv) {
+
+  if (argc == 2) {
+    all(argv[1]);
+  }
 
   if (argc < 3) {
     std::cerr << "./test [lps] <file.gpt>" << std::endl;

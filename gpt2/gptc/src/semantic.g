@@ -39,9 +39,9 @@ options {
 
 {
 public:
-  SemanticWalker::SemanticWalker(SymbolTable* symtable, 
+  SemanticWalker::SemanticWalker(SymbolTable* symtable,
                                  const std::string& filepath)
-	 : BaseSemanticWalker(symtable, filepath), 
+	 : BaseSemanticWalker(symtable, filepath),
     _analisingInitializationList(false) { }
 
 private:
@@ -106,7 +106,7 @@ declaracao_constante
                                 {
                                   IDList ids;
                                   Type *type;
-                                  Type *rtype;                                  
+                                  Type *rtype;
                                 }
 
   : #(T_CONSTANTE
@@ -124,7 +124,7 @@ declaracao_constante
 identificadores returns [IDList list]
   : (
       id:T_IDENTIFICADOR        {list.push_back(id);}
-    )*
+    )+
   ;
 
 tipo returns [Type *type]
@@ -166,7 +166,7 @@ dimensoes returns [std::list<int> dims]
   : (
       dsize=dimensao
                         {dims.push_back(dsize);}
-    )*
+    )+
   ;
 
 dimensao returns [int size]
@@ -190,7 +190,7 @@ campos_estrutura returns [SymbolList fields]
                                 {
                                   IDList ids;
                                   Type *type;
-                                  Type *rtype;                                  
+                                  Type *rtype;
                                 }
 
   : (
@@ -381,7 +381,7 @@ parametro returns [Symbol symbol]
                                       type->setRef(true);
                                     }
 
-                                    symbol = 
+                                    symbol =
                                         Symbol(id->getText(),
                                           type,
                                           _symtable->unit(),
@@ -655,7 +655,7 @@ enunciado
   | en_repita
   | en_para
   | en_caso
-  | T_SAIR                                
+  | T_SAIR //TODO: deve estar dentro de uma iteração
   | devnull=chamada_subrotina
   ;
 
@@ -670,7 +670,7 @@ en_atribuicao
 en_retorne
                         {Type *type;}
 
-  : #(ret:T_RETORNE type=expressao_) 
+  : #(ret:T_RETORNE type=expressao_)
 
                         {evalRetorne(ret, type);}
   ;
@@ -678,17 +678,17 @@ en_retorne
 en_se
                         {ExpressionReturn ex;}
 
-  : #(se:T_SE 
+  : #(se:T_SE
 
       ex=expressao    {evalCondicional(ex);}
-      lista_enunciados 
+      lista_enunciados
       (T_SENAO lista_enunciados)?
     )
   ;
 
 en_enquanto
                         {ExpressionReturn ex;}
-  : #(enq:T_ENQUANTO 
+  : #(enq:T_ENQUANTO
       ex=expressao      {evalCondicional(ex);}
       lista_enunciados
     )
@@ -696,7 +696,7 @@ en_enquanto
 
 en_repita
                               {ExpressionReturn ex;}
-  : #(T_REPITA      
+  : #(T_REPITA
       lista_enunciados
       T_ATE ex=expressao      {evalCondicional(ex);}
     )
@@ -705,7 +705,7 @@ en_repita
 en_para
                               {ExpressionReturn lv, from, to;}
 
-  : #(p:T_PARA lv=lvalue 
+  : #(p:T_PARA lv=lvalue
         from=expressao        {evalAttribution(lv, from);}
         to=expressao          {evalAttribution(lv, to);}
         (T_PASSO)?
@@ -724,7 +724,7 @@ teste_caso[Type *ltype]
 
                                {Type *rtype;}
 
-  : #(T_FACA 
+  : #(T_FACA
       rtype=lit:literal            {evalExpr_IGUAL(lit, ltype, rtype);}
       lista_enunciados
     )

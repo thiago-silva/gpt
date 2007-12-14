@@ -9,7 +9,7 @@ gptc_SOURCES = main.cpp
 gptc_LDADD = libgptc.la $(ANTLR_LIB)
 
 
-EXTRA_DIST = lexer.g parser.g semantic.g code.g
+EXTRA_DIST = lexer.g parser.g semantic.g gptasm.g
 
 
 BUILT_SOURCES = PortugolLexer.hpp \
@@ -18,14 +18,16 @@ BUILT_SOURCES = PortugolLexer.hpp \
                 PortugolParser.cpp \
                 SemanticWalker.hpp \
                 SemanticWalker.cpp \
-								CodeWalker.hpp \
-								CodeWalker.cpp \
+								GptAsmWalker.hpp \
+								GptAsmWalker.cpp \
                 TokenNames.hpp \
                 TokenLabels.hpp
 
 
 libgptc_la_SOURCES =  BaseSemanticWalker.hpp \
 											BaseSemanticWalker.cpp \
+											BaseGptAsmWalker.hpp \
+											BaseGptAsmWalker.cpp \
 											CompilerError.hpp \
 											CompilerError.cpp \
 											MismatchedUnicodeCharException.hpp \
@@ -42,6 +44,15 @@ libgptc_la_SOURCES =  BaseSemanticWalker.hpp \
 											Types.cpp \
 											UnicodeCharBuffer.hpp \
 											UnicodeCharScanner.hpp \
+											GptAsmExpression.hpp \
+											Arguments.hpp \
+											Arguments.cpp \
+											AsmProgram.hpp AsmProgram.cpp \
+										  Context.hpp Context.cpp \
+										  Options.hpp \
+											Subroutine.hpp Subroutine.cpp \
+											TextFile.hpp TextFile.cpp \
+										  Tools.hpp Tools.cpp \
 											$(BUILT_SOURCES)
 
 
@@ -57,8 +68,10 @@ CLEANFILES = PortugolLexer.cpp \
              SemanticWalker.cpp \
              SemanticWalkerTokenTypes.hpp \
              SemanticWalkerTokenTypes.txt \
-             CodeWalkerTokenTypes.hpp \
-             CodeWalkerTokenTypes.txt \
+             GptAsmWalkerTokenTypes.hpp \
+             GptAsmWalker.cpp \
+						 GptAsmWalker.hpp  \
+             GptAsmWalkerTokenTypes.txt \
              TokenNames.hpp \
              TokenLabels.hpp
 
@@ -71,8 +84,8 @@ PortugolParser.hpp PortugolParser.cpp: $(srcdir)/parser.g Makefile
 SemanticWalker.hpp SemanticWalker.cpp: $(srcdir)/semantic.g Makefile
 	$(ANTLR_BIN) $(srcdir)/semantic.g
 
-CodeWalker.hpp CodeWalker.cpp: $(srcdir)/code.g Makefile
-	$(ANTLR_BIN) $(srcdir)/code.g
+GptAsmWalker.hpp GptAsmWalker.cpp: $(srcdir)/gptasm.g Makefile
+	$(ANTLR_BIN) $(srcdir)/gptasm.g
 
 TokenNames.hpp: Makefile
 	@echo "#ifndef TOKENNAMES_H" > $@
