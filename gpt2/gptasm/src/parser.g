@@ -247,11 +247,10 @@ options {
    |  "pushdv"
       {bytecode.addOpcode(getLastTokenText());}
       element
-      T_COMMA
-      intvalue
+      {bytecode.addSymbolSize(getLastTokenText());}
       // TODO: muitos opcodes poderiam ter o valor inteiro diretamente ao inves de um enderecamento...
-   |  ("pushir"|"pushsr"|"pushrr"|"pushdr"|"pushmr")
-      {bytecode.addOpcode(getLastTokenText());}
+//   |  ("pushir"|"pushsr"|"pushrr"|"pushdr"|"pushmr")
+//      {bytecode.addOpcode(getLastTokenText());}
    |  ("pushit"|"pushst"|"pushrt"|"pushct"|"pushbt"|"pushdt"|"pushmt")
       {bytecode.addOpcode(getLastTokenText());}
    |  ("popiv"|"popsv"|"poprv"|"popmv")
@@ -260,8 +259,7 @@ options {
    |  "popdv"
       {bytecode.addOpcode(getLastTokenText());}
       identifier
-      T_COMMA
-      intvalue
+      {bytecode.addSymbolSize(getLastTokenText());}
 //   |  ("incsp"|"decsp")
 //      {bytecode.addOpcode(getLastTokenText());}
 //      intvalue
@@ -279,11 +277,11 @@ options {
       { bytecode.addAddress(getLastTokenText(),CSymbol::CONST, CSymbol::STRING); }
    |  "ret"
       {bytecode.addOpcode(getLastTokenText());}
-      intvalue
+//      intvalue
    |  ("iret"|"rret"|"sret"|"dret"|"mret")
       {bytecode.addOpcode(getLastTokenText());}
-      intvalue
-      T_COMMA
+//      intvalue
+//      T_COMMA
       identifier
    ;
 

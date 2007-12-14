@@ -162,6 +162,7 @@ void CGenBytecode::initProcedure(const std::string &procedureName, const bool &h
     registryLabel(procedureName);
    _parameters.clear();
 //   _parametersSize = 0;
+   _raSize = 0;
 }
 
 
@@ -195,6 +196,7 @@ void CGenBytecode::makeVarDefinition(const std::string &lexeme, const int &type,
       _code.writeByte(OP_INCSP);
       addAddress(itoa(symbol->getTypeSize()), CSymbol::CONST, CSymbol::INT, size);
    }
+   _raSize += size;
 }
 
 
@@ -208,6 +210,7 @@ void CGenBytecode::makeParDefinition(const std::string &lexeme, const int &type,
 //   CSymbol *symbol = _symbolTable.addParameter(lexeme, type, _currentSP);
 //   std::cout << "par " << lexeme << " address " << _currentSP << std::endl;
 //   _currentSP += symbol->getTypeSize();
+   _raSize += size;
 }
 
 
@@ -255,8 +258,27 @@ void CGenBytecode::registryLabel(const std::string &labelName)
 
 void CGenBytecode::addOpcode(const std::string &mn)
 {
+   unsigned char opcode = _opcodes[mn];
 //   std::cout << "Mn=" << mn << " opcode: " << (int)_opcodes[mn] << std::endl;
-   _code.writeByte(_opcodes[mn]);
+   _code.writeByte(opcode);
+   switch (opcode) {
+      case OP_RET:
+      case OP_IRET:
+      case OP_RRET:
+      case OP_SRET:
+      case OP_DRET:
+      case OP_MRET:
+         // Para os mnemonicos ret, iret, rret, sret, dret e mret o montador acrescenta o tamanho do registro de ativacao
+         _code.writeInt(_raSize);
+         break;
+   }
+}
+
+
+void CGenBytecode::addSymbolSize(const std::string &symbol)
+{
+   int size = _symbolTable.getSymbol(symbol)->getTypeSize();
+   _code.writeInt(size);
 }
 
 

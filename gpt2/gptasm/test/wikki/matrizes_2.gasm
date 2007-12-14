@@ -62,8 +62,7 @@ proc mostra
     jmp teste2
     proximo2:
 
-//    decsp_8
-    ret 8
+    ret
 endproc
 
 endprogram

@@ -38,6 +38,7 @@ public:
    CBinString getBinary();
    void unsolvedLabel(const std::string &label);
    void translateLabelsToAddress();
+   void addSymbolSize(const std::string &symbol);
 private:
 
    CHeader                    _header;
@@ -48,6 +49,7 @@ private:
    std::string                _currentProcedure;
    int                        _currentSP;
 //   int                        _parametersSize;
+   int                        _raSize;
    std::list<std::pair<std::string, int> > _unsolvedLabels;
    std::map<std::string, int> _solvedLabels;
 //   std::list<std::pair<std::string,int> > _parameters;

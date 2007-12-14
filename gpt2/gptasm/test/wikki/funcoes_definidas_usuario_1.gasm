@@ -24,8 +24,7 @@ proc soma
 
     isum __result, x, y
 
-//    decsp 12 // tamanho dos parametros + variaveis locais - retorno da funcao
-    iret 12, __result
+    iret __result
 endproc
 
 endprogram

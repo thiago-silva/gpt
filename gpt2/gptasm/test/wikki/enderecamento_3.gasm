@@ -9,7 +9,7 @@ proc main
     // c.y := 20;
     isetv c:8, 20 // *(c + 4 ) := 20
 
-    pushdv c, 12
+    pushdv c
     pcall exibe
 
     exit_0
@@ -39,9 +39,7 @@ proc exibe
     push_2
     lcall imprima
 
-//    descp 20
-
-    ret 20
+    ret
 endproc
 
 endprogram

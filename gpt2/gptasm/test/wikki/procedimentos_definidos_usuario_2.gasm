@@ -28,8 +28,7 @@ proc soma
     isum t1, v1, v2
     isetv r:0, t1
 
-//    decsp 16
-    ret	16
+    ret
 endproc
 
 endprogram

@@ -3,7 +3,6 @@ program exemplo
 proc main
     var v string
 
-//    salloc v
     pcall ajusta
     popsv v
 
@@ -22,8 +21,7 @@ proc ajusta
 
     salloc __result
     sset __result, "Hello !!!"
-//    decsp 4
-    sret 5,__result
+    sret __result
 endproc
 
 endprogram

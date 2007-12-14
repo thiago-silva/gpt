@@ -1158,9 +1158,9 @@ void CRunBytecode::popdvOpcode()
    trace ("popdv opcode");
 
    int varAddress  = _code.fetchInt();
-   int sizeAddress = _code.fetchInt();
+   int size        = _code.fetchInt();
 
-   _dataStack.setBytes(varAddress, _dataStack.popBytes(_dataStack.getInt(sizeAddress)));
+   _dataStack.setBytes(varAddress, _dataStack.popBytes(size));
 }
 
 void CRunBytecode::popmvOpcode()
@@ -1320,9 +1320,9 @@ void CRunBytecode::pushdvOpcode()
    trace ("pushdv opcode");
 
    int varAddress  = _code.fetchInt();
-   int sizeAddress = _code.fetchInt();
+   int size        = _code.fetchInt();
 
-   _dataStack.pushBytes(_dataStack.getBytes(varAddress, _dataStack.getInt(sizeAddress)));
+   _dataStack.pushBytes(_dataStack.getBytes(varAddress, size));
 }
 
 void CRunBytecode::pushmvOpcode()
@@ -1473,7 +1473,8 @@ void CRunBytecode::retOpcode()
 {
    trace ("ret opcode");
 
-   int raSize  = _dataStack.getInt(_code.fetchInt());
+//   int raSize  = _dataStack.getInt(_code.fetchInt());
+   int raSize  = _code.fetchInt();
 
    _dataStack.decSP(raSize);
 
@@ -1484,7 +1485,8 @@ void CRunBytecode::iretOpcode()
 {
    trace ("iret opcode");
 
-   int raSize  = _dataStack.getInt(_code.fetchInt());
+//   int raSize  = _dataStack.getInt(_code.fetchInt());
+   int raSize  = _code.fetchInt();
    int result = _dataStack.getInt(_code.fetchInt());
 
    _dataStack.decSP(raSize);
@@ -1504,7 +1506,8 @@ void CRunBytecode::sretOpcode()
 {
    trace ("sret opcode");
 
-   int raSize  = _dataStack.getInt(_code.fetchInt());
+//   int raSize  = _dataStack.getInt(_code.fetchInt());
+   int raSize  = _code.fetchInt();
    int address = _code.fetchInt();
 
    std::string *value = new std::string(); // TODO: quando eh desalocado ?
@@ -1533,7 +1536,8 @@ void CRunBytecode::mretOpcode()
 {
    trace ("mret opcode");
 
-   int raSize  = _dataStack.getInt(_code.fetchInt());
+//   int raSize  = _dataStack.getInt(_code.fetchInt());
+   int raSize  = _code.fetchInt();
    SMatrix1TypeHeader *matrix = (SMatrix1TypeHeader*) _dataStack.getInt(_code.fetchInt());
 
    int size = sizeof(SMatrix1TypeHeader) + matrix->_elements[0]*matrix->_elementSize;

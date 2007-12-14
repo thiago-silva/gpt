@@ -40,8 +40,7 @@ proc insere_dados
     jmp teste
     proximo:
 
-//    decsp_4
-    mret 4, d1
+    mret d1
 endproc
 
 proc mostra_dados
@@ -72,8 +71,7 @@ proc mostra_dados
     jmp teste2
     proximo2:
 
-//    decsp_4
-    ret 4
+    ret
 endproc
 
 endprogram

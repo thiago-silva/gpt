@@ -42,8 +42,7 @@ proc fatorial
     ifnot t1, senao
         // retorne 1;
         iset __result, 1
-//        decsp 16
-        iret 16, __result
+        iret __result
         jmp proximo
     // senão
     senao:
@@ -54,13 +53,11 @@ proc fatorial
         popiv t1
         imul t2, z, t1
         iset __result, t2
-//        decsp 16
-        iret 16, __result
+        iret __result
     // fim-se
     proximo:
 
-//    decsp 16
-    iret 16, __result
+    iret __result
 endproc
 
 endprogram
