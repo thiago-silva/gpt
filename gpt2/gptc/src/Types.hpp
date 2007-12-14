@@ -22,7 +22,7 @@ public:
 
   bool isLValueFor(const TypeList&) const;
   bool equals(const TypeList&) const;
-  
+
   bool hasErrorType() const;
 
   std::string toString() const;
@@ -35,32 +35,6 @@ public:
 class Type : private PortugolTokenTypes {
 public:
   enum { PRIMITIVE, MATRIX, STRUCT, SUBPROGRAM, ERROR };
-
-//   class StructField {
-//   public:
-//     StructField(const std::string& n, Type* t);
-// 
-//     bool isLValueFor(const StructField& other) const;
-// 
-//     bool operator==(const StructField& other) const;
-// 
-//     Type *type() const;
-//     const std::string& name() const;
-//   private:
-//     std::string _name;
-//     Type* _type;
-//   };
-// 
-//   class StructFieldList : public std::list<StructField> {
-//   public:
-// //     bool compatible(const StructFieldList& other) const;
-//     bool isLValueFor(const StructFieldList& other) const;
-//     bool operator==(const StructFieldList& other) const;
-// 
-//     const_iterator find(const std::string&) const;
-//     std::string toString() const;
-//   };
-
 
   //Error type
   Type(TypeBuilder*);
@@ -82,7 +56,7 @@ public:
 
   //Struct
   Type(TypeBuilder*,
-       const std::string& name, 
+       const std::string& name,
        const SymbolList& fields,
        const std::string& unit, int line);
 
@@ -97,7 +71,7 @@ public:
   const TypeList& paramTypes() const;
   Type* returnType() const;
 //   bool  paramMatches(const TypeList&) const;
-  
+
 
   /* General Methods */
   void setConst(bool);
@@ -112,6 +86,7 @@ public:
   bool isSubprogram() const;
 
   const std::string& name() const;
+  std::string asmName() const;
   const std::string& identifier() const;
 
   bool equals(int id) const;
@@ -120,23 +95,23 @@ public:
 
 
   //virtual
-  Type* promotion(Type*);
+  Type* attrPromotion(Type*);
   bool  equals(const Type* other) const;
   bool  isLValueFor(Type* rtype);
 
 
   //impl primitive
-  Type* primitive_promotion(Type* other);
+  Type* primitive_attrPromotion(Type* other);
   bool  primitive_equals(const Type* other) const;
   bool  primitive_isLValueFor(Type* rvalue);
 
   //impl matrix
-  Type* matrix_promotion(Type* other);
+  Type* matrix_attrPromotion(Type* other);
   bool matrix_equals(const Type* other) const;
   bool matrix_isLValueFor(Type* rvalue);
 
   //impl struct
-  Type* struct_promotion(Type* other);
+  Type* struct_attrPromotion(Type* other);
   bool struct_equals(const Type* other) const;
   bool struct_isLValueFor(Type* rtype);
 
@@ -187,7 +162,7 @@ public:
 
   Type* reticencesType();
 
-  Type* subprogramType(const TypeList& paramTypes, Type* returnType);  
+  Type* subprogramType(const TypeList& paramTypes, Type* returnType);
 
   Type* errorType();
 

@@ -30,7 +30,7 @@ Type* InitMatrixList::elementsDivergeFrom(Type* from) const {
 
   const_iterator it;
   for (it = begin(); it != end(); ++it) {
-    if (!(*it).second->isError() && !from->promotion((*it).second)) {
+    if (!(*it).second->isError() && !from->attrPromotion((*it).second)) {
       return (*it).second;
     }
   }
@@ -42,7 +42,7 @@ Type* InitMatrixList::evaluatedElementType(Type* from) const {
   Type *ret = from;
   for (it = begin(); it != end(); ++it) {
     if (!(*it).second->isError()) {
-      ret = ret->promotion((*it).second);
+      ret = ret->attrPromotion((*it).second);
     }
   }
   return ret;

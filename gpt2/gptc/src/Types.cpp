@@ -16,16 +16,16 @@
 // Type::StructField::operator==(const Type::StructField& other) const {
 //   return _name == other._name && _type->equals(other._type);
 // }
-// 
+//
 // Type* Type::StructField::type() const {
 //   return _type;
 // }
-// 
+//
 // const std::string& Type::StructField::name() const {
 //   return _name;
 // }
-// 
-// 
+//
+//
 // bool
 // Type::StructFieldList::isLValueFor(const Type::StructFieldList& other) const {
 //   if (size() != other.size()) {
@@ -46,7 +46,7 @@
 //   }
 //   return true;
 // }
-// 
+//
 // bool
 // Type::StructFieldList::operator==(const Type::StructFieldList& other) const {
 //   if (size() != other.size()) {
@@ -67,8 +67,8 @@
 //   }
 //   return true;
 // }
-// 
-// 
+//
+//
 // Type::StructFieldList::const_iterator
 // Type::StructFieldList::find(const std::string& name) const {
 //   const_iterator it;
@@ -79,7 +79,7 @@
 //   }
 //   return end();
 // }
-// 
+//
 // std::string Type::StructFieldList::toString() const {
 //   std::string ret = "{";
 //   std::string v = "";
@@ -118,12 +118,12 @@ bool Type::isError() const {
   if (isMatrix() && _ofType->isError()) {
     return true;
   }
-  
+
   if (isStruct() && _fields.typeList().hasErrorType()) {
     return true;
   }
 
-  if (isSubprogram() && 
+  if (isSubprogram() &&
      (_returnType->isError() || _paramTypes.hasErrorType())) {
     return true;
   }
@@ -150,6 +150,33 @@ const std::string& Type::name() const {
   return _name;
 }
 
+std::string Type::asmName() const {
+  switch (_typeId) {
+    case PRIMITIVE:
+      switch (_id) {
+        case T_INTEIRO:
+          return "int";
+        case T_REAL:
+          return "real";
+        case T_LITERAL:
+          return "string";
+        case T_CARACTERE:
+          return "char";
+        case T_LOGICO:
+          return "bool";
+        case T_CORINGA:
+          return "pointer";
+      }
+      throw;
+    case MATRIX:
+      return "matrix";
+    case STRUCT:
+      return "data";
+    default:
+      throw;
+  }
+}
+
 const std::string& Type::identifier() const {
   return _identifier;
 }
@@ -165,14 +192,14 @@ bool Type::equals(Type* ofType, int dimensions) const {
 
 /************* VIRTUAL *********************************/
 
-Type* Type::promotion(Type* other) {
+Type* Type::attrPromotion(Type* other) {
   switch (_typeId) {
     case PRIMITIVE:
-      return primitive_promotion(other);
+      return primitive_attrPromotion(other);
     case MATRIX:
-      return matrix_promotion(other);
+      return matrix_attrPromotion(other);
     case STRUCT:
-      return struct_promotion(other);
+      return struct_attrPromotion(other);
     case SUBPROGRAM:
       return NULL;
     default:
@@ -274,7 +301,7 @@ Type* Type::caracOrLit(Type* other) {
   return NULL;
 }
 
-Type* Type::primitive_promotion(Type* other) {
+Type* Type::primitive_attrPromotion(Type* other) {
   if (!other->isPrimitive()) {
     return NULL;
   }
@@ -365,12 +392,12 @@ Type* Type::evalTypeFromSubscript(int dimensions) {
   }
 }
 
-Type* Type::matrix_promotion(Type* other) {
+Type* Type::matrix_attrPromotion(Type* other) {
   if (!other->isMatrix()) {
     return NULL;
   }
 
-  Type *ofProm = _ofType->promotion(other->_ofType);
+  Type *ofProm = _ofType->attrPromotion(other->_ofType);
   if (!ofProm) {
     return NULL;
   } else {
@@ -379,7 +406,7 @@ Type* Type::matrix_promotion(Type* other) {
 }
 
 bool Type::matrix_equals(const Type* other) const {
-  return other->isMatrix() && 
+  return other->isMatrix() &&
          equals(other->_ofType, other->_dimensions.size());
 }
 
@@ -421,7 +448,7 @@ Type::Type(TypeBuilder* builder,
 
 Type::Type(TypeBuilder* builder, const SymbolList& fields)
   : _typeId(STRUCT), _builder(builder), _isConst(false), _isRef(false),
-    _name("<anônimo>"), _anonymous(true), _fields(fields), 
+    _name("<anônimo>"), _anonymous(true), _fields(fields),
     _unit("<interno>"), _line(-1) {
 
   _name += ":{";
@@ -437,7 +464,7 @@ const SymbolList& Type::fields() const {
   return _fields;
 }
 
-Type* Type::struct_promotion(Type* other) {
+Type* Type::struct_attrPromotion(Type* other) {
   if (!other->isStruct()) {
     return NULL;
   }
@@ -453,7 +480,7 @@ Type* Type::struct_promotion(Type* other) {
     if (otherFieldIt == other->fields().end()) { //structs diferentes
       return NULL;
     } else {
-      promoType = (*it).type()->promotion((*otherFieldIt).type());
+      promoType = (*it).type()->attrPromotion((*otherFieldIt).type());
       if (!promoType) {
         return NULL;
       } else {
@@ -676,7 +703,7 @@ Type* TypeBuilder::primitiveType(int id) {
   return ret;
 }
 
-Type* TypeBuilder::matrixType(Type* ofType, 
+Type* TypeBuilder::matrixType(Type* ofType,
                               const std::list<int>& dimensions) {
   Type* ret = new Type(this, ofType, dimensions);
   _types.push_back(ret);
@@ -713,24 +740,24 @@ Type* TypeBuilder::structType(const SymbolList& fields) {
     valor : coringa;
   fim-estrutura
 
-  procedimento p( ... args) 
+  procedimento p( ... args)
 
   -> args : matriz[] do tipo Parâmetro
 */
 Type* TypeBuilder::reticencesType() {
   SymbolList fields;
 
-  fields.push_back(Symbol("tipo", 
+  fields.push_back(Symbol("tipo",
     primitiveType(PortugolTokenTypes::T_LITERAL)));
 
-  fields.push_back(Symbol("valor", 
+  fields.push_back(Symbol("valor",
     primitiveType(PortugolTokenTypes::T_CORINGA)));
 
   return matrixType(
     structType("Parâmetro", fields, "<interno>",-1), std::list<int>(1));
 }
 
-Type* 
+Type*
 TypeBuilder::subprogramType(const TypeList& paramTypes, Type* returnType) {
   Type* ret = new Type(this, paramTypes, returnType);
   _types.push_back(ret);
