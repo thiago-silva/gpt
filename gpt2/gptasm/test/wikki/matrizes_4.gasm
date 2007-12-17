@@ -16,19 +16,19 @@ proc main
     pushsv "Valores armazenados:"
     pushst
     push_1
-    lcall imprima
+    lcall io, imprima
 
     m2get t1, m, 0, 0
     pushiv t1
     pushit
     push_1
-    lcall imprima
+    lcall io, imprima
 
     m2get t1, m, 0, 1
     pushiv t1
     pushit
     push_1
-    lcall imprima
+    lcall io, imprima
 
     // desaloca espaço da matriz m
     mfree m

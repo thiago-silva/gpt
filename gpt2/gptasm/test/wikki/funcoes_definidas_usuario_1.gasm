@@ -12,7 +12,7 @@ proc main
     pushsv "A soma é: "
     pushst
     push_2
-    lcall imprima
+    lcall io, imprima
 
     exit_0
 endproc

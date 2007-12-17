@@ -18,7 +18,7 @@ proc main
     pushsv "c.x="
     pushst
     push_2
-    lcall imprima
+    lcall io, imprima
 
     // imprima( "c.y=", c.y );
     igetv t1, c:4 // t1 := *(c + 4)
@@ -27,7 +27,7 @@ proc main
     pushsv "c.y="
     pushst
     push_2
-    lcall imprima
+    lcall io, imprima
 
     exit_0
 endproc

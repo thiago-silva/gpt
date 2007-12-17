@@ -31,6 +31,7 @@ public:
    int getSP() const;
    void readString(std::string &value);
    std::string getString(int address);
+   std::string popString();
    void setString(int address, const std::string &value);
    void setByte(const int &address, const char &value);
    char getByte(const int &address);

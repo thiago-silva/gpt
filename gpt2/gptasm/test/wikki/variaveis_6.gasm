@@ -10,17 +10,17 @@ proc main
     pushiv true
     pushbt
     pushiv 1
-    lcall imprima
+    lcall io, imprima
 
     pushiv false
     pushbt
     pushiv 1
-    lcall imprima
+    lcall io, imprima
 
     pushiv v
     pushbt
     pushiv 1
-    lcall imprima
+    lcall io, imprima
 
     exit 0
 endproc

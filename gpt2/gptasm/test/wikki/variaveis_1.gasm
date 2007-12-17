@@ -21,7 +21,7 @@ proc main
     pushsv "x*y+4="
     pushst
     pushiv 2
-    lcall imprima
+    lcall io, imprima
 	
     exit 0
 endproc

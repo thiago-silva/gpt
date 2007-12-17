@@ -9,7 +9,7 @@ proc main
     pushsv v
     pushst
     pushiv 1
-    lcall imprima
+    lcall io, imprima
 
     sfree v
 

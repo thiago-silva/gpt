@@ -6,7 +6,7 @@ proc main
    pushsv "Finalizando..."
    pushst
    pushiv 1
-   lcall imprima
+   lcall io, imprima
 
    exit 0
 endproc
@@ -19,7 +19,7 @@ proc soma
    pushiv temp
    pushit
    pushiv 1
-   lcall imprima
+   lcall io, imprima
 
    ret
 endproc

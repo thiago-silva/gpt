@@ -39,6 +39,7 @@ private:
    void setStringData(const int &address, const std::string &value);
    std::string getStringData(const int &address);
    void popRA();
+   void callSyslib(const std::string &libname, const std::string &procname);
    // opcodes
    void invalidOpcode(const std::string &opcode="");
    void nopOpcode();
@@ -189,6 +190,7 @@ private:
    int             _returnCode;
    CDataStack      _dataStack;
    std::stack<int> _executionStack;
+   std::map<std::string, void*> syslibHandlerList;
 };
 
 #endif

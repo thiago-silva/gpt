@@ -25,7 +25,7 @@ proc soma
     pushsv "A soma é: "
     pushst
     push_2
-    lcall imprima
+    lcall io, imprima
 
     ret
 endproc

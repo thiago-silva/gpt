@@ -13,7 +13,7 @@ proc main
     pushiv s
     pushit
     push_1
-    lcall imprima
+    lcall io, imprima
 	
     exit_0
 endproc

@@ -19,7 +19,7 @@ proc main
     pushsv "Tamanho de m1 deve ser 100: "
     pushst
     push_2
-    lcall imprima
+    lcall io, imprima
 
     mgetsize1 t1, m2
     pushiv t1
@@ -27,7 +27,7 @@ proc main
     pushsv "Tamanho de m2 deve ser 1000: "
     pushst
     push_2
-    lcall imprima
+    lcall io, imprima
 
     mgetsize2 t1, m3
     pushiv t1
@@ -38,7 +38,7 @@ proc main
     pushsv "Tamanho de m3 deve ser 10 e 20: "
     pushst
     push_3
-    lcall imprima
+    lcall io, imprima
 
     mgetsize2 t1, m4
     pushiv t1
@@ -49,7 +49,7 @@ proc main
     pushsv "Tamanho de m4 deve ser 15 e 25: "
     pushst
     push_3
-    lcall imprima
+    lcall io, imprima
 
     mfree m1
     mfree m2

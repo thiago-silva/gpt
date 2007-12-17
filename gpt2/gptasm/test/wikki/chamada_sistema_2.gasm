@@ -1,0 +1,20 @@
+program exemplo
+// use io
+
+var t1 int
+
+proc main
+    pushiv 2
+    pushiv 4
+    lcall io, soma
+    popiv t1
+
+    pushiv t1
+    pushit
+    push_1
+    lcall io, imprima
+
+    exit 0
+endproc
+
+endprogram

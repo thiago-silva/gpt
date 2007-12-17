@@ -241,16 +241,24 @@ options {
 //--------------------
   mn_chamada_subrotina
 //--------------------
-   :  ("pushiv"|"pushsv"|"pushrv"|"pushmv")
+// TODO: talvez o ideal seria agrupar os opcodes por tipo de dado que manipulam. Isso deixaria o parser e o tornaria mais consistente.
+   :  "pushiv"
+      {bytecode.addOpcode(getLastTokenText());}
+      intelement
+   |  "pushsv"
+      {bytecode.addOpcode(getLastTokenText());}
+      stringelement
+   |  "pushmv"
       {bytecode.addOpcode(getLastTokenText());}
       element
+   |  "pushrv"
+      {bytecode.addOpcode(getLastTokenText());}
+      realelement
    |  "pushdv"
       {bytecode.addOpcode(getLastTokenText());}
       element
       {bytecode.addSymbolSize(getLastTokenText());}
       // TODO: muitos opcodes poderiam ter o valor inteiro diretamente ao inves de um enderecamento...
-//   |  ("pushir"|"pushsr"|"pushrr"|"pushdr"|"pushmr")
-//      {bytecode.addOpcode(getLastTokenText());}
    |  ("pushit"|"pushst"|"pushrt"|"pushct"|"pushbt"|"pushdt"|"pushmt")
       {bytecode.addOpcode(getLastTokenText());}
    |  ("popiv"|"popsv"|"poprv"|"popmv")
@@ -260,13 +268,8 @@ options {
       {bytecode.addOpcode(getLastTokenText());}
       identifier
       {bytecode.addSymbolSize(getLastTokenText());}
-//   |  ("incsp"|"decsp")
-//      {bytecode.addOpcode(getLastTokenText());}
-//      intvalue
    |  ("push_0"|"push_1"|"push_2"|"push_3"|"push_4"|"push_5")
       {bytecode.addOpcode(getLastTokenText());}
-//   |  ("incsp_4"|"incsp_8"|"decsp_4"|"decsp_8")
-//      {bytecode.addOpcode(getLastTokenText());}
    |  "pcall"
       {bytecode.addOpcode(getLastTokenText());}
       T_ID
@@ -275,13 +278,13 @@ options {
       {bytecode.addOpcode(getLastTokenText());}
       T_ID
       { bytecode.addAddress(getLastTokenText(),CSymbol::CONST, CSymbol::STRING); }
+      T_COMMA
+      T_ID
+      { bytecode.addAddress(getLastTokenText(),CSymbol::CONST, CSymbol::STRING); }
    |  "ret"
       {bytecode.addOpcode(getLastTokenText());}
-//      intvalue
    |  ("iret"|"rret"|"sret"|"dret"|"mret")
       {bytecode.addOpcode(getLastTokenText());}
-//      intvalue
-//      T_COMMA
       identifier
    ;
 
@@ -306,18 +309,18 @@ options {
       {bytecode.addOpcode(getLastTokenText());}
       identifier
       T_COMMA
-      intvalue
+      intliteral
       T_COMMA 
-      intvalue
+      intliteral
    |  "m2alloc"
       {bytecode.addOpcode(getLastTokenText());}
       identifier
       T_COMMA
-      intvalue
+      intliteral
       T_COMMA
-      intvalue
+      intliteral
       T_COMMA
-      intvalue
+      intliteral
    |  "mfree"
       {bytecode.addOpcode(getLastTokenText());}
       identifier
@@ -351,7 +354,7 @@ options {
       {bytecode.addOpcode(getLastTokenText());}
    |   "exit"
       {bytecode.addOpcode(getLastTokenText());}
-      intvalue
+      intliteral
   ;
 
 identifier
@@ -390,6 +393,29 @@ identifier
   | literal
   ;
 
-intvalue
+intliteral
   : T_INT_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::INT); }
+  | T_CHAR_VALUE   { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::CHAR);   }
+  | "true"         { bytecode.addAddress("1",                CSymbol::CONST, CSymbol::BOOL);    }
+  | "false"        { bytecode.addAddress("0",                CSymbol::CONST, CSymbol::BOOL);    }
   ;
+
+intelement
+  : identifier
+  | intliteral
+  ;
+realelement
+  : identifier
+  | realliteral
+  ;
+
+realliteral
+  : T_REAL_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::REAL); }
+  | T_INT_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::REAL); }
+  ;
+
+stringelement
+  : identifier
+  | T_STRING_VALUE { bytecode.addAddress(getLastTokenText(), CSymbol::CONST, CSymbol::STRING); }
+  ;
+

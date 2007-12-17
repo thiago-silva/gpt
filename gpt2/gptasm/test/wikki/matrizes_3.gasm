@@ -51,7 +51,7 @@ proc mostra_dados
     pushsv "Valores armazenados:"
     pushst
     push_1
-    lcall imprima
+    lcall io, imprima
 
     // para i de 0 até 9 faça
     iset i, 0
@@ -64,7 +64,7 @@ proc mostra_dados
     pushiv t1
     pushit
     push_1
-    lcall imprima
+    lcall io, imprima
 
     // fim-para
     iinc i, 1

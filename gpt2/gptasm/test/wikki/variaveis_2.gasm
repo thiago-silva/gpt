@@ -13,12 +13,12 @@ proc main
     pushiv v
     pushit
     pushiv 1
-    lcall imprima
+    lcall io, imprima
 	
     pushiv 10
     pushit
     pushiv 1
-    lcall imprima
+    lcall io, imprima
 	
     exit 0
 endproc

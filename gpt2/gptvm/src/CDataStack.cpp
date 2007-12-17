@@ -209,6 +209,14 @@ std::string CDataStack::getString(int address)
 }
 
 
+std::string CDataStack::popString()
+{
+   int dataSize = sizeof(char)+sizeof(std::string*);
+   std::string result = getString(size()-dataSize);
+   CBinString::popBytes(dataSize);
+   return result;
+}
+
 void CDataStack::pushBytes(const int &number)
 {
    CBinString::pushBytes(number);

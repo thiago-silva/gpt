@@ -1,0 +1,20 @@
+program exemplo
+// use io
+
+var t1 real
+
+proc main
+    pushrv 3
+    pushrv 9
+    lcall io, pow
+    poprv t1
+
+    pushrv t1
+    pushrt
+    push_1
+    lcall io, imprima
+
+    exit 0
+endproc
+
+endprogram

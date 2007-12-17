@@ -15,7 +15,7 @@ proc main
     pushiv x
     pushit
     push_1
-    lcall imprima
+    lcall io, imprima
 
     // fim-para
     iinc x, 1

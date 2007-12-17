@@ -7,11 +7,11 @@ proc main
     pushsv "Digite o número para calcular o fatorial:"
     pushst
     push_1
-    lcall imprima
+    lcall io, imprima
 
     // x := leia( );
     pushit
-    lcall leia
+    lcall io, leia
     popiv x
 
     // imprima( "Fatorial de ", x, " é ", fatorial( x ) );
@@ -25,7 +25,7 @@ proc main
     pushsv "Fatorial de "
     pushst
     push_4
-    lcall imprima
+    lcall io, imprima
 
     exit_0
 endproc

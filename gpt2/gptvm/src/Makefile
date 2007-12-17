@@ -12,7 +12,7 @@ objects = main.o CGptVm.o CRunBytecode.o CBytecode.o CDataStack.o \
           $(COMMON_DIR)CBinString.o $(COMMON_DIR)CSymbolList.o 
           
 all: $(objects)
-	g++ -o gptvm $(objects)
+	g++ -o gptvm $(objects) -ldl
 
 %.o: %.cpp %.hpp
 	$(CC) $(CCFLAGS) -c $(INCLUDE_DIR) $< -o $@

@@ -12,7 +12,7 @@ proc main
     pushsv "2+5*3="
     pushst
     pushiv 2
-    lcall imprima
+    lcall io, imprima
 
     exit_0
 endproc

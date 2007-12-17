@@ -1,0 +1,15 @@
+program exemplo
+// use io
+
+proc main
+    lcall io, imprime_hello
+
+    lcall io, imprime_hello
+
+    pushsv "Oi !!!!"
+    lcall io, imprime_mensagem
+
+    exit 0
+endproc
+
+endprogram

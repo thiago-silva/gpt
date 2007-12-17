@@ -27,7 +27,7 @@ proc exibe
     pushsv "est.x="
     pushst
     push_2
-    lcall imprima
+    lcall io, imprima
 
     // imprima( "est.y=", est.y );
     igetv t1, est:4 // t1 := *(est + 4)
@@ -36,7 +36,7 @@ proc exibe
     pushsv "est.y="
     pushst
     push_2
-    lcall imprima
+    lcall io, imprima
 
     ret
 endproc

@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <iostream>
+#include <dlfcn.h>
 
 #include "Tools.hpp"
 
@@ -386,6 +387,37 @@ void CRunBytecode::popRA()
 }
 
 
+void CRunBytecode::callSyslib(const std::string &libname, const std::string &procname)
+{
+   std::map<std::string, void*>::iterator ithandler;
+   void *dlhandler = NULL;
+
+   ithandler = syslibHandlerList.find(libname);
+
+   if (ithandler == syslibHandlerList.end()) {
+      // TODO: path absoluto ??? nem pensar :-)
+      dlhandler = dlopen(("../../../syslib/src/lib" + libname + ".so").c_str(), RTLD_LAZY);
+      if (!dlhandler) {
+         fprintf (stderr, "%s\n", dlerror());
+         exit(1);
+      }
+      dlerror();    /* Clear any existing error */
+      syslibHandlerList[libname] = dlhandler;
+   } else {
+      dlhandler = ithandler->second;
+   }
+
+   void (*func)(CDataStack&);
+   func = (void (*)(CDataStack&)) dlsym(dlhandler, ("gsl_"+procname).c_str());
+   char *error;
+   if ((error = dlerror()) != NULL) {
+      fprintf (stderr, "%s\n", error);
+      exit(1);
+   }
+   (*func)(_dataStack);
+}
+
+
 /////////////
 // opcodes //
 /////////////
@@ -426,20 +458,26 @@ void CRunBytecode::lcallOpcode()
    _executionStack.push(_dataStack.getBS());
    _dataStack.setBS(_dataStack.getSP());
 
-   int address = _code.fetchInt();
+   std::string libname = _dataStack.getCString(_code.fetchInt()+1);
+   int procAddress = _code.fetchInt();
 
-   if (_dataStack[address] != CSymbol::CONST) {
+   if (_dataStack[procAddress] != CSymbol::CONST) {
       error( "Endereco para lcall deve conter uma string constante !!!" );
    }
 
-   address=sumAddress(address, 1);
+   procAddress=sumAddress(procAddress, 1);
 
-   if (_dataStack.getCString(address) == "imprima") {
-      procImprima();
-   } else if (_dataStack.getCString(address) == "leia") {
-      procLeia();
-   } else {
-      error("lcall invocando subrotina desconhecida !!!");
+   std::string procname = _dataStack.getCString(procAddress);
+
+   if (libname == "io") {
+      if (procname == "imprima") {
+         procImprima();
+      } else if (procname == "leia") {
+         procLeia();
+      } else {
+//         error("lcall invocando subrotina desconhecida !!!");
+         callSyslib(libname, procname);
+      }
    }
 
    _dataStack.setBS(_executionStack.top());

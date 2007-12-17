@@ -7,10 +7,10 @@ proc main
     pushsv "Digite um número: "
     pushst
     push_1
-    lcall imprima
+    lcall io, imprima
     // x := leia( );
     pushit
-    lcall leia
+    lcall io, leia
     popiv x
     // imprima( "O número digitado foi ", x );
     pushiv x
@@ -18,7 +18,7 @@ proc main
     pushsv "O número digitado foi "
     pushst
     push_2
-    lcall imprima
+    lcall io, imprima
 
     exit_0
 endproc
