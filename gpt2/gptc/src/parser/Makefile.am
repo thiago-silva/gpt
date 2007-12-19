@@ -1,4 +1,6 @@
-INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/src -I$(top_srcdir)/src/common
+COMMON_IDIR = ../../../../common/src
+INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/src -I$(top_srcdir)/src/common \
+           -I$(COMMON_IDIR)
 
 EXTRA_DIST = lexer.g parser.g
 
@@ -11,9 +13,7 @@ BUILT_SOURCES = PortugolLexer.hpp \
                 TokenNames.hpp \
                 TokenLabels.hpp
 
-libparser_la_SOURCES = MismatchedUnicodeCharException.cpp \
-	MismatchedUnicodeCharException.hpp UnicodeCharBuffer.hpp \
-	UnicodeCharScanner.hpp $(BUILT_SOURCES)
+libparser_la_SOURCES = $(BUILT_SOURCES)
 
 
 CLEANFILES = PortugolLexer.cpp \

@@ -1,5 +1,7 @@
+COMMON_IDIR = ../../../../common/src
 INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/src -I../parser \
-           -I$(top_srcdir)/src/symboltable -I$(top_srcdir)/src/common
+           -I$(top_srcdir)/src/symboltable -I$(top_srcdir)/src/common \
+           -I$(COMMON_IDIR)
 
 noinst_LTLIBRARIES = libgptasm.la
 
@@ -11,7 +13,7 @@ BUILT_SOURCES = GptAsmWalker.hpp GptAsmWalker.cpp
 libgptasm_la_SOURCES = Arguments.cpp Arguments.hpp AsmProgram.cpp AsmProgram.hpp\
 	BaseGptAsmWalker.cpp BaseGptAsmWalker.hpp Context.cpp Context.hpp\
 	GptAsmExpression.cpp GptAsmExpression.hpp Options.hpp Subroutine.cpp\
-	Subroutine.hpp TextFile.cpp TextFile.hpp Tools.cpp Tools.hpp $(BUILT_SOURCES)
+	Subroutine.hpp TextFile.cpp TextFile.hpp $(BUILT_SOURCES)
 
 CLEANFILES = GptAsmWalkerTokenTypes.hpp \
              GptAsmWalker.cpp \
