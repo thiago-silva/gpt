@@ -16,7 +16,8 @@ libgptasm_la_SOURCES = Arguments.cpp Arguments.hpp AsmProgram.cpp AsmProgram.hpp
 CLEANFILES = GptAsmWalkerTokenTypes.hpp \
              GptAsmWalker.cpp \
 						 GptAsmWalker.hpp  \
-             GptAsmWalkerTokenTypes.txt
+             GptAsmWalkerTokenTypes.txt \
+             PortugolTokenTypes.txt
 
 GptAsmWalker.hpp GptAsmWalker.cpp: $(srcdir)/gptasm.g Makefile
 	$(ANTLR_BIN) $(srcdir)/gptasm.g

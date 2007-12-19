@@ -15,7 +15,8 @@ libsemantic_la_SOURCES = BaseSemanticWalker.hpp \
 CLEANFILES = SemanticWalker.hpp \
              SemanticWalker.cpp \
              SemanticWalkerTokenTypes.hpp \
-             SemanticWalkerTokenTypes.txt
+             SemanticWalkerTokenTypes.txt \
+             PortugolTokenTypes.txt
 
 SemanticWalker.hpp SemanticWalker.cpp: $(srcdir)/semantic.g
 	$(ANTLR_BIN) $(srcdir)/semantic.g

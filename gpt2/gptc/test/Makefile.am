@@ -30,7 +30,9 @@ CLEANFILES = LangTestLexer.cpp \
 						 LangTestParser.hpp  \
              LangTestParserTokenTypes.hpp \
              LangTestParserTokenTypes.txt \
-             tokenNames.hpp
+             LangTestLexerTokenTypes.hpp \
+             LangTestLexerTokenTypes.txt \
+             testTokenNames.hpp
 
 
 LangTestLexer.cpp LangTestLexer.hpp LangTestParser.hpp LangTestParser.cpp: \

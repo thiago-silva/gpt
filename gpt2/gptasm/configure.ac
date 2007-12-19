@@ -1,8 +1,8 @@
 AC_PREREQ(2.60)
 
-AC_INIT(gptc, 2.0)
+AC_INIT(gptasm, 1.0)
 AC_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE(gptc, 2.0)
+AM_INIT_AUTOMAKE(gptasm, 1.0)
 
 AC_LANG(C++)
 AC_PROG_CXX
@@ -49,7 +49,6 @@ if test "$use_debug_define" = "yes"; then
   CXXFLAGS="-DDEBUG $CXXFLAGS"
 fi
 
-
 #------------------------------
 # Checks for ANTLR
 #------------------------------
@@ -63,8 +62,8 @@ fi
 if test "x${ANTLR_BIN}" = "x"; then
   AC_MSG_ERROR(
   [
-    O programa "antlr" (ou runantlr) nÃ£o foi encontrado no seu sistema (PATH).
-    GPT precisa do ANTLR (versÃ£o >= 2.6) instalado.
+    O programa "antlr" (ou runantlr) não foi encontrado no seu sistema (PATH).
+    GPT precisa do ANTLR (versão >= 2.6) instalado.
     Baixe em: http://www.antlr.org
   ])
 fi
@@ -73,8 +72,8 @@ AC_PATH_PROG(ANTLR_CFG, antlr-config)
 if test "x${ANTLR_CFG}" = "x"; then
   AC_MSG_ERROR(
   [
-    O programa "antlr-config" nÃ£o foi encontrado no seu sistema (PATH).
-    GPT precisa do ANTLR (versÃ£o >= 2.6) instalado.
+    O programa "antlr-config" não foi encontrado no seu sistema (PATH).
+    GPT precisa do ANTLR (versão >= 2.6) instalado.
     Baixe em: http://www.antlr.org
   ])
 fi
@@ -87,12 +86,7 @@ AC_SUBST(ANTLR_INC)
 AC_SUBST(ANTLR_LIB)
 
 
+
 AC_CONFIG_FILES([Makefile
-                 src/Makefile
-                 src/common/Makefile
-                 src/parser/Makefile
-                 src/semantic/Makefile
-                 src/symboltable/Makefile
-                 src/gptasm_target/Makefile
-                 test/Makefile])
+                 src/Makefile])
 AC_OUTPUT
