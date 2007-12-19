@@ -96,6 +96,8 @@ Type* SymbolTable::getType(const std::string& name) {
 void SymbolTable::insertSymbol(const Symbol& symbol) {
   if (symbolExists(symbol)) {
     throw RedeclarationException(symbol);
+  } else { 
+    checkAmbiguity(symbol);
   }
   _table[symbol.scope()].push_back(symbol);
 }
@@ -108,7 +110,7 @@ void SymbolTable::insertSymbols(const SymbolList& symbols) {
   }
 }
 
-const Symbol& SymbolTable::getSymbol(const std::string& lexeme,
+const Symbol& SymbolTable::getFirstSymbol(const std::string& lexeme,
                                      const std::string& scope) {
   SymbolList::const_iterator it = _table[scope].findFirstByLexeme(lexeme);
   if (it == _table[scope].end()) {
@@ -117,11 +119,20 @@ const Symbol& SymbolTable::getSymbol(const std::string& lexeme,
   return (*it);
 }
 
+SymbolList SymbolTable::getSymbols(const std::string& lexeme) {
+  return _table[globalScope()].findAllByLexeme(lexeme);
+}
+
 const Symbol& 
 SymbolTable::getSymbol(const std::string& lexeme, const TypeList& params) {
   //deve considerar promocao de tipos
   //    função f(a:real) ...
   //    f(1);                //resolve para a função "f_real"
+
+//checar:
+//  f(a : inteiro)
+//  f(b : real)
+//  f(2); //primeira versão, sempre!
 
 
   SymbolList list = _table[globalScope()].findAllByLexeme(lexeme);
@@ -156,19 +167,20 @@ SymbolTable::getSymbol(const std::string& lexeme, const TypeList& params) {
 //   return (*it);
 }
 
-const Symbol& SymbolTable::getSymbol(const std::string& lexeme) {
+const Symbol& SymbolTable::getFirstSymbol(const std::string& lexeme) {
   //buscar primeiro no escopo atual, depois no global
 
   if (isInGlobalScope()) {
-    return getSymbol(lexeme, _scope);
+    return getFirstSymbol(lexeme, _scope);
   } else {
     try {
-      return getSymbol(lexeme, _scope);
+      return getFirstSymbol(lexeme, _scope);
     } catch( ... ) {
-      return getSymbol(lexeme, globalScope());
+      return getFirstSymbol(lexeme, globalScope());
     }
   }
 }
+
 
 bool SymbolTable::symbolExists(const Symbol& s) {
   SymbolList::const_iterator it = 
@@ -178,6 +190,42 @@ bool SymbolTable::symbolExists(const Symbol& s) {
     return false;
   } else {
     return true;
+  }
+}
+
+void SymbolTable::checkAmbiguity(const Symbol& s) {
+//  f(a : inteiro)
+//  f(b : inteiro, ... resto)
+//  -> declaracao ambigua
+
+  if (!s.type()->isSubprogram()) {
+    return;
+  }
+
+  SymbolList list = 
+    _table[globalScope()].findAllByLexeme(s.lexeme());
+
+  if (list.size() == 0) {
+    return;
+  }
+
+  for (SymbolList::iterator it = list.begin(); it != list.end(); ++it) {
+    if (!(*it).type()->isSubprogram()) {
+      continue;
+    }
+
+    int size = (*it).type()->paramTypes().size();
+    if ((size + 1) == s.type()->paramTypes().size()) {
+      Type *sss = s.type()->paramTypes().back();
+      bool bn = sss->isReticences();
+      if (s.type()->paramTypes().back()->isReticences()) {
+        throw AmbiguousDeclarationException(s, *it);
+      }
+    } else if ((size - 1) == s.type()->paramTypes().size()) {
+      if ((*it).type()->paramTypes().back()->isReticences()) {
+        throw AmbiguousDeclarationException(s, *it);
+      }
+    }
   }
 }
 

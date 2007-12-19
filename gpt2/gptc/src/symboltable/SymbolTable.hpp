@@ -35,14 +35,16 @@ public:
   void insertSymbols(const SymbolList& symbols);
 
   //(lexeme, scope)
-  const Symbol& getSymbol(const std::string&, const std::string&);
+  const Symbol& getFirstSymbol(const std::string&, const std::string&);
 
   //(lexeme, params)
   const Symbol& getSymbol(const std::string&, const TypeList&);
 
+  //(lexeme) escopo global
+  SymbolList getSymbols(const std::string&);
 
   //(lexeme) -> todos os escopos, iniciando pelo atual
-  const Symbol& getSymbol(const std::string&);
+  const Symbol& getFirstSymbol(const std::string&);
 
   void dump();
 
@@ -51,6 +53,7 @@ private:
 /*  bool symbolExists(const std::string&);
   bool symbolExists(const std::string&, const std::string&);*/
   bool symbolExists(const Symbol& s);
+  void checkAmbiguity(const Symbol& s);
 
   std::string                        _unit;
   std::string                        _scope;
