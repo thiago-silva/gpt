@@ -63,8 +63,8 @@ fi
 if test "x${ANTLR_BIN}" = "x"; then
   AC_MSG_ERROR(
   [
-    O programa "antlr" (ou runantlr) nÃ£o foi encontrado no seu sistema (PATH).
-    GPT precisa do ANTLR (versÃ£o >= 2.6) instalado.
+    O programa "antlr" (ou runantlr) nÃÂ£o foi encontrado no seu sistema (PATH).
+    GPT precisa do ANTLR (versÃÂ£o >= 2.6) instalado.
     Baixe em: http://www.antlr.org
   ])
 fi
@@ -73,8 +73,8 @@ AC_PATH_PROG(ANTLR_CFG, antlr-config)
 if test "x${ANTLR_CFG}" = "x"; then
   AC_MSG_ERROR(
   [
-    O programa "antlr-config" nÃ£o foi encontrado no seu sistema (PATH).
-    GPT precisa do ANTLR (versÃ£o >= 2.6) instalado.
+    O programa "antlr-config" nÃÂ£o foi encontrado no seu sistema (PATH).
+    GPT precisa do ANTLR (versÃÂ£o >= 2.6) instalado.
     Baixe em: http://www.antlr.org
   ])
 fi
@@ -89,5 +89,10 @@ AC_SUBST(ANTLR_LIB)
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile
+                 src/common/Makefile
+                 src/parser/Makefile
+                 src/semantic/Makefile
+                 src/symboltable/Makefile
+                 src/gptasm_target/Makefile
                  test/Makefile])
 AC_OUTPUT

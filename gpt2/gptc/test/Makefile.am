@@ -1,7 +1,10 @@
-INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/test -I$(top_srcdir)/src -I../src
+INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/test -I$(top_srcdir)/src \
+           -I../src/parser -I$(top_srcdir)/src/parser -I$(top_srcdir)/src/common
 
 bin_PROGRAMS = tester
-tester_LDADD = $(top_builddir)/src/libgptc.la $(ANTLR_LIB)
+tester_LDADD = $(top_builddir)/src/parser/libparser.la \
+               $(top_builddir)/src/common/libcommon.la \
+               $(top_builddir)/src/symboltable/libsymboltable.la $(ANTLR_LIB)
 
 EXTRA_DIST = compiler_test.g
 
@@ -31,7 +34,7 @@ CLEANFILES = LangTestLexer.cpp \
 
 
 LangTestLexer.cpp LangTestLexer.hpp LangTestParser.hpp LangTestParser.cpp: \
-     Makefile $(srcdir)/compiler_test.g
+     $(srcdir)/compiler_test.g
 	$(ANTLR_BIN) $(srcdir)/compiler_test.g
 
 testTokenNames.hpp: Makefile
