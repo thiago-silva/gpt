@@ -1,6 +1,8 @@
 header {
    #include <string>
    #include <sstream>
+   #include "UnicodeCharBuffer.hpp"
+   #include "UnicodeCharScanner.hpp"
 }
 
 
@@ -9,14 +11,15 @@ options {
 }
 
 
-class GptAssemblyLexer extends Lexer;
+class GptAssemblyLexer extends Lexer("UnicodeCharScanner");
 
 
 options {
    k=2;
    charVocabulary='\0'..'\377';
    exportVocab=GptAssemblyLexer;
-  testLiterals = true;
+   testLiterals = true;
+   noConstructors=true;
 //  testLiterals = false;
 //  filter=T_INVALID;
 //  genHashLines=false;//no #line
@@ -180,8 +183,9 @@ tokens {
 
 {
 public:  
-
-private:
+   GptAssemblyLexer(std::istream& in)
+    : UnicodeCharScanner(new UnicodeCharBuffer(in), true) {
+   }
 }
 
 
@@ -259,7 +263,7 @@ T_CHAR_VALUE
 options {
    paraphrase = "char";
 }
-   : '\'' ( ~( '\'' | '\\' ) | ESC )? '\''
+   : '\''! ( ~( '\'' | '\\' ) | ESC )? '\''!
    ;
 
 T_STRING_VALUE

@@ -313,3 +313,66 @@ int sumAddress(int address, int value)
    return address;
 }
 
+int toUTF8Char(const std::string& chr)
+{
+  int ch = 0;
+  int inchar = chr[0];
+
+  if( (inchar & 0x80) == 0 )
+    return inchar;
+
+  unsigned int need = 0;
+  if( (inchar & 0xF8) == 0xF8 )
+  {
+    ch = inchar & 7;
+    need = 3;
+  }
+  else if( (inchar & 0xE0) == 0xE0 )
+  {
+    ch = inchar & 0xF;
+    need = 2;
+  }
+  else if( (inchar & 0xC0) == 0xC0 )
+  {
+    ch = inchar & 0x1F;
+    need = 1;
+  }  
+
+  int i = 1;
+  while( need )
+  {
+    inchar = chr[i++];
+    ch <<= 6;
+    ch += inchar & 0x3F;
+    need--;
+  }
+  return ch;
+}
+
+void appendUTF8Char(std::string& text, int c)
+{
+  if (c < 0x80)
+  {
+    text += c;
+    return;
+  }
+  else if (c < 0x800)
+  {
+    text += ( (c >> 6) | 0xC0 );
+    text += ( c & 0x3F | 0x80 );
+  }
+  else if (c < 0x10000)
+  {
+    text += ( (c >> 12) | 0xE0 );
+    text += ( ((c >> 6) & 0x3F) | 0x80 );
+    text += ( (c & 0x3F) | 0x80 );
+  }
+  else if (c < 0x200000)
+  {
+    text += ( (c >> 18) | 0xF0 );				// first 3 bits
+    text += ( (((c >> 16) & 0x3) << 4) |
+              ((c >> 12) & 0xF) | 0x80 );
+    text += ( ((c >> 6) & 0x3F) | 0x80 );
+    text += ( (c & 0x3F) | 0x80 );
+  }  
+}

@@ -967,7 +967,15 @@ void CRunBytecode::i2sOpcode()
 
 void CRunBytecode::c2sOpcode()
 {
-   invalidOpcode(__FUNCTION__);
+   trace ("c2s opcode");
+
+   int varAddress = _code.fetchInt();
+   int val1Address = _code.fetchInt();
+
+   std::string op1 = _dataStack.getString(varAddress);
+
+   appendUTF8Char(op1, _dataStack.getInt(val1Address));
+   _dataStack.setString(varAddress,  op1);
 }
 
 void CRunBytecode::r2sOpcode()

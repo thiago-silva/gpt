@@ -65,6 +65,8 @@ CSymbol* CData::addConstant (const std::string &name, const int &type, int size,
       writeInt(atoi(name.c_str()));
    } else if (type == CSymbol::REAL) {
       writeReal(atof(name.c_str()));
+   } else if (type == CSymbol::CHAR) {
+      writeInt(toUTF8Char(name));
    }
 
    return symbol;
