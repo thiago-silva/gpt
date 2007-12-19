@@ -5,7 +5,7 @@ var t1 real
 
 proc main
     pushrv 9
-    lcall io, sqrt
+    lcall math, sqrt
     poprv t1
 
     pushrv t1

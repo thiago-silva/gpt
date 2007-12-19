@@ -21,14 +21,21 @@ void CBindSources::writeHeaders()
    }
    hppSource.writeln();
 
+   hppSource.writeln( "#include \"CDataStack.hpp\"" );
+   hppSource.writeln();
+
    hppSource.writeln( "extern \"C\" {" );
    hppSource.incTab();
 
    cppSource.writeln( "#include \"" + _filename + ".hpp\"" );
    cppSource.writeln();
-   cppSource.writeln( "#include \"CDataStack.hpp\"" );
    cppSource.writeln( "#include \"CSymbol.hpp\"" );
    cppSource.writeln();
+
+   makefileSource.writeln("COMMON_DIR=../../../common/src/");
+   makefileSource.writeln("INCLUDE_DIR=-I$(COMMON_DIR)");// -I../../../gptvm/src/");
+   makefileSource.writeln("CC=g++");
+   makefileSource.writeln("CCFLAGS=-g -Wall");
 }
 
 
@@ -112,6 +119,34 @@ void CBindSources::writeFooters()
    hppSource.writeln("}");
    hppSource.writeln();
    hppSource.writeln( "#endif" );
+
+   makefileSource.write("LIBS=");
+
+   for(std::list<std::string>::iterator lib = _linkerLibList.begin(); lib != _linkerLibList.end(); lib++) {
+      std::string slib = (*lib).substr(1, (*lib).length()-2);
+      makefileSource.write("-l" + slib + " ");
+   }
+   makefileSource.writeln();
+   makefileSource.writeln();
+
+   makefileSource.writeln("objects = " + _filename + ".o $(COMMON_DIR)/CDataStack.o $(COMMON_DIR)/CBinString.o $(COMMON_DIR)/Tools.o");
+   makefileSource.writeln();
+
+   makefileSource.writeln("all: $(objects)");
+   makefileSource.writeln("\tg++ -shared $(objects) $(LIBS) -o lib" + _filename + ".so");
+   makefileSource.writeln();
+
+   makefileSource.writeln("%.o: %.cpp %.hpp");
+   makefileSource.writeln("\t$(CC) -shared $(CCFLAGS) -c $(INCLUDE_DIR) $< -o $@");
+   makefileSource.writeln();
+
+   makefileSource.writeln("%.o: %.cpp");
+   makefileSource.writeln("\t$(CC) -shared $(CCFLAGS) -c $(INCLUDE_DIR) $< -o $@");
+   makefileSource.writeln();
+
+   makefileSource.writeln("clean:");
+   makefileSource.writeln("\trm -f *.o lib" + _filename + ".so");
+   makefileSource.writeln();
 }
 
 

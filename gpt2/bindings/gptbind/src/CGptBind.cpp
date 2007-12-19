@@ -40,6 +40,14 @@ bool CGptBind::run( )
 
    hppFile << hppOutput;
 
+   ofstream makefileFile(("Makefile." + _options->destfile).c_str(), ios_base::out);
+   if (!makefileFile) {
+      cout << "ERRO: não foi possível abrir o arquivo: \"" << _options->destfile << "\"" << endl;
+      return false;
+   }
+
+   makefileFile << makefileOutput;
+
    return true;
 }
 

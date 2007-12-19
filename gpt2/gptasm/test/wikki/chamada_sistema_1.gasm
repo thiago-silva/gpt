@@ -2,12 +2,12 @@ program exemplo
 // use io
 
 proc main
-    lcall io, imprime_hello
+    lcall messages, mensagem_padrao
 
-    lcall io, imprime_hello
+    lcall messages, mensagem_padrao
 
     pushsv "Oi !!!!"
-    lcall io, imprime_mensagem
+    lcall messages, imprime_mensagem
 
     exit 0
 endproc

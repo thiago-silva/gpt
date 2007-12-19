@@ -94,7 +94,7 @@ AC_ARG_WITH(common,
 [
   COMMON_LIB=`pwd`/$withval
 ],[
-  COMMON_LIB="../../common/src/libgptcommon.la"
+  COMMON_LIB="../../common/_build/src/libgptcommon.la"
 ])
 
 AC_SUBST(COMMON_LIB)

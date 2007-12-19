@@ -6,7 +6,7 @@ var t1 real
 proc main
     pushrv 3
     pushrv 9
-    lcall io, pow
+    lcall math, pow
     poprv t1
 
     pushrv t1

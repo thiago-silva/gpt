@@ -86,19 +86,19 @@ options {
 //-------
   optionsdef
 //-------
-   : "options" T_ABREC (optiondef)+ T_FECHAC
+   : "options" T_ABREC (optiondef)* T_FECHAC
    ;
 
 //------
   optiondef
 //------
-   : optionname T_EQUAL T_STRING_VALUE T_SEMICOLON
+   : linkerlibOption T_SEMICOLON
    ;
 
 ///----------
-   optionname
+   linkerlibOption
 ///----------
-   : "linkerlib" { sources->addLinkerLib(getLastTokenText()); }
+   : "linkerlib" T_EQUAL T_STRING_VALUE { sources->addLinkerLib(getLastTokenText()); }
    ;
 
 //#############
