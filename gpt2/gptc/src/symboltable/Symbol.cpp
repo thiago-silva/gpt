@@ -76,6 +76,17 @@ int Symbol::column() const {
   return _column;
 }
 
+std::string Symbol::name() const {
+  std::stringstream ret;
+  ret << _lexeme;
+
+  if (!_type->isSubprogram()) {
+    ret << " : ";
+  }
+  ret << _type->name();
+  return ret.str();
+}
+
 std::string Symbol::toString() const {
   std::stringstream ret;
   ret << _unit << ":" << _line

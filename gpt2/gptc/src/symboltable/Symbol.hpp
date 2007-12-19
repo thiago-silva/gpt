@@ -42,6 +42,7 @@ public:
   int line() const;
   int column() const;
 
+  std::string name()     const;
   std::string toString() const;
 
   std::string identifier() const;
