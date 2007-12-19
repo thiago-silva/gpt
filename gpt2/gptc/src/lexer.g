@@ -99,7 +99,7 @@ tokens {
   //imaginários para a AST
 
   T_NULO="nulo";
-
+  T_LVALUE;
   
 
   T_PARAM;

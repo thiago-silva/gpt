@@ -385,7 +385,7 @@ en_retorne
 
 lvalue!
   : id:T_IDENTIFICADOR (m:lvalue_indices)? (T_PONTO es:lvalue_membro)?
-    {#lvalue = #(id, m, es);}
+    {#lvalue = #([T_LVALUE,"&lvalue"], id, m, es);}
   ;
 
 lvalue_membro!
@@ -522,18 +522,18 @@ options {
   : expr_unario ((T_DIV^ | T_MULTIP^ | T_MOD^) expr_unario)*
   ;
 
-expr_unario
+expr_unario!
 options {
   defaultErrorHandler=false;
 }
-  : op_unario expr_elemento
+  : o:op_unario e:expr_elemento {#expr_unario = #(o,e);}
   ;
 
 op_unario!
   : ( T_MENOS      {#op_unario = #[T_UN_NEGATIVO,"&negat"];}
     | T_MAIS       {#op_unario = #[T_UN_POSITIVO,"&pos"];}
-    | n:T_NAO      {#op_unario = #[T_NAO        ,"negaç"];}
-    | bn:T_BIT_NAO {#op_unario = #[T_BIT_NAO    ,"&negb"];}
+    | n:T_NAO      {#op_unario = #n;}
+    | bn:T_BIT_NAO {#op_unario = #bn;}
     )?
   ;
 
