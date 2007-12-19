@@ -185,6 +185,7 @@ tokens {
 public:  
    GptAssemblyLexer(std::istream& in)
     : UnicodeCharScanner(new UnicodeCharBuffer(in), true) {
+      initLiterals();
    }
 }
 
