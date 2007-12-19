@@ -56,4 +56,15 @@ private:
   std::string _lexeme;
 };
 
+class AmbiguousDeclarationException {
+public:
+  AmbiguousDeclarationException(const Symbol&, const Symbol&);
+
+  const Symbol& symbol() const;
+  const Symbol& otherSymbol() const;
+private:
+  Symbol _symbol;
+  Symbol _otherSymbol;
+};
+
 #endif

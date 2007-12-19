@@ -61,3 +61,18 @@ UnmatchedException::UnmatchedException(const std::string& l)
 const std::string& UnmatchedException::lexeme() {
   return _lexeme;
 }
+
+//--------------------------------------------------------
+
+
+AmbiguousDeclarationException::AmbiguousDeclarationException(const Symbol& s, const Symbol& o)
+  : _symbol(s), _otherSymbol(o) {
+}
+
+const Symbol& AmbiguousDeclarationException::symbol() const {
+  return _symbol;
+}
+
+const Symbol& AmbiguousDeclarationException::otherSymbol() const {
+  return _otherSymbol;
+}
