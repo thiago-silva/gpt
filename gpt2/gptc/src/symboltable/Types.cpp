@@ -23,6 +23,14 @@ bool Type::isRef()   const {
   return _isRef;
 }
 
+void Type::setReticences(bool c) {
+  _isReticences = c;
+}
+
+bool Type::isReticences() const {
+  return _isReticences;
+}
+
 bool Type::isError() const {
   if (_typeId == ERROR) {
     return true;
@@ -59,8 +67,21 @@ bool Type::isSubprogram() const {
   return _typeId == SUBPROGRAM;
 }
 
-const std::string& Type::name() const {
-  return _name;
+void Type::setName(const std::string& name) {
+  _name = name;
+}
+
+std::string Type::name() const {
+  std::stringstream ret;
+  if (isRef()) {
+    ret << "ref ";
+  }
+
+  if (isConst()) {
+    ret << "constante ";
+  }
+  ret << _name;
+  return ret.str();
 }
 
 std::string Type::asmName(bool complete) const {
@@ -386,13 +407,13 @@ Type::Type(TypeBuilder* builder,
     _name(name), _identifier(name), _anonymous(false), _fields(fields),
     _unit(unit), _line(line) {
 
-  _name = _name + ":{";
-  std::string v = "";
-  for (SymbolList::const_iterator it = fields.begin(); it != fields.end(); ++it) {
-    _name += v + (*it).lexeme() + ":" + (*it).type()->name();
-    v = ",";
-  }
-  _name += "}";
+//   _name = _name + ":{";
+//   std::string v = "";
+//   for (SymbolList::const_iterator it = fields.begin(); it != fields.end(); ++it) {
+//     _name += v + (*it).lexeme() + ":" + (*it).type()->name();
+//     v = ",";
+//   }
+//   _name += "}";
 }
 
 
@@ -402,13 +423,13 @@ Type::Type(TypeBuilder* builder, const SymbolList& fields)
     _anonymous(true), _fields(fields),
     _unit("<interno>"), _line(-1) {
 
-  _name += ":{";
-  std::string v = "";
-  for (SymbolList::const_iterator it = fields.begin(); it != fields.end(); ++it) {
-    _name += v + (*it).lexeme() + ":" + (*it).type()->name();
-    v = ",";
-  }
-  _name += "}";
+//   _name += ":{";
+//   std::string v = "";
+//   for (SymbolList::const_iterator it = fields.begin(); it != fields.end(); ++it) {
+//     _name += v + (*it).lexeme() + ":" + (*it).type()->name();
+//     v = ",";
+//   }
+//   _name += "}";
 }
 
 const SymbolList& Type::fields() const {
@@ -501,19 +522,12 @@ Type::Type(TypeBuilder* builder,
   : _typeId(SUBPROGRAM), _builder(builder), _isConst(false), _isRef(false),
     _paramTypes(paramTypes), _returnType(returnType) {
 
-  if (!_returnType) {
-    _name = "proc(";
-  } else {
-    _name = "func(";
-  }
-
-  _name += _paramTypes.toString();
-  _name += ")";
+  _name = "(" + _paramTypes.toString() + ")";
 
   _identifier = _paramTypes.toIdentifier();
 
-  if (_returnType) {
-    _name       += " : " + _returnType->name();
+  if (_returnType && _returnType->name() != g_tokenLabels[PortugolTokenTypes::T_NULO]) {
+    _name += " : " + _returnType->name();
   }
 }
 
@@ -704,8 +718,12 @@ Type* TypeBuilder::reticencesType() {
   fields.push_back(Symbol("valor",
     primitiveType(PortugolTokenTypes::T_CORINGA)));
 
-  return matrixType(
-    structType("Parâmetro", fields, "<interno>",-1), std::list<int>(1));
+  Type *ret = matrixType(
+      structType("Parâmetro", fields, "<interno>",-1), std::list<int>(1));
+
+  ret->setName("...");
+  ret->setReticences(true);
+  return ret;
 }
 
 Type*

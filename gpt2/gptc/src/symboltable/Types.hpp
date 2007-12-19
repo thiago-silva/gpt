@@ -80,13 +80,17 @@ public:
   bool isConst() const;
   bool isRef()   const;
 
+  void setReticences(bool);
+  bool isReticences() const;
+
   bool isError() const;
   bool isPrimitive() const;
   bool isMatrix() const;
   bool isStruct() const;
   bool isSubprogram() const;
 
-  const std::string& name() const;
+  void setName(const std::string&);
+  std::string name() const;
   std::string asmName(bool = false) const;
   const std::string& identifier() const;
 
@@ -127,6 +131,7 @@ private:
 
   bool         _isConst;
   bool         _isRef;
+  bool         _isReticences;
 
   std::string  _name;
   std::string  _identifier;
