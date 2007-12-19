@@ -77,9 +77,11 @@ protected:
   void declareStruct(RefPortugolAST, const SymbolList& );
 
 
+  void checkMatrixDimensions(RefPortugolAST, const std::list<int>&);
+
   Type* evalInitStruct(const InitStructList& stc);
   Type* evalInitMatrix(RefPortugolAST, const InitMatrixList& mtx);
-
+  
   Type* evalMatrixSubscript(RefPortugolAST, Type*, int);
   void  evalMatrixSubscriptType(RefPortugolAST,Type*);
 

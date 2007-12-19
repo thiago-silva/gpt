@@ -154,9 +154,12 @@ tipo_matriz returns [Type *type]
                           Type* ofType;
                         }
 
-  : #(T_MATRIZ ofType=tipo dims=dimensoes)
+  : #(m:T_MATRIZ ofType=tipo dims=dimensoes)
 
-                  {type =_typeBuilder->matrixType(ofType,dims);}
+                  {
+                    checkMatrixDimensions(m,dims);
+                    type =_typeBuilder->matrixType(ofType,dims);
+                  }
 
   ;
 
@@ -507,12 +510,16 @@ elemento returns [Type *type]
   ;
 
 literal returns [Type *type]
-  : T_TEXTO_LITERAL         {type = _typeBuilder->primitiveType(T_LITERAL);}
-  | T_INTEIRO_LITERAL       {type = _typeBuilder->primitiveType(T_INTEIRO);}
-  | T_REAL_LITERAL          {type = _typeBuilder->primitiveType(T_REAL);}
-  | T_CARACTERE_LITERAL     {type = _typeBuilder->primitiveType(T_CARACTERE);}
-  | T_VERDADEIRO            {type = _typeBuilder->primitiveType(T_LOGICO);}
-  | T_FALSO                 {type = _typeBuilder->primitiveType(T_LOGICO);}
+                            {RefPortugolAST ast = _t;}
+  : (
+      T_TEXTO_LITERAL       {type = _typeBuilder->primitiveType(T_LITERAL);}
+    | T_INTEIRO_LITERAL     {type = _typeBuilder->primitiveType(T_INTEIRO);}
+    | T_REAL_LITERAL        {type = _typeBuilder->primitiveType(T_REAL);}
+    | T_CARACTERE_LITERAL   {type = _typeBuilder->primitiveType(T_CARACTERE);}
+    | T_VERDADEIRO          {type = _typeBuilder->primitiveType(T_LOGICO);}
+    | T_FALSO               {type = _typeBuilder->primitiveType(T_LOGICO);}
+    )
+    {ast->setEvalType(type);}
   ;
 
 
@@ -523,7 +530,7 @@ lvalue returns [ExpressionReturn ret]
                               int dimensions;
                             }
 
-  : #(id:T_IDENTIFICADOR    {type = getSymbolType(id);}
+  : #(lv:T_LVALUE id:T_IDENTIFICADOR    {type = getSymbolType(id);}
 
       (
         dimensions=lvalue_indices
@@ -534,7 +541,10 @@ lvalue returns [ExpressionReturn ret]
       (type=lvalue_membro[id,type])?
     )
 
-      {ret.first = id; ret.second = type;}
+      {
+        ret.first = id; ret.second = type;
+        lv->setEvalType(type);
+      }
   ;
 
 
