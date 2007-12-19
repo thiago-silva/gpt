@@ -63,7 +63,7 @@ if test "x${ANTLR_BIN}" = "x"; then
   AC_MSG_ERROR(
   [
     O programa "antlr" (ou runantlr) não foi encontrado no seu sistema (PATH).
-    GPT precisa do ANTLR (versão >= 2.6) instalado.
+    GPT precisa do ANTLR (versão 2) instalado.
     Baixe em: http://www.antlr.org
   ])
 fi
@@ -73,7 +73,7 @@ if test "x${ANTLR_CFG}" = "x"; then
   AC_MSG_ERROR(
   [
     O programa "antlr-config" não foi encontrado no seu sistema (PATH).
-    GPT precisa do ANTLR (versão >= 2.6) instalado.
+    GPT precisa do ANTLR (versão 2) instalado.
     Baixe em: http://www.antlr.org
   ])
 fi
@@ -85,6 +85,19 @@ AC_SUBST(ANTLR_BIN)
 AC_SUBST(ANTLR_INC)
 AC_SUBST(ANTLR_LIB)
 
+#------------------------------
+# Common lib
+#------------------------------
+
+AC_ARG_WITH(common,
+        AC_HELP_STRING([--with-common],[libgptcommon.la path]),
+[
+  COMMON_LIB=`pwd`/$withval
+],[
+  COMMON_LIB="../../common/src/libgptcommon.la"
+])
+
+AC_SUBST(COMMON_LIB)
 
 
 AC_CONFIG_FILES([Makefile

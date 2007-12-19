@@ -49,6 +49,21 @@ if test "$use_debug_define" = "yes"; then
   CXXFLAGS="-DDEBUG $CXXFLAGS"
 fi
 
+#------------------------------
+# Common lib
+#------------------------------
+
+AC_ARG_WITH(common,
+        AC_HELP_STRING([--with-common],[libgptcommon.la path]),
+[
+  COMMON_LIB=`pwd`/$withval
+],[
+  COMMON_LIB="../../common/src/libgptcommon.la"
+])
+
+AC_SUBST(COMMON_LIB)
+
+
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile])

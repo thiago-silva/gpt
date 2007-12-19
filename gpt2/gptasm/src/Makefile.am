@@ -1,12 +1,10 @@
 COMMON_IDIR = ../../../common/src
-COMMON_LDIR = ../../common/src
-
 
 INCLUDES = -I$(top_srcdir)/.  -I$(COMMON_IDIR)
 
 bin_PROGRAMS = gptasm
 
-gptasm_LDADD = $(COMMON_LDIR)/libgptcommon.la $(ANTLR_LIB)
+gptasm_LDADD = $(COMMON_LIB) $(ANTLR_LIB)
 
 
 BUILT_SOURCES = GptAssemblyLexer.hpp \
@@ -15,7 +13,7 @@ BUILT_SOURCES = GptAssemblyLexer.hpp \
                 GptAssemblyParser.cpp 
 
 gptasm_SOURCES = CData.cpp  CData.hpp  CGenBytecode.cpp  CGenBytecode.hpp  CGptAsm.cpp  \
-                  CGptAsm.hpp  main.cpp $(BUILT_SOURCES)
+                 CGptAsm.hpp  main.cpp $(BUILT_SOURCES)
 
 EXTRA_DIST = lexer.g parser.g
 
