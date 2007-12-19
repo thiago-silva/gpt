@@ -102,7 +102,7 @@ Type* BaseSemanticWalker::getStructType(RefPortugolAST node) {
 Type* BaseSemanticWalker::getSymbolType(RefPortugolAST node) {
   try {
     return
-      _symtable->getSymbol(node->getText()).type();
+      _symtable->getFirstSymbol(node->getText()).type();
   } catch (UndeclaredSymbolException e) {
     report(node->getLine(), node->getColumn(),
            std::string("símbolo não declarado: ") + node->getText());
@@ -251,6 +251,11 @@ void BaseSemanticWalker::declareProc(RefPortugolAST id,
 
 void BaseSemanticWalker::declareProc(const Symbol& s, 
                                      SymbolList& params) {
+//checar ambiguidades:
+//  f(a : inteiro)
+//  f(b : inteiro, ... resto)
+//  -> declaracao ambigua
+
   try {
     _symtable->insertSymbol(s);
   } catch (RedeclarationException e) {
@@ -258,8 +263,12 @@ void BaseSemanticWalker::declareProc(const Symbol& s,
            std::string("redeclaração: ") + e.symbol().lexeme());
     _symtable->setIgnoreScope();
     return;
-  }  
-
+  } catch (AmbiguousDeclarationException e) {
+    report(e.symbol().line(), e.symbol().column(),
+           "declaração ambígua com: " + e.otherSymbol().name());
+    _symtable->setIgnoreScope();
+    return;
+  }
   _symtable->setScope(s);
   params.setScope(s.identifier());
 
@@ -356,11 +365,23 @@ void BaseSemanticWalker::evalAttribution(const ExpressionReturn& l,
 
 Type* BaseSemanticWalker::evalCall(RefPortugolAST id,
                                    const TypeList& paramTypes) {
+
   //TODO
   //-proibicao de consts passados para parametros "ref" sem constness
 
 // - Testar avaliacao de chamada de subprogramas (com e sem reticencias)
 //   -Avaliacao de qtd e tipos de parametros
+
+//checar: 
+//  f(a : inteiro)
+//  f(b : inteiro, ... resto)
+//  f(a) //ambiguo
+
+//checar:
+//  f(a : inteiro)
+//  f(b : real)
+//  f(2); //primeira versão, sempre!
+
 
   if (paramTypes.hasErrorType()) {
     return _typeBuilder->errorType();
@@ -370,12 +391,12 @@ Type* BaseSemanticWalker::evalCall(RefPortugolAST id,
     return 
       _symtable->getSymbol(id->getText(), paramTypes).type()->returnType();
   } catch (UndeclaredSymbolException e) {
-    report(id->getLine(), id->getColumn(), 
+    report(id->getLine(), id->getColumn(),
         "função não encontrada: '" + id->getText() + "'");
     return _typeBuilder->errorType();
   } catch (UnmatchedException e) {
     report(id->getLine(), id->getColumn(),
-           "Função compatível com '" + id->getText() 
+           "Função compatível com '" + id->getText()
            + "(" + paramTypes.toString() + ")' não encontrada");
     return _typeBuilder->errorType();
   }
