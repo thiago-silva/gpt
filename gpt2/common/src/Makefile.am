@@ -8,4 +8,5 @@ libgptcommon_la_SOURCES = CBinString.cpp  CHeader.cpp  COptions.hpp  CSymbol.hpp
                           CSymbolTable.cpp  Common.hpp  Tools.cpp \
                           MismatchedUnicodeCharException.hpp \
                           MismatchedUnicodeCharException.cpp \
-                          UnicodeCharBuffer.hpp UnicodeCharScanner.hpp
+                          UnicodeCharBuffer.hpp UnicodeCharScanner.hpp \
+                          CDataStack.hpp CDataStack.cpp
