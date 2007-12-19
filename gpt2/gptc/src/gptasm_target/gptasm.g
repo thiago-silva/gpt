@@ -40,7 +40,7 @@ options {
 
 {
 public:
-  GptAsmWalker::GptAsmWalker(SymbolTable* symtable,
+  GptAsmWalker(SymbolTable* symtable,
                              const std::string& filepath)
 	 : BaseGptAsmWalker(symtable, filepath) {}
 }

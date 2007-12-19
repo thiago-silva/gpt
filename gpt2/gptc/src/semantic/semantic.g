@@ -39,7 +39,7 @@ options {
 
 {
 public:
-  SemanticWalker::SemanticWalker(SymbolTable* symtable,
+  SemanticWalker(SymbolTable* symtable,
                                  const std::string& filepath)
 	 : BaseSemanticWalker(symtable, filepath),
     _analisingInitializationList(false) { }
