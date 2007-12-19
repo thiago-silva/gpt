@@ -1,7 +1,7 @@
 rm $1.gvm 1>/dev/null 2>&1
 #rm $1.stdout 1>/dev/null 2>&1
 
-../../src/gptasm $1
+../../../_build/gptasm/src/gptasm $1
 if [ $? -ne 0 ]
 then
 	echo "Erro: nao foi possivel assemblar $1.gasm"
