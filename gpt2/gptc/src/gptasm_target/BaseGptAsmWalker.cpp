@@ -26,7 +26,7 @@ void BaseGptAsmWalker::finishParser() {
 
 void BaseGptAsmWalker::declareProgramVars(const std::list<std::string>& ids) {
   for (std::list<std::string>::const_iterator it = ids.begin(); it != ids.end(); ++it) {
-    Symbol symbol = _symtable->getSymbol(*it);
+    Symbol symbol = _symtable->getFirstSymbol(*it);
     _asmPrg->emitVarDefinition(symbol.identifier(), symbol.type()->asmName(true));
 
     if (symbol.type()->isMatrix()) {
@@ -57,17 +57,17 @@ void BaseGptAsmWalker::addMatrixInitialization(const Symbol& symbol) {
 void BaseGptAsmWalker::declareSubroutineVars(const std::list<std::string>& ids) {
   for (std::list<std::string>::const_iterator it = ids.begin(); it != ids.end(); ++it) {
     _subroutine->emitVarDefinition(
-      *it, _symtable->getSymbol(*it).type());
+      *it, _symtable->getFirstSymbol(*it).type());
   }
 }
 
 void BaseGptAsmWalker::declareParameter(const string& lexeme) {
   _subroutine->emitParDefinition(
-    lexeme, _symtable->getSymbol(lexeme).type());
+    lexeme, _symtable->getFirstSymbol(lexeme).type());
 }
 
 int BaseGptAsmWalker::getSymbolType(const string& lexeme) {
-  return _symtable->getSymbol(lexeme).type()->primitiveType();
+  return _symtable->getFirstSymbol(lexeme).type()->primitiveType();
 }
 
 // std::string BaseGptAsmWalker::expandOffset(const std::string&, const std::list<std::string>&) {

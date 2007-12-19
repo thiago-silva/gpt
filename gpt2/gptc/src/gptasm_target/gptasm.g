@@ -213,7 +213,7 @@ lvalue returns [Symbol ret]
   : #(lv:T_LVALUE 
       id:T_IDENTIFICADOR  
 
-                     {ret = _symtable->getSymbol(id->getText());}
+                     {ret = _symtable->getFirstSymbol(id->getText());}
 
 //       (
 //_subroutine->declareTmp(lv->getEvalType());
