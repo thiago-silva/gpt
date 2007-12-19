@@ -326,7 +326,8 @@ tipo_retorno!
   ;
 
 lista_parametros
-  : (param_reticencias | parametro (T_VIRGULA! lista_parametros)?)
+  : param_reticencias 
+  | parametro (T_VIRGULA! lista_parametros)?
   ;
 
 param_reticencias!
