@@ -10,13 +10,14 @@ AsmProgram::AsmProgram(Options *options)
 
 void AsmProgram::init()
 {
-	_asmPrg.writeln("// Programa " + _options->filename + ".gasm gerado a partir de " + _options->filename + ".gpt");
-	_asmPrg.writeln("program " + _options->filename);
+	_asmPrg.writeln("// Programa gerado a partir de " + _options->filename);
+	_asmPrg.writeln("program");
 	_asmPrg.writeln();
 }
 
 void AsmProgram::finish()
 {
+  _asmPrg.writeln();
 	_asmPrg.writeln("end-program");
 }
 

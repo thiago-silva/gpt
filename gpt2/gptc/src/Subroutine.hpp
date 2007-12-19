@@ -13,6 +13,7 @@
 
 using namespace std;
 
+class Type;
 
 class Subroutine
 {
@@ -22,7 +23,7 @@ public:
 	void init();
 	void finish();
 	void emitPUSHMn(const string &symbol, const bool &pushType = false);
-	void emitMn(const string &mn, const string &op1 = "", const string &op2 = "", const string &op3 = "");
+	void emit(const string &mn, const string &op1 = "", const string &op2 = "", const string &op3 = "");
 	void emitMnWithPrefix(const string &mn, const string &var, const string &op1 = "", const string &op2 = "");
 
 	void emitLabel(const string &label);
@@ -36,16 +37,20 @@ public:
 	{
 		return _name;
 	}
-	void emitVarDefinition(const string &name, const string &type);
-	void emitParDefinition(const string &name, const string &type);
+	void emitVarDefinition(const string &name, Type* type);
+	void emitParDefinition(const string &name, Type* type);
 	string getCode() const;
+
+  string declareTmp(Type* type);
 private:
 	string getMnWithPrefix(const string &mn, const string &var);
 	Options *_options;
 	vector<string> _params;
 	int _lastSourceLine;
 	string _name;
+  int    _tmpSuffix;
 	TextFile _header;
+  TextFile _prologue;
 	TextFile _body;
 	TextFile _footer;
 };

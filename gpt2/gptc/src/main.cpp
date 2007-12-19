@@ -90,14 +90,22 @@ void all(char* fname) {
   SemanticWalker semantic(symtable, fname);
   semantic.programa(ast);
 
+  std::cerr << "semantic.g AST:\n";
+  std::cerr << ast->toStringList() << std::endl << std::endl;
+
   GptAsmWalker code(symtable, fname);
   code.programa(ast);
+
+  
+  std::cerr << "\n\n===\n\n" << code.getCode() << std::endl << std::endl;
+
 }
 
 int main(int argc, char** argv) {
 
   if (argc == 2) {
     all(argv[1]);
+    return 0;
   }
 
   if (argc < 3) {

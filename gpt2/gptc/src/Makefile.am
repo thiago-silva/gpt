@@ -44,7 +44,7 @@ libgptc_la_SOURCES =  BaseSemanticWalker.hpp \
 											Types.cpp \
 											UnicodeCharBuffer.hpp \
 											UnicodeCharScanner.hpp \
-											GptAsmExpression.hpp \
+											GptAsmExpression.hpp GptAsmExpression.cpp \
 											Arguments.hpp \
 											Arguments.cpp \
 											AsmProgram.hpp AsmProgram.cpp \

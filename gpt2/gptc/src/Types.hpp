@@ -46,6 +46,7 @@ public:
   Type* intOrReal(Type* other);
   Type* caracOrLit(Type* other);
 
+
   //Matrix
   Type(TypeBuilder*, Type* ofType, const std::list<int>& dimensions);
 
@@ -86,8 +87,10 @@ public:
   bool isSubprogram() const;
 
   const std::string& name() const;
-  std::string asmName() const;
+  std::string asmName(bool = false) const;
   const std::string& identifier() const;
+
+  int byteSize() const;
 
   bool equals(int id) const;
   bool equals(Type* ofType, int dimensions) const;

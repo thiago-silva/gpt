@@ -22,6 +22,8 @@ header {
   #include "BaseGptAsmWalker.hpp"
   #include "PortugolAST.hpp"
   #include "GptAsmExpression.hpp"
+  #include "AsmProgram.hpp"
+  #include "SymbolTable.hpp"
 }
 
 options {
@@ -51,10 +53,11 @@ programa
 
         (declaracoes)?
 
-//         (corpo)?
-
+        (corpo)?
+                                {_asmPrg->finishSubroutine(_subroutine);}
         EOF
      )
+                                {_asmPrg->finish();}
   ;
 
 importacao
@@ -74,9 +77,9 @@ declaracao_variavel[bool isLocal]
   : #(T_VARIAVEL tipo ids=identificadores
                                           {
                                             if (isLocal) {
-                                              declareProgramVars(ids);
-                                            } else {
                                               declareSubroutineVars(ids);
+                                            } else {
+                                              declareProgramVars(ids);
                                             }
                                           }
 //       (
@@ -92,9 +95,9 @@ declaracao_constante[bool isLocal]
 
                                           {
                                             if (isLocal) {
-                                              declareProgramVars(ids);
-                                            } else {
                                               declareSubroutineVars(ids);
+                                            } else {
+                                              declareProgramVars(ids);
                                             }
                                           }
   ;
@@ -139,93 +142,110 @@ campo_estrutura
 /************************** EXPRESSOES *************************/
 
 
-expressao [const std::string& lvalue]
+expressao returns [GptAsmExpression* ret]
 
-                                      {GptAsmExpression ret;}
   : #(T_EXPRESSAO ret=expr)
-                                      {ret.expand(lvalue,1/*_subroutine*/);}
   ;
 
-expr returns [GptAsmExpression ret]
+expr returns [GptAsmExpression* ret]
 
-                        {GptAsmExpression l, r;}
+                        {
+                          GptAsmExpression *l, *r;
+                          Type *optype = _t->getEvalType();
+                        }
 
-//   : #(T_OU              l=expr r=expr) {expr_OU(ret, l, r);}
-//   | #(T_E               l=expr r=expr) {expr_E(ret, l, r);}
-//   | #(T_BIT_OU          l=expr r=expr) {expr_BIT_OU(ret, l, r);}
-//   | #(T_BIT_OUX         l=expr r=expr) {expr_BIT_XOU(ret, l, r);}
-//   | #(T_BIT_E           l=expr r=expr) {expr_BIT_E(ret, l, r);}
-//   | #(T_IGUAL           l=expr r=expr) {expr_IGUAL(ret, l, r);}
-//   | #(T_DIFERENTE       l=expr r=expr) {expr_DIFERENTE(ret, l, r);}
-//   | #(T_MAIOR           l=expr r=expr) {expr_MAIOR(ret, l, r);}
-//   | #(T_MENOR           l=expr r=expr) {expr_MENOR(ret, l, r);}
-//   | #(T_MAIOR_EQ        l=expr r=expr) {expr_MAIOR_EQ(ret, l, r);}
-//   | #(T_MENOR_EQ        l=expr r=expr) {expr_MENOR_EQ(ret, l, r);}
-//   | #(T_BIT_SHIFT_LEFT  l=expr r=expr) {expr_BIT_SHIFT_LEFT(ret, l, r);}
-//   | #(T_BIT_SHIFT_RIGHT l=expr r=expr) {expr_BIT_SHIFT_RIGHT(ret, l, r);}
-  : #(T_MAIS            l=expr r=expr) {expr_MAIS(ret, l, r);}
-//   | #(T_MENOS           l=expr r=expr) {expr_MENOS(ret, l, r);}
-//   | #(T_DIV             l=expr r=expr) {expr_DIV(ret, l, r);}
-//   | #(T_MULTIP          l=expr r=expr) {expr_MULTIP(ret, l, r);}
-//   | #(T_MOD             l=expr r=expr) {expr_MOD(ret, l, r);}
-//   | #(T_UN_NEGATIVO     l=elemento)  {expr_UN_NEGATIVO(ret,l);}
-//   | #(T_UN_POSITIVO     l=elemento)  {expr_UN_POSITIVO(ret,l);}
-//   | #(T_NAO             l=elemento)  {expr_UN_NAO(ret,l);}
-//   | #(T_BIT_NAO         l=elemento)  {expr_BIT_NAO(ret,l);}
+  : #(T_OU              l=expr r=expr) {ret=expr_OU(optype, l, r);}
+  | #(T_E               l=expr r=expr) {ret=expr_E(optype, l, r);}
+  | #(T_BIT_OU          l=expr r=expr) {ret=expr_BIT_OU(optype, l, r);}
+  | #(T_BIT_OUX         l=expr r=expr) {ret=expr_BIT_XOU(optype, l, r);}
+  | #(T_BIT_E           l=expr r=expr) {ret=expr_BIT_E(optype, l, r);}
+  | #(T_IGUAL           l=expr r=expr) {ret=expr_IGUAL(optype, l, r);}
+  | #(T_DIFERENTE       l=expr r=expr) {ret=expr_DIFERENTE(optype, l, r);}
+  | #(T_MAIOR           l=expr r=expr) {ret=expr_MAIOR(optype, l, r);}
+  | #(T_MENOR           l=expr r=expr) {ret=expr_MENOR(optype, l, r);}
+  | #(T_MAIOR_EQ        l=expr r=expr) {ret=expr_MAIOR_EQ(optype, l, r);}
+  | #(T_MENOR_EQ        l=expr r=expr) {ret=expr_MENOR_EQ(optype, l, r);}
+  | #(T_BIT_SHIFT_LEFT  l=expr r=expr) {ret=expr_BIT_SHIFT_LEFT(optype, l, r);}
+  | #(T_BIT_SHIFT_RIGHT l=expr r=expr) {ret=expr_BIT_SHIFT_RIGHT(optype, l, r);}
+  | #(T_MAIS            l=expr r=expr) {ret=expr_MAIS(optype, l, r);}
+  | #(T_MENOS           l=expr r=expr) {ret=expr_MENOS(optype, l, r);}
+  | #(T_DIV             l=expr r=expr) {ret=expr_DIV(optype, l, r);}
+  | #(T_MULTIP          l=expr r=expr) {ret=expr_MULTIP(optype, l, r);}
+  | #(T_MOD             l=expr r=expr) {ret=expr_MOD(optype, l, r);}
+  | #(T_UN_NEGATIVO     l=elemento)  {ret=expr_UN_NEGATIVO(optype,l);}
+  | #(T_UN_POSITIVO     l=elemento)  {ret=expr_UN_POSITIVO(optype,l);}
+  | #(T_NAO             l=elemento)  {ret=expr_UN_NAO(optype,l);}
+  | #(T_BIT_NAO         l=elemento)  {ret=expr_BIT_NAO(optype,l);}
   | ret=elemento
   ;
 
 
-elemento returns [GptAsmExpression ret]
-                      {std::string r;}
+elemento returns [GptAsmExpression* ret]
+                      {
+                        Symbol lv;
+                      }
   : ret=literal
-  | r=lvalue
+  | lv=lvalue         {ret = new GptAsmExpression(lv.type(), lv.identifier());}
 //   | ret=chamada_subrotina
-  | expressao[r]
+  | #(T_EXPRESSAO ret=expr)
   ;
 
-literal returns [GptAsmExpression ret]
+literal returns [GptAsmExpression* ret]
 
-  : l:T_TEXTO_LITERAL          {/*ret.set(l->getText());*/}
-  | i:T_INTEIRO_LITERAL        {/*ret.set(i->getText());*/}
-  | r:T_REAL_LITERAL           {/*ret.set(r->getText());*/}
-  | c:T_CARACTERE_LITERAL      {/*ret.set(c->getText());*/}
-  | v:T_VERDADEIRO             {/*ret.set(v->getText());*/}
-  | f:T_FALSO                  {/*ret.set(f->getText());*/}
-  ;
+                                    {
+                                      Type *type = _t->getEvalType();
+                                      std::string value;
+                                    }
 
-
-lvalue returns [std::string lv]
-
-                                      {std::string offset;}
-
-  : #(id:T_IDENTIFICADOR              {lv = id->getText();}
-      (offset=lvalue_indices[lv]      {lv += ":" + offset;})?
-//       (lvalue_membro)?
+  : (   t:T_TEXTO_LITERAL           {value = '"' + t->getText() + '"';}
+      | i:T_INTEIRO_LITERAL         {value = i->getText();}
+      | r:T_REAL_LITERAL            {value = r->getText();}
+      | c:T_CARACTERE_LITERAL       {value = "'" + c->getText() + "'";}
+      | v:T_VERDADEIRO              {value = "true";}
+      | f:T_FALSO                   {value = "false";}
     )
-                
+      {ret = new GptAsmExpression(type, value);}
   ;
 
 
-lvalue_indices[const std::string id] returns [std::string ret]
+lvalue returns [Symbol ret]
+
+  : #(lv:T_LVALUE 
+      id:T_IDENTIFICADOR  
+
+                     {ret = _symtable->getSymbol(id->getText());}
+
+//       (
+//_subroutine->declareTmp(lv->getEvalType());
+//         lvalue_indices[lv]
+//       )?
+
+//       (
+//         lvalue_membro
+//       )?
+    )
+  ;
+
+
+lvalue_indices[const std::string id]
                                 {
                                   std::list<std::string> dimensions;
-                                  std:string tmp;
+                                  std::string tmp;
                                 }
   : #(T_SUBSCRITO
         (
                                 {/*tmp = _subroutine->newTmp();*/}
-          expressao[tmp]
+          expressao
                                 {dimensions.push_back(tmp);}
         )+
     )
-                                {ret = expandOffset(id, dimensions);}
+//                                 {ret = expandOffset(id, dimensions);}
   ;
 
 
-// lvalue_membro
-//   : #(T_MEMBRO lvalue)
-//   ;
+lvalue_membro
+  : #(T_MEMBRO lvalue)
+  ;
 
 
 
@@ -234,37 +254,48 @@ lvalue_indices[const std::string id] returns [std::string ret]
 
 
 
-// corpo
-//   :  corpo_subprograma      (corpo)?
-//   |  bloco_codigo           (corpo_subprograma)*
-//   ;
-// 
-// 
-// bloco_codigo
-//   : #(T_INICIO lista_enunciados)
-//   ;
-// 
-// lista_enunciados
-//   : (enunciado)*
-//   ;
-// 
-// enunciado
-//   : en_atribuicao
-// /*  | en_retorne
-//   | en_se
-//   | en_enquanto
-//   | en_repita
-//   | en_para
-//   | en_caso
-//   | T_SAIR
-//   | chamada_subrotina*/
-//   ;
-// 
-// en_atribuicao
-//                       {std::string lv;}
-//   : #(T_ATRIBUICAO
-//         lv=lvalue      //x / x:offset
-//         expressao[lv]
-//       )
-//   ;
+corpo
+  :  bloco_codigo           /*(corpo_subprograma)**/
+//   |  corpo_subprograma      (corpo)?
+  ;
+
+bloco_codigo
+  : #(T_INICIO lista_enunciados)
+  ;
+
+lista_enunciados
+  : (enunciado)*
+  ;
+
+enunciado
+  : en_atribuicao
+/*  | en_retorne
+  | en_se
+  | en_enquanto
+  | en_repita
+  | en_para
+  | en_caso
+  | T_SAIR
+  | chamada_subrotina*/
+  ;
+
+en_atribuicao
+                      {
+                        Symbol lv;
+                        GptAsmExpression *expr;
+                      }
+  : #(T_ATRIBUICAO
+        lv=lvalue
+
+        expr=expressao
+                      {                        
+                        if (expr->isAtom()) {
+                          emitAttribution(lv, expr->value());
+                        } else {
+                          expr->expand(lv.identifier(), _subroutine);
+                        }
+                        delete expr;
+                      }
+      )
+  ;
 

@@ -4,12 +4,13 @@
 using namespace std;
 
 #include "Tools.hpp"
+#include "Types.hpp"
 
-#include "PortugolParserTokenTypes.hpp"
+#include "PortugolTokenTypes.hpp"
 
 
 Subroutine::Subroutine(Options *options, /*CGptAssemblyFile *file,*/ const string &name)
-	: _options(options), _name(name), _lastSourceLine(0)
+	: _options(options), _name(name), _tmpSuffix(1), _lastSourceLine(0)
 {
 	if (_options->sentences) {
 		//_sourceInfo = new SourceInfo();
@@ -29,6 +30,7 @@ Subroutine::~Subroutine()
 
 void Subroutine::init()
 {
+  _header.writeln();
 	_header.writeln(string("// Procedure ") + _name);
 	_header.writeln("proc " + _name);
 	_header.incTab();
@@ -61,7 +63,7 @@ void Subroutine::emitPUSHMn(const string &symbol, const bool &pushType)
 }
 
 
-void Subroutine::emitMn(const string &mn, const string &op1, const string &op2, const string &op3)
+void Subroutine::emit(const string &mn, const string &op1, const string &op2, const string &op3)
 {
 	_body.write(mn);
 	if (op1.empty()) {
@@ -86,7 +88,7 @@ void Subroutine::emitMn(const string &mn, const string &op1, const string &op2, 
 
 void Subroutine::emitMnWithPrefix(const string &mn, const string &var, const string &op1, const string &op2)
 {
-	emitMn(getMnWithPrefix(mn, var), var, op1, op2);
+	emit(getMnWithPrefix(mn, var), var, op1, op2);
 }
 
 
@@ -99,9 +101,7 @@ void Subroutine::emitLabel(const string &label)
 void Subroutine::emitAsmCode(const string &code)
 {
 	_body.writeln();
-	_body.writeln("// asm-begin");
 	_body.writeln(code);
-	_body.writeln("// asm-end");
 	_body.writeln();
 }
 
@@ -136,21 +136,33 @@ void Subroutine::writeln(string value)
 }
 */
 
-void Subroutine::emitVarDefinition(const string &name, const string &type)
+void Subroutine::emitVarDefinition(const string &name, Type* type)
 {
-	_header.writeln("var " + name + " " + type);
+	_header.writeln("var " + name + " " + type->asmName());
+
+  if (type->isPrimitive() && type->equals(PortugolTokenTypes::T_LITERAL)) {
+    _prologue.writeln("salloc " + name);
+  }
 }
 
-
-void Subroutine::emitParDefinition(const string &name, const string &type)
+void Subroutine::emitParDefinition(const string &name, Type* type)
 {
-	_header.writeln("par " + name + " " + type);
+	_header.writeln("par " + name + " " + type->asmName());
 }
 
+string Subroutine::declareTmp(Type* type) {
+  std::stringstream s;
+  s << "tmp" << _tmpSuffix++;
+ 
+  std::string name = s.str();
+  emitVarDefinition(name, type);
+  return name;
+}
 
 string Subroutine::getCode() const
 {
-	return _header.getText() + _body.getText() + _footer.getText();
+	return _header.getText() + _prologue.getText() 
+         + _body.getText() + _footer.getText();
 }
 
 

@@ -111,7 +111,7 @@ Symbol::buildIdentifier(const std::string& name, const TypeList& list) {
 }
 
 std::string Symbol::identifier() const {
-  return _identifier;
+  return "_" + _identifier;
 }
 
 

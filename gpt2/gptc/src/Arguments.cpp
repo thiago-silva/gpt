@@ -27,6 +27,6 @@ void Arguments::emitMnsInSubroutineCall( )
 
 	}
 	if (varArgs) {
-		_subroutine->emitMn( "push", itoa( size( ) ) );
+		_subroutine->emit( "push", itoa( size( ) ) );
 	}
 }

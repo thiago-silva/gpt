@@ -2,95 +2,8 @@
 #include "TokenLabels.hpp"
 
 #include <iostream>
+#include <sstream>
 
-// Type::StructField::StructField(const std::string& n, Type* t)
-//       : _name(n), _type(t) {
-// }
-
-// bool
-// Type::StructField::isLValueFor(const Type::StructField& other) const {
-//   return _name == other._name && _type->isLValueFor(other._type);
-// }
-
-// bool
-// Type::StructField::operator==(const Type::StructField& other) const {
-//   return _name == other._name && _type->equals(other._type);
-// }
-//
-// Type* Type::StructField::type() const {
-//   return _type;
-// }
-//
-// const std::string& Type::StructField::name() const {
-//   return _name;
-// }
-//
-//
-// bool
-// Type::StructFieldList::isLValueFor(const Type::StructFieldList& other) const {
-//   if (size() != other.size()) {
-//     return false;
-//   }
-//   const_iterator it, jt;
-//   bool found;
-//   for (it = begin(); it != end(); ++it) {
-//     found = false;
-//     for (jt = other.begin(); jt != other.end(); ++jt) {
-//       if ((*it).isLValueFor(*jt)) {
-//         found = true;
-//       }
-//     }
-//     if (!found) {
-//       return false;
-//     }
-//   }
-//   return true;
-// }
-//
-// bool
-// Type::StructFieldList::operator==(const Type::StructFieldList& other) const {
-//   if (size() != other.size()) {
-//     return false;
-//   }
-//   const_iterator it, jt;
-//   bool found;
-//   for (it = begin(); it != end(); ++it) {
-//     found = false;
-//     for (jt = other.begin(); jt != other.end(); ++jt) {
-//       if ((*it) == (*jt)) {
-//         found = true;
-//       }
-//     }
-//     if (!found) {
-//       return false;
-//     }
-//   }
-//   return true;
-// }
-//
-//
-// Type::StructFieldList::const_iterator
-// Type::StructFieldList::find(const std::string& name) const {
-//   const_iterator it;
-//   for (it = begin(); it != end(); ++it) {
-//     if ((*it).name() == name) {
-//       return it;
-//     }
-//   }
-//   return end();
-// }
-//
-// std::string Type::StructFieldList::toString() const {
-//   std::string ret = "{";
-//   std::string v = "";
-//   const_iterator it;
-//   for (it = begin(); it != end(); ++it) {
-//     ret += v + (*it).name() + ":" + (*it).type()->name();
-//     v = ", ";
-//   }
-//   ret += "}";
-//   return ret;
-// }
 
 //************* GENERAL *********************************/
 
@@ -150,7 +63,9 @@ const std::string& Type::name() const {
   return _name;
 }
 
-std::string Type::asmName() const {
+std::string Type::asmName(bool complete) const {
+  std::stringstream stream;
+
   switch (_typeId) {
     case PRIMITIVE:
       switch (_id) {
@@ -171,7 +86,12 @@ std::string Type::asmName() const {
     case MATRIX:
       return "matrix";
     case STRUCT:
-      return "data";
+      if (!complete) {
+        return "data";
+      } else {
+        stream << "data[" << byteSize() << "]";
+        return stream.str();
+      }
     default:
       throw;
   }
@@ -179,6 +99,35 @@ std::string Type::asmName() const {
 
 const std::string& Type::identifier() const {
   return _identifier;
+}
+
+int Type::byteSize() const {
+  int ret = 0;
+  switch (_typeId) {
+    case PRIMITIVE:
+      switch(primitiveType()) {
+        case T_INTEIRO:    
+        case T_CARACTERE:
+        case T_LITERAL:
+        case T_LOGICO:
+        case T_CORINGA:
+          return sizeof(int);
+        case T_REAL:
+          return sizeof(double);
+        default:
+          throw;
+      }
+    case MATRIX:
+      return sizeof(void*);
+    case STRUCT:      
+      for (SymbolList::const_iterator it = _fields.begin(); it != _fields.end(); ++it) {
+        ret += (*it).type()->byteSize();
+      }
+      return ret;
+    case SUBPROGRAM:
+    default:
+      throw;
+  }
 }
 
 bool Type::equals(int id) const {
@@ -300,6 +249,7 @@ Type* Type::caracOrLit(Type* other) {
 
   return NULL;
 }
+
 
 Type* Type::primitive_attrPromotion(Type* other) {
   if (!other->isPrimitive()) {
@@ -436,7 +386,7 @@ Type::Type(TypeBuilder* builder,
     _name(name), _identifier(name), _anonymous(false), _fields(fields),
     _unit(unit), _line(line) {
 
-  _name = _identifier + ":{";
+  _name = _name + ":{";
   std::string v = "";
   for (SymbolList::const_iterator it = fields.begin(); it != fields.end(); ++it) {
     _name += v + (*it).lexeme() + ":" + (*it).type()->name();
@@ -448,7 +398,8 @@ Type::Type(TypeBuilder* builder,
 
 Type::Type(TypeBuilder* builder, const SymbolList& fields)
   : _typeId(STRUCT), _builder(builder), _isConst(false), _isRef(false),
-    _name("<anônimo>"), _anonymous(true), _fields(fields),
+    _name("<anônimo>"), _identifier("_anônimo_"), 
+    _anonymous(true), _fields(fields),
     _unit("<interno>"), _line(-1) {
 
   _name += ":{";
