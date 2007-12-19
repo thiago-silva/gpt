@@ -36,7 +36,6 @@ tokens {
    T_KW_POINTER="pointer";
    T_KW_MATRIX="matrix";
    T_KW_DATA="data";
-   T_KW_LIBNAME="libname";
    T_KW_FUNCTIONPREFIX="functionprefix";
    T_KW_LINKERLIB="linkerlib";
    T_REAL_VALUE="número real"; //nondeterminism T_INT_LIT & T_REAL_LIT

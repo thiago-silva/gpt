@@ -13,12 +13,12 @@ CGptBind::CGptBind( COptions *options ) : _options( options )
 
 bool CGptBind::run( )
 {
-   ifstream in(_options->sourcefile.c_str());
+   ifstream in((_options->sourcefile+".sld").c_str());
    GptBindLexer lexer(in);
    GptBindParser parser(lexer);
 
 //   string asmProgram = parser.program(_options->sourcefile);
-   parser.sld_grammar();
+   parser.sld_grammar(_options->sourcefile);
 
    string cppOutput = parser.getCpp();
    string hppOutput = parser.getHpp();

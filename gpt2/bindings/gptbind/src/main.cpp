@@ -37,8 +37,8 @@ int main (int argc, char *argv[])
       return EXIT_FAILURE;
    }
 
-   options.sourcefile = string(argv[0]) + ".sld";
-   options.destfile   = string(argv[0]) + ".gvm";
+   options.sourcefile = argv[0];
+   options.destfile   = argv[0];
 
    cout << "Binding " << options.sourcefile << "..." << endl;
 

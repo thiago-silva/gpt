@@ -26,9 +26,9 @@ options {
 {  
    public:
 //      CGenBytecode bytecode;
-      void init()
+      void init(std::string sourcefile)
       {
-         sources = new CBindSources( "teste", "gptbind_" );
+         sources = new CBindSources( sourcefile );
       }
       antlr::RefToken getLastToken()
       {
@@ -64,9 +64,9 @@ options {
 //###############
 
 //-----------
-  sld_grammar
+  sld_grammar [std::string sourcefile]
 //-----------
-   : { init(); }
+   : { init(sourcefile); }
      (optionsdef)?
      (headersdef)?
      {
@@ -98,7 +98,7 @@ options {
 ///----------
    optionname
 ///----------
-   : "libname" | "functionprefix" | "linkerlib"
+   : "linkerlib" { sources->addLinkerLib(getLastTokenText()); }
    ;
 
 //#############
@@ -114,7 +114,7 @@ options {
 //------
   headerdef
 //------
-   : T_STRING_VALUE T_SEMICOLON
+   : T_STRING_VALUE {sources->addHeader(getLastTokenText());} T_SEMICOLON
    ;
 
 //#############
@@ -134,13 +134,12 @@ options {
 {
    std::vector<std::pair<std::string, std::string> > parameters;
    std::vector<std::string> arguments;
-//   std::vector<std::pair<std::string, int> > arguments;
 }
    : "procedure" tk_procname:T_ID (parameters_declaration[parameters])
      T_MAPINTO
      tk_mapname:T_ID (arguments_declaration[arguments])? T_SEMICOLON
      {
-        sources->addProcedureBind(tk_procname->getText(), parameters, tk_mapname->getText(), arguments);
+        sources->addSubroutineBind(tk_procname->getText(), "", parameters, tk_mapname->getText(), arguments);
      }
    ;
 
@@ -150,11 +149,14 @@ options {
 {
    std::vector<std::pair<std::string, std::string> > parameters;
    std::vector<std::string> arguments;
-//   std::vector<std::pair<std::string, int> > arguments;
+   std::string resultType;
 }
-   : "function" T_ID (parameters_declaration[parameters]) T_COLON type
+   : "function" tk_procname:T_ID (parameters_declaration[parameters]) T_COLON resultType=type
      T_MAPINTO
-     T_ID (arguments_declaration[arguments])? T_SEMICOLON
+     tk_mapname:T_ID (arguments_declaration[arguments])? T_SEMICOLON
+     {
+        sources->addSubroutineBind(tk_procname->getText(), resultType, parameters, tk_mapname->getText(), arguments);
+     }
    ;
 
 ///----------------------
@@ -165,10 +167,10 @@ options {
 }
    : T_ABREP
      (
-        type {typeValue = getLastTokenText();} tk_id:T_ID
+        typeValue=type tk_id:T_ID
         {parameters.push_back(std::pair<std::string, std::string>(tk_id->getText(), typeValue));} 
         (
-           T_COMMA type {typeValue = getLastTokenText();} tk_id2:T_ID
+           T_COMMA typeValue=type tk_id2:T_ID
            {parameters.push_back(std::pair<std::string, std::string>(tk_id2->getText(), typeValue));} 
         )*
      )?
@@ -219,16 +221,19 @@ options {
   ;
 
 ///----
-   type
+   type returns [std::string result]
 ///----
-   : "int"
-   | "real"
-   | "char"
-   | "string"
-   | "bool"
-   | "pointer"
-   | "matrix"
-   | "data"
+   :
+   ( "int"
+     | "real"
+     | "char"
+     | "string"
+     | "bool"
+     | "pointer"
+     | "matrix"
+     | "data"
+   )
+   {result = getLastTokenText();}
    ;
 
 /////----
