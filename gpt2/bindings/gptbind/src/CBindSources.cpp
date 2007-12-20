@@ -4,8 +4,11 @@
 CBindSources::CBindSources(const std::string &filename)
       : _filename(filename)
 {
-   _mapGptToCppType["string"] = "const char *";
-   _mapGptToCppType["real"]   = "double";
+   _mapGptToCppType["string" ] = "const char *";
+   _mapGptToCppType["real"   ] = "double";
+   _mapGptToCppType["int"    ] = "int";
+   _mapGptToCppType["char"   ] = "char";
+   _mapGptToCppType["bool"   ] = "boolean";
 }
 
 
@@ -41,8 +44,8 @@ void CBindSources::writeHeaders()
 
 void CBindSources::addSubroutineBind(
       const std::string &name,
-      const std::string &returnType,
-      std::vector<std::pair<std::string, std::string> > parameters,
+      const std::pair<std::string, std::string> &returnType,
+      std::vector<std::pair<std::string, std::pair<std::string, std::string> > > parameters,
       const std::string &functionBind,
       std::vector<std::string> arguments )
 {
@@ -53,12 +56,12 @@ void CBindSources::addSubroutineBind(
    cppSource.writeln( "{" );
    cppSource.incTab();
 
-   for(std::vector<std::pair<std::string, std::string> >::iterator param = parameters.begin(); param != parameters.end(); param++) {
+   for(std::vector<std::pair<std::string, std::pair<std::string,std::string> > >::iterator param = parameters.begin(); param != parameters.end(); param++) {
       cppSource.writeln (sourceToPopParameter (param->first, param->second));
    }
 
-   if (!returnType.empty()) {
-      cppSource.writeln(_mapGptToCppType[returnType] + " result;");
+   if (!returnType.first.empty()) {
+      cppSource.writeln(getMapGptToCppType(returnType) + " result;");
       cppSource.writeln();
       cppSource.write( "result=" );
    }
@@ -76,7 +79,7 @@ void CBindSources::addSubroutineBind(
       }
    }
    cppSource.writeln(");");
-   if (!returnType.empty()) {
+   if (!returnType.first.empty()) {
       cppSource.writeln();
       cppSource.writeln(sourceToPushResult("result", returnType));
    }
@@ -85,29 +88,43 @@ void CBindSources::addSubroutineBind(
 }
 
 
-std::string CBindSources::sourceToPopParameter(const std::string &name, const std::string &type)
+std::string CBindSources::sourceToPopParameter(const std::string &name, const std::pair<std::string,std::string> &type)
 {
    std::string result;
 
    std::map<std::string, std::string> mapPop;
    mapPop["string"] = "dataStack.popString().c_str()";
-   mapPop["real"]   = "dataStack.popReal()";
+   mapPop["real"  ] = "dataStack.popReal()";
+   mapPop["int"   ] = "dataStack.popInt()";
+   mapPop["char"  ] = "dataStack.popInt()";
+   mapPop["bool"  ] = "dataStack.popInt()";
 
-   result = _mapGptToCppType[type] + " c" + name + "=" + mapPop[type] + ";";
+   result = getMapGptToCppType(type) + " c" + name + "=";
+
+   if (type.first == "pointer") {
+      result += "(" + type.second + ")" + mapPop["int"];
+   } else {
+      result += mapPop[type.first];
+   }
+   result += ";";
 
    return result;
 }
 
 
-std::string CBindSources::sourceToPushResult(const std::string &name, const std::string &type)
+std::string CBindSources::sourceToPushResult(const std::string &name, const std::pair<std::string,std::string> &type)
 {
    std::string result;
 
    std::map<std::string, std::string> mapPush;
-   mapPush["real"  ] = "dataStack.pushReal(" + name + ")";
    mapPush["string"] = "dataStack.pushString(" + name + ")";
+   mapPush["real"  ] = "dataStack.pushReal(" + name + ")";
+   mapPush["int"   ] = "dataStack.pushInt(" + name + ")";
+   mapPush["char"  ] = "dataStack.pushInt(" + name + ")";
+   mapPush["bool"  ] = "dataStack.pushBool(" + name + ")";
+   mapPush["pointer"] = "dataStack.pushInt((int)" + name + ")";
 
-   result = mapPush[type] + ";";
+   result = mapPush[type.first] + ";";
 
    return result;
 }
@@ -159,5 +176,15 @@ void CBindSources::addLinkerLib(const std::string &lib)
 void CBindSources::addHeader(const std::string &header)
 {
    _headerList.push_back(header);
+}
+
+
+std::string CBindSources::getMapGptToCppType(const std::pair<std::string,std::string> &type)
+{
+   if (type.first == "pointer") {
+      return type.second;
+   } else {
+      return _mapGptToCppType[type.first];
+   }
 }
 

@@ -132,14 +132,14 @@ options {
   procedure_bind
 //--------------
 {
-   std::vector<std::pair<std::string, std::string> > parameters;
+   std::vector<std::pair<std::string, std::pair<std::string, std::string> > > parameters;
    std::vector<std::string> arguments;
 }
    : "procedure" tk_procname:T_ID (parameters_declaration[parameters])
      T_MAPINTO
      tk_mapname:T_ID (arguments_declaration[arguments])? T_SEMICOLON
      {
-        sources->addSubroutineBind(tk_procname->getText(), "", parameters, tk_mapname->getText(), arguments);
+        sources->addSubroutineBind(tk_procname->getText(), std::pair<std::string,std::string>("",""), parameters, tk_mapname->getText(), arguments);
      }
    ;
 
@@ -147,9 +147,9 @@ options {
   function_bind
 //-------------
 {
-   std::vector<std::pair<std::string, std::string> > parameters;
+   std::vector<std::pair<std::string, std::pair<std::string, std::string> > > parameters;
    std::vector<std::string> arguments;
-   std::string resultType;
+   std::pair<std::string,std::string> resultType;
 }
    : "function" tk_procname:T_ID (parameters_declaration[parameters]) T_COLON resultType=type
      T_MAPINTO
@@ -160,18 +160,18 @@ options {
    ;
 
 ///----------------------
-   parameters_declaration[std::vector<std::pair<std::string, std::string> > &parameters]
+   parameters_declaration[std::vector<std::pair<std::string, std::pair<std::string,std::string> > > &parameters]
 ///----------------------
 {
-   std::string typeValue;
+   std::pair<std::string,std::string> typeValue;
 }
    : T_ABREP
      (
         typeValue=type tk_id:T_ID
-        {parameters.push_back(std::pair<std::string, std::string>(tk_id->getText(), typeValue));} 
+        {parameters.push_back(std::pair<std::string, std::pair<std::string,std::string> >(tk_id->getText(), typeValue));} 
         (
            T_COMMA typeValue=type tk_id2:T_ID
-           {parameters.push_back(std::pair<std::string, std::string>(tk_id2->getText(), typeValue));} 
+           {parameters.push_back(std::pair<std::string, std::pair<std::string,std::string> >(tk_id2->getText(), typeValue));} 
         )*
      )?
      T_FECHAP
@@ -221,19 +221,23 @@ options {
   ;
 
 ///----
-   type returns [std::string result]
+   type returns [std::pair<std::string,std::string> result]
 ///----
    :
-   ( "int"
-     | "real"
-     | "char"
-     | "string"
-     | "bool"
-     | "pointer"
-     | "matrix"
-     | "data"
+   ( "int" {result.first = getLastTokenText();}
+   | "real" {result.first = getLastTokenText();}
+   | "char" {result.first = getLastTokenText();}
+   | "string" {result.first = getLastTokenText();}
+   | "bool" {result.first = getLastTokenText();}
+   | ( "pointer" T_STRING_VALUE
+      {
+         result.first = "pointer";
+         result.second = getLastTokenText();
+         result.second = result.second.substr(1, result.second.length()-2);
+      } )
+   | "matrix" {result.first = getLastTokenText();}
+   | "data" {result.first = getLastTokenText();}
    )
-   {result = getLastTokenText();}
    ;
 
 /////----

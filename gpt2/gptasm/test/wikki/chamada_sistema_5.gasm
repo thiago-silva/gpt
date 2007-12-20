@@ -1,0 +1,26 @@
+program exemplo
+// use io
+
+var f pointer
+//var f int // pointer...
+var result int
+
+proc main
+    pushsv "w+"
+    pushsv "arquivo.txt"
+    lcall file, fopen
+    popiv f
+
+    pushiv f
+    pushsv "Uma linha !!!"
+    lcall file, fputs
+    popiv result
+
+    pushiv f
+    lcall file, fclose
+    popiv result
+
+    exit 0
+endproc
+
+endprogram

@@ -15,8 +15,8 @@ public:
    void writeHeaders();
    void addSubroutineBind(
          const std::string &name, 
-         const std::string &returnType,
-         std::vector<std::pair<std::string, std::string> > parameters,
+         const std::pair<std::string,std::string> &returnType,
+         std::vector<std::pair<std::string, std::pair<std::string, std::string> > > parameters,
          const std::string &functionBind,
          std::vector<std::string> arguments
    );
@@ -44,8 +44,9 @@ private:
    std::list<std::string> _linkerLibList;
    std::list<std::string> _headerList;
 
-   std::string sourceToPopParameter(const std::string &name, const std::string &type);
-   std::string sourceToPushResult(const std::string &name, const std::string &type);
+   std::string sourceToPopParameter(const std::string &name, const std::pair<std::string,std::string> &type);
+   std::string sourceToPushResult(const std::string &name, const std::pair<std::string,std::string> &type);
+   std::string getMapGptToCppType(const std::pair<std::string,std::string> &type);
 };
 
 #endif

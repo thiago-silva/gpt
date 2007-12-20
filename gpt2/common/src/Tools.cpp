@@ -251,6 +251,7 @@ int getTypeSize(const int &type) // TODO: para o tipo DATA essa funcao deveria r
    case CSymbol::STRING:
       return sizeof(char)+sizeof(void*);
    case CSymbol::MATRIX:
+   case CSymbol::POINTER:
       return sizeof(void*);
    }
    return 0;
