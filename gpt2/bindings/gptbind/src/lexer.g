@@ -174,6 +174,20 @@ options {
   : '}'
   ;
 
+T_ABRECO
+options {
+  paraphrase = "'['";
+}
+  : '['
+  ;
+
+T_FECHACO
+options {
+  paraphrase = "']'";
+}
+  : ']'
+  ;
+
 
 T_ABREP
 options {

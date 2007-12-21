@@ -63,10 +63,15 @@ CSymbol* CData::addConstant (const std::string &name, const int &type, int size,
       writeString(name, false);
    } else if (type == CSymbol::INT) {
       writeInt(atoi(name.c_str()));
+   } else if (type == CSymbol::BOOL) {
+      writeInt(atoi(name.c_str()));
    } else if (type == CSymbol::REAL) {
       writeReal(atof(name.c_str()));
    } else if (type == CSymbol::CHAR) {
       writeInt(toUTF8Char(name));
+   } else {
+     std::cout << "Ta faltando algum tipo ???" << endl;
+     abort();
    }
 
    return symbol;

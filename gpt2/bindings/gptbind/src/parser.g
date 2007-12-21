@@ -229,11 +229,10 @@ options {
    | "char" {result.first = getLastTokenText();}
    | "string" {result.first = getLastTokenText();}
    | "bool" {result.first = getLastTokenText();}
-   | ( "pointer" T_STRING_VALUE
+   | ( "pointer" T_ABRECO tkid:T_ID T_FECHACO
       {
          result.first = "pointer";
-         result.second = getLastTokenText();
-         result.second = result.second.substr(1, result.second.length()-2);
+         result.second = tkid->getText();
       } )
    | "matrix" {result.first = getLastTokenText();}
    | "data" {result.first = getLastTokenText();}

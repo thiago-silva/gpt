@@ -396,7 +396,7 @@ void CRunBytecode::callSyslib(const std::string &libname, const std::string &pro
 
    if (ithandler == syslibHandlerList.end()) {
       // TODO: path absoluto ??? nem pensar :-)
-      dlhandler = dlopen(("../../../bindings/gptbind/test/lib" + libname + ".so").c_str(), RTLD_LAZY);
+      dlhandler = dlopen(("../../bindings/gptbind/test/lib" + libname + ".so").c_str(), RTLD_LAZY);
       if (!dlhandler) {
          fprintf (stderr, "%s\n", dlerror());
          exit(1);

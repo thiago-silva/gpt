@@ -4,11 +4,11 @@
 CBindSources::CBindSources(const std::string &filename)
       : _filename(filename)
 {
-   _mapGptToCppType["string" ] = "const char *";
-   _mapGptToCppType["real"   ] = "double";
-   _mapGptToCppType["int"    ] = "int";
-   _mapGptToCppType["char"   ] = "char";
-   _mapGptToCppType["bool"   ] = "boolean";
+   _mapGptToCppType["string"] = "const char*";
+   _mapGptToCppType["real"  ] = "double";
+   _mapGptToCppType["int"   ] = "int";
+   _mapGptToCppType["char"  ] = "char";
+   _mapGptToCppType["bool"  ] = "boolean";
 }
 
 
@@ -102,7 +102,7 @@ std::string CBindSources::sourceToPopParameter(const std::string &name, const st
    result = getMapGptToCppType(type) + " c" + name + "=";
 
    if (type.first == "pointer") {
-      result += "(" + type.second + ")" + mapPop["int"];
+      result += "(" + type.second + "*)" + mapPop["int"];
    } else {
       result += mapPop[type.first];
    }
@@ -182,7 +182,7 @@ void CBindSources::addHeader(const std::string &header)
 std::string CBindSources::getMapGptToCppType(const std::pair<std::string,std::string> &type)
 {
    if (type.first == "pointer") {
-      return type.second;
+      return type.second + "*";
    } else {
       return _mapGptToCppType[type.first];
    }
