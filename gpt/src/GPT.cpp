@@ -166,7 +166,7 @@ bool GPT::compile(const list<string>& ifnames, bool genBinary) {
       ofname += ".asm";
     } 
     #ifdef WIN32
-    else 
+    else
     {      
       ofname += ".exe";      
     }
@@ -199,10 +199,10 @@ bool GPT::compile(const list<string>& ifnames, bool genBinary) {
     fo.close();
 
     stringstream cmd;
-    cmd << "nasm -fbin -o " << ofname << " " << ftmpname;
+    cmd << "nasm -fbin -o \"" << ofname << "\" " << ftmpname;
 
     if(system(cmd.str().c_str()) == -1) {
-      s << PACKAGE << ": não foi possível invocar gcc." << endl;
+      s << PACKAGE << ": não foi possível invocar o nasm." << endl;
       GPTDisplay::self()->showError(s);
       goto bail;
     }
@@ -300,7 +300,7 @@ bool GPT::parse(list<pair<string,istream*> >& istream_list) {
       GPTDisplay::self()->addFileName((*it).first);
 
       firstFile = (*it).first;
-      fst = lexer;      
+      fst = lexer;
     }
 
     selector->select(fst);
