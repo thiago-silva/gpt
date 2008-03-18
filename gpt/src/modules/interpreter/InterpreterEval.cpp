@@ -21,7 +21,9 @@
 #include "config.h"
 
 #include "InterpreterEval.hpp"
-#include "InterpreterDBG.hpp"
+#ifndef WIN32
+  #include "InterpreterDBG.hpp"
+#endif
 #include "GPTDisplay.hpp"
 
 void ExprValue::setValue(string str) {
@@ -201,7 +203,9 @@ void InterpreterEval::init(const string& file) {
   stack_entry_t entry = stack_entry_t(file, ctx);
   program_stack.push_back(entry);
 
+#ifndef WIN32
   InterpreterDBG::self()->init(dbg_host, dbg_port);
+#endif
 }
 
 
@@ -769,7 +773,7 @@ void InterpreterEval::nextCmd(const string& file, int line) {
   program_stack.back().second.second = line;
 
   currentLine = line;
-
+#ifndef WIN32
   InterpreterDBG::self()->checkData();
 
   if(InterpreterDBG::self()->breakOn(file, line)) {
@@ -808,6 +812,7 @@ void InterpreterEval::nextCmd(const string& file, int line) {
         break;
     }
   }
+#endif
 }
 
 //private
