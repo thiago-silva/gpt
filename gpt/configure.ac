@@ -4,8 +4,8 @@
 
 AC_PREREQ(2.60)
 
-AC_INIT(gpt, 1.0)
-AM_INIT_AUTOMAKE(gpt, 1.0)
+AC_INIT(gpt, 1.0.1)
+AM_INIT_AUTOMAKE(gpt, 1.0.1)
 AC_CONFIG_HEADER([config.h])
 AC_LANG(C++)
 AC_PROG_CXX
@@ -33,7 +33,7 @@ AC_ARG_ENABLE(debug,
       use_debug_define=no
       ;;
   esac
-], 
+],
   [use_debug_code="no"
     use_debug_define=no
 ])
@@ -130,13 +130,13 @@ AC_SUBST(PCRE_LIB)
 
 
 dnl------------------------------
-dnl checks if we want to install 
+dnl checks if we want to install
 dnl the libs and headers
 dnl------------------------------
 
 AC_ARG_ENABLE([install-devel],
     [AC_HELP_STRING([--enable-install-devel],
-                    [instala bibliotecas e headers])], 
+                    [instala bibliotecas e headers])],
     [INSTALL_DEVEL="yes"],
     [INSTALL_DEVEL="no"]
 )
@@ -148,16 +148,16 @@ dnl------------------------------
 dnl the end
 dnl------------------------------
 
-AC_OUTPUT(Makefile        
-        src/Makefile 
-        doc/Makefile 
+AC_OUTPUT(Makefile
+        src/Makefile
+        doc/Makefile
         doc/man/Makefile
-        doc/man/pt_BR/Makefile  
+        doc/man/pt_BR/Makefile
         exemplos/Makefile
         lib/Makefile
-        src/modules/Makefile 
-        src/modules/parser/Makefile 
-        src/modules/interpreter/Makefile 
+        src/modules/Makefile
+        src/modules/parser/Makefile
+        src/modules/interpreter/Makefile
         src/modules/c_translator/Makefile
         src/modules/x86/Makefile
       )
@@ -167,7 +167,7 @@ Sumario:
 	antlr           : $ANTLR_BIN
 	antlr includes  : $ANTLR_INC
 	antr lib        : $ANTLR_LIB
-	
+
 	pcre includes   : $PCRE_INC
 	pcre lib        : $PCRE_LIB
 

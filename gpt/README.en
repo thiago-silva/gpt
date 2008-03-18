@@ -1,4 +1,4 @@
-G-Portugol - version: 1.0
+G-Portugol - version: 1.0.1
 =========================
 
 o About
@@ -6,12 +6,12 @@ o About
   G-Portugol is a structured programming language, based on the portuguese
   language (therefore, targeted to the portuguese-speakers crowd) and
   used mainly to teach programming. More information in the README.pt_BR file.
-  
+
   Website: http://gpt.berlios.de
 
   Mailing List: https://lists.berlios.de/mailman/listinfo/gpt-usuarios
 
-  Author: Thiago Silva <tsilva@sourcecraft.info> 
+  Author: Thiago Silva <tsilva@sourcecraft.info>
 
 o Copyright
   See the COPYRIGHT file
