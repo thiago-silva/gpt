@@ -5,7 +5,7 @@
 
 [Setup]
 AppName=G-Portugol
-AppVerName=G-Portugol versão 1.1
+AppVerName=G-Portugol versão 1.0.1
 AppPublisherURL=http://gpt.berlios.de
 AppCopyright=Copyright (C) 2003-2008 Thiago Silva
 LicenseFile=..\..\COPYING
@@ -28,13 +28,13 @@ Source: "..\..\build\src\gpt.exe"; DestDir: "{app}\bin"
 Source: "bin\nasm.exe"; DestDir: "{app}\bin"
 Source: "bin\gptshell.bat"; DestDir: "{app}\bin"
 Source: "..\..\lib\base.gpt"; DestDir: "{app}\lib"
-Source: "codigos\olamundo.gpt"; DestDir: "{app}\codigos"
+Source: "..\..\exemplos\olamundo.gpt"; DestDir: "{app}\codigos"
 Source: "..\..\README.pt_BR"; DestName: "LEIAME.txt"; DestDir: "{app}\doc"; Flags: isreadme
 Source: "copy\BSD.COPYING.txt"; DestDir: "{app}\doc"
 Source: "copy\GNU.COPYING.txt"; DestDir: "{app}\doc"
 Source: "..\..\AUTHORS"; DestName: "AUTORES.txt"; DestDir: "{app}\doc"
 Source: "..\..\THANKS"; DestName: "AGRADECIMENTOS.txt"; DestDir: "{app}\doc"
-Source: "doc\MUDANÇAS.txt"; DestDir: "{app}\doc"
+Source: "..\..\NEWS"; DestName: "MUDANÇAS.txt"; DestDir: "{app}\doc"
 Source: "..\..\doc\manual\manual.pdf"; DestName: "G-Portugol - Manual.pdf"; DestDir: "{app}\doc"
 
 
