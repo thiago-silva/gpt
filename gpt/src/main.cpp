@@ -80,7 +80,7 @@ static int init(int argc, char** argv) {
 */
 
 #ifndef DEBUG
-  while((c = getopt(argc, argv, "o:c:s:H:P:idvh")) != -1) {
+  while((c = getopt(argc, argv, "o:t:s:H:P:idvh")) != -1) {
     switch(c) {
 #else
   while((c = getopt(argc, argv, "o:t:s:H:P:idvhD")) != -1) {
@@ -134,8 +134,8 @@ static int init(int argc, char** argv) {
         break;
       case 'h':
         return CMD_SHOW_HELP;
-        case '?':
-           if((optopt == 'o') || (optopt == 't')) {
+      case '?':
+           if((optopt == 'o') || (optopt == 't') || (optopt == 's')) {
             s << PACKAGE << ": faltando argumento para opção -" << (char)optopt << endl;
            } else {
             s << PACKAGE << ": opção inválida: -" <<  char(optopt) << endl;
@@ -197,7 +197,11 @@ static void appendDefaultFiles() {
   string filename;
   string::size_type c = 0;
   string::size_type b = 0;
+#ifdef WIN32
+  while((c = inc.find(";", b)) != string::npos) {
+#else
   while((c = inc.find(":", b)) != string::npos) {
+#endif
     filename = inc.substr(b, c);
     if(filename.length()) {
       _ifilenames.push_back(filename);
