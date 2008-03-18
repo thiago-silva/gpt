@@ -42,11 +42,29 @@ int GPTDisplay::totalErrors() {
   return _totalErrors;
 }
 
+string GPTDisplay::toLatin1(const string& str) {
+	char c = 0;
+	string ret;
+	for (int i = 0; i < str.length(); i++) {
+		if (str[i] == 0xffffffc3) {
+			c = 1;
+			continue;
+		}
+		if (c) {
+			ret += str[i] | 0x40;
+		} else {
+			ret += str[i];
+		}
+		c = 0;
+	}
+	return ret;
+}
+
 string GPTDisplay::toOEM(const string& str) {
   #ifdef WIN32
     string ret;
     char buffer [str.length()];
-    CharToOem(str.c_str(), buffer);
+    CharToOem(toLatin1(str.c_str()).c_str(), buffer);
     ret = buffer;
     return ret;
   #else

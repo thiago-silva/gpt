@@ -96,7 +96,8 @@ private:
   static GPTDisplay* _self;
 
   string toOEM(const string& str);
-
+  string toLatin1(const string&);
+  
   void showError(ErrorMsg&);
   void showTip(ErrorMsg&);
 
