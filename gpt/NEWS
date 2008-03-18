@@ -1,6 +1,15 @@
 Sumário de mudanças
 -------------------
 
+18 de Março de 2008  * gpt 1.0.1
+
+  * Suporte exclusivo para arquivos fontes escritos em UTF-8.
+  * (Win) Adaptação do programa Notepad++ para ser usado com o compilador.
+  * (Win) Novo instalador para sistemas MS Windows.
+  * (Win) Adição do script gptshell.bat.
+  * Correção de bug relativo aos flags de tradução do compilador.
+  * Diversos outros bugs corrigidos.
+
 08 de Abril de 2006  * gpt 1.0
 
  * Adição de arquivo com funções básicas (base.gpt).
@@ -21,8 +30,8 @@ Sumário de mudanças
  * Correção de bugs na tradução para C (expressões envolvendo valores literais).
  * Correção de bugs na interpretação (expressões envolvendo valores reais
    calculadas incorretamente).
- * Correção de bugs na interpretação (avaliação de diversas operações)   
- * Correção de bugs na interpretação (enunciado "se" entrando em loop infinito)   
+ * Correção de bugs na interpretação (avaliação de diversas operações).
+ * Correção de bugs na interpretação (enunciado "se" entrando em loop infinito).
  * Correção de bugs na interpretação (retorno de dados em funções).
  * Correção de bugs na compilação (avaliação de subtração envolvendo valores 
    reais).
@@ -30,9 +39,9 @@ Sumário de mudanças
    envolvendo valores reais).
  * Correção de bugs na compilação (operador unário de negação).
  * Correção de bugs na compilação (retorno de valores de tipos diferentes
-   sem utilizar casting)
+   sem utilizar casting).
  * Correção de bugs na análise semântica (avaliação de retorno de valores
-   em funções)
+   em funções).
  * Correção de bugs na compilação (casting de parâmetro inteiro para
    real e real para inteiro).
  * Adicionado suporte a compilação de algoritmos usando mais de um arquivo.
@@ -54,9 +63,9 @@ Sumário de mudanças
 08 de Março de 2006  * gpt 0.9b
 
  * Implementação da geração de código executável (x86, PE/ELF,
-   NASM como backend)
- * GPT portado para MS Windows (testado com compilador MingW32)
- * Vários bugfixes (ver ChangeLog)
+   NASM como backend).
+ * GPT portado para MS Windows (testado com compilador MingW32).
+ * Vários bugfixes (ver ChangeLog).
 
 27 de Janeiro de 2006  * gpt 0.8b
 
