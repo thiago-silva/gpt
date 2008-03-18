@@ -1,0 +1,32 @@
+Utilizando o editor Notepad++ com o compilador GPT
+==================================================
+
+  O editor Notepad++ pode ser encontrado no URL:
+
+    http://notepad-plus.sourceforge.net
+  
+  Após a instalação do editor, pode-se utilizar as configurações 
+  disponibilizadas pela distribuição do G-Portugol, que inclui suporte
+  à sintaxe da linguagem e atalhos de teclado para executar o compilador
+  e os algoritmos pelo próprio editor.
+  
+  
+  Os arquivos de configuração para o Notepad++ são:
+
+    -config.xml
+    -shortcuts.xml
+    -userDefinedLangs.xml
+
+  Em geral, eles podem ser encontrados no seguinte diretório:
+
+    c:\gpt\notepad++
+
+  Para usar os recursos do G-Portugol no editor, deve-se fechar qualquer 
+  instância do Notepad++ rodando para, em seguida, copiar os arquivos 
+  da lista acima para o diretório de Dados de Aplicativos do Notepad++. 
+
+  Por exemplo, supondo-se que o usuário atual da sessão do Windows XP seja 
+  fulano, deve-se copiar os arquivos acima para:
+
+    C:\Documents and Settings\fulano\Dados de Aplicativos\Notepad++
+
