@@ -76,7 +76,7 @@ if test "x${ANTLR_BIN}" = "x"; then
   AC_MSG_ERROR(
   [
     O programa "antlr" (ou runantlr) nao foi encontrado no seu sistema (PATH).
-    GPT precisa do ANTLR (versao 2.7.5) instalado.
+    GPT precisa do ANTLR (versao 2.7.x) instalado.
     Baixe em: http://www.antlr.org
   ])
 fi
@@ -86,7 +86,7 @@ if test "x${ANTLR_CFG}" = "x"; then
   AC_MSG_ERROR(
   [
     O programa "antlr-config" nao foi encontrado no seu sistema (PATH).
-    GPT precisa do ANTLR (versao 2.7.5) instalado.
+    GPT precisa do ANTLR (versao 2.7.x) instalado.
     Baixe em: http://www.antlr.org
   ])
 fi
