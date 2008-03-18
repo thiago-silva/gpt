@@ -1,3 +1,7 @@
+#Nota windows:
+#aclocal do cygwin fica feliz somente
+#tiver quebra de linha no format UNIX
+
 AC_PREREQ(2.60)
 
 AC_INIT(gpt, 1.0)
