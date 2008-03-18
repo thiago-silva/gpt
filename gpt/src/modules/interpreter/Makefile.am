@@ -7,7 +7,12 @@ noinst_LTLIBRARIES = libinterpreter.la
 BUILT_SOURCES = InterpreterWalker.cpp
 
 nodist_libinterpreter_la_SOURCES = $(BUILT_SOURCES)
-libinterpreter_la_SOURCES = InterpreterDBG.cpp InterpreterEval.cpp
+
+libinterpreter_la_SOURCES = InterpreterEval.cpp
+
+if BUILD_DEBUGGER
+libinterpreter_la_SOURCES += InterpreterDBG.cpp 
+endif
 
 noinst_HEADERS = InterpreterDBG.hpp InterpreterEval.hpp
 

@@ -60,7 +60,7 @@ else
    SO_WINDOWS="no"
 fi
 
-AM_CONDITIONAL(SO_WINDOWS, test x$SO_WINDOWS = xyes)
+AM_CONDITIONAL(BUILD_DEBUGGER, test x$SO_WINDOWS = xno)
 
 dnl------------------------------
 dnl Checks for ANTLR
@@ -147,7 +147,8 @@ dnl------------------------------
 AC_OUTPUT(Makefile        
         src/Makefile 
         doc/Makefile 
-        doc/man/Makefile 
+        doc/man/Makefile
+        doc/man/pt_BR/Makefile  
         exemplos/Makefile
         lib/Makefile
         src/modules/Makefile 

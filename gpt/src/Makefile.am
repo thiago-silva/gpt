@@ -10,10 +10,10 @@ INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/src -I$(top_srcdir)/src/modules \
 	
 SUBDIRS = modules
 
-if SO_WINDOWS
-gpt_LDADD = $(top_builddir)/src/modules/libgportugol.la $(ANTLR_LIB) $(PCRE_LIB) -lwsock32
-else
-gpt_LDADD = $(top_builddir)/src/modules/libgportugol.la $(ANTLR_LIB) $(PCRE_LIB)
+gpt_LDADD = $(top_builddir)/src/modules/libgportugol.la $(ANTLR_LIB)
+
+if BUILD_DEBUGGER
+gpt_LDADD += $(PCRE_LIB)
 endif
 
 AM_LDFLAGS = -static

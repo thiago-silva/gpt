@@ -7,18 +7,20 @@ noinst_LTLIBRARIES = libparser.la
 BUILT_SOURCES = PortugolLexer.cpp  PortugolParser.cpp SemanticWalker.cpp 
 
 nodist_libparser_la_SOURCES = $(BUILT_SOURCES)
+
+headers = BasePortugolParser.hpp SemanticEval.hpp MismatchedUnicodeCharException.hpp \
+          UnicodeCharBuffer.hpp UnicodeCharScanner.hpp
+
 libparser_la_SOURCES = BasePortugolParser.cpp SemanticEval.cpp MismatchedUnicodeCharException.cpp
 
 if INSTALL_DEVEL
 nodist_pkginclude_HEADERS = PortugolParserTokenTypes.hpp PortugolLexer.hpp \
                             PortugolParser.hpp PortugolTokenTypes.hpp \
-										        SemanticWalker.hpp SemanticWalkerTokenTypes.hpp
+								            SemanticWalker.hpp SemanticWalkerTokenTypes.hpp
 
-pkginclude_HEADERS = BasePortugolParser.hpp SemanticEval.hpp MismatchedUnicodeCharException.hpp \
-                     UnicodeCharBuffer.hpp UnicodeCharScanner.hpp
+pkginclude_HEADERS = $(headers)
 else
-noinst_HEADERS = BasePortugolParser.hpp SemanticEval.hpp MismatchedUnicodeCharException.hpp \
-                     UnicodeCharBuffer.hpp UnicodeCharScanner.hpp
+noinst_HEADERS = $(headers)
 endif
 
 lexer_g       = lexer.g
