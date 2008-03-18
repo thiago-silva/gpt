@@ -1,5 +1,3 @@
-# INCLUDES = 
-# METASOURCES = AUTO
+SUBDIRS = pt_BR
 
-man_MANS = gpt.1
-EXTRA_DIST = $(man_MANS)
+dist_man_MANS = gpt.1

@@ -13,8 +13,8 @@
 .\"    may be used to endorse or promote products derived from this software
 .\"    without specific prior written permission.
 .\"
-.\" THIS SOFTWARE IS PROVIDED BY THIAGO SILVA AND CONTRIBUTORS
-.\" ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+.\" THIS SOFTWARE IS PROVIDED BY THIAGO SILVA AND CONTRIBUTORS 
+.\" ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
 .\" THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
 .\" ARE DISCLAIMED.  IN NO EVENT SHALL JULIE HAUGH OR CONTRIBUTORS BE LIABLE
 .\" FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -28,74 +28,78 @@
 .\"
 .TH GPT 1
 .SH NOME
-gpt \- compiler, interpreter and translator for the G-Portugol programming language
+gpt \- compilador, interpretador e tradutor da linguagem G-Portugol
 
 .SH SINOPSE
-  gpt
-[
+  gpt 
+[ 
 .BR \-vhid
 ] [
-.BI \-ots
-output_file
-] file1 file2 ...
+.BI \-ots  
+arq_saida 
+] arquivo1 arquivo2 ...
 
-.SH DESCRIPTION
+.SH DESCRIÇÃO
 .I gpt
-is a simple compiler for the G-Porutol Language. It is possible to have
-a list of files to be included in the compilation setting the GPT_INCLUDE
-environment variable, wich should have a list of file paths separated with ":".
+é um compilador simples para a linguagem G-portugol. Além de criar executáveis,
+pode interpretar algoritmos e traduzí-los para a linguagem C. Um algoritmo pode 
+ser formado por vários arquivos, cada um podendo conter várias funções, por 
+exemplo. Os arquivos são passados na linha de comando, sendo que o primeiro 
+arquivo deve ser aquele que contém o bloco principal e a declaração do algoritmo. 
+É possível, também, ter a lista de arquivos adicionadas automaticamente 
+utilizando a variável de ambiente GPT_INCLUDE, que deve conter o caminho de 
+cada arquivo separado por ":". 
 .SH OPTIONS
 .TP
 .BI \-v
-Shows version information and exits.
+Exibe informações de versão e termina execução.
 .br
 .ns
 .TP
 .BI \-h
-Shows a summary of options and exits.
+Exibe sumário de opções termina execução.
 .br
 .ns
 .TP
 .TP
 .BI \-i
-Execute
-.Iinterpreting
-the source code.
+Executa o algoritmo em modo 
+.I interpretação.
 .br
 .ns
 .TP
 .BI \-d
-Shows tips in the error report.
+Mostra dicas no relatório de erros.
 .br
 .ns
 .TP
-.BI \-o " output_file"
-Compile the source code and save the resulting binary with the name
-.I output_file.
+.BI \-o " arq_saída" 
+Compila o algoritmo e salva o arquivo executável com o nome
+.I arq_saída.
 .br
 .ns
 .TP
-.BI \-t " output_file"
-Translates the source code to the C programming language and saves the
-resulting file as
-.I output_file.
+.BI \-t " arq_saída"
+Traduz o algoritmo para a linguagem C e salva o arquivo com o código resultante
+como
+.I arq_saída.
 .br
 .ns
 .TP
-.BI \-s " output_file"
-Compiles the source code to assembly source. Saves the resulting code as
-.I output_file.
+.BI \-s " arq_saída"
+Compila o algoritmo mas não cria código executável. Salva o arquivo com código em assembly como
+.I arq_saída.
 .br
 .ns
-.SH SEE ALSO
+.SH VEJA TAMBÉM
 .BR nasm (1)
 
-.SH ADDITIONAL INFORMATION
+.SH INFORMAÇÕES ADICIONAIS
 
-For further information, visit the website:
+Para maiores informações, visite o website em: 
 .br
 .BI http://gpt.berlios.de
 
-.SH AUTHOR
+.SH AUTOR
 Thiago Silva <tsilva@sourcecraft.info>
 
