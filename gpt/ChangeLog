@@ -1,0 +1,1456 @@
+2008-03-18
+
+	* /trunk/gpt/configure.ac:
+	* /trunk/gpt/README.en:
+	* /trunk/gpt/doc/manual/manual.tex:
+	* /trunk/gpt/README.pt_BR:
+
+	-Incrementando valor da versao
+
+	* /trunk/gpt/packages/win_setup/doc/MUDANÇAS.txt:
+
+	-latin1 -> utf8
+
+	* /trunk/gpt/packages/win_setup/notepad++/LEIAME.txt:
+
+	-Pequeno passo a passo para utilizar o notepad++
+
+	* /trunk/gpt/packages/gpt_1.0.1_i386.deb:
+
+	-Remocao do binario .deb (deve ser gerado)
+
+	* /trunk/gpt/packages/win_setup/bin:
+	* /trunk/gpt/packages/win_setup/copy:
+	* /trunk/gpt/packages/win_setup/notepad++/userDefineLang.xml:
+	* /trunk/gpt/packages/win_setup/notepad++/shortcuts.xml:
+	* /trunk/gpt/packages/win_setup/notepad++:
+	* /trunk/gpt/packages/win_setup/notepad++/config.xml:
+	* /trunk/gpt/packages/win_setup/doc/MUDANÇAS.txt:
+	* /trunk/gpt/packages/win_setup/bin/nasm.exe:
+	* /trunk/gpt/packages/win_setup/codigos:
+	* /trunk/gpt/packages/win_setup/copy/GNU.COPYING.txt:
+	* /trunk/gpt/packages/win_setup/modpath.iss:
+	* /trunk/gpt/packages/win_setup/notepad++/LEIAME.txt:
+	* /trunk/gpt/packages/win_setup/setup.iss:
+	* /trunk/gpt/packages/win_setup/codigos/olamundo.gpt:
+	* /trunk/gpt/packages/win_setup/bin/gptshell.bat:
+	* /trunk/gpt/packages/win_setup:
+	* /trunk/gpt/packages/win_setup/doc:
+	* /trunk/gpt/packages/win_setup/copy/BSD.COPYING.txt:
+
+	-Adicionando arquivos para criacao do instalador do windows
+
+	* /trunk/gpt/doc/man/gpt.1:
+
+	-Correcao de formatacao
+
+	* /trunk/gpt/doc/man/gpt.1:
+
+	-Correcao de ingles
+
+	* /trunk/gpt/configure.ac:
+	* /trunk/gpt/src/modules/parser/Makefile.am:
+	* /trunk/gpt/src/modules/Makefile.am:
+	* /trunk/gpt/Makefile.am:
+	* /trunk/gpt/src/modules/interpreter/Makefile.am:
+	* /trunk/gpt/src/Makefile.am:
+
+	-Limpando configure.ac e Makefile.am's
+	-Compilacao condicional do codigo do depurador em Windows
+
+	* /trunk/gpt/doc/man/pt_BR:
+	* /trunk/gpt/doc/man/gpt.1:
+	* /trunk/gpt/doc/man/Makefile.am:
+	* /trunk/gpt/doc/man/gpt.en.1:
+	* /trunk/gpt/doc/man/pt_BR/Makefile.am:
+	* /trunk/gpt/doc/man/pt_BR/gpt.1:
+
+	-Organizando mans
+
+	* /trunk/gpt/THANKS:
+
+	-Adicionando THANKS
+
+	* /trunk/gpt/doc/man/gpt.en.1:
+
+	-Resquicios em portugues....
+
+	* /trunk/gpt/doc/man/gpt.1:
+	* /trunk/gpt/doc/man/gpt.en.1:
+
+	-Atualizando email
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.cpp:
+
+	-Desabilitando codigo de depuracao no Windows (nao funcionava
+	mesmo...)
+
+	* /trunk/gpt/src/modules/parser/accent.sh:
+
+	-sed no MingW nao suporta -i
+
+	* /trunk/gpt/src/modules/GPTDisplay.hpp:
+	* /trunk/gpt/src/modules/GPTDisplay.cpp:
+
+	Fix:
+	-Exibicao das mensagens UTF-8 corretamente, de acordo com o
+	OEM
+
+	* /trunk/gpt/src/main.cpp:
+
+	Fix:
+	-Nao ha opcao -c
+	-Opcao -t nao estava na lista do getopt
+	-GPT_INCLUDE processado corretamente no Windows
+
+	* /trunk/gpt/AUTHORS:
+	* /trunk/gpt/README.en:
+	* /trunk/gpt/README.pt_BR:
+	* /trunk/gpt/src/GPT.cpp:
+
+	-Atualizando email
+
+2008-03-17
+
+	* /trunk/gpt/src/GPT.cpp:
+
+	Fix:
+	-Pequeno fix em mensagem de erro
+
+2008-03-13
+
+	* /trunk/gpt/src/modules/x86/asm_lib.h:
+
+	-Fix label sem ':'
+
+	* /trunk/gpt/doc/man/gpt.en.1:
+
+	-Adicionando man em ingles
+
+2008-03-12
+
+	* /trunk/gpt/exemplos/olamundo.gpt:
+
+	-Aviao?? que diabos eh isso?
+
+2008-03-11
+
+	* /trunk/gpt/configure.ac:
+	* /trunk/gpt/lib/Makefile.am:
+
+	-Remocao da instalacao ad-hoc
+	-(Re)Adicao do config.h
+
+	* /trunk/gpt/Makefile.cvs:
+	* /trunk/gpt/config.h.in:
+
+	-Ok...tudo limpo
+
+	* /trunk/gpt/depcomp:
+	* /trunk/gpt/missing:
+	* /trunk/gpt/config.guess:
+	* /trunk/gpt/config.sub:
+	* /trunk/gpt/ltmain.sh:
+	* /trunk/gpt/install-sh:
+	* /trunk/gpt/mkinstalldirs:
+
+	-Removendo lixo
+
+	* /trunk/gpt/configure.ac:
+
+	-Copiando do gpt2
+
+	* /trunk/gpt/configure.ac:
+	* /trunk/gpt/configure.in:
+
+	-Atualizando nome
+
+2008-03-09
+
+	* /trunk/gpt/AUTHORS:
+
+	-Correcao do email
+
+2007-12-27
+
+	* /trunk/gpt/packages/deb/usr/local/bin:
+	* /trunk/gpt/packages/gpt_1.0.1_i386.deb:
+	* /trunk/gpt/packages/deb:
+	* /trunk/gpt/packages/deb/DEBIAN:
+	* /trunk/gpt/packages/deb/DEBIAN/control:
+	* /trunk/gpt/packages/deb/usr/local:
+	* /trunk/gpt/packages/deb/usr/local/lib/gpt:
+	* /trunk/gpt/packages/deb/usr/local/bin/gpt:
+	* /trunk/gpt/packages:
+	* /trunk/gpt/packages/deb/usr/local/lib/gpt/base.gpt:
+	* /trunk/gpt/packages/deb/usr:
+	* /trunk/gpt/packages/deb/usr/local/lib:
+
+	-Adicao inicial do pacote .deb
+
+	* /trunk/gpt/exemplos/olamundo.gpt:
+
+	-Adicao inicial do pacote .deb
+
+2007-10-30
+
+	* /trunk/gpt/HACKING:
+
+	-Regra para utilizar ASCII nas mensagens de commit
+	-Adicao de secao sobre testes automatizados
+
+2007-10-17
+
+	* /trunk/gpt/HACKING:
+
+	-Remoção do texto que citava o Subversion na seção
+	'Instalando dependencias' -Adição de instrucao de como
+	instalar o Subversion, na seção 'Baixando a última...'
+	-Correção de 'pro' por 'por', na seção 'Realizando
+	commits'
+
+2007-10-15
+
+	* /trunk/gpt/src/modules/parser/Makefile.am:
+	* /trunk/gpt/Makefile.am:
+
+	-Adicionado classes para analse unicode
+	-script accent.sh registrado
+
+	* /trunk/gpt/src/modules/parser/accent.sh:
+
+	-Adicionado script para traduzir strings erroneamente geradas
+	pelo antlr
+
+2007-10-08
+
+	* /trunk/gpt/doc/man/gpt.1:
+
+	-manpage convertida para utf-8
+
+2007-09-22
+
+	* /trunk/gpt/stuff/highlight.gpt:
+	* /trunk/gpt/exemplos/highlight.gpt:
+
+	-highlight.gpt nao eh um exemplo
+
+2007-09-20
+
+	* /trunk/gpt/lib/base.gpt:
+	* /trunk/gpt/lib/Makefile.am:
+
+	-Faltou converter estes para UTF-8
+
+2007-09-19
+
+	* /trunk/gpt/exemplos/olamundo.gpt:
+	* /trunk/gpt/HACKING:
+	* /trunk/gpt/configure.in:
+	* /trunk/gpt/exemplos/highlight.gpt:
+	* /trunk/gpt/src/Makefile.am:
+
+	-Adicionado HACKING
+	-exemplos convertidos para UTF-8
+	-Limpeza e melhorias no arquivo configure.in para encontrar o
+	antlr correto no sistema
+
+2007-09-16
+
+	* /trunk/gpt/INSTALL:
+	* /trunk/gpt/README:
+
+	-Conversao para utf-8 e adicao de instrucoes para codigo
+	baixado pelo repositorio
+
+2007-09-15
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterDBG.cpp:
+	* /trunk/gpt/src/modules/parser/Makefile.am:
+	* /trunk/gpt/src/modules/parser/parser.g:
+	* /trunk/gpt/src/modules/parser/MismatchedUnicodeCharException.cpp:
+	* /trunk/gpt/src/modules/parser/UnicodeCharScanner.hpp:
+	* /trunk/gpt/src/modules/parser/MismatchedUnicodeCharException.hpp:
+	* /trunk/gpt/src/modules/parser/semantic.g:
+	* /trunk/gpt/src/modules/Symbol.cpp:
+	* /trunk/gpt/src/modules/parser/SemanticEval.cpp:
+	* /trunk/gpt/src/modules/c_translator/pt2c.g:
+	* /trunk/gpt/src/modules/interpreter/interpreter.g:
+	* /trunk/gpt/src/modules/Symbol.hpp:
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/src/main.cpp:
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.cpp:
+	* /trunk/gpt/src/modules/parser/BasePortugolParser.cpp:
+	* /trunk/gpt/src/modules/parser/lexer.g:
+	* /trunk/gpt/src/modules/parser/UnicodeCharBuffer.hpp:
+	* /trunk/gpt/src/GPT.cpp:
+
+	-Adicionado Ccodigo do exemplo do antlr para tratar unicode
+	-Todos os arquivos fontes foram transformados de latin-1 para
+	utf-8 com o iconv
+
+2007-06-24
+
+	* /trunk/gpt/stuff/iso2utf.sh:
+
+	-Script para converter sources de iso88591 para utf8
+
+2007-04-27
+
+	* /trunk/gpt/src/modules/SymbolTable.hpp:
+
+	-Fixed compilation error
+
+2006-04-08
+
+	* /trunk/gpt/src/main.cpp:
+
+	-fix compilacao de algoritmo no windows criando arquivo com
+	extensao .exe
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterDBG.cpp:
+
+	-fix: compilacao no windows
+
+	* /trunk/gpt/src/modules/parser/semantic.g:
+	* /trunk/gpt/src/modules/parser/SemanticEval.cpp:
+	* /trunk/gpt/src/modules/parser/parser.g:
+
+	Fix:
+	-fix temporario para mensagens de erro semantico faltando
+	informacoes de arquivo / linha
+
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/src/modules/x86/asm_win32.h:
+	* /trunk/gpt/src/modules/x86/X86.hpp:
+	* /trunk/gpt/src/modules/x86/asm_elf.h:
+	* /trunk/gpt/src/modules/x86/asm_lib.h:
+
+	Fix:
+	-Todas as macros definidas devem ser undef ao final da
+	funcao. Ao utilizar variavel global e local com mesmo nome,
+	no escopo local o label eh uma macro. Portanto, qualquer
+	codigo fisicamente posterior (outras funcoes) utilizarah a
+	macro ao inves da variavel global, ocasionando segfault.
+
+	* /trunk/gpt/src/modules/x86/x86.g:
+	* /trunk/gpt/src/GPT.cpp:
+
+	Fix:
+	-Usando near conditional jumps para nao precisar do -O1 ao
+	executar o nasm
+
+	* /trunk/gpt/src/main.cpp:
+	* /trunk/gpt/src/modules/parser/lexer.g:
+	* /trunk/gpt/src/modules/GPTDisplay.cpp:
+	* /trunk/gpt/src/GPT.cpp:
+
+	-fix compilacao de multiplos arquivos (denovo)
+
+	* /trunk/gpt/src/modules/c_translator/pt2c.g:
+
+	Fix:
+	-passagem de matrizes de literais por parametro
+
+	* /trunk/gpt/src/modules/x86/asm_elf.h:
+
+	-compilacao do tester.gpt dando segfault. Investigando, a
+	montagem do nasm -felf gerou program header diferente.
+	Agora, me parece que o program header no codigo gera o
+	equivalente ao usar -felf.
+	Fix:
+	-cabecalho incorreto
+
+2006-04-07
+
+	* /trunk/gpt/src/modules/Symbol.hpp:
+
+	Fix:
+	-recuperacao de tipo de parametros
+
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/src/modules/x86/X86.hpp:
+
+	-Ordem dos parametros estava incorreta (ao contrario)
+	-caractere deve ser convertido para inteiro
+
+	* /trunk/gpt/src/modules/interpreter/interpreter.g:
+
+	Fix:
+	-loop infinito em enunciado "se val então fim-se"
+
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+
+	Fix:
+	-casting em operacoes de comparacao
+
+	* /trunk/gpt/src/modules/c_translator/pt2c.g:
+
+	Fix:
+	-expressao "<>" usando termos literais
+
+	* /trunk/gpt/src/modules/c_translator/pt2c.g:
+
+	Fix:
+	-falha no codigo de expressoes literais usando operador <>
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.cpp:
+
+	Fix:
+	-avaliacao de expressoes AND
+
+	* /trunk/gpt/lib:
+	* /trunk/gpt/configure.in:
+	* /trunk/gpt/lib/base.gpt:
+	* /trunk/gpt/Makefile.am:
+	* /trunk/gpt/lib/Makefile.am:
+
+	-Adicionado biblioteca basica
+
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+
+	Fix:
+	-operador de negacao para tipo real
+	-cast de real para inteiro estava arredondando (deve truncar)
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.cpp:
+
+	-fix cast incorreto
+
+	* /trunk/gpt/src/modules/x86/x86.g:
+
+	Fix:
+	-retorno de valores sem utilizar cast
+
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+
+	Fix:
+	-codigo de subtração incorreto envolvendo reais
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.hpp:
+	* /trunk/gpt/src/modules/interpreter/interpreter.g:
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.cpp:
+
+	Fix:
+	-retorno de valores sem cast
+
+	* /trunk/gpt/src/modules/parser/SemanticEval.cpp:
+
+	Fix:
+	-checagem incorreta de retorno de valor com tipo da funcao
+
+	* /trunk/gpt/src/modules/x86/x86.g:
+
+	Fix:
+	-casting de reais/inteiros na passagem de parametros
+
+	* /trunk/gpt/src/modules/interpreter/interpreter.g:
+
+	Fix:
+	-retorno de valores
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.cpp:
+
+	Fix:
+	-avaliacao de diversas expressoes
+
+	* /trunk/gpt/src/modules/c_translator/pt2c.g:
+
+	Fix:
+	-Precedencia de operadores em expressoes
+
+	* /trunk/gpt/src/modules/parser/parser.g:
+
+	Fix:
+	-Expressoes faltando parentesis causando segfault
+
+2006-04-06
+
+	* /trunk/gpt/src/modules/c_translator/pt2c.g:
+
+	Fix:
+	-expressoes de comparacao de valores literais
+
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/src/modules/x86/x86.g:
+	* /trunk/gpt/src/modules/x86/X86.hpp:
+
+	Fix:
+	-avaliacoes de expressoes de comparacao usando termos
+	literais devem usar strlen e strcmp
+
+	* /trunk/gpt/src/modules/parser/SemanticEval.cpp:
+	* /trunk/gpt/src/modules/Symbol.hpp:
+	* /trunk/gpt/src/modules/parser/SemanticEval.hpp:
+
+	Fix:
+	-Avaliacao de parametros fora de ordem.
+
+	* /trunk/gpt/src/modules/c_translator/pt2c.g:
+
+	-remocao do sufixo "__". Adicao de prefixo "_" para
+	identificadores do usuario.
+
+	* /trunk/gpt/doc/man/gpt.1:
+
+	-atualizacao do manual
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.cpp:
+	* /trunk/gpt/gpt.kno:
+
+	-fix: ao executar step-out no scopo global, comportamento
+	deve ser o mesmo que continuar execucao
+
+	* /trunk/gpt/src/modules/parser/parser.g:
+
+	-utlizando apenas mensagens "conjunto/matriz" ao inves de
+	"vetor". Nao sei se esse eh o melhor esquema para se referir
+	a vetores/matrizes/conjuntos, mas pelo menos as as mensagens
+	estao uniformizadas agora
+
+	* /trunk/gpt/src/modules/parser/BasePortugolParser.cpp:
+
+	-utlizando apenas mensagens "conjunto/matriz" ao inves de
+	"vetor". Nao sei se esse eh o melhor esquema para se referir
+	a vetores/matrizes/conjuntos, mas pelo menos as as mensagens
+	estao uniformizadas agora
+
+	* /trunk/gpt/src/modules/parser/parser.g:
+
+	-fix: relatorio de erros nao estava exibindo o nome do
+	arquivo para o erro "leia() + 1"
+
+	* /trunk/gpt/src/modules/parser/semantic.g:
+	* /trunk/gpt/src/modules/parser/SemanticEval.cpp:
+	* /trunk/gpt/src/modules/parser/SemanticEval.hpp:
+
+	-revisao das mensagens de erro
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterDBG.cpp:
+	* /trunk/gpt/src/modules/interpreter/InterpreterDBG.hpp:
+	* /trunk/gpt/src/modules/interpreter/interpreter.g:
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.cpp:
+
+	-fix: noh nao tem filename valido. Pegando atributo do seu
+	first child.
+
+	* /trunk/gpt/src/main.cpp:
+	* /trunk/gpt/src/GPT.cpp:
+
+	-usando opcao '-t' para pt2c
+
+	* /trunk/gpt/src/modules/interpreter/interpreter.g:
+
+	-enviando informacoes do arquivo atual para o objeto
+	interpreter.
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.hpp:
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.cpp:
+
+	-Adicionado "file" nas nformacoes da pilha.
+	Fix:
+	-fluxo de dados com o debugger. Dados sempre devem ser
+	checados quando houver oportunidade (ex. setar/habilitar um
+	breakpoint enquanto a aplicacao esta bloquada na funcao
+	"leia").
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterDBG.cpp:
+	* /trunk/gpt/src/modules/interpreter/InterpreterDBG.hpp:
+
+	-melhoria no recebimento de dados e interface
+	-Adicionado "file" nas nformacoes da pilha
+
+	* /trunk/gpt/src/modules/GPTDisplay.hpp:
+	* /trunk/gpt/src/modules/GPTDisplay.cpp:
+	* /trunk/gpt/src/GPT.cpp:
+
+	-fix ordem de erros do relatorio de erros
+
+	* /trunk/gpt/src/modules/PortugolAST.cpp:
+	* /trunk/gpt/src/modules/parser/semantic.g:
+	* /trunk/gpt/src/modules/PortugolAST.hpp:
+
+	-adicionado informacoes sobre o arquivo fonte onde o noh da
+	AST se encontra, para relatorio de erros
+
+	* /trunk/gpt/src/modules/parser/lexer.g:
+
+	-fix segfault em uponEOF
+
+	* /trunk/gpt/src/main.cpp:
+
+	-fix segfaul quando variavel de ambiente nao existe
+
+2006-04-05
+
+	* /trunk/gpt/src/modules/GPTDisplay.hpp:
+	* /trunk/gpt/src/GPT.hpp:
+	* /trunk/gpt/src/modules/parser/lexer.g:
+	* /trunk/gpt/src/modules/GPTDisplay.cpp:
+	* /trunk/gpt/src/GPT.cpp:
+
+	-Adicionado controle de nome de arquivos para error reporting
+
+	* /trunk/gpt/src/GPT.hpp:
+	* /trunk/gpt/src/main.cpp:
+	* /trunk/gpt/src/GPT.cpp:
+
+	-se usuario nao escolher nome do arquivo pra compilacao, eh
+	usado o nome do algoritmo
+
+	* /trunk/gpt/src/GPT.hpp:
+	* /trunk/gpt/src/main.cpp:
+	* /trunk/gpt/src/GPT.cpp:
+
+	-main.cpp:
+	-opcao "-t" agora eh "-c"
+	-nome do arquivo de output eh correspondente ao nome do
+	algoritmo (+ extensao, se for o caso: "asm", "c", "exe",
+	etc)
+	-remocao da opcao de escolher o nome do arquivo alvo
+	-varios algoritmo podem ser compilados para formar um
+	programa, desde que o primeiro arquivo contenha o bloco
+	principal
+	-arquivos contendo funcoes podem ser incluidos por default
+	setando a variavel de ambiente GPT_INCLUDE
+
+	* /trunk/gpt/src/modules/parser/lexer.g:
+
+	-varios algoritmo podem ser compilados para formar um
+	programa, desde que o primeiro arquivo contenha o bloco
+	principal
+
+	* /trunk/gpt/stuff/svn2cl.php:
+	* /trunk/gpt/configure.in:
+	* /trunk/gpt/stuff:
+	* /trunk/gpt/NEWS:
+	* /trunk/gpt/README:
+	* /trunk/gpt/doc/manual/manual.tex:
+	* /trunk/gpt/doc/manual/gpt.kilepr:
+	* /trunk/gpt/gpt.kdevelop:
+
+	-script para criar ChangeLog
+
+	* /trunk/gpt/src/modules/parser/parser.g:
+
+	-fix: expressoes estavam sendo avaliadas de forma incorreta.
+	(ex: 20 * 10 / 100 avaliava como 20 * (10/100))
+
+	* /trunk/gpt/src/modules/parser/lexer.g:
+
+	-fix de espaco em branco fora da tabela latin1
+
+	* /trunk/gpt/src/GPT.hpp:
+	* /trunk/gpt/src/main.cpp:
+	* /trunk/gpt/src/GPT.cpp:
+
+	-Opcao para depuracao
+
+2006-03-31
+
+	* /trunk/gpt/src/modules/x86/x86.g:
+
+	Fix:
+	-nome da funcao "leia_inteiro" prefixado com "_".
+
+2006-03-08
+
+	* /trunk/gpt/INSTALL:
+	* /trunk/gpt/configure.in:
+	* /trunk/gpt/NEWS:
+	* /trunk/gpt/README:
+	* /trunk/gpt/gpt.kdevelop:
+
+	-revisao para a nova versao
+
+	* /trunk/gpt/doc/manual/manual.tex:
+
+	-revisao para a nova versao
+	-adicao de texto sobre compilacao
+
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+
+	-fix: nome de funcoes
+	-fix: parametros de funcoes
+
+	* /trunk/gpt/src/modules/x86/x86.g:
+
+	-fix: nome de funcoes
+
+2006-03-07
+
+	* /trunk/gpt/src/modules/c_translator/pt2c.g:
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/src/modules/x86/x86.g:
+
+	-fix: avaliacao de expressoes literais vazias
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterDBG.cpp:
+	* /trunk/gpt/src/modules/Display.cpp:
+	* /trunk/gpt/src/modules/GPTDisplay.hpp:
+	* /trunk/gpt/src/modules/parser/SemanticEval.cpp:
+	* /trunk/gpt/src/modules/Makefile.am:
+	* /trunk/gpt/src/modules/Display.hpp:
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/src/main.cpp:
+	* /trunk/gpt/src/modules/parser/parser.g:
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.cpp:
+	* /trunk/gpt/src/modules/parser/BasePortugolParser.cpp:
+	* /trunk/gpt/src/modules/parser/lexer.g:
+	* /trunk/gpt/src/modules/GPTDisplay.cpp:
+	* /trunk/gpt/src/GPT.cpp:
+
+	-rename Display -> GPTDisplay
+
+	* /trunk/gpt/src/modules/Display.cpp:
+	* /trunk/gpt/src/modules/Display.hpp:
+
+	-rename Display -> GPTDisplay
+
+	* /trunk/gpt/src/modules/Display.cpp:
+	* /trunk/gpt/src/GPT.hpp:
+	* /trunk/gpt/src/modules/Display.hpp:
+	* /trunk/gpt/src/GPT.cpp:
+
+	-controle de limite de erros
+
+	* /trunk/gpt/src/modules/c_translator/pt2c.g:
+
+	-fix stm_para (ultima valor de lvalue deve ser = expr "ate")
+
+	* /trunk/gpt/src/modules/interpreter/interpreter.g:
+
+	-fix: segfault quando nao ha "passo" no algoritmo
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.cpp:
+
+	-fix: passagem de matriz como parametro para funcao
+	-fix: impressao de numeros reais com precisao 2
+
+2006-03-05
+
+	* /trunk/gpt/src/modules/c_translator/Makefile.am:
+	* /trunk/gpt/src/modules/parser/Makefile.am:
+	* /trunk/gpt/src/modules/Makefile.am:
+	* /trunk/gpt/src/modules/interpreter/Makefile.am:
+	* /trunk/gpt/src/modules/x86/Makefile.am:
+
+	-revisao e fix dos Makefiles (dependencies, dist, etc)
+
+	* /trunk/gpt/src/modules/x86/asm_tmpl.h:
+	* /trunk/gpt/src/modules/x86/template.asm:
+
+	-reestruturacao dos templates asm
+
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+
+	-reestruturacao dos templates asm
+
+	* /trunk/gpt/src/modules/x86/asm_prologue.h:
+	* /trunk/gpt/src/modules/x86/asm_elf.h:
+	* /trunk/gpt/src/modules/x86/asm_lib.h:
+
+	-reestruturacao dos templates asm
+
+2006-03-04
+
+	* /trunk/gpt/src/modules/x86/asm_win32.h:
+
+	-remocao dos underlines em macros,definitions,ids,etc
+
+	* /trunk/gpt/src/modules/x86/asm_tmpl.h:
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/src/modules/x86/x86.g:
+	* /trunk/gpt/src/modules/x86/X86.hpp:
+
+	-ID's de usuario com prefixo "_". Funcoes/macros/ids
+	internos, sem prefixo
+
+	* /trunk/gpt/src/modules/x86/asm_tmpl.h:
+	* /trunk/gpt/src/modules/x86/asm_win32.h:
+	* /trunk/gpt/src/modules/x86/x86.g:
+
+	-fix: imprima behavior [imprima("res: ",f()).] que imprime
+	argumento por argumento, sem avaliar as expressoes (f) antes
+	de tudo.
+
+	* /trunk/gpt/src/GPT.cpp:
+
+	-fix: erro de portugues
+
+	* /trunk/gpt/src/modules/x86/x86.g:
+
+	-fix retorno da producao fcall
+
+	* /trunk/gpt/src/modules/x86/asm_tmpl.h:
+	* /trunk/gpt/src/modules/x86/asm_win32.h:
+
+	-fix/reimpl atof
+	-fix atoi
+
+2006-03-03
+
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/src/modules/x86/asm_win32.h:
+
+	-implementacao da compilacao win32
+
+	* /trunk/gpt/test/asm/win32/teste.asm:
+	* /trunk/gpt/test/asm/win32/header.asm:
+	* /trunk/gpt/test/asm/win32/nagoa+.inc:
+	* /trunk/gpt/test/asm/win32:
+
+	-arquivos de teste win32 asm
+
+2006-03-02
+
+	* /trunk/gpt/src/modules/x86/x86.g:
+
+	-para lvalue recebe valor do "ate" no fim da estrutura
+
+	* /trunk/gpt/src/GPT.hpp:
+	* /trunk/gpt/src/main.cpp:
+	* /trunk/gpt/src/Makefile.am:
+	* /trunk/gpt/src/GPT.cpp:
+
+	-refactor para classe GPT.
+	-implementacao da compilacao com nasm.
+	-implementacao do switch -s (salvar .asm source)
+	-etc...
+
+	* /trunk/gpt/src/modules/x86/x86.g:
+
+	-fix para
+
+	* /trunk/gpt/src/modules/x86/asm_tmpl.h:
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/src/modules/x86/x86.g:
+	* /trunk/gpt/src/modules/x86/X86.hpp:
+
+	-revisao de local/param e matrizes (passagem por valor, etc)
+	-fix __matrix_cpy
+
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/src/modules/x86/x86.g:
+
+	-revisao do acesso a variaveis (uniformizacao).
+	-fix: estrutura para
+
+	* /trunk/gpt/src/modules/x86/asm_tmpl.h:
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/src/modules/x86/x86.g:
+	* /trunk/gpt/src/modules/x86/X86.hpp:
+
+	-implementacao de funcoes
+	-implementacao do "retorne"
+	-implementacao de variaveis locais e parametros
+	-fix: fcall (stack). funcoes de retorno nulo ou que nao tem o
+	valor de retorno aproveitado
+
+2006-03-01
+
+	* /trunk/gpt/src/modules/parser/semantic.g:
+
+	-fix: "shadow globals" [funcao f(x:inteiro) -> erro: x
+	redeclarado em @global)]
+
+	* /trunk/gpt/src/modules/x86/asm_tmpl.h:
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/src/modules/x86/x86.g:
+	* /trunk/gpt/src/modules/x86/X86.hpp:
+
+	-SIZEOF_DWORD = 4
+	-conversao de "\n", "\r" e "\0" para strings e caracteres
+	-revisao da implementacao das estruturas se/enquanto/para
+
+	* /trunk/gpt/src/modules/x86/asm_tmpl.h:
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/src/modules/x86/x86.g:
+	* /trunk/gpt/src/modules/x86/X86.hpp:
+
+	-revisao de codigo
+	-refactor com classe X86
+	-fix do elf header (.data)
+	-fix expressoes e atribuicoes (primitivos, literais e
+	matrizes)
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterDBG.cpp:
+
+	-alguns fixes
+
+	* /trunk/gpt/src/modules/Display.cpp:
+	* /trunk/gpt/src/modules/Display.hpp:
+
+	-add showError(string)
+
+2006-02-28
+
+	* /trunk/gpt/src/modules/c_translator/pt2c.g:
+
+	-fix: "para" usando matrizes
+
+	* /trunk/gpt/src/modules/x86/x86.g:
+
+	-impl de "se", "enquanto" e "para"
+
+	* /trunk/gpt/src/modules/parser/semantic.g:
+
+	-fix: evaluateNumericExpr: checagem de matrizes e tipos
+	inteiros
+
+	* /trunk/gpt/src/modules/parser/SemanticEval.cpp:
+	* /trunk/gpt/src/modules/parser/SemanticEval.hpp:
+
+	-fix: evaluateNumericExpr: checagem de matrizes e tipos
+	inteiros
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterDBG.cpp:
+	* /trunk/gpt/src/modules/Display.cpp:
+	* /trunk/gpt/src/modules/ErrorHandler.cpp:
+	* /trunk/gpt/src/modules/parser/SemanticEval.cpp:
+	* /trunk/gpt/src/modules/Makefile.am:
+	* /trunk/gpt/src/modules/Display.hpp:
+	* /trunk/gpt/src/modules/ErrorHandler.hpp:
+	* /trunk/gpt/src/modules/parser/parser.g:
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.cpp:
+	* /trunk/gpt/src/modules/parser/BasePortugolParser.cpp:
+	* /trunk/gpt/src/modules/parser/lexer.g:
+	* /trunk/gpt/src/Makefile.am:
+	* /trunk/gpt/src/gpt.cpp:
+
+	-mv ErrorHandler Display
+	-Uso global de Display
+	-win32: fix code page (CharToOem)
+
+	* /trunk/gpt/src/modules/c_translator/Makefile.am:
+	* /trunk/gpt/src/modules/interpreter/InterpreterDBG.cpp:
+	* /trunk/gpt/src/modules/parser/Makefile.am:
+	* /trunk/gpt/configure.in:
+	* /trunk/gpt/src/modules/Makefile.am:
+	* /trunk/gpt/src/modules/interpreter/InterpreterDBG.hpp:
+	* /trunk/gpt/src/modules/interpreter/Makefile.am:
+	* /trunk/gpt/src/modules/x86/Makefile.am:
+	* /trunk/gpt/src/Makefile.am:
+	* /trunk/gpt/src/gpt.cpp:
+
+	-port para win32
+
+2006-02-24
+
+	* /trunk/gpt/src/modules/x86/x86.g:
+
+	-reestruturacao e implementacao dos elf headers/program
+	headers
+	-Adicao do suporte em tempo de execucao
+	-criacao de labels locais ('.' prefixed) e globais
+	-atribuicao: implementacao de casting para numeros reais
+	-expresssoes: implementacao completa
+
+	* /trunk/gpt/src/modules:
+	* /trunk/gpt/src/compiler:
+
+	-svn rename src/compiler src/modules
+
+2006-02-23
+
+	* /trunk/gpt/test/asm/bin.asm:
+
+	-Exemplo de ELF headers para criacao de um executavel valido
+
+	* /trunk/gpt/test/asm/test.asm:
+	* /trunk/gpt/test/asm/build:
+	* /trunk/gpt/test/asm:
+
+	-rotinas internas em assembly
+
+2006-02-22
+
+	* /trunk/gpt/src/compiler/x86/template.s:
+
+	-todas as funcoes implementadas
+
+	* /trunk/gpt/src/compiler/x86/template.s:
+
+	-nasm template das funcoes internas
+
+2006-02-10
+
+	* /trunk/gpt/src/compiler/parser/Makefile.am:
+	* /trunk/gpt/src/compiler/x86:
+	* /trunk/gpt/src/compiler/c_translator/pt2c.g:
+	* /trunk/gpt/src/compiler/Makefile.am:
+	* /trunk/gpt/src/compiler/x86/Makefile.am:
+	* /trunk/gpt/src/compiler/x86/x86.g:
+	* /trunk/gpt/src/compiler/parser/lexer.g:
+
+	-inicio da implementacao da compilacao para arch x86
+
+2006-01-31
+
+	* /trunk/gpt/src/compiler/parser/lexer.g:
+
+	-fix: octal
+
+2006-01-27
+
+	* /trunk/gpt/README:
+
+	-fix: portugues
+
+	* /trunk/gpt/configure.in:
+
+	-fix: parse error (,)
+
+2006-01-26
+
+	* /trunk/gpt/src/Makefile.am:
+
+	-fix: checagem da biblioteca do antlr
+
+	* /trunk/gpt/configure.in:
+
+	-fix: checagem da biblioteca do antlr
+
+	* /trunk/gpt/configure.in:
+
+	-fix: checagem do antlr
+
+2006-01-25
+
+	* /trunk/gpt/doc/manual/manual.tex:
+
+	-extensao dos arquivos .pt -> .gpt
+
+2006-01-24
+
+	* /trunk/gpt/doc/man/gpt.1:
+
+	-add: URL do site
+
+	* /trunk/gpt/src/compiler/parser/semantic.g:
+
+	-fix: declaracao de funcao (retorno retorno)
+
+	* /trunk/gpt/src/compiler/c_translator/pt2c.g:
+
+	-fix: declaracao de funcao (retorno retorno)
+	-fix: retorno de literais
+
+	* /trunk/gpt/src/gpt.cpp:
+
+	-versao 0.8b
+
+	* /trunk/gpt/configure.in:
+	* /trunk/gpt/gpt.kdevelop:
+
+	-versao 0.8b
+
+	* /trunk/gpt/exemplos/Makefile.am:
+
+	-adiciona "exemplos" no pacote
+
+	* /trunk/gpt/configure.in:
+
+	-adiciona "exemplos" no pacote
+	-melhor verbose para os erros
+
+	* /trunk/gpt/Makefile.am:
+
+	-adiciona "exemplos" no pacote
+
+	* /trunk/gpt/exemplos/olamundo.gpt:
+	* /trunk/gpt/exemplos/highlight.pt:
+	* /trunk/gpt/exemplos/highlight.gpt:
+	* /trunk/gpt/exemplos/olamundo.pt:
+
+	-.gp -> .gpt
+
+	* /trunk/gpt/doc/manual/manual.tex:
+
+	-quase la...
+
+	* /trunk/gpt/test/cli_debugger:
+
+	-transicao cvs2svn
+
+	* /trunk/gpt/src/compiler/c_translator/Makefile.am:
+	* /trunk/gpt/src/compiler/interpreter/InterpreterDBG.cpp:
+	* /trunk/gpt/src/compiler/parser/Makefile.am:
+	* /trunk/gpt/src/compiler/Makefile.am:
+	* /trunk/gpt/src/compiler/interpreter/InterpreterDBG.hpp:
+	* /trunk/gpt/test/cli_debugger:
+	* /trunk/gpt/src/compiler/interpreter/Makefile.am:
+	* /trunk/gpt/config.h.in:
+
+	-transicao cvs2svn
+
+	* /trunk/gpt/INSTALL:
+	* /trunk/gpt/configure.in:
+
+	-transicao cvs2svn
+
+	* /trunk/gpt/src/compiler/SymbolTable.hpp:
+	* /trunk/gpt/src/compiler/PortugolAST.cpp:
+	* /trunk/gpt/src/compiler/interpreter/InterpreterEval.hpp:
+	* /trunk/gpt/src/compiler/parser/BasePortugolParser.hpp:
+	* /trunk/gpt/src/compiler/ErrorHandler.cpp:
+	* /trunk/gpt/src/compiler/PortugolAST.hpp:
+	* /trunk/gpt/test/cli_debugger.c:
+	* /trunk/gpt/src/compiler/parser/parser.g:
+	* /trunk/gpt/src/compiler/ErrorHandler.hpp:
+	* /trunk/gpt/src/compiler/parser/semantic.g:
+	* /trunk/gpt/src/compiler/Symbol.cpp:
+	* /trunk/gpt/src/compiler/interpreter/InterpreterHelper.cpp:
+	* /trunk/gpt/src/compiler/parser/SemanticEval.cpp:
+	* /trunk/gpt/src/compiler/c_translator/pt2c.g:
+	* /trunk/gpt/src/compiler/Symbol.hpp:
+	* /trunk/gpt/src/compiler/interpreter/interpreter.g:
+	* /trunk/gpt/src/compiler/interpreter/InterpreterHelper.hpp:
+	* /trunk/gpt/src/compiler/parser/SemanticEval.hpp:
+	* /trunk/gpt/src/compiler/SymbolTable.cpp:
+	* /trunk/gpt/src/compiler/interpreter/InterpreterEval.cpp:
+	* /trunk/gpt/src/Makefile.am:
+	* /trunk/gpt/src/compiler/parser/BasePortugolParser.cpp:
+	* /trunk/gpt/src/compiler/parser/lexer.g:
+	* /trunk/gpt/src/gpt.cpp:
+
+	-transicao CVS2SVN
+
+	* /trunk/gpt/extra:
+	* /trunk/gpt/Makefile.am:
+	* /trunk/gpt/doc/manual/manual.tex:
+	* /trunk/gpt/gpt.kno:
+	* /trunk/gpt/gpt.kdevelop:
+
+	-gpt nao precisa desses arquivos
+
+	* /trunk/gpt/src/ErrorHandler.hpp:
+	* /trunk/gpt/src/compiler/SymbolTable.hpp:
+	* /trunk/gpt/src/compiler/interpreter:
+	* /trunk/gpt/src/compiler/PortugolAST.cpp:
+	* /trunk/gpt/src/compiler/parser/BasePortugolParser.hpp:
+	* /trunk/gpt/src/compiler/ErrorHandler.cpp:
+	* /trunk/gpt/src/compiler/PortugolAST.hpp:
+	* /trunk/gpt/gramaticas:
+	* /trunk/gpt/src/compiler/parser/parser.g:
+	* /trunk/gpt/src/compiler/ErrorHandler.hpp:
+	* /trunk/gpt/src/parser:
+	* /trunk/gpt/src/compiler/parser/semantic.g:
+	* /trunk/gpt/src/compiler/Symbol.cpp:
+	* /trunk/gpt/src/compiler/interpreter/InterpreterHelper.cpp:
+	* /trunk/gpt/src/compiler/parser/SemanticEval.cpp:
+	* /trunk/gpt/src/compiler/c_translator/pt2c.g:
+	* /trunk/gpt/src/compiler/interpreter/interpreter.g:
+	* /trunk/gpt/src/compiler/c_translator:
+	* /trunk/gpt/src/compiler/Symbol.hpp:
+	* /trunk/gpt/src/compiler/parser:
+	* /trunk/gpt/src/compiler/interpreter/InterpreterHelper.hpp:
+	* /trunk/gpt/src/compiler/parser/SemanticEval.hpp:
+	* /trunk/gpt/src/compiler/SymbolTable.cpp:
+	* /trunk/gpt/src/ErrorHandler.cpp:
+	* /trunk/gpt/src/compiler:
+	* /trunk/gpt/src/compiler/parser/BasePortugolParser.cpp:
+	* /trunk/gpt/src/compiler/parser/lexer.g:
+
+	-converstion CVS2SVN
+
+2006-01-15
+
+	* /trunk/gpt/doc/manual/manual.tex:
+
+	-melhoria da pagina do titulo
+	-PDF: links azuis (noborder)
+	-PDF: doc metainfo added
+
+	* /trunk/gpt/src/parser/SemanticEval.cpp:
+
+	-fix: "x := imprima()" -> imprima retorna TIPO_NULO.
+	-fix: "x := 2 + f" onde "f" eh uma fincao
+
+	* /trunk/gpt/src/parser/InterpreterHelper.cpp:
+	* /trunk/gpt/src/parser/InterpreterHelper.hpp:
+
+	-limpeza de c�digo.
+	-fix: leitura de dados.
+	--leitura de strings separados por BS (blank space).
+	--leitura de caracteres, inteiros, reais e logicos de forma
+	mais consistente.
+	-melhoria no casting
+	-separacao da classe de depuracao
+
+	* /trunk/gpt/gramaticas/pt2c.g:
+
+	-fix: leitura de dados.
+	--leitura de caracteres, inteiros, reais e logicos de forma
+	mais consistente.
+	--impress�o de reais no formato "%.2f"
+	-tipos reais -> tipo double
+
+	* /trunk/gpt/gramaticas/parser.g:
+
+	-fix: printTip para c�digo incorreto "mat[1 := ..."
+
+	* /trunk/gpt/gramaticas/lexer.g:
+
+	-fix: literais caractere e literais string
+
+	* /trunk/gpt/gramaticas/interpreter.g:
+
+	-fix: tratamento de literais e caracteres vindos da AST
+
+2006-01-13
+
+	* /trunk/gpt/extra/pseudo.xml.custom:
+	* /trunk/gpt/extra/pseudo.xml:
+
+	-add: binarios, octais e funcoes/funcoes builtin
+
+	* /trunk/gpt/gramaticas/interpreter.g:
+	* /trunk/gpt/gramaticas/lexer.g:
+
+	-constantes literais e constantes caractere: lexer n�o
+	adiciona (") e (') no texto do token
+
+	* /trunk/gpt/src/parser/BasePortugolParser.cpp:
+	* /trunk/gpt/gramaticas/parser.g:
+	* /trunk/gpt/src/parser/BasePortugolParser.hpp:
+
+	-reportMismatchedError() -> reportParserError()
+
+	* /trunk/gpt/gramaticas/pt2c.g:
+
+	-adicao de codigo para liberar memoria alocada nos programas
+	traduzidos
+	-constantes literais e constantes caractere: lexer n�o
+	adiciona (") e (') no texto do token
+
+	* /trunk/gpt/src/parser/SemanticEval.cpp:
+
+	-pelo menos um argumento deve ser passado para funcoes com
+	parametros variaveis
+
+	* /trunk/gpt/src/gpt.cpp:
+
+	-add: opcao para traduzir, apenas.
+	-fix: tempnam() -> mkstemp()
+
+2006-01-12
+
+	* /trunk/gpt/gramaticas/interpreter.g:
+	* /trunk/gpt/gramaticas/semantic.g:
+	* /trunk/gpt/src/ErrorHandler.hpp:
+	* /trunk/gpt/src/parser/InterpreterHelper.cpp:
+	* /trunk/gpt/gramaticas/pt2c.g:
+	* /trunk/gpt/src/parser/InterpreterHelper.hpp:
+	* /trunk/gpt/gramaticas/lexer.g:
+	* /trunk/gpt/src/parser/SemanticEval.cpp:
+	* /trunk/gpt/src/parser/SymbolTable.cpp:
+	* /trunk/gpt/src/parser/SemanticEval.hpp:
+	* /trunk/gpt/src/parser/SymbolTable.hpp:
+	* /trunk/gpt/src/parser/BasePortugolParser.cpp:
+	* /trunk/gpt/src/parser/PortugolAST.cpp:
+	* /trunk/gpt/gramaticas/parser.g:
+	* /trunk/gpt/src/parser/BasePortugolParser.hpp:
+	* /trunk/gpt/src/parser/PortugolAST.hpp:
+	* /trunk/gpt/src/ErrorHandler.cpp:
+	* /trunk/gpt/src/gpt.cpp:
+
+	-add: licenca
+
+	* /trunk/gpt/src/parser/InterpreterHelper.hpp:
+
+	-melhoria no casting
+
+	* /trunk/gpt/src/parser/InterpreterHelper.hpp:
+
+	-Suporte a matrizes/vetores
+	-checagem de bounds em runtime.
+	-fix: eval de somas
+
+2006-01-11
+
+	* /trunk/gpt/gramaticas/interpreter.g:
+
+	-fix: enquanto/para funcionando com N stm aninhados
+
+2006-01-02
+
+	* /trunk/gpt/src/parser/BasePortugolParser.cpp:
+	* /trunk/gpt/gramaticas/parser.g:
+	* /trunk/gpt/src/parser/BasePortugolParser.hpp:
+
+	-Tratamento de erros terminado.
+
+	* /trunk/gpt/gramaticas/lexer.g:
+
+	-msg de erro inadequada
+	-fix: comentario estilo C++ nao estava funcionando quando
+	usado na ultima linha do arquivo
+
+	* /trunk/gpt/src/gpt.cpp:
+
+	-add:translate only opt
+
+2005-12-29
+
+	* /trunk/gpt/gramaticas/interpreter.g:
+	* /trunk/gpt/src/parser/InterpreterHelper.hpp:
+
+	-add: interacao com debugger. Em estagio bem experimental
+	ainda
+
+	* /trunk/gpt/test/cli_debugger.c:
+	* /trunk/gpt/test/build_debugger:
+
+	-command line debugger
+
+	* /trunk/gpt/src/gpt.cpp:
+
+	-add: opcao para apenas interpretar
+
+	* /trunk/gpt/src/parser/SymbolTable.hpp:
+	* /trunk/gpt/src/parser/SymbolTable.cpp:
+
+	-add: getSymbols(scope)
+	-adicionado attributo: unique code (cd) em Symbol. (Nao me
+	lembro pra que...acho que nem esta sendo usado)
+
+	* /trunk/gpt/src/parser/Symbol.cpp:
+	* /trunk/gpt/src/parser/Symbol.hpp:
+
+	-adicionado attributo: unique code (cd) em Symbol. (Nao me
+	lembro pra que...acho que nem esta sendo usado)
+
+	* /trunk/gpt/src/parser/SemanticEval.hpp:
+	* /trunk/gpt/src/parser/SemanticEval.cpp:
+
+	-fix: operador modulo (%) nao eh aplicavel a tipos reais
+	-fix: operador ~ (bin not) nao eh aplicavel a tipos reais
+	-adicionado atributo para nome da variavel nos parametros de
+	funcao (ParamSig class)
+	-checagem semantica da producao passo
+
+	* /trunk/gpt/gramaticas/semantic.g:
+
+	-checagem semantica da producao passo
+
+	* /trunk/gpt/gramaticas/interpreter.g:
+	* /trunk/gpt/gramaticas/Makefile.am:
+	* /trunk/gpt/src/parser/InterpreterHelper.cpp:
+	* /trunk/gpt/src/parser/InterpreterHelper.hpp:
+	* /trunk/gpt/src/gpt.cpp:
+
+	-Inicio da implementacao do Interpreter
+
+	* /trunk/gpt/gramaticas/parser.g:
+
+	-texto dos tokens unarios estavam aparecendo em mensagens de
+	erro semanticos ("operador "un!" bla bla ")
+
+	* /trunk/gpt/gramaticas/lexer.g:
+
+	-fix: numeros literais (hex, bin, oct)
+
+2005-12-24
+
+	* /trunk/gpt/gramaticas/semantic.g:
+	* /trunk/gpt/gramaticas/pt2c.g:
+	* /trunk/gpt/src/parser/SemanticEval.cpp:
+
+	-fix: retorno funcionando para funcao com retorno nulo
+
+	* /trunk/gpt/gramaticas/lexer.g:
+
+	-fix: express�o "z-1" dando erro: "caractere 'z'
+	inv�lido"
+
+2005-12-23
+
+	* /trunk/gpt/gramaticas/pt2c.g:
+
+	-suporte a operadores l�gicos sobre literais
+
+	* /trunk/gpt/src/parser/BasePortugolParser.cpp:
+	* /trunk/gpt/gramaticas/parser.g:
+	* /trunk/gpt/src/parser/BasePortugolParser.hpp:
+	* /trunk/gpt/src/gpt.cpp:
+
+	-usando nome do algoritmo para gerar o arquivo executavel
+
+	* /trunk/gpt/src/parser/SemanticEval.cpp:
+
+	-adicionado restricoes no uso de funcoes internas de tipo
+	TIPO_ALL
+
+	* /trunk/gpt/gramaticas/pt2c.g:
+
+	-literal nulo eh impresso como "(nulo)"
+	-fix: tipos de expressoes nao estavam sendo avaliadas em
+	expressoes unarias
+
+	* /trunk/gpt/gramaticas/lexer.g:
+
+	-melhoria no suporte a hexadecimais e octais
+	-adicionado suporte a binarios
+
+	* /trunk/gpt/src/ErrorHandler.hpp:
+	* /trunk/gpt/doc:
+	* /trunk/gpt/INSTALL:
+	* /trunk/gpt/Makefile.cvs:
+	* /trunk/gpt/COPYING:
+	* /trunk/gpt/src/parser/Symbol.cpp:
+	* /trunk/gpt/doc/Makefile.am:
+	* /trunk/gpt/src/parser/Symbol.hpp:
+	* /trunk/gpt/doc/gramatica/lexer.html:
+	* /trunk/gpt/src/parser/SemanticEval.cpp:
+	* /trunk/gpt/test:
+	* /trunk/gpt/mkinstalldirs:
+	* /trunk/gpt/extra/pseudo.xml:
+	* /trunk/gpt/test/feed_test:
+	* /trunk/gpt/extra:
+	* /trunk/gpt/src/parser:
+	* /trunk/gpt/src/parser/SemanticEval.hpp:
+	* /trunk/gpt/exemplos/highlight.pt:
+	* /trunk/gpt/configure.in:
+	* /trunk/gpt/INSTALL.default:
+	* /trunk/gpt/src/parser/Makefile.am:
+	* /trunk/gpt/doc/gramatica/parser.html:
+	* /trunk/gpt/exemplos/algoritmo1.pt:
+	* /trunk/gpt/gramaticas/parser.g:
+	* /trunk/gpt/README:
+	* /trunk/gpt:
+	* /trunk/gpt/gramaticas/semantic.g:
+	* /trunk/gpt/gramaticas/pt2c.g:
+	* /trunk/gpt/missing:
+	* /trunk/gpt/Makefile.am:
+	* /trunk/gpt/doc/man/gpt.1:
+	* /trunk/gpt/gramaticas:
+	* /trunk/gpt/install-sh:
+	* /trunk/gpt/gramaticas/lexer.g:
+	* /trunk/gpt/gpt.kno:
+	* /trunk/gpt/doc/man:
+	* /trunk/gpt/src/parser/SymbolTable.cpp:
+	* /trunk/gpt/gramaticas/Makefile.am:
+	* /trunk/gpt/pparser.kdevelop:
+	* /trunk/gpt/test/error_tester.php:
+	* /trunk/gpt/AUTHORS:
+	* /trunk/gpt/src/parser/SymbolTable.hpp:
+	* /trunk/gpt/depcomp:
+	* /trunk/gpt/src:
+	* /trunk/gpt/src/parser/BasePortugolParser.cpp:
+	* /trunk/gpt/src/parser/PortugolAST.cpp:
+	* /trunk/gpt/doc/man/Makefile.am:
+	* /trunk/gpt/extra/pseudo.xml.custom:
+	* /trunk/gpt/config.guess:
+	* /trunk/gpt/exemplos:
+	* /trunk/gpt/src/parser/BasePortugolParser.hpp:
+	* /trunk/gpt/src/parser/PortugolAST.hpp:
+	* /trunk/gpt/config.sub:
+	* /trunk/gpt/doc/gramatica:
+	* /trunk/gpt/ltmain.sh:
+	* /trunk/gpt/src/ErrorHandler.cpp:
+	* /trunk/gpt/src/Makefile.am:
+	* /trunk/gpt/src/gpt.cpp:
+
+	-Initial revision
+
