@@ -1,66 +1,66 @@
-Sumário de mudanças
+SumÃ¡rio de mudanÃ§as
 -------------------
 
 08 de Abril de 2006  * gpt 1.0
 
- * Adição de arquivo com funções básicas (base.gpt).
- * Melhorias no modulo de depuração.
- * Revisão e correção de mensagens de erro de compilação.
- * Correção de bugs na compilação em GNU/Linux (cabeçalho ELF).
- * Correção de bugs na compilação (declaração de variável local shadows variável
-   global indefinidamente, ocasionando possíveis crashes).
- * Correção de bugs na compilação e tradução (expressões envolvendo literais).
- * Correção de bugs na compilação e tradução (inicialização de matrizes de 
+ * AdiÃ§Ã£o de arquivo com funÃ§Ãµes bÃ¡sicas (base.gpt).
+ * Melhorias no modulo de depuraÃ§Ã£o.
+ * RevisÃ£o e correÃ§Ã£o de mensagens de erro de compilaÃ§Ã£o.
+ * CorreÃ§Ã£o de bugs na compilaÃ§Ã£o em GNU/Linux (cabeÃ§alho ELF).
+ * CorreÃ§Ã£o de bugs na compilaÃ§Ã£o (declaraÃ§Ã£o de variÃ¡vel local shadows variÃ¡vel
+   global indefinidamente, ocasionando possÃ­veis crashes).
+ * CorreÃ§Ã£o de bugs na compilaÃ§Ã£o e traduÃ§Ã£o (expressÃµes envolvendo literais).
+ * CorreÃ§Ã£o de bugs na compilaÃ§Ã£o e traduÃ§Ã£o (inicializaÃ§Ã£o de matrizes de 
    literais).
- * Correção de bugs na análise semântica (avaliação de parâmetros de função).
- * Correção de bugs na compilação (parâmetros de função).
- * Correção de bugs na análise sintática (expressões sem parêntesis causando
+ * CorreÃ§Ã£o de bugs na anÃ¡lise semÃ¢ntica (avaliaÃ§Ã£o de parÃ¢metros de funÃ§Ã£o).
+ * CorreÃ§Ã£o de bugs na compilaÃ§Ã£o (parÃ¢metros de funÃ§Ã£o).
+ * CorreÃ§Ã£o de bugs na anÃ¡lise sintÃ¡tica (expressÃµes sem parÃªntesis causando
    crashes).
- * Correção de bugs na tradução para C (expressões faltando e/ou com 
-   precedência incorreta).
- * Correção de bugs na tradução para C (expressões envolvendo valores literais).
- * Correção de bugs na interpretação (expressões envolvendo valores reais
+ * CorreÃ§Ã£o de bugs na traduÃ§Ã£o para C (expressÃµes faltando e/ou com 
+   precedÃªncia incorreta).
+ * CorreÃ§Ã£o de bugs na traduÃ§Ã£o para C (expressÃµes envolvendo valores literais).
+ * CorreÃ§Ã£o de bugs na interpretaÃ§Ã£o (expressÃµes envolvendo valores reais
    calculadas incorretamente).
- * Correção de bugs na interpretação (avaliação de diversas operações)   
- * Correção de bugs na interpretação (enunciado "se" entrando em loop infinito)   
- * Correção de bugs na interpretação (retorno de dados em funções).
- * Correção de bugs na compilação (avaliação de subtração envolvendo valores 
+ * CorreÃ§Ã£o de bugs na interpretaÃ§Ã£o (avaliaÃ§Ã£o de diversas operaÃ§Ãµes)   
+ * CorreÃ§Ã£o de bugs na interpretaÃ§Ã£o (enunciado "se" entrando em loop infinito)   
+ * CorreÃ§Ã£o de bugs na interpretaÃ§Ã£o (retorno de dados em funÃ§Ãµes).
+ * CorreÃ§Ã£o de bugs na compilaÃ§Ã£o (avaliaÃ§Ã£o de subtraÃ§Ã£o envolvendo valores 
    reais).
- * Correção de bugs na compilação (avaliação de expressões relacionais 
+ * CorreÃ§Ã£o de bugs na compilaÃ§Ã£o (avaliaÃ§Ã£o de expressÃµes relacionais 
    envolvendo valores reais).
- * Correção de bugs na compilação (operador unário de negação).
- * Correção de bugs na compilação (retorno de valores de tipos diferentes
+ * CorreÃ§Ã£o de bugs na compilaÃ§Ã£o (operador unÃ¡rio de negaÃ§Ã£o).
+ * CorreÃ§Ã£o de bugs na compilaÃ§Ã£o (retorno de valores de tipos diferentes
    sem utilizar casting)
- * Correção de bugs na análise semântica (avaliação de retorno de valores
-   em funções)
- * Correção de bugs na compilação (casting de parâmetro inteiro para
+ * CorreÃ§Ã£o de bugs na anÃ¡lise semÃ¢ntica (avaliaÃ§Ã£o de retorno de valores
+   em funÃ§Ãµes)
+ * CorreÃ§Ã£o de bugs na compilaÃ§Ã£o (casting de parÃ¢metro inteiro para
    real e real para inteiro).
- * Adicionado suporte a compilação de algoritmos usando mais de um arquivo.
- * Adicionado suporte a variável de ambiente GPT_INCLUDE para incluir algoritmos 
+ * Adicionado suporte a compilaÃ§Ã£o de algoritmos usando mais de um arquivo.
+ * Adicionado suporte a variÃ¡vel de ambiente GPT_INCLUDE para incluir algoritmos 
    automaticamente.
- * Revisão da man-page.
- * Atualização do manual.
- * Nome do algoritmo é usado para criar arquivo executável ao invés de usar 
+ * RevisÃ£o da man-page.
+ * AtualizaÃ§Ã£o do manual.
+ * Nome do algoritmo Ã© usado para criar arquivo executÃ¡vel ao invÃ©s de usar 
    "a.exe" ou "a.out".
 
 05 de Abril de 2006  * gpt 0.9.2
 
- * Correção de um bug na avaliação de expressões aritméticas.
+ * CorreÃ§Ã£o de um bug na avaliaÃ§Ã£o de expressÃµes aritmÃ©ticas.
 
-31 de Março de 2006  * gpt 0.9.1
+31 de MarÃ§o de 2006  * gpt 0.9.1
 
- * Correção de um bug de compilação relacionado a função "leia".
+ * CorreÃ§Ã£o de um bug de compilaÃ§Ã£o relacionado a funÃ§Ã£o "leia".
 
-08 de Março de 2006  * gpt 0.9b
+08 de MarÃ§o de 2006  * gpt 0.9b
 
- * Implementação da geração de código executável (x86, PE/ELF,
+ * ImplementaÃ§Ã£o da geraÃ§Ã£o de cÃ³digo executÃ¡vel (x86, PE/ELF,
    NASM como backend)
  * GPT portado para MS Windows (testado com compilador MingW32)
- * Vários bugfixes (ver ChangeLog)
+ * VÃ¡rios bugfixes (ver ChangeLog)
 
 27 de Janeiro de 2006  * gpt 0.8b
 
- * Primeira versão publicada.
+ * Primeira versÃ£o publicada.
  * Recursos oferecidos:
    +interpretar/depurar;
    +traduzir algoritmos para C;
