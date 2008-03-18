@@ -1,4 +1,4 @@
-<?
+<?php
 class LogEntry {
   var $author;
   var $files;
