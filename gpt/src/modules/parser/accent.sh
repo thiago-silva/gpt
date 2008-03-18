@@ -1,6 +1,8 @@
 #/bin/sh
 #sed  's/\\341/Ã¡/g; s/\\351/Ã©/g; s/\\355/Ã­/g; s/\\363/Ã³/g; s/\\372/Ãº/g; s/\\343/Ã£/g; s/\\347/Ã§/g' PortugolParser.cpp
-sed  -i 's/"fim-var.*veis/"fim-variáveis/;
+
+#sed do mingw nao suporta '-i'
+sed  's/"fim-var.*veis/"fim-variáveis/;
       s/"vari.*veis/"variáveis/;
       s/"l.*gico/"lógico/;
       s/"in.*cio/"início/;
@@ -12,7 +14,7 @@ sed  -i 's/"fim-var.*veis/"fim-variáveis/;
       s/"l.*gicos/"lógicos/;
       s/"fun.*o\\"/"função\\"/;
       s/"n.*mero/"número/;
-' PortugolParser.cpp
+' PortugolParser.cpp > PortugolParser.cpp.p && rm PortugolParser.cpp && mv PortugolParser.cpp.p PortugolParser.cpp
 
 
 # 	"\"vari\303\241veis\"",
