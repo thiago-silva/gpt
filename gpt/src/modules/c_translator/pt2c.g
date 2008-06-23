@@ -26,6 +26,8 @@ header {
   #include <sstream>
   #include <map>
   #include <list>
+  #include <stdlib.h>
+  
   using namespace std;
 
   typedef struct production_t {

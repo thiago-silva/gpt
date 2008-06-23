@@ -30,6 +30,7 @@
 #include <stack>
 #include <map>
 #include <iostream>
+#include <stdlib.h>
 
 using namespace std;
 

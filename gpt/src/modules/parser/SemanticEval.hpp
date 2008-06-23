@@ -27,6 +27,7 @@
 #include <string>
 #include <map>
 #include <list>
+#include <stdlib.h>
 
 //---------- helpers ------------
 

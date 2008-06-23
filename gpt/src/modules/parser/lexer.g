@@ -28,6 +28,7 @@ header {
   #include <antlr/TokenStreamSelector.hpp>
 	#include "UnicodeCharBuffer.hpp"
 	#include "UnicodeCharScanner.hpp"
+  #include <stdlib.h>
 
   using namespace antlr;
   using namespace std;

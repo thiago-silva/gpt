@@ -27,6 +27,8 @@
 #include <string>
 #include <list>
 #include <unistd.h>
+#include <stdio.h>
+#include <string.h>
 
 #define DEFAULT_PORT "7680"
 
