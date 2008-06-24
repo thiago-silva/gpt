@@ -16,5 +16,4 @@ if BUILD_DEBUGGER
 gpt_LDADD += $(PCRE_LIB)
 endif
 
-AM_LDFLAGS = -static
 noinst_HEADERS = GPT.hpp
