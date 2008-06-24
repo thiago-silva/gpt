@@ -1,4 +1,33 @@
+2008-06-24
+
+	* /trunk/gpt/src/Makefile.am:
+
+	-Linkando o gpt dinamicamente ao libgportugol
+
+2008-06-23
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.hpp:
+	* /trunk/gpt/src/modules/GPTDisplay.hpp:
+	* /trunk/gpt/src/modules/c_translator/pt2c.g:
+	* /trunk/gpt/src/main.cpp:
+	* /trunk/gpt/src/modules/parser/SemanticEval.hpp:
+	* /trunk/gpt/src/modules/parser/lexer.g:
+
+	-Patch do metal: adicao de headers para resolver a compilacao
+	com gcc 4.3 em outras plataformas
+
+2008-03-24
+
+	* /trunk/gpt/doc/man/gpt.1:
+	* /trunk/gpt/doc/man/pt_BR/gpt.1:
+
+	-Fix na licenca das man pages. Passando pra GPL
+
 2008-03-18
+
+	* /trunk/gpt/packages/win_setup/setup.iss:
+
+	-Tirando redundancias
 
 	* /trunk/gpt/configure.ac:
 	* /trunk/gpt/README.en:

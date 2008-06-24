@@ -4,8 +4,8 @@
 
 AC_PREREQ(2.60)
 
-AC_INIT(gpt, 1.0.1)
-AM_INIT_AUTOMAKE(gpt, 1.0.1)
+AC_INIT(gpt, 1.0.2)
+AM_INIT_AUTOMAKE(gpt, 1.0.2)
 AC_CONFIG_HEADER([config.h])
 AC_LANG(C++)
 AC_PROG_CXX
