@@ -199,7 +199,7 @@ bool GPT::compile(const list<string>& ifnames, bool genBinary) {
     fo.close();
 
     stringstream cmd;
-    cmd << "nasm -fbin -o \"" << ofname << "\" " << ftmpname;
+    cmd << "nasm -O1 -fbin -o \"" << ofname << "\" " << ftmpname;
 
     if(system(cmd.str().c_str()) == -1) {
       s << PACKAGE << ": não foi possível invocar o nasm." << endl;
