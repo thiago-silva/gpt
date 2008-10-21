@@ -1,0 +1,35 @@
+Source: gpt
+Section: devel
+Priority: optional
+Maintainer: Marcelo Jorge Vieira (metal) <metal@alucinados.com>
+Build-Depends: cdbs, debhelper (>= 7), autotools-dev, antlr, libantlr-dev, libpcre3-dev
+Standards-Version: 3.8.0
+Homepage: http://gpt.berlios.de
+Vcs-Svn: svn://svn.berlios.de/gpt/trunk
+Vcs-Browser: https://svn.berlios.de/wsvn/gpt/trunk
+
+Package: gpt
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, nasm
+Description: G-Portugol is a portuguese structured programming language
+ based on the popular, freeform, pseudocode known as portugol.
+ The compiler features native compilation, translation to C code,
+ and interpretation of algorithms.
+ 
+Package: libgportugol-dev
+Section: libdevel
+Architecture: any
+Depends: libgportugol0 (= ${binary:Version}), antlr, libantlr-dev, libpcre3-dev
+Description: Development files for the G-Portugol library
+ G-Portugol is a portuguese structured programming language, based on the
+ popular, freeform, pseudocode known as portugol. The compiler features
+ native compilation, translation to C code, and interpretation of algorithms.
+
+Package: libgportugol0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: G-Portugol library
+ G-Portugol is a portuguese structured programming language, based on the
+ popular, freeform, pseudocode known as portugol. The compiler features
+ native compilation, translation to C code, and interpretation of algorithms.

@@ -1,0 +1,14 @@
+gpt (1.0.2-1) unstable; urgency=high
+
+  * New upstream version
+  * Updated Standards-Version to 3.8.0
+  * Fixed FTBFS (Closes: #486968)
+
+ -- Marcelo Jorge Vieira (metal) <metal@alucinados.com>  Sat, 24 Jun 2008 13:54:28 -0300
+
+gpt (1.0.1.svn20080324-1) unstable; urgency=low
+
+  * Initial release (Closes: #470169)
+
+ -- Marcelo Jorge Vieira (metal) <metal@alucinados.com>  Thu, 13 Mar 2008 01:27:31 -0300
+

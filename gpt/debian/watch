@@ -1,0 +1,3 @@
+version=3
+https://developer.berlios.de/project/showfiles.php?group_id=5791 \
+        http://(?:.*)gpt-(\d+(?:\.\d+){1,3}).tar.gz 
