@@ -1,6 +1,7 @@
 #ifndef INC_UnicodeCharScanner_hpp__
 #define INC_UnicodeCharScanner_hpp__
 
+#include <cstdio>
 #include <map>
 #include <cctype>
 
