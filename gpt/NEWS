@@ -1,6 +1,10 @@
 Sumário de mudanças
 -------------------
 
+11 de Dezembro de 2008 * gpt 1.0.2a
+
+  * Correção de bugs relacionados à compilação com gcc 4.4
+
 24 de Junho de 2008 * gpt 1.0.2
 
   * Correção de bugs relacionados à compilação com gcc 4.3
