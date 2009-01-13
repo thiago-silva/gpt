@@ -70,7 +70,7 @@ dnl------------------------------
 dnl Checks for ANTLR
 dnl------------------------------
 
-AC_PATH_PROG(ANTLR_BIN, antlr)
+AC_PATH_PROG(ANTLR_BIN, runantlr)
 
 if test "x${ANTLR}" = "x"; then
   AC_PATH_PROG(ANTLR_BIN, runantlr)

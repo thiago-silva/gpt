@@ -3,6 +3,8 @@
 
 #include <istream>
 #include <cassert>
+#include <cstdio>
+
 #include <antlr/config.hpp>
 #include <antlr/InputBuffer.hpp>
 #include <antlr/CharStreamIOException.hpp>
