@@ -845,9 +845,9 @@ void InterpreterEval::executeImprima(list<ExprValue>& args) {
         break;
       case TIPO_LOGICO:
         if(atoi((*it).value.c_str())) {
-          s << "verdadeiro";
+          cout << "verdadeiro";
         } else {
-          s << "falso";
+          cout << "falso";
         }
         break;
       case TIPO_LITERAL:
