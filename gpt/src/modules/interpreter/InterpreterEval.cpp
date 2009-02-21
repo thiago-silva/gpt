@@ -851,7 +851,11 @@ void InterpreterEval::executeImprima(list<ExprValue>& args) {
         }
         break;
       case TIPO_LITERAL:
-        cout << (*it).value;
+      	if(!(*it).value.empty()) {	
+          cout << (*it).value.c_str();
+        } else {
+          cout << "(nulo)";
+        }
         break;
       default:
         cout << (*it).value;
