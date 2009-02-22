@@ -3,16 +3,16 @@
 
 algoritmo tester;
 
-variáveis
+variÃ¡veis
   i : inteiro;
   r : real;
-  l : lógico;
+  l : lÃ³gico;
   c : caractere;
   str : literal;  
   mat: matriz[2] de inteiros;
-fim-variáveis
+fim-variÃ¡veis
 
-início
+inÃ­cio
   testar_inicializacao();
   testar_expr_aritm();
   testar_expr_log();
@@ -32,287 +32,287 @@ início
 
 fim
 
-função testar_inicializacao()
+funÃ§Ã£o testar_inicializacao()
   local : inteiro;
-início
-  se i <> 0 então
+inÃ­cio
+  se i <> 0 entÃ£o
     imprima("testar_inicializacao: i <> 0");
   fim-se
 
-  se r <> 0 então
+  se r <> 0 entÃ£o
     imprima("testar_inicializacao: r <> 0");
   fim-se
 
-  se r <> 0.0 então
+  se r <> 0.0 entÃ£o
     imprima("testar_inicializacao: r <> 0.0");
   fim-se
 
-  se l <> 0 então 
+  se l <> 0 entÃ£o 
     imprima("testar_inicializacao: l <> 0");
   fim-se
 
-  se l <> falso então
+  se l <> falso entÃ£o
     imprima("testar_inicializacao: l <> falso");
   fim-se
 
-  se str <> "" então
+  se str <> "" entÃ£o
     imprima("testar_inicializacao: str <> \"\"");
   fim-se
 
-  se local <> 0 então
+  se local <> 0 entÃ£o
     imprima("testar_inicializacao: local <> 0");
   fim-se
 
-  para local de 0 até 1 faça  
-    se mat[local] <> 0 então
+  para local de 0 atÃ© 1 faÃ§a  
+    se mat[local] <> 0 entÃ£o
       imprima("testar_inicializacao: mat[",local,"] <> 0");
     fim-se
   fim-para
 
-  se local <> 1 então
+  se local <> 1 entÃ£o
     imprima("testar_inicializacao: local <> 2");
   fim-se  
 fim
 
-função testar_expr_aritm()
-início
+funÃ§Ã£o testar_expr_aritm()
+inÃ­cio
 
-  se verdadeiro então
+  se verdadeiro entÃ£o
     //
-  senão
+  senÃ£o
     imprima("testar_expr_aritm: se verdadeiro");
   fim-se
 
-  se falso então
+  se falso entÃ£o
     imprima("testar_expr_aritm: se falso");
   fim-se
 
-  se não verdadeiro então
-    imprima("testar_expr_aritm: se não verdadeiro");
+  se nÃ£o verdadeiro entÃ£o
+    imprima("testar_expr_aritm: se nÃ£o verdadeiro");
   fim-se
     
-  se 2 + 2 então
+  se 2 + 2 entÃ£o
     //ok
-  senão  
+  senÃ£o  
     imprima("testar_expr_aritm: 2 + 2");
   fim-se
 
-  se 2 - 2 então
+  se 2 - 2 entÃ£o
     imprima("testar_expr_aritm: 2 - 2");
   fim-se
 
-  se 2 + 2 <> 4 então
+  se 2 + 2 <> 4 entÃ£o
     imprima("testar_expr_aritm: 2 + 2 <> 4");
   fim-se
 
-  se não (2 - 2) então
+  se nÃ£o (2 - 2) entÃ£o
     //
-  senão
-    imprima("testar_expr_aritm: se não (2-2)");  
+  senÃ£o
+    imprima("testar_expr_aritm: se nÃ£o (2-2)");  
   fim-se
 
-  se 10 + 2 * 3 <> 16 então
+  se 10 + 2 * 3 <> 16 entÃ£o
     imprima("testar_expr_aritm: 10 + 2 * 3 <> 16");
   fim-se
   
-  se 10 + 2 * 3 - 12 / 3 <> 12 então
+  se 10 + 2 * 3 - 12 / 3 <> 12 entÃ£o
     imprima("testar_expr_aritm: 10 + 2 * 3 - 12 / 3 <> 12");
   fim-se
 
-  se (10 + 2) * (12 - 10) / 3 <> 8 então
+  se (10 + 2) * (12 - 10) / 3 <> 8 entÃ£o
     imprima("testar_expr_aritm: (10 + 2) * (12 - 10) / 3 <> 8");
   fim-se
   
-  se 0b101 <> 5 então
+  se 0b101 <> 5 entÃ£o
     imprima("testar_expr_aritm: 0b101 <> 5");
   fim-se
 
-  se 0xA <> 10 então
+  se 0xA <> 10 entÃ£o
     imprima("testar_expr_aritm: 0xA <> 10");
   fim-se
 
-  se 0c10 <> 8 então
+  se 0c10 <> 8 entÃ£o
     imprima("testar_expr_aritm: 0c10 <> 8");
   fim-se
 
-  se 10 * -1 <> -10 então
+  se 10 * -1 <> -10 entÃ£o
     imprima("testar_expr_aritm: 10 * -1 <> -10");
   fim-se
 
-  se 10 - 5.5 <> 4.5 então
+  se 10 - 5.5 <> 4.5 entÃ£o
     imprima("testar_expr_aritm: 10 - 5.5 <> 4.5");
   fim-se
 
-  se 5.5 - 1 <> 4.5 então
+  se 5.5 - 1 <> 4.5 entÃ£o
     imprima("testar_expr_aritm: 5.5 - 1 <> 4.5");
   fim-se
 
-  se 5.5 * 2 <> 11 então
+  se 5.5 * 2 <> 11 entÃ£o
     imprima("testar_expr_aritm: 5.5 * 2 <> 11");
   fim-se
 
-  se 2 * 5.5  <> 11 então
+  se 2 * 5.5  <> 11 entÃ£o
     imprima("testar_expr_aritm: 2 * 5.5  <> 11");
   fim-se
 
-  se 1 + 2 * 5.5  <> 12 então
+  se 1 + 2 * 5.5  <> 12 entÃ£o
     imprima("testar_expr_aritm: 1 + 2 * 5.5  <> 12");
   fim-se
 
-  se 1 + 5.5 * 2 <> 12 então
+  se 1 + 5.5 * 2 <> 12 entÃ£o
     imprima("testar_expr_aritm: 1 + 5.5 * 2 <> 12");
   fim-se
 
-  se 5 / 2 <> 2 então
+  se 5 / 2 <> 2 entÃ£o
     imprima("testar_expr_aritm: 5 / 2 <> 2");
   fim-se
   
-  se 5.0 / 2 <> 2.5 então
+  se 5.0 / 2 <> 2.5 entÃ£o
     imprima("testar_expr_aritm: 5.0 / 2 <> 2.5");
   fim-se
 
-  se 1 + 5.0 / 2 <> 3.5 então
+  se 1 + 5.0 / 2 <> 3.5 entÃ£o
     imprima("testar_expr_aritm: 1 + 5.0 / 2 <> 3.5");
   fim-se
 
-  se 1 > 2 então
+  se 1 > 2 entÃ£o
     imprima("testar_expr_aritm: 1 > 2");
   fim-se
 
-  se 1 >= 2 então
+  se 1 >= 2 entÃ£o
     imprima("testar_expr_aritm: 1 >= 2");
   fim-se
 
-  se 1 >= 1 então
-  senão
+  se 1 >= 1 entÃ£o
+  senÃ£o
     imprima("testar_expr_aritm: 1 >= 1");
   fim-se
 
-  se 2 < 1 então
+  se 2 < 1 entÃ£o
     imprima("testar_expr_aritm: 2 < 1");
   fim-se
 
-  se 2 <= 1 então
+  se 2 <= 1 entÃ£o
     imprima("testar_expr_aritm: 2 <= 1");
   fim-se
 
-  se 2 <= 2 então
-  senão
+  se 2 <= 2 entÃ£o
+  senÃ£o
     imprima("testar_expr_aritm: 2 <= 1");
   fim-se
 
 fim
 
-função testar_expr_log()
-início
-  se verdadeiro e verdadeiro então
-  senão
+funÃ§Ã£o testar_expr_log()
+inÃ­cio
+  se verdadeiro e verdadeiro entÃ£o
+  senÃ£o
     imprima("testar_expr_log: verdadeiro e verdadeiro");
   fim-se
 
-  se verdadeiro e falso então
+  se verdadeiro e falso entÃ£o
     imprima("testar_expr_log: verdadeiro e falso");
   fim-se
 
-  se falso e verdadeiro então
+  se falso e verdadeiro entÃ£o
     imprima("testar_expr_log: falso e verdadeiro");
   fim-se
 
-  se falso e falso então
+  se falso e falso entÃ£o
     imprima("testar_expr_log: falso e falso");
   fim-se
 
-  se verdadeiro ou verdadeiro então
-  senão
+  se verdadeiro ou verdadeiro entÃ£o
+  senÃ£o
     imprima("testar_expr_log: verdadeiro ou verdadeiro");
   fim-se
 
-  se verdadeiro ou falso então
-  senão
+  se verdadeiro ou falso entÃ£o
+  senÃ£o
     imprima("testar_expr_log: verdadeiro ou falso");
   fim-se
 
-  se falso ou verdadeiro então
-  senão
+  se falso ou verdadeiro entÃ£o
+  senÃ£o
     imprima("testar_expr_log: falso ou verdadeiro");
   fim-se
 
-  se falso ou falso então
+  se falso ou falso entÃ£o
     imprima("testar_expr_log: falso ou falso");
   fim-se
 
 
   //not
-  se não (verdadeiro e verdadeiro) então
-    imprima("testar_expr_log: não verdadeiro e verdadeiro");
+  se nÃ£o (verdadeiro e verdadeiro) entÃ£o
+    imprima("testar_expr_log: nÃ£o verdadeiro e verdadeiro");
   fim-se
 
-  se não (verdadeiro e falso) então
-  senão
-    imprima("testar_expr_log: não verdadeiro e falso");
+  se nÃ£o (verdadeiro e falso) entÃ£o
+  senÃ£o
+    imprima("testar_expr_log: nÃ£o verdadeiro e falso");
   fim-se
 
-  se não (falso e verdadeiro) então
-  senão
-    imprima("testar_expr_log: não falso e verdadeiro");
+  se nÃ£o (falso e verdadeiro) entÃ£o
+  senÃ£o
+    imprima("testar_expr_log: nÃ£o falso e verdadeiro");
   fim-se
 
-  se não (falso e falso) então
-  senão
-    imprima("testar_expr_log: não falso e falso");
+  se nÃ£o (falso e falso) entÃ£o
+  senÃ£o
+    imprima("testar_expr_log: nÃ£o falso e falso");
   fim-se
 
-  se não (verdadeiro ou verdadeiro) então
-    imprima("testar_expr_log: não verdadeiro ou verdadeiro");
+  se nÃ£o (verdadeiro ou verdadeiro) entÃ£o
+    imprima("testar_expr_log: nÃ£o verdadeiro ou verdadeiro");
   fim-se
 
-  se não (verdadeiro ou falso) então
-    imprima("testar_expr_log: não verdadeiro ou falso");
+  se nÃ£o (verdadeiro ou falso) entÃ£o
+    imprima("testar_expr_log: nÃ£o verdadeiro ou falso");
   fim-se
 
-  se não (falso ou verdadeiro) então
-    imprima("testar_expr_log: não falso ou verdadeiro");
+  se nÃ£o (falso ou verdadeiro) entÃ£o
+    imprima("testar_expr_log: nÃ£o falso ou verdadeiro");
   fim-se
 
-  se não (falso ou falso) então
-  senão
-    imprima("testar_expr_log: não falso ou falso");
+  se nÃ£o (falso ou falso) entÃ£o
+  senÃ£o
+    imprima("testar_expr_log: nÃ£o falso ou falso");
   fim-se
 
   //operadores binarios &, |, ^
 
-  se (5 & 0b100) <> 4 então
+  se (5 & 0b100) <> 4 entÃ£o
     imprima("testar_expr_log: 5 & 0b100 <> 4");
   fim-se
 
   //<> maior precedencia que |
-  se 0b101 | 2 <> 7 então
-  senão
+  se 0b101 | 2 <> 7 entÃ£o
+  senÃ£o
     imprima("testar_expr_log: 0b101 | 2 <> 7");
   fim-se
 
-  se (0b101 | 2) <> 7 então
+  se (0b101 | 2) <> 7 entÃ£o
     imprima("testar_expr_log: 0b101 | 2 <> 7");
   fim-se
 
-  se (0b1011 ^ 0b0101) <> 14 então
+  se (0b1011 ^ 0b0101) <> 14 entÃ£o
     imprima("testar_expr_log: (0b1011 ^ 0b0101) <> 14");
   fim-se
 
-  se ~4 <> -5 então
+  se ~4 <> -5 entÃ£o
     imprima("testar_expr_log: ~4 <> -5");
   fim-se
 fim
 
 
-função testar_matriz_carac()
+funÃ§Ã£o testar_matriz_carac()
   gg: matriz[2][3] de caracteres;
   i,j: inteiro;
-início  
+inÃ­cio  
 
-  para i de 0 até 1 faça
-    para j de 0 até 2 faça      
-      se gg[i][j] <> '' ou  gg[i][j] <> 0 então
+  para i de 0 atÃ© 1 faÃ§a
+    para j de 0 atÃ© 2 faÃ§a      
+      se gg[i][j] <> '' ou  gg[i][j] <> 0 entÃ£o
         imprima("testar_matriz_carac: gg[i][j] <> \"\"");
       fim-se
       c := c + 1;
@@ -329,12 +329,12 @@ início
   matriz_carac_func(gg);
 fim
 
-função matriz_carac_func(qq: matriz[2][3] de caracteres)
+funÃ§Ã£o matriz_carac_func(qq: matriz[2][3] de caracteres)
   cp : matriz[6] de caracteres;
   i : inteiro;
   j : inteiro;
   c : inteiro;
-início  
+inÃ­cio  
   cp[0] := 'a';
   cp[1] := 'b';
   cp[2] := 'c';
@@ -342,9 +342,9 @@ início
   cp[4] := 'e';
   cp[5] := 'f';
 
-  para i de 0 até 1 faça
-    para j de 0 até 2 faça      
-      se qq[i][j] <> cp[c] então        
+  para i de 0 atÃ© 1 faÃ§a
+    para j de 0 atÃ© 2 faÃ§a      
+      se qq[i][j] <> cp[c] entÃ£o        
         imprima("matriz_carac_func: qq[i][j] <> cp[c]");
       fim-se
       c := c + 1;
@@ -353,15 +353,15 @@ início
 
 fim
 
-função testar_matriz_literais()
+funÃ§Ã£o testar_matriz_literais()
   gg : matriz[2][3] de literais;
   i,j: inteiro;
-início
+inÃ­cio
 
-  para i de 0 até 1 faça
-    para j de 0 até 2 faça
-      se gg[i][j] <> "" então
-        imprima("testar_matriz_literais: gg[i][j] <> \"\"");
+  para i de 0 atÃ© 1 faÃ§a
+    para j de 0 atÃ© 2 faÃ§a
+      se gg[i][j] <> "" entÃ£o
+        imprima("testar_matriz_literais: gg[",i,"][",j,"] <> \"\"");
       fim-se
       c := c + 1;
     fim-para
@@ -377,12 +377,12 @@ início
   matriz_lit_func(gg);
 fim
 
-função matriz_lit_func(qq: matriz[2][3] de literais)
+funÃ§Ã£o matriz_lit_func(qq: matriz[2][3] de literais)
   cp : matriz[6] de literais;
   i : inteiro;
   j : inteiro;
   c : inteiro;
-início
+inÃ­cio
   cp[0] := "oi1";
   cp[1] := "oi2";
   cp[2] := "oi3";
@@ -390,9 +390,9 @@ início
   cp[4] := "oi5";
   cp[5] := "oi6";
 
-  para i de 0 até 1 faça
-    para j de 0 até 2 faça
-      se qq[i][j] <> cp[c] então
+  para i de 0 atÃ© 1 faÃ§a
+    para j de 0 atÃ© 2 faÃ§a
+      se qq[i][j] <> cp[c] entÃ£o
         imprima("testar_matriz_literais: qq[i][j] <> cp[c]");
       fim-se
       c := c + 1;
@@ -401,80 +401,80 @@ início
 
 fim
 
-função testar_enquanto()
+funÃ§Ã£o testar_enquanto()
   local : inteiro;
   z : inteiro;
-início
+inÃ­cio
 
-  enquanto não local faça
+  enquanto nÃ£o local faÃ§a
     
-    se z = 0 então
+    se z = 0 entÃ£o
       z := 1;    
     fim-se
   
-    se z = 1 então
+    se z = 1 entÃ£o
       local := 1;
     fim-se
   fim-enquanto
 
-  se local <> 1 ou z <> 1 então
+  se local <> 1 ou z <> 1 entÃ£o
     imprima("testar_enquanto: local <> 1 e z <> 1");
   fim-se
 fim
 
-função testar_para()
+funÃ§Ã£o testar_para()
   str : inteiro; //shadow global str
   g : inteiro;
-início
+inÃ­cio
 
-  para str de 0 até 4 faça
+  para str de 0 atÃ© 4 faÃ§a
     g := g + str;
   fim-para
 
-  se g <> 10 ou str <> 4 então
+  se g <> 10 ou str <> 4 entÃ£o
     imprima("testar_para: g <> 10 ou str <> 4");
   fim-se
 
   g := 0;
-  para str de 0 até 10 passo 2 faça
+  para str de 0 atÃ© 10 passo 2 faÃ§a
     g := g + str;
   fim-para
 
-  se g <> 30 ou str <> 10 então
+  se g <> 30 ou str <> 10 entÃ£o
     imprima("testar_para: g <> 30 ou str <> 10");
   fim-se
   
   g := 30;
-  para str de 10 até 0 passo -2 faça
+  para str de 10 atÃ© 0 passo -2 faÃ§a
     g := g - str;
   fim-para  
 
-  se g <> 0 ou str <> 0 então
+  se g <> 0 ou str <> 0 entÃ£o
     imprima("testar_para: g <> 0 ou str <> 0");
   fim-se
 fim
 
 
 
-função testar_funcoes()
+funÃ§Ã£o testar_funcoes()
   lit : literal;
   mm  : matriz[2] de inteiros;
   i : inteiro;
   r : real;
-início
+inÃ­cio
   mm[0] := -7;
   mm[1] := -8;
 
   lit := f(13, 5.5, mm, 'a');
-  se lit <> "ok" então
+  se lit <> "ok" entÃ£o
     imprima("testar_funcoes: lit <> \"oi\"");
   fim-se
 
-  se mm[0] = 99 então
+  se mm[0] = 99 entÃ£o
     imprima("testar_funcoes: mm[0] = 99");
   fim-se
 
-  se mm[0] <> -7 então
+  se mm[0] <> -7 entÃ£o
     imprima("testar_funcoes: mm[0] <> -7");
   fim-se
 
@@ -482,24 +482,24 @@ início
   mm[1] := 0;
   lit := f(1,0, mm, 0);
 
-  se lit <> "ret" então
+  se lit <> "ret" entÃ£o
     imprima("testar_funcoes: lit <> \"ret\"");
   fim-se
 
   r := f2(2.6);
 
   i := r + 0.5;
-  se i <> 6 então
+  se i <> 6 entÃ£o
     imprima("testar_funcoes: i <> 6");
   fim-se
 
   i := f2(2.6);
-  se i <> 5 então
+  se i <> 5 entÃ£o
     imprima("testar_funcoes: i <> 5");
   fim-se
 
   r := f3();
-  se r <> 99 então
+  se r <> 99 entÃ£o
     imprima("testar_funcoes: r <> 99");
   fim-se
 
@@ -507,16 +507,16 @@ início
   f4(2);
 fim
 
-função f(x:inteiro, r:real, m: matriz[2] de inteiros, c: caractere) : literal
+funÃ§Ã£o f(x:inteiro, r:real, m: matriz[2] de inteiros, c: caractere) : literal
   count : inteiro;
-início
+inÃ­cio
   count := x + r + m[0] + m[1] + c + 0.5;
   
-  se count = 1 então
+  se count = 1 entÃ£o
     retorne "ret";
   fim-se
     
-  se count <> 101 então
+  se count <> 101 entÃ£o
     imprima("f: count <> 101");
   fim-se
 
@@ -525,23 +525,23 @@ início
   retorne "ok";
 fim
 
-função f2(x: inteiro) : real
-início
-  se x <> 2 então
+funÃ§Ã£o f2(x: inteiro) : real
+inÃ­cio
+  se x <> 2 entÃ£o
     imprima("f2: x <> 2");
   fim-se
 
   retorne 5.6;
 fim
 
-função f3() : inteiro
-início
+funÃ§Ã£o f3() : inteiro
+inÃ­cio
   retorne 99;
 fim
 
-função f4(r:real)
-início
-  se r <> 2 então
+funÃ§Ã£o f4(r:real)
+inÃ­cio
+  se r <> 2 entÃ£o
     imprima("f4: r <> 2");
   fim-se
 fim
