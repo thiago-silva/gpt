@@ -159,6 +159,7 @@ options {
          "   int *d;\n"
          "   double* f;\n"
          "   char* c;\n"
+         "   char** s;\n"
          "   boolean* b;\n"          
          "   switch(type) {\n"
          "     case 'i':\n"
@@ -172,6 +173,10 @@ options {
          "     case 'c':\n"
          "       c = (char*) matrix;\n"
          "       for(i = 0; i < size; i++) c[i] = 0;\n"
+         "       break;\n"
+         "     case 's':\n"
+         "       s = (char**) matrix;\n"
+         "       for(i = 0; i < size; i++) s[i] = 0;\n"
          "       break;\n"
          "     case 'b':\n"
          "       b = (boolean*) matrix;\n"
@@ -267,6 +272,12 @@ options {
          "   return TRUE;\n"
          "}\n";
     s << "boolean str_comp(char* left, char* right) {\n"
+         "   if (!left && !right) {\n"
+         "      return TRUE;\n"
+         "   }\n"
+         "   if (!left || !right) {\n"
+         "      return FALSE;\n"
+         "   }\n"
          "   if(str_strlen(left) != str_strlen(right)) {\n"
          "     return FALSE;\n"
          "   }\n"
@@ -507,8 +518,9 @@ variaveis
                   case TIPO_REAL:
                     init << "'f', ";break;
                   case TIPO_CARACTERE:
+                    init << "'c', ";break;
                   case TIPO_LITERAL:
-                    init << "'c', ";break;      
+                    init << "'s', ";break;      
                   case TIPO_LOGICO:
                     init << "'b', ";break;
                 }
@@ -931,7 +943,7 @@ func_decls
                   case TIPO_CARACTERE:
                     cpy << "'c', ";break;
                   case TIPO_LITERAL:
-                    cpy << "'s', ";break;      
+                    cpy << "'s', ";break;
                   case TIPO_LOGICO:
                     cpy << "'b', ";break;
                 }
