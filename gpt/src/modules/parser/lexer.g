@@ -500,7 +500,7 @@ catch[antlr::RecognitionException] {
   matched token. if there is, we check for the tokens on tokens{} secion.
   if is a match, we don't do anything, and let the testLiterals do its work.
   Else, it means we have something like "a-b". So we need to rewind to
-  "a", right before the match of '-', synchorinize the current matched text
+  "a", right before the match of '-', synchronize the current matched text
   (wich now is "a-b") to "a", and let it roll again (wich will dispatch
   a token T_IDENTIFIER with text "a", and start again from '-' point).
 */
