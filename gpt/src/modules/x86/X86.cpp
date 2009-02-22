@@ -1024,14 +1024,20 @@ string X86::toChar(const string& str) {
   }
 }
 
+//extrai os bytes que representam um número em ponto flutuante
+//e devolve o inteiro como string
 string X86::toReal(const string& str) {
+  float fvalue = (float) atof(str.c_str());
+  unsigned char *cp = (unsigned char*) &fvalue;
+
+  int i = cp[0]
+    + (cp[1] << 8) 
+    + (cp[2] << 16) 
+    + (cp[3] << 24);
+
   stringstream s;
-  //get the content of a float variable to integer.
-  float fvalue; //sizeof(float) should be 4
-  long  *fvaluep; //sizeof(long) should be 4
-  fvalue = atof(str.c_str());
-  fvaluep = (long*) &fvalue;
-  s << *fvaluep;
+  s << i;
+
   return s.str();
 }
 
