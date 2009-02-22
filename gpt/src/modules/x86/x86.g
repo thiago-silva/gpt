@@ -415,7 +415,7 @@ stm_enquanto
   string lbfim = x86.createLabel(true, "fim_enquanto");;
 
   s << lbenq << ":";
-  x86.writeTEXT(lbenq);
+  x86.writeTEXT(s.str());
   s.str("");
 
   x86.writeTEXT("; while: expressao");
