@@ -166,8 +166,7 @@ o Realizando commits
   e bugfixes.
 
   Além do mais, BUGFIX pode ser seguido de um número (ie #1234), que representa
-  o número do bug em um sistema de gerencia de bugs, como bugzilla. Porém
-  ainda não usamos tal sistema.
+  o número do bug em um sistema de gerencia de bugs, que no nossa caso é o Mantis.
 
 o Unit Testing
 

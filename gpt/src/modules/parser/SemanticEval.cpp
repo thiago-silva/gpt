@@ -550,9 +550,13 @@ ExpressionValue SemanticEval::evaluateExpr(ExpressionValue& ev, RefPortugolAST u
 }
 
 void SemanticEval::evaluateReturnCmd(ExpressionValue& ev, int line) {
-  if(currentScope == SymbolTable::GlobalScope) {
-    //tentando retornar no bloco principal
-    GPTDisplay::self()->add("Bloco principal não deve ter retorno", line);
+  bool isGlobalEscope = currentScope == SymbolTable::GlobalScope;
+  if(isGlobalEscope) {
+    if(ev.primitiveType() != TIPO_INTEIRO) {
+        stringstream msg;
+        msg << "Retorno do bloco principal deve ser compatível do tipo inteiro: " ;
+        GPTDisplay::self()->add(msg.str(), line);
+      }
   } else {
     //currentScope eh o nome da funcao atual
     try {

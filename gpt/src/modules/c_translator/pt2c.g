@@ -271,6 +271,12 @@ options {
          "   }\n"
          "   return TRUE;\n"
          "}\n";
+    s << "int str_strlen(char* str) {\n"
+         "   if(str == 0) {\n"
+         "     return 0;\n"
+         "   }\n"
+         "   return strlen(str);\n"
+         "}\n";     
     s << "boolean str_comp(char* left, char* right) {\n"
          "   if (!left && !right) {\n"
          "      return TRUE;\n"
@@ -285,12 +291,6 @@ options {
          "     return TRUE;\n"
          "   }\n"
          "   return (strcmp(left, right)==0);\n"
-         "}\n";
-    s << "int str_strlen(char* str) {\n"
-         "   if(str == 0) {\n"
-         "     return 0;\n"
-         "   }\n"
-         "   return strlen(str);\n"
          "}\n";
     s << "char* return_literal(char* str) {\n"
          "  char* lit = NULL;\n"
@@ -705,9 +705,16 @@ fcall[int expct_type] returns [production p] //id, list<dimexpr>
 
 stm_ret
 {
-  int expecting_type = stable.getSymbol(SymbolTable::GlobalScope, _currentScope, true).type.primitiveType();
+  int expecting_type=TIPO_NULO;
+  bool isGlobalEscope = _currentScope==SymbolTable::GlobalScope;
+  if (isGlobalEscope){
+    expecting_type = TIPO_INTEIRO; // o retorno no bloco principal é do TIPO_INTEIRO
+  }else{
+  	expecting_type = stable.getSymbol(SymbolTable::GlobalScope, _currentScope, true).type.primitiveType();
+  }
+  
   production e;
-  stringstream str;
+  stringstream str; 
 }
   : #(T_KW_RETORNE (TI_NULL|e=expr[expecting_type]))
     {
@@ -725,7 +732,7 @@ stm_ret
 stm_se
 {
   production e;
-  stringstream str;
+  stringstream str; 
 }
   : #(T_KW_SE e=expr[TIPO_LOGICO]
         {

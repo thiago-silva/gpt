@@ -220,8 +220,13 @@ string X86::currentScope() {
   return _currentScope;
 }
 
-void X86::writeExit() {
-  writeTEXT("exit 0");
+void X86::writeExit(int value) {
+  char svalue[5];
+  sprintf(svalue, "%d", value);
+  
+  string exit = "exit ";
+  exit += svalue;
+  writeTEXT(exit);
 }
 
 void X86::declarePrimitive(int decl_type, const string& name, int type) {

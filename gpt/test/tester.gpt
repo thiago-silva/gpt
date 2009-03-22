@@ -30,6 +30,8 @@ início
 
 //testar_castings();
 
+  retorne 42;
+  imprima("se imprimiu essa linha, o retorne do bloco principal não funcionou");
 fim
 
 função testar_inicializacao()

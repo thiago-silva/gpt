@@ -331,22 +331,34 @@ fcall[int expct_type] returns [int type]
 
 stm_ret
 {
-  int expecting_type = stable.getSymbol(SymbolTable::GlobalScope, x86.currentScope(), true).type.primitiveType();
+  int expecting_type=TIPO_NULO;
   int etype;
+  bool isGlobalEscope = (x86.currentScope()==SymbolTable::GlobalScope);
+  if (isGlobalEscope){
+    expecting_type = TIPO_INTEIRO; // o retorno no bloco principal é do TIPO_INTEIRO
+  }else{
+	expecting_type = stable.getSymbol(SymbolTable::GlobalScope, x86.currentScope(), true).type.primitiveType();        
+  }  
 }
   : #(T_KW_RETORNE (TI_NULL|etype=expr[expecting_type]))
     {
-      if(expecting_type != TIPO_NULO) {
-        x86.writeTEXT("pop eax");
+      if (isGlobalEscope){
+      // arrumar um jeito de passar o valor do retorne aqui.
+      	x86.writeExit();  // o writeExit() já está preparado pra receber um parametro inteiro, que é opcional	
+      }else{
+      	if(expecting_type != TIPO_NULO) {
+        	x86.writeTEXT("pop eax");
+      	}
+      	if(expecting_type == TIPO_LITERAL) {
+        	x86.writeTEXT("addarg eax");
+        	x86.writeTEXT("call clone_literal");
+        	x86.writeTEXT("clargs 1");
+      	} else {
+        	x86.writeCast(etype, expecting_type);
+      	}
+      
+      	x86.writeTEXT("return");
       }
-      if(expecting_type == TIPO_LITERAL) {
-        x86.writeTEXT("addarg eax");
-        x86.writeTEXT("call clone_literal");
-        x86.writeTEXT("clargs 1");
-      } else {
-        x86.writeCast(etype, expecting_type);
-      }
-      x86.writeTEXT("return");
     }
   ;
 

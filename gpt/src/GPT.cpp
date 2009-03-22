@@ -41,7 +41,7 @@
 GPT* GPT::_self = 0;
 
 GPT::GPT()
-  :/* _usePipe(false),*/ _printParseTree(false), _useOutputFile(false)
+  : /*_usePipe(false),*/ _printParseTree(false), _useOutputFile(false)
 {
 }
 
@@ -97,9 +97,8 @@ void GPT::showHelp() {
           "   -h            mostra esse texto\n"
           "   -o <arquivo>  compila e salva programa como <arquivo>\n"
           "   -t <arquivo>  salva o código em linguagem C como <arquivo>\n"
-          "   -s <arquivo>  salva o código em linguagem assembly como <arquivo>\n"
+          "   -s <arquivo>  salva o código em linguagem Assembly como <arquivo>\n"
           "   -i            interpreta o algoritmo\n"
-          "\n"
           "   -d            exibe dicas no relatório de erros\n\n"
           "   Maiores informações no manual.\n";
 
@@ -152,7 +151,7 @@ bool GPT::prologue(const list<string>& ifnames) {
     return success;
 }
 
-bool GPT::compile(const list<string>& ifnames, bool genBinary) {  
+bool GPT::compile(const list<string>& ifnames, bool genBinary){  
   bool success = false;
   stringstream s;
 
@@ -173,54 +172,59 @@ bool GPT::compile(const list<string>& ifnames, bool genBinary) {
     #endif
   }
 
-  X86Walker x86(_stable);
-  string asmsrc = x86.algoritmo(_astree);
+  try{
+    X86Walker x86(_stable);
+    string asmsrc = x86.algoritmo(_astree);
 
-  string ftmpname = createTmpFile();
-  ofstream fo;
+    string ftmpname = createTmpFile();
+    ofstream fo;
 
-  if(!genBinary) { //salva assembly code
-    fo.open(ofname.c_str(), ios_base::out);
-    if(!fo) {
-      s << PACKAGE << ": não foi possível abrir o arquivo: \"" << ofname << "\"" << endl;
-      GPTDisplay::self()->showError(s);
-      goto bail;
+    if(!genBinary) { //salva assembly code
+      fo.open(ofname.c_str(), ios_base::out);
+      if(!fo) {
+        s << PACKAGE << ": não foi possível abrir o arquivo: \"" << ofname << "\"" << endl;
+        GPTDisplay::self()->showError(s);
+        goto bail;
+      }
+      fo << asmsrc;
+      fo.close();
+    } else { //compile
+      fo.open(ftmpname.c_str(), ios_base::out);
+      if(!fo) {
+        s << PACKAGE << ": erro ao processar arquivo temporário" << endl;
+        GPTDisplay::self()->showError(s);
+        goto bail;
+      }
+      fo << asmsrc;
+      fo.close();
+
+      stringstream cmd;
+      cmd << "nasm -O1 -fbin -o \"" << ofname << "\" " << ftmpname;
+
+      if(system(cmd.str().c_str()) == -1) {
+        s << PACKAGE << ": não foi possível invocar o nasm." << endl;
+        GPTDisplay::self()->showError(s);
+        goto bail;
+      }
+
+      #ifndef WIN32
+        cmd.str("");
+        cmd << "chmod +x " << ofname;
+        system(cmd.str().c_str());
+      #endif
     }
-    fo << asmsrc;
-    fo.close();
-  } else { //compile
-    fo.open(ftmpname.c_str(), ios_base::out);
-    if(!fo) {
-      s << PACKAGE << ": erro ao processar arquivo temporário" << endl;
-      GPTDisplay::self()->showError(s);
-      goto bail;
-    }
-    fo << asmsrc;
-    fo.close();
+  
+    success = true;
 
-    stringstream cmd;
-    cmd << "nasm -O1 -fbin -o \"" << ofname << "\" " << ftmpname;
-
-    if(system(cmd.str().c_str()) == -1) {
-      s << PACKAGE << ": não foi possível invocar o nasm." << endl;
-      GPTDisplay::self()->showError(s);
-      goto bail;
-    }
-
-    #ifndef WIN32
-      cmd.str("");
-      cmd << "chmod +x " << ofname;
-      system(cmd.str().c_str());
-    #endif
-  }
-
-  success = true;
-
-  bail:
-    if(ftmpname.length()>0) {
-       unlink(ftmpname.c_str());
-    }
+    bail:
+      if(ftmpname.length()>0) {
+         unlink(ftmpname.c_str());
+      }
     return success;
+  } catch(SymbolTableException& e) {
+      s << PACKAGE << ": erro interno: " << e.getMessage() << endl;
+      GPTDisplay::self()->showError(s);
+  }
 }
 
 bool GPT::translate2C(const list<string>& ifnames) {
@@ -236,23 +240,28 @@ bool GPT::translate2C(const list<string>& ifnames) {
      ofname += ".c";
   }
 
-  Portugol2CWalker pt2c(_stable);
-  string c_src = pt2c.algoritmo(_astree);
+  try{
+  	Portugol2CWalker pt2c(_stable);
+	string c_src = pt2c.algoritmo(_astree);
 
-  ofstream fo;
-  fo.open(ofname.c_str(), ios_base::out);
-  if(!fo) {
-    s << PACKAGE << ": não foi possível abrir o arquivo: \"" << ofname << "\"" << endl;
-    GPTDisplay::self()->showError(s);
-    goto bail;
+	ofstream fo;
+	fo.open(ofname.c_str(), ios_base::out);
+	if(!fo) {
+	  s << PACKAGE << ": não foi possível abrir o arquivo: \"" << ofname << "\"" << endl;
+      GPTDisplay::self()->showError(s);
+	  goto bail;
+	}
+	fo << c_src;
+	fo.close();
+
+	success = true;
+
+	bail:
+	  return success;
+  } catch(SymbolTableException& e) {
+      s << PACKAGE << ": erro interno: " << e.getMessage() << endl;
+      GPTDisplay::self()->showError(s);
   }
-  fo << c_src;
-  fo.close();
-
-  success = true;
-
-  bail:
-    return success;
 }
 
 bool GPT::interpret(const list<string>& ifnames, const string& host, int port) {
