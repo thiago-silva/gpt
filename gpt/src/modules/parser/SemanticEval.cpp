@@ -554,7 +554,7 @@ void SemanticEval::evaluateReturnCmd(ExpressionValue& ev, int line) {
   if(isGlobalEscope) {
     if(ev.primitiveType() != TIPO_INTEIRO) {
         stringstream msg;
-        msg << "Retorno do bloco principal deve ser compatível do tipo inteiro: " ;
+        msg << "Valor de retorno do bloco principal deve ser compatível com o tipo inteiro";
         GPTDisplay::self()->add(msg.str(), line);
       }
   } else {
