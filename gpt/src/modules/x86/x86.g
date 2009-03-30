@@ -149,7 +149,10 @@ tipo_matriz returns [pair<int, list<string> > p] //pair<type, list<dimsize> >
 
 principal
   : stm_block
-    {x86.writeExit();}
+    {
+            x86.writeTEXT("mov ecx, 0");
+            x86.writeExit();
+    }
   ;
 
 stm_block
@@ -343,9 +346,9 @@ stm_ret
   : #(T_KW_RETORNE (TI_NULL|etype=expr[expecting_type]))
     {
       if (isGlobalEscope){
-      // arrumar um jeito de passar o valor do retorne aqui.
-      	x86.writeExit();  // o writeExit() já está preparado pra receber um parametro inteiro, que é opcional	
-      }else{
+        x86.writeTEXT("pop ecx");
+        x86.writeExit();
+      } else {
       	if(expecting_type != TIPO_NULO) {
         	x86.writeTEXT("pop eax");
       	}

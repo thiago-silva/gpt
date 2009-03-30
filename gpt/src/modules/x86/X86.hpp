@@ -98,7 +98,7 @@ public:
   string translateFuncImprima(const string& id, int type);
   string createLabel(bool local, string tmpl);
 
-  void writeExit(int value=0);
+  void writeExit();
 
   void writeAttribution(int e1, int e2, pair<pair<int, bool>, string>&);
   void writeOuExpr();
