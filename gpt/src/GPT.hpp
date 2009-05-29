@@ -48,7 +48,7 @@ public:
 
   bool compile(const list<string>& ifnames, bool genBinary = true);
   bool translate2C(const list<string>& ifnames);
-  bool interpret(const list<string>& ifnames, const string& host, int port);
+  int interpret(const list<string>& ifnames, const string& host, int port);
   
 private:
   GPT();

@@ -30,6 +30,7 @@ início
 
 //testar_castings();
 
+  imprima("Verifique se o resultado de 'echo $?' é 42");
   retorne 42;
   imprima("se imprimiu essa linha, o retorne do bloco principal não funcionou");
 fim

@@ -264,15 +264,15 @@ bool GPT::translate2C(const list<string>& ifnames) {
   }
 }
 
-bool GPT::interpret(const list<string>& ifnames, const string& host, int port) {
+int GPT::interpret(const list<string>& ifnames, const string& host, int port) {
   if(!prologue(ifnames)) {
     return false;
   }
 
   InterpreterWalker interpreter(_stable, host, port);
-  interpreter.algoritmo(_astree);
+  int r = interpreter.algoritmo(_astree);
 
-  return true;
+  return r;
 }
 
 

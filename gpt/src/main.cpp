@@ -260,7 +260,9 @@ int main(int argc, char** argv) {
       success = GPT::self()->compile(_ifilenames, false);
       break;
     case CMD_INTERPRET:
-      success = GPT::self()->interpret(_ifilenames, _host, atoi(_port.c_str()));
+      int result;
+      result = GPT::self()->interpret(_ifilenames, _host, atoi(_port.c_str()));
+      return result; 
       break;
     case CMD_INVALID:
       break;

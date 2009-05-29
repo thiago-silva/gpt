@@ -710,7 +710,7 @@ stm_ret
   if (isGlobalEscope){
     expecting_type = TIPO_INTEIRO; // o retorno no bloco principal é do TIPO_INTEIRO
   }else{
-  	expecting_type = stable.getSymbol(SymbolTable::GlobalScope, _currentScope, true).type.primitiveType();
+    expecting_type = stable.getSymbol(SymbolTable::GlobalScope, _currentScope, true).type.primitiveType();
   }
   
   production e;

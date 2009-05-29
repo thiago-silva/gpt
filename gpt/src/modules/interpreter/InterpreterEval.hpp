@@ -151,6 +151,9 @@ class InterpreterEval {
  
   void setReturnExprValue(ExprValue& v);
   ExprValue getReturnExprValue(const string&);
+  
+  int getReturning();
+  
 //----------- Debugger -------------------------
 
   void nextCmd(const string& file, int line);

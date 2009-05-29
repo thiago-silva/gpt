@@ -767,6 +767,10 @@ ExprValue InterpreterEval::getReturnExprValue(const string& fname) {
   return retExpr;
 }
 
+int InterpreterEval::getReturning(){
+  return atoi(retExpr.value.c_str());
+}
+
 //----------- Debugger -------------------------
 
 void InterpreterEval::nextCmd(const string& file, int line) {

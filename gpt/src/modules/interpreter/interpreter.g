@@ -143,8 +143,9 @@ options {
   )
 
 */
-algoritmo
+algoritmo returns [int ret]
 {
+  ret = 0;
   topnode = _t;
   interpreter.init(_t->getFilename());  
   _t = _t->getNextSibling();
@@ -153,6 +154,11 @@ algoritmo
   }
 }
   : inicio    
+    {
+      if (_returning){
+        ret = interpreter.getReturning();
+      }
+    }
   ;
 
 inicio
