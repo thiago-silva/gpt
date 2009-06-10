@@ -1,6 +1,11 @@
 Sumário de mudanças
 -------------------
 
+10 de junho de 2009 * gpt 1.1
+  
+  * O bloco principal agora tem suporte para instrução "retorne"
+  * Correção de bugs relacionados a impressão de valores nulos 
+
 11 de Dezembro de 2008 * gpt 1.0.2a
 
   * Correção de bugs relacionados à compilação com gcc 4.4

@@ -10,6 +10,7 @@ variáveis
   c : caractere;
   str : literal;  
   mat: matriz[2] de inteiros;
+  aviçao: inteiro;
 fim-variáveis
 
 início
@@ -23,7 +24,7 @@ início
   testar_para();
 
 
-  testar_funcoes();
+  testar_funções();
 
 //overflow de inteiros, caracteres logicos e reais
   //testar_overflow();
@@ -459,7 +460,7 @@ fim
 
 
 
-função testar_funcoes()
+função testar_funções()
   lit : literal;
   mm  : matriz[2] de inteiros;
   i : inteiro;

@@ -1,3 +1,144 @@
+2009-05-29
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.hpp:
+	* /trunk/gpt/src/GPT.hpp:
+	* /trunk/gpt/src/modules/c_translator/pt2c.g:
+	* /trunk/gpt/src/modules/interpreter/interpreter.g:
+	* /trunk/gpt/src/main.cpp:
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.cpp:
+	* /trunk/gpt/src/modules/x86/x86.g:
+	* /trunk/gpt/test/tester.gpt:
+	* /trunk/gpt/src/GPT.cpp:
+
+	- Adicionado suporte a retorne no bloco principal, no modulo
+	interpretador.
+
+2009-03-30
+
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/src/modules/x86/x86.g:
+	* /trunk/gpt/src/modules/x86/X86.hpp:
+
+	-Passando o valor de exit() pelo registrador ecx
+
+	* /trunk/gpt/src/modules/parser/SemanticEval.cpp:
+
+	-Adequacao de mensagem de erro
+
+2009-03-22
+
+	* /trunk/gpt/HACKING:
+	* /trunk/gpt/src:
+	* /trunk/gpt/src/modules/c_translator/pt2c.g:
+	* /trunk/gpt/src/modules/parser/SemanticEval.cpp:
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/src/modules/x86/x86.g:
+	* /trunk/gpt/test/tester.gpt:
+	* /trunk/gpt/src/modules/x86/X86.hpp:
+	* /trunk/gpt/src/GPT.cpp:
+
+	- Adicionado suporte a retorne no bloco principal. Sendo que,
+	atualmente, somente na traducao para C++ o valor de retorno
+	do
+	-algoritmo é passado para o S.O.
+	Fix:
+	- Resolvido bug na traducao para C++: o g++ nao encontrava a
+	funcao str_strlen().
+	-REGULAR:
+	- Pequena correcao no HACKING.
+
+2009-02-22
+
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+
+	-substituindo um hack por outro em toReal
+
+	* /trunk/gpt/test/tester.gpt:
+
+	-codificacao parece que tava zoada
+
+	* /trunk/gpt/src/modules/x86/x86.g:
+
+	Fix:
+	-label de enquanto faltando o ':' ao final
+
+	* /trunk/gpt/src/modules/c_translator/pt2c.g:
+
+	Fix:
+	-str_comp dando segfault quando argumentos sao nulos
+	-matriz de literais nao estava sendo inicializada
+	corretamente
+
+	* /trunk/gpt/src/modules/parser/lexer.g:
+
+	-correcao de typo em comentario
+
+2009-02-21
+
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/src/modules/x86/asm_lib.h:
+
+	- Correcao do bug #83 (ver mantis) para a versao compilada
+	(impressao de tipo literal)
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.cpp:
+
+	- Correcao do bug #83 (mantis) para o interpretador
+	(impressao de tipo literal)
+
+2009-02-19
+
+	* /trunk/gpt/src/modules/interpreter/InterpreterEval.cpp:
+	* /trunk/gpt/src/modules/x86/asm_lib.h:
+	* /trunk/gpt/src/GPT.cpp:
+
+	Fix:
+	-data do copyright
+	-Bug na impressao de valores logicos
+
+2009-02-16
+
+	* /trunk/gpt/doc/manual/manual.tex:
+
+	-Correcoes no portugues
+
+2009-01-13
+
+	* /trunk/gpt/configure.ac:
+	* /trunk/gpt/src/modules/parser/UnicodeCharBuffer.hpp:
+
+	-fixing compilation issues with GCC 4.4
+	-fixed building on debian with pccts installed
+
+2008-12-11
+
+	* /trunk/gpt/src/modules/parser/UnicodeCharScanner.hpp:
+
+	-resolvendo compilacao com gcc 4.4
+
+2008-10-21
+
+	* /trunk/gpt/debian/dirs:
+	* /trunk/gpt/debian/compat:
+	* /trunk/gpt/packages/deb:
+	* /trunk/gpt/debian/watch:
+	* /trunk/gpt/debian/changelog:
+	* /trunk/gpt/debian/copyright:
+	* /trunk/gpt/debian/docs:
+	* /trunk/gpt/debian/libgportugol-dev.install:
+	* /trunk/gpt/debian/rules:
+	* /trunk/gpt/debian/libgportugol0.install:
+	* /trunk/gpt/debian/gpt.install:
+	* /trunk/gpt/debian:
+	* /trunk/gpt/debian/control:
+
+	- Adicao dos arquivos necessarios para criacao de pacotes
+	debian
+
+	* /trunk/gpt/lib/Makefile.am:
+
+	-base.gpt nao estava sendo incluido no pacote tar.gz
+
 2008-06-24
 
 	* /trunk/gpt/src/Makefile.am:

@@ -178,3 +178,65 @@ o Unit Testing
   
 
   TODO: explicar a infraestrutura de testes (quando houver uma)
+
+Documentando
+=============
+
+  Os arquivos de documentação ficam no diretório doc.
+
+  O manual está em doc/manual e é escrito em Latex, portanto será necessário a instalação dos seguintes pacotes:
+  - latex-make
+  - texlive-latex-base
+  - latex2html
+  
+  Os arquivos do manual ficam na pasta doc/manual. E o arquivo principal é o manual.tex.
+  Após fazer as modificações, para gerar o pdf, basta executar o comando
+  $ latex manual.tex
+  
+  Para gerar o manual em html, use o comando
+  $ latex2html manual.tex
+
+Distribuindo
+=============
+
+  Para a distribução do GPT pode-se seguir os seguinte passos:
+  
+  o Atualizar documentação (ver seção Documentando)
+  
+  o Checar se todos os arquivos novos/modificados estão no repositório
+    $ svn status 
+  
+  o Testar o versão do SVN em outros ambientes
+  
+  o Mudar a versão no arquivo configure.ac
+    Atualizar os paramentros das funções AC_INIT e AM_INIT_AUTOMAKE com a nova versão do gpt
+    Após isso executar os comandos, para que a mudança reflita nos arquivos gerados automaticamente:
+    $ autoconf && automake
+    
+  o Atualizar NEWS
+    O arquivo NEWS deverá ser atualizado manualmente seguindo o padrão utilizado.
+    
+  o Atualizar ChangeLog
+    Para gerar o ChangeLog será necessário a instalação do pacote:
+    - php-cli
+  
+    Executar o comando
+    $ php stuff/svn2cl.php > ChangeLog
+  
+  o Commit e tag
+    Após essas atualizações, deverá ser feito um commit sem comentários e tagear a versão no SVN. 
+    $ svn commit
+    $ svn copy svn://svn.berlios.de/gpt/trunk/gpt \
+           svn://svn.berlios.de/gpt/tags/gpt-1.1 \
+      -m "Release 1.1"
+
+  o Criar pacotes
+    - tar.gz
+      $ make distclean; mkdir build; cd build; ../configure && make && make distcheck
+    
+    
+    - debian
+
+  o Fazer o upload dos arquivos
+  
+  o Atualizar o site e publicar as novidades

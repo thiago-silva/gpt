@@ -131,7 +131,7 @@
 \def\version#1{\def\@version{#1}}
 
 \title{G-Portugol}
-\version{v1.0.1}
+\version{v1.1}
 \author{Thiago Silva}
 \email{\texttt{tsilva@sourcecraft.info}}
 
@@ -426,7 +426,7 @@ especiais.}
   podem ter acentos ou caracteres especiais como \$, \#, etc. A definição
   de um identificador em   G-Portugol é equivalente ao das linguagens populares:
   uma letra (a-z ou A-Z) seguido de qualquer número de letras ou números.
-  Finalmente, underlines (_) são permitidos. Cedilhas, portanto, também não
+  Finalmente, underlines (\_) são permitidos. Cedilhas, portanto, também não
   formam identificadores válidos. 
 
  \item 
@@ -1036,6 +1036,24 @@ Vale ressaltar que não se faz imposição sobre a identação do código. Esse
 recurso pode ser vantajoso no ensino, promovendo a clareza de código,
 portanto, sua implementação pode ser discutida para versões futuras.
 
+Embora a sintaxe seja bem diferente, o bloco principal tem uma função semântica semelhante à
+função \textit{main} do C. Possuindo a possibilidade de retornar um valor inteiro através do 
+comando ''retorne''. 
+
+\begin{program}
+  \begin{verbatim}
+algoritmo bloco_principal;
+
+início
+  imprima("Retornando valor do bloco principal");
+  retorne 42;
+  imprima("Essa linha não será impressa");
+fim
+  \end{verbatim}
+  
+  \caption{Bloco principal com comando retorne.}
+\end{program}
+
   \subsubsection{Estruturas de Controle}
 
 Estruturas de controle são formadas por um cabeçalho seguido por
@@ -1365,7 +1383,6 @@ Opções:
    -t <arquivo>  salva o código em linguagem C como <arquivo>
    -s <arquivo>  salva o código em linguagem assembly como <arquivo>
    -i            interpreta
-
    -d            exibe dicas no relatório de erros
 
    Maiores informações no manual.
