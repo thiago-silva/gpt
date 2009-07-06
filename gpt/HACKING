@@ -199,44 +199,43 @@ Documentando
 Distribuindo
 =============
 
-  Para a distribução do GPT pode-se seguir os seguinte passos:
+Para a distribução de uma nova versão do GPT pode-se seguir os seguinte passos:
   
-  o Atualizar documentação (ver seção Documentando)
+o Atualizar documentação (ver seção Documentando)
   
-  o Checar se todos os arquivos novos/modificados estão no repositório
-    $ svn status 
+o Checar se todos os arquivos novos/modificados estão no repositório
+  $ svn status 
   
-  o Testar o versão do SVN em outros ambientes
+o Testar o versão do SVN em outros ambientes
   
-  o Mudar a versão no arquivo configure.ac
-    Atualizar os paramentros das funções AC_INIT e AM_INIT_AUTOMAKE com a nova versão do gpt
-    Após isso executar os comandos, para que a mudança reflita nos arquivos gerados automaticamente:
-    $ autoconf && automake
+o Mudar a versão no arquivo configure.ac
+  Atualizar os paramentros das funções AC_INIT e AM_INIT_AUTOMAKE com a nova versão do gpt
+  Após isso executar os comandos, para que a mudança reflita nos arquivos gerados automaticamente:
+  $ autoconf && automake
     
-  o Atualizar NEWS
-    O arquivo NEWS deverá ser atualizado manualmente seguindo o padrão utilizado.
+o Atualizar NEWS
+  O arquivo NEWS deverá ser atualizado manualmente seguindo o padrão utilizado.
     
-  o Atualizar ChangeLog
-    Para gerar o ChangeLog será necessário a instalação do pacote:
-    - php-cli
+o Atualizar ChangeLog
+  Para gerar o ChangeLog será necessário a instalação do pacote:
+  - php-cli
   
-    Executar o comando
-    $ php stuff/svn2cl.php > ChangeLog
+  Executar o comando
+  $ php stuff/svn2cl.php > ChangeLog
   
-  o Commit e tag
-    Após essas atualizações, deverá ser feito um commit sem comentários e tagear a versão no SVN. 
-    $ svn commit
-    $ svn copy svn://svn.berlios.de/gpt/trunk/gpt \
-           svn://svn.berlios.de/gpt/tags/gpt-1.1 \
+o Commit e tag
+  Após essas atualizações, deverá ser feito um commit sem comentários e tagear a versão no SVN. 
+  $ svn commit
+  $ svn copy https://username@svn.berlios.de/svnroot/repos/gpt/trunk/gpt \
+            https://username@svn.berlios.de/svnroot/repos/gpt/tags/gpt-1.1\
       -m "Release 1.1"
 
-  o Criar pacotes
-    - tar.gz
-      $ make distclean; mkdir build; cd build; ../configure && make && make distcheck
+o Criar pacotes
+  - tar.gz
+    $ make distclean; mkdir build; cd build; ../configure && make && make distcheck
     
-    
-    - debian
+  - debian
 
-  o Fazer o upload dos arquivos
+o Fazer o upload dos arquivos
   
-  o Atualizar o site e publicar as novidades
+o Atualizar o site e publicar as novidades

@@ -305,7 +305,11 @@ string X86::toNasmString(string str) {
           ret += str[i];
       }
     } else {
-      ret += str[i];
+      if(str[i] == '\'') {
+        ret += "',39,'";
+      } else {
+        ret += str[i];
+      }
     }
   }
   return ret;

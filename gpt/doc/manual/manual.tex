@@ -366,7 +366,12 @@ linhas como na linguagem C:
 \end{verbatim}
 
 Outro detalhe é a pontuação. Da mesma forma que em C, o '';'' é utilizado como
-finalizador de enunciados.
+finalizador de enunciados. Se for necessário utilizar uma aspa dupla em um literal, 
+deve-se utilizar o escape:
+
+\begin{verbatim}
+  imprima("Isso é literal com aspas duplas ($\backslash$") "); 
+\end{verbatim}
 
 \section{Variáveis}
 
