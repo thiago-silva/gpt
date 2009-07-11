@@ -639,6 +639,7 @@ stm
   | stm_ret
   | stm_se
   | stm_enquanto
+  | stm_repita
   | stm_para
   ;
 
@@ -778,6 +779,28 @@ stm_enquanto
       {
         unindent();
         writeln("}");
+      }
+    )
+  ;
+
+stm_repita
+{
+  production e;
+  stringstream str;
+}
+  :#(T_KW_REPITA
+      {
+        str << "do{";
+        writeln(str);
+        indent();
+      }
+      (stm)*
+      e=expr[TIPO_LOGICO]
+      {
+        unindent();
+        str.str(""); 
+        str << "}while (! "  << e.expr.second << ");";
+        writeln(str);
       }
     )
   ;

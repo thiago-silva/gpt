@@ -66,7 +66,7 @@ início
     imprima("testar_inicializacao: local <> 0");
   fim-se
 
-  para local de 0  1 faça  
+  para local de 0 até 1 faça  
     se mat[local] <> 0 então
       imprima("testar_inicializacao: mat[",local,"] <> 0");
     fim-se
@@ -464,6 +464,9 @@ início
 
   repita
     z := z + 1;
+    se z>10 então
+      imprima("testar_repita: z <> 10. laço infinito");
+    fim-se  
   até z=10;
 
   se z <> 10 então
@@ -472,10 +475,10 @@ início
 
   repita
     z := z - 1;
-  até z<5;
+  até z<=5;
 
-  se z >= 5 então
-    imprima("testar_repita: z >= 5");
+  se z > 5 então
+    imprima("testar_repita: z > 5");
   fim-se
 
   repita
