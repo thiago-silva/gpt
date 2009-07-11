@@ -183,6 +183,7 @@ stm
   | stm_ret
   | stm_se
   | stm_enquanto
+  | stm_repita
   | stm_para
   ;
 
@@ -244,6 +245,13 @@ stm_enquanto
   ExpressionValue etype;
 }
   : #(e:T_KW_ENQUANTO etype=expr {evaluator.evaluateBooleanExpr(etype, e->getLine());} (stm)* )
+  ;
+
+stm_repita
+{
+  ExpressionValue etype;
+}
+  : #(r:T_KW_REPITA (stm)* etype=expr {evaluator.evaluateBooleanExpr(etype, r->getLine());} )
   ;
 
 stm_para

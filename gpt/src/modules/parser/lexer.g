@@ -81,6 +81,7 @@ tokens {
   T_KW_DE="de";
   T_KW_ATE="até";
   T_KW_FIM_PARA="fim-para";
+  T_KW_REPITA="repita";
   T_KW_MATRIZ="matriz";
   T_KW_INTEIROS="inteiros";
   T_KW_REAIS="reais";

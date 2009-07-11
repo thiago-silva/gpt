@@ -342,6 +342,7 @@ stm_list
       | stm_ret {tk=lastToken;} T_SEMICOL!
       | stm_se
       | stm_enquanto
+      | stm_repita {tk=lastToken;} T_SEMICOL!
       | stm_para
     )*
   ;
@@ -362,6 +363,7 @@ stm_list
     b.add(T_KW_FIM_SE);
     b.add(T_KW_FIM_ENQUANTO);
     b.add(T_KW_FIM_PARA);
+    b.add(T_KW_ATE);
     b.add(T_KW_FIM);
     consumeUntil(b);
   }
@@ -380,7 +382,7 @@ stm_ret!
   exception
   catch[antlr::NoViableAltException e] {
     reportParserError(lastToken->getLine(), expecting_expression, "", lastToken->getText());
-  
+
     //tudo o que vem depois de stm_list
     BitSet b;
     b.add(T_IDENTIFICADOR);
@@ -389,9 +391,11 @@ stm_ret!
     b.add(T_KW_ENQUANTO);
     b.add(T_KW_PARA);
     b.add(T_KW_SENAO);
+    b.add(T_KW_REPITA);
     b.add(T_KW_FIM_SE);
     b.add(T_KW_FIM_ENQUANTO);
     b.add(T_KW_FIM_PARA);
+    b.add(T_KW_ATE);
     b.add(T_KW_FIM);
     consumeUntil(b);
   }
@@ -491,10 +495,12 @@ stm_se
     b.add(T_KW_SE);
     b.add(T_KW_ENQUANTO);
     b.add(T_KW_PARA);
+    b.add(T_KW_REPITA);
     b.add(T_KW_SENAO);
     b.add(T_KW_FIM_SE);
     b.add(T_KW_FIM_ENQUANTO);
     b.add(T_KW_FIM_PARA);
+    b.add(T_KW_ATE);
     b.add(T_KW_FIM);
     consumeUntil(b);
   }
@@ -512,10 +518,12 @@ stm_se
     b.add(T_KW_SE);
     b.add(T_KW_ENQUANTO);
     b.add(T_KW_PARA);
+    b.add(T_KW_REPITA);
     b.add(T_KW_SENAO);
     b.add(T_KW_FIM_SE);
     b.add(T_KW_FIM_ENQUANTO);
     b.add(T_KW_FIM_PARA);
+    b.add(T_KW_ATE);
     b.add(T_KW_FIM);
     consumeUntil(b);
   }
@@ -549,15 +557,60 @@ stm_enquanto
     b.add(T_KW_SE);
     b.add(T_KW_ENQUANTO);
     b.add(T_KW_PARA);
+    b.add(T_KW_REPITA);
     b.add(T_KW_SENAO);
     b.add(T_KW_FIM_SE);
     b.add(T_KW_FIM_ENQUANTO);
     b.add(T_KW_FIM_PARA);
+    b.add(T_KW_ATE);
     b.add(T_KW_FIM);
     consumeUntil(b);
   }
 
   //nota: stm_enquanto nao lanca noViable
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+stm_repita
+{RefToken tk;}
+  : rep:T_KW_REPITA^ stm_list {tk=lastToken;} ate:T_KW_ATE! expr {tk=lastToken;}
+  ;
+
+  exception
+  catch[antlr::MismatchedTokenException e] {
+    if(e.expecting != T_KW_ATE) {
+      if(e.getLine() == tk->getLine()) {
+        reportParserError(e.getLine(), getTokenNames()[e.expecting], getTokenDescription(e.token));
+      } else {
+        reportParserError(tk->getLine(), getTokenNames()[e.expecting], "", tk->getText());
+      }
+    } else {
+      if(e.getLine() == tk->getLine()) {
+        reportParserError(e.getLine(), expecting_stm_or_ate, getTokenDescription(e.token));
+      } else {
+        reportParserError(tk->getLine(), expecting_stm_or_ate, "", tk->getText());
+      }  
+    }
+
+    //tudo o que vem depois de stm_list
+    BitSet b;
+    b.add(T_IDENTIFICADOR);
+    b.add(T_KW_RETORNE);
+    b.add(T_KW_SE);
+    b.add(T_KW_ENQUANTO);
+    b.add(T_KW_PARA);
+    b.add(T_KW_REPITA);
+    b.add(T_KW_SENAO);
+    b.add(T_KW_FIM_SE);
+    b.add(T_KW_FIM_ENQUANTO);
+    b.add(T_KW_FIM_PARA);
+    b.add(T_KW_ATE);
+    b.add(T_KW_FIM);
+    consumeUntil(b);
+  }
+
+  //nota: stm_repita nao lanca noViable
+
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 stm_para 
@@ -596,10 +649,12 @@ stm_para
     b.add(T_KW_SE);
     b.add(T_KW_ENQUANTO);
     b.add(T_KW_PARA);
+    b.add(T_KW_REPITA);
     b.add(T_KW_SENAO);
     b.add(T_KW_FIM_SE);
     b.add(T_KW_FIM_ENQUANTO);
     b.add(T_KW_FIM_PARA);
+    b.add(T_KW_ATE);
     b.add(T_KW_FIM);
     consumeUntil(b);
   }

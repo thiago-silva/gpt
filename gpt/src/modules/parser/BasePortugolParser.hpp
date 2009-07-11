@@ -64,6 +64,7 @@ protected:
   static string expecting_stm_or_fimse;
   static string expecting_stm_or_fimenq;
   static string expecting_stm_or_fimpara;
+  static string expecting_stm_or_ate;
   static string expecting_eof_or_function;
   static string expecting_function_name;
   static string expecting_param_or_fparen;
@@ -112,6 +113,7 @@ protected:
            || (tk == PortugolParserTokenTypes::T_KW_ATE)
            || (tk == PortugolParserTokenTypes::T_KW_PASSO)
            || (tk == PortugolParserTokenTypes::T_KW_FIM_PARA)
+           || (tk == PortugolParserTokenTypes::T_KW_REPITA)
            || (tk == PortugolParserTokenTypes::T_KW_FUNCAO)
            || (tk == PortugolParserTokenTypes::T_KW_RETORNE)
 //            || (tk == PortugolParserTokenTypes::T_KW_CONJUNTO)

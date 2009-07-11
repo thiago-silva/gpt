@@ -38,6 +38,7 @@ string BasePortugolParser::expecting_stm_or_fim = "\"fim\" ou comando válido";
 string BasePortugolParser::expecting_stm_or_fimse = "\"fim-se\" ou comando válido";
 string BasePortugolParser::expecting_stm_or_fimenq = "\"fim-enquanto\" ou comando válido";
 string BasePortugolParser::expecting_stm_or_fimpara = "\"fim-para\" ou comando válido";
+string BasePortugolParser::expecting_stm_or_ate="\"até\" ou comando válido";
 string BasePortugolParser::expecting_eof_or_function = "fim de arquivo (EOF) ou \"função\"";
 string BasePortugolParser::expecting_function_name = "nome da função";
 string BasePortugolParser::expecting_param_or_fparen = "variável ou \")\"";

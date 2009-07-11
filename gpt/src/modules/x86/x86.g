@@ -165,6 +165,7 @@ stm
   | stm_ret
   | stm_se
   | stm_enquanto
+  | stm_repita
   | stm_para
   ;
 
@@ -456,6 +457,35 @@ stm_enquanto
       }
     )
   ;
+
+stm_repita
+{
+  stringstream s;
+  string lbrep = x86.createLabel(true, "repita");;
+  string lbfim = x86.createLabel(true, "ate");;
+
+  s << lbrep << ":";
+  x86.writeTEXT(s.str());
+  s.str("");
+
+  x86.writeTEXT("; repita");
+}
+  : #(T_KW_REPITA 
+       (stm)*
+      {
+       x86.writeTEXT("; until expressao");
+      }
+       expr[TIPO_LOGICO]
+      {
+        x86.writeTEXT("; until resultado");
+        x86.writeTEXT("pop eax");
+        x86.writeTEXT("cmp eax, 0");
+        s << "je near " << lbrep;
+        x86.writeTEXT(s.str());
+      }
+    )
+  ;
+
 
 stm_para
 {
