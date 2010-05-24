@@ -1,3 +1,15 @@
+2010-05-24
+
+	* /trunk/gpt/ChangeLog:
+	* /trunk/gpt/THANKS:
+	* /trunk/gpt/NEWS:
+
+	-congelando versao 1.1
+
+	* /trunk/gpt/src/modules/x86/asm_lib.h:
+
+	-Fix: atof gerando floats entre 0 e 1 incorretamente
+
 2009-07-11
 
 	* /trunk/gpt/src/modules/c_translator/pt2c.g:
