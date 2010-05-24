@@ -1,3 +1,32 @@
+2009-07-11
+
+	* /trunk/gpt/src/modules/c_translator/pt2c.g:
+	* /trunk/gpt/src/modules/interpreter/interpreter.g:
+	* /trunk/gpt/test/tester.gpt:
+
+	- Implemetacao da estrutura repita nos modulos tradutor para
+	C e interpretador
+
+	* /trunk/gpt/src/modules/parser/semantic.g:
+	* /trunk/gpt/src/modules/parser/BasePortugolParser.hpp:
+	* /trunk/gpt/src/modules/parser/parser.g:
+	* /trunk/gpt/src/modules/x86/x86.g:
+	* /trunk/gpt/test/tester.gpt:
+	* /trunk/gpt/src/modules/parser/BasePortugolParser.cpp:
+	* /trunk/gpt/src/modules/parser/lexer.g:
+
+	- Implemetacao da estrutura repita no modulo x86
+
+2009-07-06
+
+	* /trunk/gpt/HACKING:
+	* /trunk/gpt/src/modules/x86/X86.cpp:
+	* /trunk/gpt/test/run_test.sh:
+	* /trunk/gpt/doc/manual/manual.tex:
+
+	- Correção de bug referente a impressao de literal com
+	aspas simples (') no modo compilado
+
 2009-05-29
 
 	* /trunk/gpt/src/modules/interpreter/InterpreterEval.hpp:
