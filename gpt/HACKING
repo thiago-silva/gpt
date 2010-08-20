@@ -1,9 +1,9 @@
 Desenvolvendo
 =============
 
-o Instalando dependências
+o Instalando dependências em GNU/Linux
 
-  Para desenvolver o GPT é necessário instalar os seguintes programas:
+  Para desenvolver o GPT é necessário instalar os seguintes softwares:
 
   - g++ 
   - make
@@ -14,17 +14,83 @@ o Instalando dependências
   - pcre e pcrecpp
   - nasm
 
-  Para satisfazer estas dependências no (K)Ubuntu ou Debian, pode-se executar
-  o seguinte comando:
+  Para satisfazer estas dependências no (K)Ubuntu ou Debian, pode-se executar o
+  seguinte comando:
 
   # aptitude install g++ make automake1.9 autoconf libtool antlr libantlr-dev \
   > libpcrecpp0 libpcre3-dev nasm
 
 
+o Instalando dependências em MS Windows
+
+  Utilizamos os softwares MingW/MSYS para o desenvolvimento do projeto neste
+  sistema operacional. Eis um passo-a-passo para ter o ambiente de
+  desenvolvimento operacional:
+
+  1) Instale um SDK do Java
+
+  2) Instale o MingW:
+   
+     ex:
+       -Baixe o installer "mingw-get":
+        http://sourceforge.net/downloads/mingw/Automated%20MinGW%20Installer/mingw-get/mingw-get-0.1-mingw32-alpha-2-bin.tar.gz
+
+       -descompacte em c:\mingw (ou no driver escolhido)
+       -No prompt de comando execute:
+
+           > cd c:\mingw
+           > path=c:\mingw\bin;%path%
+	   > mingw-get.exe install mingwrt w32api binutils gcc g++ mingw32-make
+
+        Isso deverá instalar os pacotes necessários do MingW
+
+  3) Installe o MSYS
+
+     ex: 
+       -Baixe e instale:
+       http://downloads.sourceforge.net/mingw/MSYS-1.0.11.exe
+
+  4) Instale o ANTLR v2.x a partir do fonte
+
+     ex: 
+       -Baixe o pacote antlr-2.7.7.tar.gz em c:\msys\1.0\home\<usuario>:
+         http://www.antlr2.org/download/antlr-2.7.7.tar.gz
+
+       -Execute o shell do MSYS
+       -Descompacte, compile e instale o antlr:
+       
+          $ tar xvfz antlr-2.7.7.tar.gz
+          $ cd antlr-2.7.7; ./configure && make && make install
+
+       - Crie um link simbólico para o antlr:
+
+          $ ln -s /usr/local/bin/antlr /usr/local/bin/runantlr
+
+  5) Instale a biblioteca PCRE
+
+     ex: 
+       - Baixe o pacote pcre-8.10.tar.gz em c:\msys\1.0\home\<usuario>:
+
+        ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.10.tar.gz
+
+       -Execute o shell do MSYS
+       -Descompacte, compile e instale o pcre:
+       
+          $ tar xvfz pcre-8.10.tar.gz
+          $ cd pcre-8.10; ./configure && make && make install
+
+
+  Agora, com os compiladores e bibliotecas presentes e o MSYS como shell, o
+  código fonte do GPT pode ser compilado.   
+
+  6) Instale o NASM (http://www.nasm.us) para usar o GPT como compilador.
+
+
 o Baixando a última versão do GPT
 
-  Para obter as últimas versões do código fonte do GPT, é necessário
-  fazer um checkout no repositório, utilizando o subversion. Para instala-lo, use o seguinte comando:
+ Para obter as últimas versões do código fonte do GPT, é necessário fazer um
+ checkout no repositório, utilizando o subversion. Para instalá-lo, use o
+ seguinte comando (debian/(K)Ubuntu):
 
   # aptitude install subversion 
 
@@ -36,7 +102,8 @@ o Baixando a última versão do GPT
 
   ex (checkout autenticado):
 
-    $ svn checkout svn+ssh://username@svn.berlios.de/svnroot/repos/gpt/trunk/gpt
+    $ svn checkout \
+    svn+ssh://username@svn.berlios.de/svnroot/repos/gpt/trunk/gpt
 
   Maiores informações na página do projeto no BerliOS:
 
@@ -45,35 +112,35 @@ o Baixando a última versão do GPT
 
 o Iniciando o desenvolvimento
 
-  Se você estiver utilizando o código fonte do repositório, é necessário
-  fazer o setup do sistema de construção com o seguinte comando:
+  Se você estiver utilizando o código fonte do repositório, é necessário fazer o
+  setup do sistema de construção com o seguinte comando:
 
   $ make -f Makefile.cvs
 
   Isto criará os Makefile.in's nescessários e o shell script "configure"
-  utilizado para criar os Makefile's utilizados pelo programa "make"
-  para automatizar a compilação do projeto.
+  utilizado para criar os Makefile's utilizados pelo programa "make" para
+  automatizar a compilação do projeto.
 
-  Se estiver utilizando o código fonte de uma versão específica
-  (obtida por meio de um pacote tar.gz, por exemplo), o script "configure"
-  já estará disponível.
+  Se estiver utilizando o código fonte de uma versão específica (obtida por meio
+  de um pacote tar.gz, por exemplo), o script "configure" já estará disponível.
 
 
-  NOTA: se estiver obtendo erros nos arquivos Makefile.am ao executar
+  NOTA: se estiver obtendo erros nos arquivos Makefile.am ao executar 
   make -f Makefile.cvs, verifique a versão do automake sendo utilizada:
 
     $ automake --version
 
   Se o comando acima informar uma versão inferior à 1.9, desinstale esta versão,
-  execute manualmente o automake1.9 ou faça as devidas configurações para que
-  a versão correta seja utilizada.
+  execute manualmente o automake1.9 ou faça as devidas configurações para que a
+  versão correta seja utilizada.
 
 
 o Configurando e construindo
 
-  Agora, basta seguir as instruções do arquivo INSTALL, executando o 
-  "configure" com as opções desejadas e, em seguida, executando "make" e 
-  "make install", se quiser instalar os arquivos no sistema.
+  Agora, basta seguir as instruções do arquivo INSTALL, executando o "configure"
+  com as opções desejadas e, em seguida, executando "make" e "make install", se
+  quiser instalar os arquivos no sistema.
+
 
 o Realizando commits
 
@@ -84,18 +151,17 @@ o Realizando commits
 
   -Toda descrição lógica deve iniciar em uma nova linha, prefixada por "-".
 
-    Ex: Duas descrições para as modificações do arquivo A.cpp :
+    Ex: Duas descrições para as modificações do arquivo A.cpp:
 
       $ svn ci A.cpp -m"-Utilizando algoritmo mais rápido para a função f()
-      > -Adicionado classe X para lidar com erros do usuário"
+      >-Adicionado classe X para lidar com erros do usuário"
 
 
-  - Todas as modificações lógicas que envolvem vários arquivos devem
-    ser commitadas em uma mesma leva, a não ser que um ou mais arquivos
-    envolvidos contenham outras modificações. Neste último caso,
-    o arquivo poderá ser commitado separadamente, mas com a mesma
-    mensagem do commit da leva, além da mensagem descrevendo as 
-    modificações específicas.
+  - Todas as modificações lógicas que envolvem vários arquivos devem ser
+    commitadas em uma mesma leva, a não ser que um ou mais arquivos envolvidos
+    contenham outras modificações. Neste último caso, o arquivo poderá ser
+    commitado separadamente, mas com a mesma mensagem do commit da leva, além da
+    mensagem descrevendo as modificações específicas.
 
     Ex 1: A.cpp e B.cpp foram modificados. A.cpp teve o nome de uma função
     modificada, e B.cpp, por usar esta função, teve que ser modificado também.
@@ -104,13 +170,13 @@ o Realizando commits
       $ svn ci A.cpp B.cpp -m"-Função func() renomeada para f()"
 
 
-    Ex 2: A.cpp e B.cpp foram modificados. A.cpp melhorou um algoritmo e 
+    Ex 2: A.cpp e B.cpp foram modificados. A.cpp melhorou um algoritmo e
     modificou o nome de uma função. B.cpp, por utilizar esta função, teve que
-    ser modificado também. Os dois arquivos, A.cpp e B.cpp podem ser
-    commitdos separadamente:
+    ser modificado também. Os dois arquivos, A.cpp e B.cpp podem ser commitdos
+    separadamente:
 
       $ svn ci A.cpp -m"-Função func() renomeada para f()
-      > -Utilizando algoritmo xyz para a funcao z()"
+      >-Utilizando algoritmo xyz para a funcao z()"
  
       $ svn ci B.cpp -m"-Função func() renomeada para f()"
 
@@ -125,16 +191,16 @@ o Realizando commits
 
   -Mensagens de modificações que resolvem bugs devem ser precedidos por BUGFIX:
 
-     $svn ci A.cpp -m"BUGFIX: resolvido bug ao fazer atribuição de inteiros"
+      $ svn ci A.cpp -m"BUGFIX: resolvido bug ao fazer atribuição de inteiros"
 
-  -Mensagens de modificações que representam novas funcionalidades ou algo 
+  -Mensagens de modificações que representam novas funcionalidades ou algo
    visível/relevante para o usuário devem iniciar com NEW:
 
-     $svn ci A.cpp -m"NEW: estruturas caso/repita agora são suportados"
+      $ svn ci A.cpp -m"NEW: estruturas caso/repita agora são suportados"
 
   -Mensagens que devem ser ignoradas devem iniciar com DEVNULL
 
-     $svn ci A.cpp -m"DEVNULL: identacão de código corrigida"
+      $ svn ci A.cpp -m"DEVNULL: identacão de código corrigida"
 
 
  Ex 3: Misturando tudo:
@@ -152,56 +218,66 @@ o Realizando commits
     > REGULAR:
     > -Adicionado gerador de código para caso/repita"
 
-   No exemplo acima, 2 mensagens são de bugfix, 2 são de novidades,
-   1 será ignorada e 2 (a primeira e a última) são mensagens normais.
+   No exemplo acima, 2 mensagens são de bugfix, 2 são de novidades, 1 será
+   ignorada e 2 (a primeira e a última) são mensagens normais.
  
    Portanto, todas as keywords são flags que marcam o texto a seguir em diante.
    REGULAR, portanto, resolve para o default, que são mensagens normais.
 
 
-  Estas convenções devem ser seguidas para a geração de arquivos ChangeLog
-  e NEWS automatizada. ChangeLog reunirá todas as modificações feitas em um 
-  período, ignorando mensagens marcadas com DEVNULL, e exibindo mensagens 
-  normais e de bugfix. O arquivo NEWS conterá mensagens marcadas com NEW
-  e bugfixes.
+  Estas convenções devem ser seguidas para a geração de arquivos ChangeLog e
+  NEWS automatizada. ChangeLog reunirá todas as modificações feitas em um
+  período, ignorando mensagens marcadas com DEVNULL, e exibindo mensagens
+  normais e de bugfix. O arquivo NEWS conterá mensagens marcadas com NEW e
+  bugfixes.
 
   Além do mais, BUGFIX pode ser seguido de um número (ie #1234), que representa
-  o número do bug em um sistema de gerencia de bugs, que no nosso caso é o Mantis.
+  o número do bug em um sistema de gerencia de bugs, que no nossa caso é o
+  Mantis.
+
 
 o Unit Testing
 
-  -Todo código que pode se beneficiar de testes automatizados *devem* ter testes
+  -Todo código que pode se beneficiar de testes automatizados *deve* ter testes
   automatizados. Versões de nós mesmos no futuro agradecem.
   
-  -Mensagens de commit para arquivos de testes não são tão obrigatórios.
-  Use o bom senso para decidir se a descrição do commit ajudaria ou não.
-  
+  -Mensagens de commit para arquivos de testes não são tão obrigatórios.  Use o
+  bom senso para decidir se a descrição do commit ajudaria ou não.
+
 
   TODO: explicar a infraestrutura de testes (quando houver uma)
+
 
 Documentando
 =============
 
   Os arquivos de documentação ficam no diretório doc.
 
-  O manual está em doc/manual e é escrito em Latex, portanto será necessário a instalação dos seguintes pacotes:
-  - latex-make
-  - texlive-latex-base
-  - latex2html
+  O manual está em doc/manual e é escrito em LaTeX. Em abientes
+  Debian/(K)Ubuntu, os seguintes pacotes fazem parte da instalação:
+  - latex-make - texlive-latex-base - latex2html
   
-  Os arquivos do manual ficam na pasta doc/manual. E o arquivo principal é o manual.tex.
-  Após fazer as modificações, para gerar o pdf, basta executar o comando
+  Os arquivos do manual ficam na pasta doc/manual. E o arquivo principal é o
+  manual.tex.  Após fazer as modificações, basta compilar com o comando:
+
   $ latex manual.tex
+
+  Para gerar o pdf, executa-se:
+
+  $ pdflatex manual.tex
   
-  Para gerar o manual em html, use o comando
+  Para gerar o manual em html, use o comando:
+
   $ latex2html manual.tex
+
 
 Distribuindo
 =============
 
 Para a distribução de uma nova versão do GPT pode-se seguir os seguinte passos:
-  
+ 
 o Atualizar documentação (ver seção Documentando)
+  -Modificar a versão no manual
   
 o Checar se todos os arquivos novos/modificados estão no repositório
   $ svn status 
@@ -209,33 +285,42 @@ o Checar se todos os arquivos novos/modificados estão no repositório
 o Testar o versão do SVN em outros ambientes
   
 o Mudar a versão no arquivo configure.ac
-  Atualizar os paramentros das funções AC_INIT e AM_INIT_AUTOMAKE com a nova versão do gpt
-  Após isso executar os comandos, para que a mudança reflita nos arquivos gerados automaticamente:
+  -Atualizar os paramentros das funções AC_INIT e AM_INIT_AUTOMAKE com a nova
+  versão do gpt. Após isso executar:
   $ autoconf && automake
     
 o Atualizar NEWS
-  O arquivo NEWS deverá ser atualizado manualmente seguindo o padrão utilizado.
+  -O arquivo NEWS deverá ser atualizado manualmente seguindo o padrão utilizado.
     
 o Atualizar ChangeLog
-  Para gerar o ChangeLog será necessário a instalação do pacote:
-  - php-cli
-  
-  Executar o comando
+  -Para gerar o ChangeLog será necessário a instalação do php (em sistemas
+  Debian/(K)Ubuntu, instalar o pacote php-cli).  
+  -Executar o comando:
   $ php stuff/svn2cl.php > ChangeLog
   
+o Criar pacotes
+  - tar.gz
+    $ make distclean; mkdir build; cd build; \
+    > ../configure && make && make distcheck
+    
+  - debian
+     TODO
+
+  - MS Windows
+    Usar o Inno Setup (http://www.jrsoftware.org/isdl.php) para criação do
+    installer.  A configuração para criação do pacote se encontra em
+    /gpt/packages/win_setup/
+  
+
 o Commit e tag
-  Após essas atualizações, deverá ser feito um commit sem comentários e tagear a versão no SVN. 
-  $ svn commit
+  Após essas atualizações, deverá ser feito um commit e tagear
+  a versão no SVN:
+
+  $ svn commit -m "Congelando a versao 1.1"
   $ svn copy https://username@svn.berlios.de/svnroot/repos/gpt/trunk/gpt \
             https://username@svn.berlios.de/svnroot/repos/gpt/tags/gpt-1.1\
       -m "Release 1.1"
 
-o Criar pacotes
-  - tar.gz
-    $ make distclean; mkdir build; cd build; ../configure && make && make distcheck
-    
-  - debian
-
-o Fazer o upload dos arquivos
+o Fazer o upload dos arquivos para gpt.berlios.de 
   
 o Atualizar o site e publicar as novidades
