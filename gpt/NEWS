@@ -4,7 +4,6 @@ Sumário de mudanças
 24 de Março de 2010 * gpt 1.1
 
   * Implemetação da estrutura repita
-  * Adicionado suporte a retorne no bloco principal
   * Correção do bug #83 (ver mantis)
   * Correção de bug na impressão de valores lógicos
   * O bloco principal agora tem suporte para instrução "retorne"
