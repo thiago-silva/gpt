@@ -50,7 +50,13 @@ o Instalando dependências em MS Windows
        -Baixe e instale:
        http://downloads.sourceforge.net/mingw/MSYS-1.0.11.exe
 
-  4) Instale o ANTLR v2.x a partir do fonte
+  4) Instale o MSYS DTK (necessário para ter o autoconf & cia):
+
+     ex:
+       -Baixe e instale:
+       http://downloads.sourceforge.net/mingw/msysDTK-1.0.1.exe
+
+  5) Instale o ANTLR v2.x a partir do fonte
 
      ex: 
        -Baixe o pacote antlr-2.7.7.tar.gz em c:\msys\1.0\home\<usuario>:
@@ -66,7 +72,7 @@ o Instalando dependências em MS Windows
 
           $ ln -s /usr/local/bin/antlr /usr/local/bin/runantlr
 
-  5) Instale a biblioteca PCRE
+  6) Instale a biblioteca PCRE
 
      ex: 
        - Baixe o pacote pcre-8.10.tar.gz em c:\msys\1.0\home\<usuario>:
@@ -83,7 +89,7 @@ o Instalando dependências em MS Windows
   Agora, com os compiladores e bibliotecas presentes e o MSYS como shell, o
   código fonte do GPT pode ser compilado.   
 
-  6) Instale o NASM (http://www.nasm.us) para usar o GPT como compilador.
+  7) Instale o NASM (http://www.nasm.us) para usar o GPT como compilador.
 
 
 o Baixando a última versão do GPT
@@ -116,6 +122,10 @@ o Iniciando o desenvolvimento
   setup do sistema de construção com o seguinte comando:
 
   $ make -f Makefile.cvs
+
+  ou
+
+  $ autoconf
 
   Isto criará os Makefile.in's nescessários e o shell script "configure"
   utilizado para criar os Makefile's utilizados pelo programa "make" para
@@ -307,10 +317,11 @@ o Criar pacotes
      TODO
 
   - MS Windows
-    Usar o Inno Setup (http://www.jrsoftware.org/isdl.php) para criação do
+
+    -Usar o Inno Setup (http://www.jrsoftware.org/isdl.php) para criação do
     installer.  A configuração para criação do pacote se encontra em
     /gpt/packages/win_setup/
-  
+    -Verificar a terminação de linha nos arquivos de texto do pacote
 
 o Commit e tag
   Após essas atualizações, deverá ser feito um commit e tagear
