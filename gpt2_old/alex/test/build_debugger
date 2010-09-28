@@ -1,1 +1,0 @@
-gcc -o cli_debugger cli_debugger.c

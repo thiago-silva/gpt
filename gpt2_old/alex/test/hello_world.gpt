@@ -1,5 +1,0 @@
-algoritmo teste;
-
-início
-    imprima( "Hello world !!!" );
-fim

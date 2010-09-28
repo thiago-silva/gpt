@@ -1,7 +1,0 @@
-algoritmo teste;
-
-variável x   : inteiro;
-variável pé  : literal;
-início
-  x := pé + 1;
-fim

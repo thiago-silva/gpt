@@ -1,5 +1,0 @@
-algoritmo exemplo;
-
-início
-    imprima( "Olá mundo !!!" );
-fim
