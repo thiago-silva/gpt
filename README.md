@@ -1,7 +1,6 @@
-G-Portugol - versão: 1.1
-========================
+#G-Portugol - versão: 1.1
 
-o Sobre a linguagem
+## Sobre a linguagem
 
   G-Portugol é um dialeto da linguagem/pseudo-código portugol (ou
   portugês estruturado), que é muito usada para descrever algoritmos em
@@ -23,7 +22,7 @@ o Sobre a linguagem
   sistemas GNU/Linux. Já o segundo está disponível apenas para o ambiente KDE
   3.0 do GNU/Linux.
 
-o O programa GPT
+## O programa GPT
 
   GPT é o programa que implementa a linguagem G-Portugol, permitindo:
 
@@ -38,7 +37,7 @@ o O programa GPT
   enviando sugestões, críticas, códigos-fonte, patches, idéias e algoritmos que
   não são processados corretamente pelo GPT.
 
-o Produção bibliográfica
+## Produção bibliográfica
 
   Monografias e trabalhos científicos já foram elaborados utilizando este
   projeto. Para uma pequena lista de publicações:
@@ -55,7 +54,7 @@ o Produção bibliográfica
   Ambientes de apoio à Aprendizagem de Algoritmos e Programação, 2008.
 
 
-o Maiores informações
+## Maiores informações
 
   Website: http://gpt.berlios.de
 
@@ -63,7 +62,7 @@ o Maiores informações
 
   Autor: Thiago Silva <tsilva@sourcecraft.info>
 
-o Copyright
+## Copyright
 
  Esse pacote é distribuído nos termos da GNU GENERAL PUBLIC LICENSE v2
  (ver arquivo COPYRIGHT para maiores detalhes)
