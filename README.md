@@ -17,8 +17,11 @@ o Sobre a linguagem
   relacionadas a computação. Portanto, seu foco é primariamente didático.
 
   Se encontram disponíveis atualmente um compilador, tradutor e interpretador
-  para a linguagem (GPT) e um ambiente visual simples (GPTEditor) que permite a
-  edição, execução e depuração de programas escritos em G-Portugol.
+  para a linguagem (GPT) e um ambiente visual simples (GPTEditor) que permite
+  a edição, execução e depuração de programas escritos em G-Portugol. O
+  primeiro é multi-plataforma e capaz de gerar executáveis para MS Windows e
+  sistemas GNU/Linux. Já o segundo está disponível apenas para o ambiente KDE
+  3.0 do GNU/Linux.
 
 o O programa GPT
 
@@ -34,6 +37,23 @@ o O programa GPT
   alguns recursos podem estar faltando. Portanto, convido-lhes a participar,
   enviando sugestões, críticas, códigos-fonte, patches, idéias e algoritmos que
   não são processados corretamente pelo GPT.
+
+o Produção bibliográfica
+
+  Monografias e trabalhos científicos já foram elaborados utilizando este
+  projeto. Para uma pequena lista de publicações:
+
+  FERREIRA, C. C. ; GONZAGA, F. B. ; SANTOS, R. P. . "Um Estudo sobre a
+  Aprendizagem de Lógica de Programação Utilizando Programação por
+  Demonstração". In: XXX Congresso da Sociedade Brasileira de Computação -
+  XVIII Workshop sobre Educação em Computação (WEI), 2010, Belo
+  Horizonte. Anais do CSBC 2010, 2010.
+
+  SILVA, Thiago B. L. ; CAVALCANTE, André Luís Brasil . Literatura Executável:
+  interpretando algoritmos em notações arbitrárias. In: XIX Simpósio
+  Brasileiro de Informática na Educação, 2008, Fortaleza. II Workshop de
+  Ambientes de apoio à Aprendizagem de Algoritmos e Programação, 2008.
+
 
 o Maiores informações
 
