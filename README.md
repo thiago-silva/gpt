@@ -1,4 +1,4 @@
-#G-Portugol - versão: 1.1
+# G-Portugol - versão: 1.1
 
 ## Sobre a linguagem
 
