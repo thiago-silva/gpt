@@ -37,6 +37,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <unistd.h>
 
 GPT* GPT::_self = 0;
 

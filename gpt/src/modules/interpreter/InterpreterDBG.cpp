@@ -34,6 +34,7 @@
 #endif
 
 #include <pcrecpp.h>
+#include <unistd.h>
 
 #ifndef WIN32
   void sigPipeHandler(int signum) {
